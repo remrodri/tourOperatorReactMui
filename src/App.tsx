@@ -1,12 +1,21 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import { AppRouter } from "./router/AppRouter";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { useState } from "react";
 
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 function App() {
-  return <RouterProvider router={AppRouter} />;
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <RouterProvider router={AppRouter} />
+    </ThemeProvider>
+  );
 }
 
 export default App;
