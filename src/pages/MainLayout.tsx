@@ -1,0 +1,33 @@
+import { Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import homeBackground from "../assets/images/home.webp";
+
+const MainLayout: React.FC = () => {
+  const location = useLocation();
+  const [backgroundImg, setBackgroundImg] = useState<string>(homeBackground);
+
+  const backgroundImgs: { [key: string]: string } = {
+    ["/home"]: homeBackground,
+  };
+
+  useEffect(() => {
+    setBackgroundImg(backgroundImgs[location.pathname] || homeBackground);
+  }, [location.pathname]);
+
+  return (
+    <Box
+      sx={{
+        backgroundImage: `url(${backgroundImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100dvh",
+      }}
+    >
+      <Typography>HomePage</Typography>
+    </Box>
+  );
+};
+
+export default MainLayout;
