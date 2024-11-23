@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
-import MainLayout from "../pages/MainLayout";
+import MainLayout from "../pages/mainLayout/MainLayout";
+import UserManagementPage from "../pages/UserManagementPage";
+import HomePage from "../pages/HomePage";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -9,8 +11,19 @@ export const AppRouter = createBrowserRouter(
       element: <LoginPage />,
     },
     {
-      path: "home",
+      path: "",
       element: <MainLayout />,
+      children: [
+        {
+          path: "home",
+          element: <HomePage />,
+        },
+        {
+          path: "gestion-de-usuarios",
+          element: <UserManagementPage />,
+          
+        },
+      ],
     },
   ],
 
