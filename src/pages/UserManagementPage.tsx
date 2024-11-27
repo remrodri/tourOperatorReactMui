@@ -1,4 +1,5 @@
 import { Box, CssBaseline, Typography } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
 const UserManagementPage: React.FC = () => {
   return (
@@ -27,7 +28,7 @@ const UserManagementPage: React.FC = () => {
           border: "1px solid rgba(0,0,0,0.3)",
         }}
       >
-        User Management
+        <Outlet/>
       </Box>
       {/* <Typography variant="h4" component="h2"> */}
       {/* </Typography> */}

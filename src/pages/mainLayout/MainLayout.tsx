@@ -17,7 +17,13 @@ const MainLayout: React.FC = () => {
 
   useEffect(() => {
     setBackgroundImg(backgroundImgs[location.pathname] || homeBackground);
-    
+    console.log(
+      "location.pathname::: ",
+      location.pathname.includes("/gestion-de-usuarios")
+    );
+    if (location.pathname.includes("/gestion-de-usuarios")) {
+      setBackgroundImg(userManagementBackgorund);
+    }
   }, [location.pathname]);
 
   return (

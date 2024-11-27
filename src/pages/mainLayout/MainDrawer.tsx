@@ -132,8 +132,11 @@ export default function MainDrawer() {
       case "Home":
         navigate("/home");
         break;
-      case "Gestion de usuarios":
-        navigate("/gestion-de-usuarios");
+      case "Nuevo":
+        navigate("/gestion-de-usuarios/nuevo");
+        break;
+      case "Ver todos":
+        navigate("/gestion-de-usuarios/usuarios");
         break;
       default:
         console.warn("la ruta no existe");
@@ -183,7 +186,6 @@ export default function MainDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          
           <ListItemButton
             onClick={userHandleClick}
             sx={{
@@ -208,7 +210,10 @@ export default function MainDrawer() {
                 </ListItemIcon>
                 <ListItemText primary="Nuevo" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} onClick={()=>handleClick("Ver todos")}>
+              <ListItemButton
+                sx={{ pl: 4 }}
+                onClick={() => handleClick("Ver todos")}
+              >
                 <ListItemIcon>
                   <RecentActorsIcon />
                 </ListItemIcon>
