@@ -1,7 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import homeBackground from "../assets/images/home.webp";
+import homeBackground from "../../assets/images/home.webp";
+import NavBar from "./NavBar";
+import MainDrawer from "./MainDrawer";
+import userManagementBackgorund from "../../assets/images/userManagement.webp";
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -9,10 +12,18 @@ const MainLayout: React.FC = () => {
 
   const backgroundImgs: { [key: string]: string } = {
     ["/home"]: homeBackground,
+    ["/gestion-de-usuarios"]: userManagementBackgorund,
   };
 
   useEffect(() => {
     setBackgroundImg(backgroundImgs[location.pathname] || homeBackground);
+    console.log(
+      "location.pathname::: ",
+      location.pathname.includes("/gestion-de-usuarios")
+    );
+    if (location.pathname.includes("/gestion-de-usuarios")) {
+      setBackgroundImg(userManagementBackgorund);
+    }
   }, [location.pathname]);
 
   return (
@@ -22,10 +33,13 @@ const MainLayout: React.FC = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        height: "100dvh",
+        height: "100vh",
+        // p: "10px",
       }}
     >
-      <Typography>HomePage</Typography>
+      {/* <Typography>HomePage</Typography> */}
+      {/* <NavBar /> */}
+      <MainDrawer />
     </Box>
   );
 };
