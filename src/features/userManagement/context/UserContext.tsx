@@ -22,7 +22,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const token = TokenService.getToken();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,11 +34,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
     try {
       const userList = (await userService.getUsers(token)).data;
-      console.log('userList::: ', userList);
-      setUsers(userList.data);
+      console.log("userList::: ", userList);
+      setUsers(userList);
     } catch (error) {
       // if (axios.isAxiosError(error)) {
-        // setError(error.response?.data || "error al obtener los users");
+      // setError(error.response?.data || "error al obtener los users");
       // } else setError("Error al obtener los usuarios");
       setError("Error al obtener los usuarios");
     } finally {
@@ -48,7 +48,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     fetchUsers();
-  }, [users, token]);
+  }, [token]);
 
   return (
     <UserContext.Provider value={{ users, loading, error }}>
@@ -56,7 +56,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     </UserContext.Provider>
   );
 };
-export const userUserContext = () => {
+export const useUserContext = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error("useUserContext debe ser usado con un userProvider");

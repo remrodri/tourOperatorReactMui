@@ -1,5 +1,4 @@
 import axios from "axios";
-import { TokenService } from "../../../utils/tokenService";
 
 const API_URL = "http://localhost:3000/api/v1/users";
 
