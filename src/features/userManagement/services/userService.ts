@@ -1,4 +1,5 @@
 import axios from "axios";
+import { User } from "../types/User";
 
 const API_URL = "http://localhost:3000/api/v1/users";
 
@@ -12,6 +13,15 @@ const getUsers = async (token: string): Promise<Response> => {
   });
   return response.data;
 };
+
+const registerUser = async (userData: Partial<User>,token:string): Promise<Response> => {
+  const response = await axios.post<Response>(API_URL, userData, {
+    headers:{Authorization: `Bearer ${token}`}
+  });
+  console.log("response::: ", response);
+  return response.data;
+};
 export const userService = {
   getUsers,
+  registerUser,
 };

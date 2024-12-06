@@ -5,26 +5,20 @@ import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { Outlet, useNavigate } from "react-router-dom";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import HomeIcon from "@mui/icons-material/Home";
-import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import { useState } from "react";
-import { Collapse } from "@mui/material";
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import { Collapse, Tooltip } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 
@@ -148,27 +142,29 @@ export default function MainDrawer() {
     setUserOpen(!userOpen);
   };
 
-  const icons = [<HomeIcon />, <SupervisorAccountIcon />];
+  // const icons = [<HomeIcon />, <SupervisorAccountIcon />];
 
   return (
     <Box sx={{ display: "flex" }}>
       {/* <CssBaseline /> */}
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: "none" },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
+          {/* <Tooltip title="Abrir" placement="right"> */}
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={[
+                {
+                  marginRight: 5,
+                },
+                open && { display: "none" },
+              ]}
+            >
+              <MenuIcon />
+            </IconButton>
+          {/* </Tooltip> */}
           <Typography variant="h6" noWrap component="div">
             Mini variant drawer
           </Typography>
@@ -176,6 +172,7 @@ export default function MainDrawer() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
+          <Tooltip title="Cerrar" placement="left">
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
@@ -183,42 +180,53 @@ export default function MainDrawer() {
               <ChevronLeftIcon />
             )}
           </IconButton>
+          </Tooltip>
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItemButton
-            onClick={userHandleClick}
-            sx={{
-              minHeight: 48,
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon>
-              <SupervisorAccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="Usuarios" />
-            {userOpen ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
+          <Tooltip title="Gestion de usuarios" placement="right">
+            <ListItemButton
+              onClick={userHandleClick}
+              sx={{
+                minHeight: 48,
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon>
+                <SupervisorAccountIcon />
+              </ListItemIcon>
+              <ListItemText primary="Usuarios" />
+              {userOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+          </Tooltip>
           <Collapse in={userOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton
-                onClick={() => handleClick("Nuevo")}
-                sx={{ pl: 4 }}
-              >
-                <ListItemIcon>
-                  <PersonAddIcon />
-                </ListItemIcon>
-                <ListItemText primary="Nuevo" />
-              </ListItemButton>
-              <ListItemButton
-                sx={{ pl: 4 }}
-                onClick={() => handleClick("Ver todos")}
-              >
-                <ListItemIcon>
-                  <RecentActorsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Ver todos" />
-              </ListItemButton>
+              <Tooltip title="Crear usuario" placement="right">
+                <ListItemButton
+                  onClick={() => handleClick("Nuevo")}
+                  sx={{
+                    // pl: 4
+                    pl: open ? 4 : 2.5,
+                  }}
+                >
+                  <ListItemIcon>
+                    <PersonAddIcon />
+                  </ListItemIcon>
+                  {/* <ListItemText primary="Nuevo" /> */}
+                  <ListItemText primary={open ? "Nuevo" : ""} />
+                </ListItemButton>
+              </Tooltip>
+              <Tooltip title="Listar usuarios" placement="right">
+                <ListItemButton
+                  sx={{ pl: open ? 4 : 2.5 }}
+                  onClick={() => handleClick("Ver todos")}
+                >
+                  <ListItemIcon>
+                    <RecentActorsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Ver todos" : ""} />
+                </ListItemButton>
+              </Tooltip>
             </List>
           </Collapse>
         </List>
