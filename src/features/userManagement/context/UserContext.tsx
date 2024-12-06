@@ -9,11 +9,13 @@ import { User } from "../types/User";
 import { TokenService } from "../../../utils/tokenService";
 import { userService } from "../services/userService";
 import axios from "axios";
+import { showToast } from "../../../utils/modal/toast";
 
 interface UserContextType {
   users: User[];
   loading: boolean;
   error: string | null;
+  registerUser: (userData: Partial<User>) => Promise<any>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -46,12 +48,38 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const registerUser = async (userData: Partial<User>): Promise<any> => {
+    console.log('userData::: ', userData);
+    if (!token) {
+      setError("No se encontro el token");
+      setLoading(false);
+      // return false;
+    } else {
+      try {
+        const response = await userService.registerUser(userData, token);
+        console.log('response::: ', response.data);
+        if (response) {
+          setUsers([...users, response.data]);
+          return response.data;
+        }
+        // console.log("response::: ", response);
+        // return true;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError("Falla al registrar el nuevo usuario");
+        }
+        // showToast("error", "Falla al registrar el usuario");
+        // return false;
+      }
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [token]);
 
   return (
-    <UserContext.Provider value={{ users, loading, error }}>
+    <UserContext.Provider value={{ users, loading, error, registerUser }}>
       {children}
     </UserContext.Provider>
   );
