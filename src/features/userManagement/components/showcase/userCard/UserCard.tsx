@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { User } from "../../types/User";
+import { User } from "../../../types/User";
 import {
   Avatar,
   Box,
@@ -10,17 +10,19 @@ import {
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import { useRoleContext } from "../../context/RoleContext";
-import { Role } from "../../types/Role";
+import { useRoleContext } from "../../../context/RoleContext";
+import { Role } from "../../../types/Role";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import UserCardMenu from "./UserCardMenu";
+import { UserModal } from "./userModal";
 
 interface props {
   user: User;
   roles: Role[];
 }
 
-const UserCard: React.FC<props> = ({ user, roles }) => {
+const UserCard: React.FC<props> = ({ user, roles=[] }) => {
   // console.log("roles::: ", roles);
 
   // const { roles } = useRoleContext();
@@ -34,6 +36,11 @@ const UserCard: React.FC<props> = ({ user, roles }) => {
     // console.log('user::: ', user.roleId);
     // console.log('roles::: ', roles[0].id);
     // console.log('user::: ', user.role);
+
+      if (!roles || roles.length === 0) {
+        console.warn("Roles no están definidos o están vacíos");
+        return;
+      }
 
     if (user.role === roles[0].id) {
       setRoleColor("#e06860");
@@ -50,10 +57,17 @@ const UserCard: React.FC<props> = ({ user, roles }) => {
       setRoleChar("G");
       setRoleName(roles[2].name);
     }
-  }, []);
+  }, [roles,user.role]);
+
+  const handleMenuOptionSelect = (option: string) => {
+    if (option === "Ver mas") {
+      UserModal.showUserDetails(user, roleName);
+    }
+  };
 
   return (
-    <Card
+    <Card 
+      
       sx={{
         width: 300,
       }}
@@ -70,26 +84,27 @@ const UserCard: React.FC<props> = ({ user, roles }) => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="more info">
-            <MoreVertIcon />
-          </IconButton>
+          // <IconButton aria-label="more info">
+          //   <MoreVertIcon />
+          // </IconButton>
+          <UserCardMenu onOptionSelect={handleMenuOptionSelect} />
         }
         title={`${roleName}`}
         subheader={`${user.firstName} ${user.lastName}`}
       />
       <CardContent>
-          <Typography
-            variant="body2"
-            sx={{
-              color: "text.secondary",
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <ContactPhoneIcon />
-            {user.phone}
-          </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <ContactPhoneIcon />
+          {user.phone}
+        </Typography>
       </CardContent>
     </Card>
   );
