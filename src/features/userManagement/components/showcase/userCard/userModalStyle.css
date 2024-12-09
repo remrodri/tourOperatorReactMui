@@ -1,0 +1,39 @@
+.custom-container {
+  background: rgba(0, 0, 0, 0.8);
+  /* width: 100%; */
+}
+.custom-htmlContainer {
+  /* display: flex; */
+  /* width: 300px; */
+  /* height: 300px; */
+  /* width: 100px; */
+  /* flex-direction: column; */
+  /* gap: 1rem; */
+  padding: 0;
+}
+
+.mi-div {
+  /* height: 100px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 1rem 0 1rem;
+}
+.mi-div span {
+  text-align: start;
+}
+.mi-div .user-info{
+  padding: 0 0 0 1rem;
+  text-align: center;
+}
+
+
+.custom-popup {
+  /* background: rgba(0, 0, 0, 0.8); */
+  /* padding: 0; */
+}
+.custom-popup h2#swal2-title.swal2-title{
+  /* color: aqua; */
+  font-size: 24px;
+  padding: 2.5rem 0 1rem 0;
+}
