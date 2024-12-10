@@ -16,6 +16,7 @@ interface UserContextType {
   error: string | null;
   registerUser: (userData: Partial<User>) => Promise<any>;
   updateUser: (userData: Partial<User>, userId: string) => Promise<any>;
+  deleteUser: (userId: string) => Promise<any>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -27,6 +28,30 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [users, setUsers] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const deleteUser = async (userId: string): Promise<any> => {
+    // console.log("userId::: ", userId);
+    if (!token) {
+      setError("No se encontro el token");
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await userService.deleteUser(userId, token);
+      if (response) {
+        const filteredUsers = users.filter((user: User) => user.id !== userId);
+        setUsers(filteredUsers);
+        return response.data;
+        // console.log("response::: ", response);
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchUsers = async () => {
     if (!token) {
@@ -109,7 +134,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <UserContext.Provider
-      value={{ users, loading, error, registerUser, updateUser }}
+      value={{ users, loading, error, registerUser, updateUser, deleteUser }}
     >
       {children}
     </UserContext.Provider>

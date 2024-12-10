@@ -30,11 +30,11 @@ export const useLogin = () => {
         }
       }
     } catch (err: unknown) {
-      // if (err instanceof Error) {
-      //   setError(err.message || "Login fallido");
-      // }
       if (axios.isAxiosError(err)) {
         console.log(err.response?.data);
+      }
+      if (err instanceof Error) {
+        setError(err.message || "Login fallido");
       }
     }
   };
