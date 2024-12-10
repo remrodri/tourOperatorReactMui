@@ -12,6 +12,7 @@ import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import UserCardMenu from "./UserCardMenu";
 import { UserModal } from "./userInfoModal/userModal";
 import { useNavigate } from "react-router-dom";
+import { useUserDeleteModal } from "./userInfoModal/useUserDeleteModal";
 
 interface props {
   user: User;
@@ -20,6 +21,7 @@ interface props {
 
 const UserCard: React.FC<props> = ({ user, roles = [] }) => {
   const navigate = useNavigate();
+  const { showUserDeleteModal } = useUserDeleteModal();
   // console.log("roles::: ", roles);
 
   // const { roles } = useRoleContext();
@@ -56,12 +58,15 @@ const UserCard: React.FC<props> = ({ user, roles = [] }) => {
     }
   }, [roles, user.role]);
 
-  const handleMenuOptionSelect = (option: string) => {
+  const handleMenuOptionSelect = async (option: string) => {
     if (option === "Ver mas") {
       UserModal.showUserDetails(user, roleName);
     }
     if (option === "Editar") {
       navigate(`editar/${user.id}`);
+    }
+    if (option === "Eliminar") {
+      showUserDeleteModal(user.id);
     }
   };
 

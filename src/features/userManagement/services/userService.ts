@@ -41,8 +41,19 @@ const updateUser = async (
   console.log("response::: ", response);
   return response.data;
 };
+
+const deleteUser = async (userId: string, token: string): Promise<Response> => {
+  const response = await axios.patch<Response>(
+    `${API_URL}/delete-user`,
+    { userId: userId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
 export const userService = {
   getUsers,
   registerUser,
   updateUser,
+  deleteUser
 };
