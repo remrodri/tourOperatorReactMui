@@ -2,27 +2,24 @@ import React, { useEffect, useState } from "react";
 import { User } from "../../../types/User";
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   CardHeader,
-  IconButton,
   Typography,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
-import { useRoleContext } from "../../../context/RoleContext";
 import { Role } from "../../../types/Role";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import UserCardMenu from "./UserCardMenu";
-import { UserModal } from "./userModal";
+import { UserModal } from "./userInfoModal/userModal";
+import { useNavigate } from "react-router-dom";
 
 interface props {
   user: User;
   roles: Role[];
 }
 
-const UserCard: React.FC<props> = ({ user, roles=[] }) => {
+const UserCard: React.FC<props> = ({ user, roles = [] }) => {
+  const navigate = useNavigate();
   // console.log("roles::: ", roles);
 
   // const { roles } = useRoleContext();
@@ -37,10 +34,10 @@ const UserCard: React.FC<props> = ({ user, roles=[] }) => {
     // console.log('roles::: ', roles[0].id);
     // console.log('user::: ', user.role);
 
-      if (!roles || roles.length === 0) {
-        console.warn("Roles no están definidos o están vacíos");
-        return;
-      }
+    if (!roles || roles.length === 0) {
+      console.warn("Roles no están definidos o están vacíos");
+      return;
+    }
 
     if (user.role === roles[0].id) {
       setRoleColor("#e06860");
@@ -57,17 +54,19 @@ const UserCard: React.FC<props> = ({ user, roles=[] }) => {
       setRoleChar("G");
       setRoleName(roles[2].name);
     }
-  }, [roles,user.role]);
+  }, [roles, user.role]);
 
   const handleMenuOptionSelect = (option: string) => {
     if (option === "Ver mas") {
       UserModal.showUserDetails(user, roleName);
     }
+    if (option === "Editar") {
+      navigate(`editar/${user.id}`);
+    }
   };
 
   return (
-    <Card 
-      
+    <Card
       sx={{
         width: 300,
       }}

@@ -5,6 +5,7 @@ import UserManagementPage from "../pages/UserManagementPage";
 import HomePage from "../pages/HomePage";
 import RegisterContainer from "../features/userManagement/components/register/RegisterContainer";
 import UserShowcase from "../features/userManagement/components/showcase/UserShowcase";
+import UserShowcasePage from "../pages/UserShowcasePage";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -30,7 +31,17 @@ export const AppRouter = createBrowserRouter(
             },
             {
               path: "usuarios",
-              element: <UserShowcase />,
+              element: <UserShowcasePage />,
+              children: [
+                {
+                  path: "",
+                  element:<UserShowcase/>
+              },
+                {
+                  path: "editar/:userId",
+                  element: <RegisterContainer />,
+                }
+              ]
             },
           ],
         },

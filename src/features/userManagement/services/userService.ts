@@ -14,14 +14,35 @@ const getUsers = async (token: string): Promise<Response> => {
   return response.data;
 };
 
-const registerUser = async (userData: Partial<User>,token:string): Promise<Response> => {
+const registerUser = async (
+  userData: Partial<User>,
+  token: string
+): Promise<Response> => {
   const response = await axios.post<Response>(API_URL, userData, {
-    headers:{Authorization: `Bearer ${token}`}
+    headers: { Authorization: `Bearer ${token}` },
   });
+  console.log("response::: ", response);
+  return response.data;
+};
+
+const updateUser = async (
+  userData: Partial<User>,
+  userId: string,
+  token: string
+): Promise<Response> => {
+  console.log("userData::: ", userData);
+  const response = await axios.patch<Response>(
+    API_URL,
+    { ...userData, userId: userId },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   console.log("response::: ", response);
   return response.data;
 };
 export const userService = {
   getUsers,
   registerUser,
+  updateUser,
 };

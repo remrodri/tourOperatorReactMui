@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useUserContext } from "../../context/UserContext";
 import UserCard from "./userCard/UserCard";
 import { useRoleContext } from "../../context/RoleContext";
+import UserShowcaseBreadcrumbs from "./userCard/userShowcaseBreadcrumbs";
 
 const UserShowcase: React.FC = () => {
   const { roles } = useRoleContext();
@@ -29,10 +30,13 @@ const UserShowcase: React.FC = () => {
         sx={{
           height: "10%",
           display: "flex",
-          alignItems: "center",
+          flexDirection:"column",
+          justifyContent: "center",
+          // alignItems: "center",
           p: "0 0 0 1.5rem",
         }}
       >
+        <UserShowcaseBreadcrumbs/>
         Todos los usuarios
       </Typography>
       <Box

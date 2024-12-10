@@ -13,12 +13,14 @@ import { Role } from "../../types/Role";
 import { User } from "../../types/User";
 import { useFormik } from "formik";
 import { userSchema } from "./validations/userSchema";
+import { useEffect } from "react";
 
 interface UserRegistrationFormProps {
   roles: Role[];
   loading: boolean;
   onSubmit: (values: any) => void;
   error?: string | null;
+  userToUpdate?: User;
 }
 
 const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
@@ -26,7 +28,9 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
   loading,
   onSubmit,
   error,
+  userToUpdate,
 }) => {
+  // console.log("userToUpdate::: ", userToUpdate);
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -39,6 +43,20 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
     validationSchema: userSchema,
     onSubmit,
   });
+
+  useEffect(() => {
+    if (userToUpdate) {
+      formik.setValues({
+        firstName: userToUpdate.firstName,
+        lastName: userToUpdate.lastName,
+        email: userToUpdate.email,
+        phone: userToUpdate.phone,
+        ci: userToUpdate.ci,
+        role: userToUpdate.role || "",
+      });
+    }
+  }, [userToUpdate]);
+
   return (
     <Box
       sx={{
@@ -46,21 +64,21 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
         // height: "100%",
         // overflowY:"auto",
         width: {
-          sm:"25rem"
+          sm: "25rem",
         },
         flexWrap: "wrap",
         background: "rgba(0,0,0,0.6)",
         backdropFilter: "blur(5px)",
         borderRadius: "16px",
         p: "20px",
-        border:"1px solid rgba(0,0,0,0.7)"
+        border: "1px solid rgba(0,0,0,0.7)",
       }}
     >
       <Typography
         variant="h6"
         component="h1"
         gutterBottom
-        sx={{ textAlign: "center", width: "100%", height: "3rem"}}
+        sx={{ textAlign: "center", width: "100%", height: "3rem" }}
       >
         Formulario de registro
       </Typography>
@@ -157,7 +175,7 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
           </Typography>
         )}
         <Button color="primary" variant="contained" fullWidth type="submit">
-          Registrar
+          {userToUpdate ? "Actualizar" : "Registrar"}
         </Button>
       </form>
     </Box>
