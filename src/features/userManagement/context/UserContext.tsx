@@ -8,14 +8,14 @@ import {
 import { User } from "../types/User";
 import { TokenService } from "../../../utils/tokenService";
 import { userService } from "../services/userService";
-import axios from "axios";
-import { showToast } from "../../../utils/modal/toast";
+import { isAxiosError } from "axios";
 
 interface UserContextType {
   users: User[];
   loading: boolean;
   error: string | null;
   registerUser: (userData: Partial<User>) => Promise<any>;
+  updateUser: (userData: Partial<User>, userId: string) => Promise<any>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -49,7 +49,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const registerUser = async (userData: Partial<User>): Promise<any> => {
-    console.log('userData::: ', userData);
+    console.log("userData::: ", userData);
     if (!token) {
       setError("No se encontro el token");
       setLoading(false);
@@ -57,7 +57,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       try {
         const response = await userService.registerUser(userData, token);
-        console.log('response::: ', response.data);
+        console.log("response::: ", response.data);
         if (response) {
           setUsers([...users, response.data]);
           return response.data;
@@ -74,12 +74,43 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const updateUser = async (
+    userData: Partial<User>,
+    userId: string
+  ): Promise<any> => {
+    // console.log("userData from update user::: ", userData);
+    if (!token) {
+      setError("No se encontro el token");
+      setLoading(false);
+    } else {
+      try {
+        const response = await userService.updateUser(userData, userId, token);
+        console.log("response::: ", response);
+        if (response) {
+          const newUsers = users.map((user: User) => {
+            return user.id === userId ? { ...user, ...userData } : user;
+          });
+          setUsers(newUsers);
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          console.log(error.response);
+        }
+        if (error instanceof Error) {
+          setError("Falla al actualizar el usuario");
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [token]);
 
   return (
-    <UserContext.Provider value={{ users, loading, error, registerUser }}>
+    <UserContext.Provider
+      value={{ users, loading, error, registerUser, updateUser }}
+    >
       {children}
     </UserContext.Provider>
   );

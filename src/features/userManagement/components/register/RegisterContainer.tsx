@@ -1,25 +1,45 @@
-import { Alert, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useRoleContext } from "../../context/RoleContext";
 import { useUserContext } from "../../context/UserContext";
 import { User } from "../../types/User";
 import RegisterUserForm from "./RegisterUserForm";
 import { showToast } from "../../../../utils/modal/toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Breadcrumb from "./RegisterUserBreadcrumbs";
 
 const RegisterContainer: React.FC = () => {
-  const { registerUser, error } = useUserContext();
+  const { registerUser, error, users, updateUser } = useUserContext();
   const { roles, loading, error: roleError } = useRoleContext();
   const navigate = useNavigate();
+  const params = useParams();
+  const [userToUpdate, setUserToUpdate] = useState<User | undefined>(undefined);
+
+  useEffect(() => {
+    if (params.userId) {
+      const userFound = users.find((user) => user.id === params.userId);
+      setUserToUpdate(userFound);
+    }
+  }, [users]);
 
   const handleRegisterUser = async (userData: any) => {
     // console.log("userData::: ", userData);
     try {
-      const response = await registerUser(userData);
-      // console.log('response::: ', response);
-      if (response) {
-        showToast("success", "Usuario creado con exito");
-        navigate("/gestion-de-usuarios/usuarios");
+      if (params.userId) {
+        await updateUser(userData, params.userId);
+      } else {
+        await registerUser(userData);
       }
+      // console.log('response::: ', response);
+      // if (response) {
+      showToast(
+        "success",
+        params.userId
+          ? "Usuario actualizado con exito"
+          : "Usuario creado con exito"
+      );
+      navigate("/gestion-de-usuarios/usuarios");
+      // }
 
       // console.log('response::: ', response);
 
@@ -47,12 +67,17 @@ const RegisterContainer: React.FC = () => {
         sx={{
           height: "10%",
           display: "flex",
-          alignItems: "center",
+          // alignItems: "center",
+          justifyContent: "center",
           p: "0 0 0 1.5rem",
+          flexDirection: "column",
         }}
         // gutterBottom
       >
-        Registro de un nuevo usuario
+        <Breadcrumb />
+        {params.userId
+          ? "Actualizacion de usuario"
+          : "Registro de un nuevo usuario"}
       </Typography>
       <Box
         sx={{
@@ -71,6 +96,7 @@ const RegisterContainer: React.FC = () => {
           loading={loading}
           onSubmit={handleRegisterUser}
           error={error || roleError}
+          userToUpdate={userToUpdate}
         />
       </Box>
     </Box>

@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { User } from "../../../types/User";
+import { User } from "../../../../types/User";
 import "./userModalStyle.css";
 
 const MySwal = withReactContent(Swal);
