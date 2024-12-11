@@ -17,10 +17,11 @@ import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { useState } from "react";
-import { Collapse, Tooltip } from "@mui/material";
+import { Avatar, Collapse, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import { useLogout } from "../../features/auth/hook/useLogout";
 
 const drawerWidth = 240;
 
@@ -106,11 +107,15 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
+const settings = ["Cerrar sesion"];
+
 export default function MainDrawer() {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(true);
+  const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
+  const { error, logout } = useLogout();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -142,6 +147,29 @@ export default function MainDrawer() {
     setUserOpen(!userOpen);
   };
 
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    // console.log("clickeado::: ");
+    setUserMenuOpen(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    // console.log('event::: ', event.target);
+    setUserMenuOpen(null);
+  };
+  const handleOptionUserMenu = (setting: string) => {
+    switch (setting) {
+      case settings[0]:
+        console.log("cerrar sesion::: ");
+        logout();
+        break;
+      default:
+        console.log("no hay opciones::: ");
+        console.log(error);
+        break;
+    }
+    handleCloseUserMenu();
+  };
+
   // const icons = [<HomeIcon />, <SupervisorAccountIcon />];
 
   return (
@@ -150,36 +178,92 @@ export default function MainDrawer() {
       <AppBar position="fixed" open={open}>
         <Toolbar>
           {/* <Tooltip title="Abrir" placement="right"> */}
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={[
-                {
-                  marginRight: 5,
-                },
-                open && { display: "none" },
-              ]}
-            >
-              <MenuIcon />
-            </IconButton>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={[
+              {
+                marginRight: 5,
+              },
+              open && { display: "none" },
+            ]}
+          >
+            <MenuIcon />
+          </IconButton>
           {/* </Tooltip> */}
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ alignContent: "center" }}
+            >
+              LOGO
+            </Typography>
+            <Box
+              sx={{
+                flexGrow: 0,
+              }}
+            >
+              <Tooltip title="Configuracion">
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, alignSelf: "flex-end" }}
+                >
+                  <Avatar>SN</Avatar>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{
+                  mt: "45px",
+                }}
+                id="menu-appbar"
+                anchorEl={userMenuOpen}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(userMenuOpen)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleOptionUserMenu(setting)}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <Tooltip title="Cerrar" placement="left">
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
           </Tooltip>
         </DrawerHeader>
         <Divider />

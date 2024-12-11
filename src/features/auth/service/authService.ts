@@ -8,16 +8,12 @@ interface LoginRequest {
   password: string;
 }
 interface LoginResponse {
-  // user: {
-  //   id: string;
-  //   firstName: string;
-  //   lastName: string;
-  //   email: string;
-  //   role: string;
-  //   firstLogin: boolean;
-  //   ci:string
-  // };
   token: string;
+}
+interface LogoutResponse {
+  StatusCode: string;
+  message: string;
+  data: any;
 }
 
 export const authService = {
@@ -41,4 +37,8 @@ export const authService = {
     //   throw error;
     // }
   },
+  // logout: async (): Promise<LogoutResponse> => {
+  //   const response = await axiosInstance.post("/auth/logout");
+  //   return response.data;
+  // },
 };
