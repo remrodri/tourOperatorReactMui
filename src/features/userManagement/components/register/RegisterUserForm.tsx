@@ -156,6 +156,7 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
             labelId="role"
             id="role"
             name="role"
+            label="Rol"
             value={formik.values.role}
             onChange={formik.handleChange}
             error={formik.touched.role && Boolean(formik.errors.role)}
