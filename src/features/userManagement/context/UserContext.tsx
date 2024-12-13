@@ -30,7 +30,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
 
   const deleteUser = async (userId: string): Promise<any> => {
-    // console.log("userId::: ", userId);
     if (!token) {
       setError("No se encontro el token");
       setLoading(false);
@@ -42,7 +41,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         const filteredUsers = users.filter((user: User) => user.id !== userId);
         setUsers(filteredUsers);
         return response.data;
-        // console.log("response::: ", response);
       }
     } catch (error) {
       if (isAxiosError(error)) {
@@ -61,12 +59,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
     try {
       const userList = (await userService.getUsers(token)).data;
-      console.log("userList::: ", userList);
       setUsers(userList);
     } catch (error) {
-      // if (axios.isAxiosError(error)) {
-      // setError(error.response?.data || "error al obtener los users");
-      // } else setError("Error al obtener los usuarios");
       setError("Error al obtener los usuarios");
     } finally {
       setLoading(false);
@@ -74,27 +68,20 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const registerUser = async (userData: Partial<User>): Promise<any> => {
-    console.log("userData::: ", userData);
     if (!token) {
       setError("No se encontro el token");
       setLoading(false);
-      // return false;
     } else {
       try {
         const response = await userService.registerUser(userData, token);
-        console.log("response::: ", response.data);
         if (response) {
           setUsers([...users, response.data]);
           return response.data;
         }
-        // console.log("response::: ", response);
-        // return true;
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError("Falla al registrar el nuevo usuario");
         }
-        // showToast("error", "Falla al registrar el usuario");
-        // return false;
       }
     }
   };
@@ -103,14 +90,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     userData: Partial<User>,
     userId: string
   ): Promise<any> => {
-    // console.log("userData from update user::: ", userData);
     if (!token) {
       setError("No se encontro el token");
       setLoading(false);
     } else {
       try {
         const response = await userService.updateUser(userData, userId, token);
-        console.log("response::: ", response);
         if (response) {
           const newUsers = users.map((user: User) => {
             return user.id === userId ? { ...user, ...userData } : user;
