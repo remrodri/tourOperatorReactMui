@@ -129,13 +129,13 @@ export default function MainDrawer() {
     console.log("text::: ", text);
     switch (text) {
       case "Home":
-        navigate("/home");
+        navigate("home");
         break;
       case "Nuevo":
-        navigate("/gestion-de-usuarios/nuevo");
+        navigate("gestion-de-usuarios/nuevo");
         break;
       case "Ver todos":
-        navigate("/gestion-de-usuarios/usuarios");
+        navigate("gestion-de-usuarios/usuarios");
         break;
       default:
         console.warn("la ruta no existe");
@@ -148,12 +148,10 @@ export default function MainDrawer() {
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    // console.log("clickeado::: ");
     setUserMenuOpen(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
-    // console.log('event::: ', event.target);
     setUserMenuOpen(null);
   };
   const handleOptionUserMenu = (setting: string) => {

@@ -6,6 +6,9 @@ import HomePage from "../pages/HomePage";
 import RegisterContainer from "../features/userManagement/components/register/RegisterContainer";
 import UserShowcase from "../features/userManagement/components/showcase/UserShowcase";
 import UserShowcasePage from "../pages/UserShowcasePage";
+import SecuritySetupPage from "../pages/SecuritySetupPage";
+import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
+import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -14,11 +17,25 @@ export const AppRouter = createBrowserRouter(
       element: <LoginPage />,
     },
     {
-      path: "",
+      path: "configuracion-de-seguridad",
+      element: <SecuritySetupPage />,
+      children: [
+        {
+          path: "actualizar-contraseña",
+          element: <PasswordFormContainer />,
+        },
+        {
+          path: "preguntas-de-seguridad",
+          element:<SecurityAnswerContainer/>
+        },
+      ],
+    },
+    {
+      path: "home",
       element: <MainLayout />,
       children: [
         {
-          path: "home",
+          path: "",
           element: <HomePage />,
         },
         {
@@ -35,13 +52,13 @@ export const AppRouter = createBrowserRouter(
               children: [
                 {
                   path: "",
-                  element:<UserShowcase/>
-              },
+                  element: <UserShowcase />,
+                },
                 {
                   path: "editar/:userId",
                   element: <RegisterContainer />,
-                }
-              ]
+                },
+              ],
             },
           ],
         },

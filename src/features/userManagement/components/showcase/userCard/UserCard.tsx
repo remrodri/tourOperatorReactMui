@@ -14,27 +14,20 @@ import { UserModal } from "./userInfoModal/userModal";
 import { useNavigate } from "react-router-dom";
 import { useUserDeleteModal } from "./userInfoModal/useUserDeleteModal";
 
-interface props {
+interface Props {
   user: User;
   roles: Role[];
 }
 
-const UserCard: React.FC<props> = ({ user, roles = [] }) => {
+const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
   const navigate = useNavigate();
   const { showUserDeleteModal } = useUserDeleteModal();
-  // console.log("roles::: ", roles);
-
-  // const { roles } = useRoleContext();
-
-  // console.log("user::: ", user);
+  
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
   const [roleName, setRoleName] = useState("Sin rol");
 
   useEffect(() => {
-    // console.log('user::: ', user.roleId);
-    // console.log('roles::: ', roles[0].id);
-    // console.log('user::: ', user.role);
 
     if (!roles || roles.length === 0) {
       console.warn("Roles no están definidos o están vacíos");
