@@ -8,7 +8,6 @@ interface LoginResponse {
   token: string;
 }
 
-
 export const authService = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await axiosInstance.post("/auth/login", data);

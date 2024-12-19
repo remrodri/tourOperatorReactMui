@@ -38,7 +38,7 @@ const RegisterContainer: React.FC = () => {
           ? "Usuario actualizado con exito"
           : "Usuario creado con exito"
       );
-      navigate("/gestion-de-usuarios/usuarios");
+      navigate("/home/gestion-de-usuarios/usuarios");
       // }
 
       // console.log('response::: ', response);
