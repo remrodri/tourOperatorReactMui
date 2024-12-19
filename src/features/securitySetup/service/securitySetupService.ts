@@ -39,11 +39,12 @@ export const securitySetupService = {
   },
   updateSecurityAnswers: async (
     token: string,
-    answers: { answerId: string; answerText: string }[]
+    answers: { answerId: string; answerText: string }[],
+    userId: string
   ) => {
     const response = await axiosInstance.patch<Response>(
       "/security-setup-answers",
-      { answers: answers },
+      { answers: answers, userId: userId },
       {
         headers: { Authorization: `Bearer ${token}` },
       }
