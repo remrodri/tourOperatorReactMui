@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
 import { jwtDecode } from "jwt-decode";
@@ -13,6 +13,25 @@ import { showToast } from "../../../../../utils/modal/toast";
 export const useUpdatePassword = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const params = useParams();
+
+  const updatePasswordWithoutToken = async (
+    password: string,
+    userId: any
+  ): Promise<any> => {
+    // console.log('userId::: ', userId);
+    // console.log('password:::>>>>>> ', password);
+    const response = await securitySetupService.updatePasswordWithoutToken(
+      password,
+      userId
+    );
+    console.log("response::: ", response);
+    if (response.statusCode !== 200) {
+      showToast("error", response.message);
+      return;
+    }
+    navigate("/");
+  };
 
   const updatePassword = async (password: string): Promise<any> => {
     try {
@@ -23,7 +42,6 @@ export const useUpdatePassword = () => {
       }
       const user: User = jwtDecode(token);
       const userId = user.id;
-
       const response = await securitySetupService.updatePassword(
         password,
         token,
@@ -32,14 +50,15 @@ export const useUpdatePassword = () => {
       console.log("response::: ", response);
       if (response.statusCode !== 200) {
         showToast("error", "No se pudo actualizar la contraseña");
+        return;
         // setError(null);
         // navigate("../preguntas-de-seguridad");
       }
       showToast("success", "Contraseña actualizada");
-      navigate("../preguntas-de-seguridad");
+      // navigate("../preguntas-de-seguridad");
     } catch (error) {
       setError("Error al actualizar el password");
     }
   };
-  return { updatePassword, error };
+  return { updatePassword, error, updatePasswordWithoutToken };
 };

@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { loginSchema } from "./validations/loginSchema";
 
@@ -63,7 +63,7 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
               width: "100%",
               display: "flex",
               justifyContent: "center",
-              height:"5.5rem"
+              height: "5.5rem",
             }}
           >
             <TextField
@@ -91,7 +91,7 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
               width: "100%",
               display: "flex",
               justifyContent: "center",
-              height:"5.5rem"
+              height: "5.5rem",
             }}
           >
             <TextField
@@ -107,11 +107,29 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
               type="password"
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && (formik.errors.password as string)}
+              helperText={
+                formik.touched.password && (formik.errors.password as string)
+              }
             />
           </Box>
+          <Link
+            href="/configuracion-de-seguridad/restablecer-contraseña"
+            variant="caption"
+            underline="none"
+            width="100%"
+            sx={{
+              p: "0 0 0 1.5rem",
+              textAlign: "left",
+              ":hover": {
+                cursor: "pointer",
+                color: "white",
+              },
+            }}
+          >
+            Olvidaste tu contraseña?
+          </Link>
           <Button
-            sx={{ width: "90%", margin: "3rem 0 1rem 0" }}
+            sx={{ width: "90%", margin: "2rem 0 1rem 0" }}
             variant="contained"
             color="primary"
             type="submit"

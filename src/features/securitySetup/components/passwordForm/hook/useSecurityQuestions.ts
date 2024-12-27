@@ -82,10 +82,13 @@ export const useSecurityQuestions = () => {
           answerText: answersText[index],
         };
       });
+      const user: User = jwtDecode(token);
+      const userId = user.id;
       // console.log("answers::: ", answers);
       const response = await securitySetupService.updateSecurityAnswers(
         token,
-        answers
+        answers,
+        userId
       );
       // console.log('response::: ', response);
       if (response.statusCode !== 200) {
