@@ -9,6 +9,8 @@ import UserShowcasePage from "../pages/UserShowcasePage";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
 import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
 import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
+import EmailFormContainer from "../features/securitySetup/components/ResetPassword/emailForm/EmailFormContainer";
+import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -24,9 +26,22 @@ export const AppRouter = createBrowserRouter(
           path: "actualizar-contraseña",
           element: <PasswordFormContainer />,
         },
+
         {
           path: "preguntas-de-seguridad",
-          element:<SecurityAnswerContainer/>
+          element: <SecurityAnswerContainer />,
+        },
+        {
+          path: "restablecer-contraseña",
+          element: <EmailFormContainer />,
+        },
+        {
+          path: "respuesta-de-seguridad/:userId",
+          element: <SecurityAnswerFormContainer />,
+        },
+        {
+          path: "actualizar-contraseña/:userId",
+          element: <PasswordFormContainer />,
         },
       ],
     },
