@@ -22,13 +22,12 @@ interface Props {
 const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
   const navigate = useNavigate();
   const { showUserDeleteModal } = useUserDeleteModal();
-  
+
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
   const [roleName, setRoleName] = useState("Sin rol");
 
   useEffect(() => {
-
     if (!roles || roles.length === 0) {
       console.warn("Roles no están definidos o están vacíos");
       return;
@@ -67,18 +66,27 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
     <Card
       sx={{
         width: 300,
+        // bgcolor: `${roleColor}`,
+        // margin:0
       }}
     >
       <CardHeader
         avatar={
           <Avatar
             sx={{
-              bgcolor: `${roleColor}`,
+              // bgcolor: `${roleColor}`,
+              height: 70,
+              width: 70,
+              border:`4px solid ${roleColor}`
+              // fontSize:30
             }}
             aria-label="user"
+            src={user.imageUrl}
+            variant="rounded"
           >
             {`${roleChar}`}
           </Avatar>
+          
         }
         action={
           // <IconButton aria-label="more info">
@@ -86,17 +94,28 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
           // </IconButton>
           <UserCardMenu onOptionSelect={handleMenuOptionSelect} />
         }
+        
         title={`${roleName}`}
         subheader={`${user.firstName} ${user.lastName}`}
       />
-      <CardContent>
+      <CardContent
+        sx={{
+          // margin:"0 0 0 0",
+          padding: 0,
+          paddingLeft:"16px"
+          
+          
+        }}
+      >
         <Typography
-          variant="body2"
+          // variant="body2"
           sx={{
-            color: "text.secondary",
+            // color: "text.secondary",
             display: "flex",
             alignItems: "center",
             gap: "1rem",
+            // margin:0
+            // padding:0
           }}
         >
           <ContactPhoneIcon />

@@ -14,6 +14,14 @@ const RegisterContainer: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [userToUpdate, setUserToUpdate] = useState<User | undefined>(undefined);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  //   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     setSelectedFile(file);
+  //     formik.setFieldValue("image",file)
+  // };
 
   useEffect(() => {
     if (params.userId) {
@@ -23,15 +31,15 @@ const RegisterContainer: React.FC = () => {
   }, [users]);
 
   const handleRegisterUser = async (userData: any) => {
-    // console.log("userData::: ", userData);
+    console.log("userData::: ", userData);
+    // console.log('userData.image::: ', userData.image);
     try {
       if (params.userId) {
         await updateUser(userData, params.userId);
       } else {
         await registerUser(userData);
       }
-      // console.log('response::: ', response);
-      // if (response) {
+
       showToast(
         "success",
         params.userId
@@ -39,16 +47,6 @@ const RegisterContainer: React.FC = () => {
           : "Usuario creado con exito"
       );
       navigate("/home/gestion-de-usuarios/usuarios");
-      // }
-
-      // console.log('response::: ', response);
-
-      // if (response) {
-      //   // console.log(response);
-      //   return<Alert severity="success">success</Alert>;
-      // } else {
-      //   return<Alert severity="error">error</Alert>;
-      // }
     } catch (error) {
       console.error(error);
       showToast("error", "Falla al registrar el usuario");
@@ -86,7 +84,8 @@ const RegisterContainer: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           padding: {
-            sm: "1rem 0 1rem 0",
+            xs: "4.5rem 0 0 0",
+            sm: "3.5rem 0 1rem 0",
           },
           overflowY: "auto",
         }}

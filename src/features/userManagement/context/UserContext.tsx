@@ -74,6 +74,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       try {
         const response = await userService.registerUser(userData, token);
+        console.log('response::: ', response);
         if (response) {
           setUsers([...users, response.data]);
           return response.data;

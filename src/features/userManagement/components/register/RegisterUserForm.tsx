@@ -6,6 +6,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -13,7 +14,8 @@ import { Role } from "../../types/Role";
 import { User } from "../../types/User";
 import { useFormik } from "formik";
 import { userSchema } from "./validations/userSchema";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { CloudUpload } from "@mui/icons-material";
 
 interface UserRegistrationFormProps {
   roles: Role[];
@@ -23,6 +25,18 @@ interface UserRegistrationFormProps {
   userToUpdate?: User;
 }
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
 const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
   roles,
   loading,
@@ -30,6 +44,7 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
   error,
   userToUpdate,
 }) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   // console.log("userToUpdate::: ", userToUpdate);
   const formik = useFormik({
     initialValues: {
@@ -39,10 +54,22 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
       phone: "",
       ci: "",
       role: "",
+      address: "",
+      image: null,
     },
     validationSchema: userSchema,
-    onSubmit,
+    onSubmit: (values) => {
+      onSubmit({ ...values, image: selectedFile });
+    },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      formik.setFieldValue("image", file)
+    }
+  };
 
   useEffect(() => {
     if (userToUpdate) {
@@ -53,6 +80,8 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
         phone: userToUpdate.phone,
         ci: userToUpdate.ci,
         role: userToUpdate.role || "",
+        address: userToUpdate.address || "",
+        image: null,
       });
     }
   }, [userToUpdate]);
@@ -70,7 +99,7 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
         background: "rgba(0,0,0,0.6)",
         backdropFilter: "blur(5px)",
         borderRadius: "16px",
-        p: "20px",
+        p: "10px",
         border: "1px solid rgba(0,0,0,0.7)",
       }}
     >
@@ -137,6 +166,7 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
           error={formik.touched.ci && Boolean(formik.errors.ci)}
           helperText={formik.touched.ci && formik.errors.ci}
         />
+
         <TextField
           sx={{ height: "70px" }}
           size="small"
@@ -169,12 +199,52 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
             ))}
           </Select>
         </FormControl>
-        {loading && <CircularProgress />}
+        {/* {loading && <CircularProgress />}
         {error && (
           <Typography color="error" variant="body2">
             {error}
           </Typography>
-        )}
+        )} */}
+        <TextField
+          sx={{ height: "70px" }}
+          size="small"
+          fullWidth
+          id="address"
+          name="address"
+          label="Direccion"
+          variant="outlined"
+          value={formik.values.address}
+          onChange={formik.handleChange}
+          error={formik.touched.address && Boolean(formik.errors.address)}
+          helperText={formik.touched.address && formik.errors.address}
+        />
+        <Box sx={{ height: "70px" }}>
+          <VisuallyHiddenInput
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="image">
+            <Button
+              variant="contained"
+              component="span"
+              startIcon={<CloudUpload />}
+              // sx={{ mb: 2 }}
+            >
+              Subir imagen
+            </Button>
+          </label>
+          {formik.touched.image && formik.errors.image && (
+            <Typography
+              color="error"
+              sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
+            >
+              {formik.errors.image}
+            </Typography>
+          )}
+        </Box>
         <Button color="primary" variant="contained" fullWidth type="submit">
           {userToUpdate ? "Actualizar" : "Registrar"}
         </Button>

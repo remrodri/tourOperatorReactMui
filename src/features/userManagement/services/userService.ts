@@ -11,6 +11,7 @@ const getUsers = async (token: string): Promise<Response> => {
   const response = await axios.get<Response>(API_URL, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  console.log('response::: ', response);
   return response.data;
 };
 
@@ -18,8 +19,18 @@ const registerUser = async (
   userData: Partial<User>,
   token: string
 ): Promise<Response> => {
-  const response = await axios.post<Response>(API_URL, userData, {
-    headers: { Authorization: `Bearer ${token}` },
+  console.log('userData::: ', userData);
+  const formData = new FormData();
+
+  Object.entries(userData).forEach(([key, value]) => {
+    if (value) formData.append(key, value);
+  });
+
+  const response = await axios.post<Response>(API_URL, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
   });
   console.log("response::: ", response);
   return response.data;
@@ -55,5 +66,5 @@ export const userService = {
   getUsers,
   registerUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };

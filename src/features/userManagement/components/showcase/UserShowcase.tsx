@@ -2,13 +2,15 @@ import { Box, Typography } from "@mui/material";
 import { useUserContext } from "../../context/UserContext";
 import UserCard from "./userCard/UserCard";
 import { useRoleContext } from "../../context/RoleContext";
-import UserShowcaseBreadcrumbs from "./userCard/userShowcaseBreadcrumbs";
+import UserShowcaseBreadcrumbs from "./userCard/UserShowcaseBreadcrumbs";
+// import UserShowcaseBreadcrumbs from "./userCard/userShowcaseBreadcrumbs";
 
 const UserShowcase: React.FC = () => {
   const { roles } = useRoleContext();
   const { users, loading, error } = useUserContext();
   if (loading) return <p>Cargando usuarios...</p>;
-  if (error) return <p>{error}</p>;
+  // if (error) return <p>{error}</p>;
+  // console.log('users::: ', users);
 
   // console.log('roles::: ', roles);
   // if (!Array.isArray(users)) {
