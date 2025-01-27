@@ -154,7 +154,7 @@ export default function MainDrawer() {
         navigate("gestion-de-usuarios/usuarios");
         break;
       case "Gestion de Paquetes turisticos":
-        // navigate("gestion-de-paquetes-turisticos");
+        navigate("paquetes-turisticos/ver-todos");
         break;
       default:
         console.warn("la ruta no existe");
@@ -368,14 +368,12 @@ export default function MainDrawer() {
               <Tooltip title="Ver todos los paquetes" placement="right">
                 <ListItemButton
                   sx={{ pl: open ? 4 : 2.5 }}
-                  onClick={() => handleClick("Ver todos paquetes turisticos")}
+                  onClick={() => handleClick("Gestion de Paquetes turisticos")}
                 >
                   <ListItemIcon>
                     <ListAltIcon />
                   </ListItemIcon>
-                  <ListItemText
-                    primary={open ? "Ver todos" : ""}
-                  />
+                  <ListItemText primary={open ? "Ver todos" : ""} />
                 </ListItemButton>
               </Tooltip>
             </List>

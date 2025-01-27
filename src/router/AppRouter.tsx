@@ -11,6 +11,9 @@ import PasswordFormContainer from "../features/securitySetup/components/password
 import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
 import EmailFormContainer from "../features/securitySetup/components/ResetPassword/emailForm/EmailFormContainer";
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
+import TourPackagePage from "../pages/TourPackagePage";
+import TourPackageShowcase from "../features/tourPackage/components/showcase/TourPackageShowcase";
+import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -76,6 +79,16 @@ export const AppRouter = createBrowserRouter(
               ],
             },
           ],
+        },
+        {
+          path: "paquetes-turisticos",
+          element: <TourPackagePage />,
+          children: [
+            {
+              path: "ver-todos",
+              element:<TourPackageShowcaseContainer/>
+            }
+          ]
         },
       ],
     },

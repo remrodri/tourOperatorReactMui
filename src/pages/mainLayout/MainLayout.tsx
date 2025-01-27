@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import homeBackground from "../../assets/images/home.webp";
 import MainDrawer from "./MainDrawer";
 import userManagementBackground from "../../assets/images/userManagement.webp";
+import tourPackageBackground from "../../assets/images/tourPackage.webp";
 // import securitySetupBackground from "../../assets/images/securitySetup.webp";
 
 const MainLayout: React.FC = () => {
@@ -13,6 +14,8 @@ const MainLayout: React.FC = () => {
   const backgroundImgs: { [key: string]: string } = {
     ["/home"]: homeBackground,
     ["/gestion-de-usuarios"]: userManagementBackground,
+    ["/gestion-de-paquetes-turisticos"]: tourPackageBackground,
+
     // ["/configuracion-de-seguridad"]: securitySetupBackground,
   };
 
@@ -31,6 +34,9 @@ const MainLayout: React.FC = () => {
     // );
     if (location.pathname.includes("/gestion-de-usuarios")) {
       setBackgroundImg(userManagementBackground);
+    }
+    if (location.pathname.includes("/paquetes-turisticos")) {
+      setBackgroundImg(tourPackageBackground);
     }
     // if (location.pathname.includes("/configuracion-de-seguridad")) {
     //   setBackgroundImg(securitySetupBackground);
