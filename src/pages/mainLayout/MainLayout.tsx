@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import homeBackground from "../../assets/images/home.webp";
-import NavBar from "./NavBar";
 import MainDrawer from "./MainDrawer";
 import userManagementBackground from "../../assets/images/userManagement.webp";
 // import securitySetupBackground from "../../assets/images/securitySetup.webp";
@@ -15,6 +14,13 @@ const MainLayout: React.FC = () => {
     ["/home"]: homeBackground,
     ["/gestion-de-usuarios"]: userManagementBackground,
     // ["/configuracion-de-seguridad"]: securitySetupBackground,
+  };
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const handleSelectedOption = (option: string) => {
+    setSelectedOption(option);
+    setOpen(!open);
   };
 
   useEffect(() => {
@@ -44,7 +50,13 @@ const MainLayout: React.FC = () => {
     >
       {/* <Typography>HomePage</Typography> */}
       {/* <NavBar /> */}
-      <MainDrawer />
+      <MainDrawer
+        // open={open}
+        // setOpen={setOpen}
+        // selectedOption={selectedOption}
+        // setSelectedOption={setSelectedOption}
+        // handleSelectedOption={handleSelectedOption}
+      />
     </Box>
   );
 };
