@@ -22,6 +22,10 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import { useLogout } from "../../features/auth/hook/useLogout";
+import CoPresentIcon from "@mui/icons-material/CoPresent";
+import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 
 const drawerWidth = 240;
 
@@ -116,6 +120,18 @@ export default function MainDrawer() {
   const [userOpen, setUserOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
   const { error, logout } = useLogout();
+  const [selectedOption, setSelectedOption] = useState("");
+  const [menuOption, setMenuOption] = useState(Boolean);
+  const [packageOpen, setPackageOpen] = useState(false);
+
+  const packageHandleClick = () => {
+    setPackageOpen(!packageOpen);
+  }
+
+  const handleSelectedOption = (option: string) => {
+    setSelectedOption(option);
+    // setMenuOpen(!open);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -136,6 +152,9 @@ export default function MainDrawer() {
         break;
       case "Ver todos":
         navigate("gestion-de-usuarios/usuarios");
+        break;
+      case "Gestion de Paquetes turisticos":
+        // navigate("gestion-de-paquetes-turisticos");
         break;
       default:
         console.warn("la ruta no existe");
@@ -275,7 +294,7 @@ export default function MainDrawer() {
               }}
             >
               <ListItemIcon>
-                <SupervisorAccountIcon />
+                <CoPresentIcon />
               </ListItemIcon>
               <ListItemText primary="Usuarios" />
               {userOpen ? <ExpandLess /> : <ExpandMore />}
@@ -313,62 +332,58 @@ export default function MainDrawer() {
           </Collapse>
         </List>
         <Divider />
-        {/* <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
-                ]}
-                onClick={() => handleClick(text)}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: "center",
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
-                  ]}
+        <List>
+          <Tooltip title="Gestion de Paquetes turisticos" placement="right">
+            <ListItemButton
+              onClick={packageHandleClick}
+              sx={{
+                minHeight: 48,
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon>
+                <AirplaneTicketIcon />
+              </ListItemIcon>
+              <ListItemText primary="Paquetes" />
+              {packageOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+          </Tooltip>
+          <Collapse in={packageOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Tooltip title="Crear paquete turistico" placement="right">
+                <ListItemButton
+                  onClick={() => handleClick("Nuevo paquete turistico")}
+                  sx={{
+                    // pl: 4
+                    pl: open ? 4 : 2.5,
+                  }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
+                  <ListItemIcon>
+                    <AddBoxIcon />
+                  </ListItemIcon>
+                  {/* <ListItemText primary="Nuevo" /> */}
+                  <ListItemText primary={open ? "Nuevo" : ""} />
+                </ListItemButton>
+              </Tooltip>
+              <Tooltip title="Ver todos los paquetes" placement="right">
+                <ListItemButton
+                  sx={{ pl: open ? 4 : 2.5 }}
+                  onClick={() => handleClick("Ver todos paquetes turisticos")}
+                >
+                  <ListItemIcon>
+                    <ListAltIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={open ? "Ver todos" : ""}
+                  />
+                </ListItemButton>
+              </Tooltip>
+            </List>
+          </Collapse>
+        </List>
+        <Divider />
       </Drawer>
-      {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}> */}
-      {/* <div> */}
-      {/* <DrawerHeader /> */}
+
       <Box
         sx={{
           flexGrow: 1,
@@ -386,16 +401,7 @@ export default function MainDrawer() {
           }}
         ></Box>
         <Outlet />
-        {/* <Box
-          sx={{
-            height: "calc(100% - 4rem)",
-            display:"flex"
-          }}
-        >
-        </Box> */}
       </Box>
-
-      {/* </div> */}
     </Box>
   );
 }

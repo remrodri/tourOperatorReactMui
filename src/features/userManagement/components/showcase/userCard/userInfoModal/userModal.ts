@@ -28,6 +28,8 @@ export const UserModal = {
         <span class="user-info">${user.phone}</span>
         <span>Rol: </span>
         <span class="user-info">${roleName}</span>
+        <span>Direccion: </span>
+        <span class="user-info">${user.address}</span>
         </div>`,
       showCloseButton: true,
       confirmButtonText: "Cerrar",

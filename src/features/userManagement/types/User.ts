@@ -7,4 +7,6 @@ export interface User {
   phone: string;
   firstLogin: string;
   role: string;
+  address: string;
+  imageUrl: string;
 }
