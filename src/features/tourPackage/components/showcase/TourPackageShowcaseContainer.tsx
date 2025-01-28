@@ -1,9 +1,14 @@
-import TourPackageShowcase from "./TourPackageShowcase"
+import { Box, Typography } from "@mui/material";
+import TourPackageShowcase from "./TourPackageShowcase";
 
-const TourPackageShowcaseContainer = () => { 
+const TourPackageShowcaseContainer: React.FC = () => {
   return (
+    <Box
+      // sx={{height: "100%"}}
+    >
+
       <TourPackageShowcase />
-    
-  )
-}
+    </Box>
+  );
+};
 export default TourPackageShowcaseContainer;

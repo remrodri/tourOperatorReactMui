@@ -14,6 +14,7 @@ import SecurityAnswerFormContainer from "../features/securitySetup/components/Re
 import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcase from "../features/tourPackage/components/showcase/TourPackageShowcase";
 import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
+import TourPackageformContainer from "../features/tourPackage/register/TourPackageFormContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -86,9 +87,13 @@ export const AppRouter = createBrowserRouter(
           children: [
             {
               path: "ver-todos",
-              element:<TourPackageShowcaseContainer/>
-            }
-          ]
+              element: <TourPackageShowcaseContainer />,
+            },
+            {
+              path: "nuevo",
+              element: <TourPackageformContainer />,
+            },
+          ],
         },
       ],
     },
