@@ -153,8 +153,11 @@ export default function MainDrawer() {
       case "Ver todos":
         navigate("gestion-de-usuarios/usuarios");
         break;
-      case "Gestion de Paquetes turisticos":
+      case "Paquetes turisticos":
         navigate("paquetes-turisticos/ver-todos");
+        break;
+      case "Nuevo paquete turistico":
+        navigate("paquetes-turisticos/nuevo");
         break;
       default:
         console.warn("la ruta no existe");
@@ -368,7 +371,7 @@ export default function MainDrawer() {
               <Tooltip title="Ver todos los paquetes" placement="right">
                 <ListItemButton
                   sx={{ pl: open ? 4 : 2.5 }}
-                  onClick={() => handleClick("Gestion de Paquetes turisticos")}
+                  onClick={() => handleClick("Paquetes turisticos")}
                 >
                   <ListItemIcon>
                     <ListAltIcon />
