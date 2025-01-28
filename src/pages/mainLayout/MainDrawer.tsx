@@ -26,6 +26,7 @@ import CoPresentIcon from "@mui/icons-material/CoPresent";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 const drawerWidth = 240;
 
@@ -377,6 +378,17 @@ export default function MainDrawer() {
                     <ListAltIcon />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Ver todos" : ""} />
+                </ListItemButton>
+              </Tooltip>
+              <Tooltip title="Tipo de tour" placement="right">
+                <ListItemButton
+                  sx={{ pl: open ? 4 : 2.5 }}
+                  onClick={() => handleClick("Tipo de tour")}
+                >
+                  <ListItemIcon>
+                    <FormatListBulletedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Tipo de tour" : ""} />
                 </ListItemButton>
               </Tooltip>
             </List>
