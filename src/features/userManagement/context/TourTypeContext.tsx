@@ -44,7 +44,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const fetchTourTypes = async () => {
     try {
       const tourTypeList = await getAllTourTypes();
-      setTourTypes(tourTypeList);
+      setTourTypes(tourTypeList.data);
     } catch (error) {
       console.log("Error al obtener los tipos de tour::: ", error);
     }

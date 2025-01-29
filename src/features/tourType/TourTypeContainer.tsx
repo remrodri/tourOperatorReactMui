@@ -5,6 +5,7 @@ import { useTourTypeContext } from "../userManagement/context/TourTypeContext";
 
 const TourTypeContainer = () => {
   const { tourTypes } = useTourTypeContext();
+  console.log('tourTypes::: ', tourTypes);
   // const [open, setOpen] = useState(false);
   // const handleClick = () => {
   //   console.log("click::: ");
