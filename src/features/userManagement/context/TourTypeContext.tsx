@@ -1,5 +1,11 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import { createTourType } from "../services/tourTypeService";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { createTourType, getAllTourTypes } from "../services/tourTypeService";
 
 interface TourTypeContextType {
   tourTypes: any[];
@@ -26,14 +32,32 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const registerTourType = async (tourTypeData: any) => {
     try {
       const response = await createTourType(tourTypeData);
+      if (response) {
+        setTourTypes([...tourTypes, response.data]);
+        setOpenDialog(false);
+      }
     } catch (error) {
       console.log(error);
-      
     }
   };
 
+  const fetchTourTypes = async () => {
+    try {
+      const tourTypeList = await getAllTourTypes();
+      setTourTypes(tourTypeList);
+    } catch (error) {
+      console.log("Error al obtener los tipos de tour::: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTourTypes();
+  }, []);
+
   return (
-    <TourTypeContext.Provider value={{ tourTypes, openDialog, handleClick, registerTourType }}>
+    <TourTypeContext.Provider
+      value={{ tourTypes, openDialog, handleClick, registerTourType }}
+    >
       {children}
     </TourTypeContext.Provider>
   );
