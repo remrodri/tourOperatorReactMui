@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useTourTypeContext } from "../userManagement/context/TourTypeContext";
 import CreateTourTypeDialog from "./createTourTypeDialog/CreateTourTypeDialog";
 import CreateTourTypeDialogContainer from "./createTourTypeDialog/CreateTourTypeDialogContainer";
+import TourTypeCard from "./tourTypeCard/TourTypeCard";
 
 // interface TourTypeProps {
 //   handleClick: () => void;
@@ -11,7 +12,8 @@ import CreateTourTypeDialogContainer from "./createTourTypeDialog/CreateTourType
 // }
 
 const TourType: React.FC = () => {
-  const { openDialog, handleClick } = useTourTypeContext();
+  const { openDialog, handleClick, tourTypes } = useTourTypeContext();
+
   return (
     <Box>
       <Typography
@@ -50,9 +52,18 @@ const TourType: React.FC = () => {
           justifyContent: "center",
           flexWrap: "wrap",
           overflowY: "auto",
-          gap: "0.4rem",
+          gap: "1rem",
+          pt:"2rem"
         }}
-      ></Box>
+      >
+        {tourTypes && tourTypes.length > 0 ? (
+          tourTypes.map((tourType) => (
+            <TourTypeCard key={tourType.id} tourType={tourType} />
+          ))
+        ) : (
+          <p>No hay tipos de tour registrados</p>
+        )}
+      </Box>
     </Box>
   );
 };
