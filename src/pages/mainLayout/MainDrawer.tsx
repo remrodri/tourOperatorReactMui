@@ -160,6 +160,9 @@ export default function MainDrawer() {
       case "Nuevo paquete turistico":
         navigate("paquetes-turisticos/nuevo");
         break;
+      case "Tipo de tour":
+        navigate("paquetes-turisticos/tipo-de-tour");
+        break;
       default:
         console.warn("la ruta no existe");
         break;
