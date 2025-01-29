@@ -15,6 +15,8 @@ import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcase from "../features/tourPackage/components/showcase/TourPackageShowcase";
 import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
 import TourPackageformContainer from "../features/tourPackage/register/TourPackageFormContainer";
+import TourType from "../features/tourType/TourType";
+import TourTypeContainer from "../features/tourType/TourTypeContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -92,6 +94,10 @@ export const AppRouter = createBrowserRouter(
             {
               path: "nuevo",
               element: <TourPackageformContainer />,
+            },
+            {
+              path: "tipo-de-tour",
+              element: <TourTypeContainer />,
             },
           ],
         },
