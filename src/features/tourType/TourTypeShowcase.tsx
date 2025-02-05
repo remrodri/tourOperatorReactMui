@@ -4,15 +4,16 @@ import React, { useState } from "react";
 import { useTourTypeContext } from "../userManagement/context/TourTypeContext";
 import CreateTourTypeDialog from "./createTourTypeDialog/CreateTourTypeDialog";
 import CreateTourTypeDialogContainer from "./createTourTypeDialog/CreateTourTypeDialogContainer";
-import TourTypeCard from "./tourTypeCard/TourTypeCard";
+import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
 
-// interface TourTypeProps {
-//   handleClick: () => void;
-//   open:boolean;
-// }
+interface TourTypeShowcaseProps {
+  handleClick: () => void;
+  // open:boolean;
+}
 
-const TourType: React.FC = () => {
-  const { openDialog, handleClick, tourTypes } = useTourTypeContext();
+const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick}) => {
+  // const { openDialog, handleClick, tourTypes } = useTourTypeContext();
+  const { openDialog,  tourTypes } = useTourTypeContext();
 
   return (
     <Box>
@@ -42,7 +43,7 @@ const TourType: React.FC = () => {
           >
             Nuevo
           </Button>
-          {openDialog && <CreateTourTypeDialogContainer />}
+          {/* {openDialog && <CreateTourTypeDialogContainer/>} */}
         </Box>
       </Typography>
       <Box
@@ -67,4 +68,4 @@ const TourType: React.FC = () => {
     </Box>
   );
 };
-export default TourType;
+export default TourTypeShowcase;

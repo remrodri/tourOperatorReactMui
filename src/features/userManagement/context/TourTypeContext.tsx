@@ -5,13 +5,34 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createTourType, getAllTourTypes } from "../services/tourTypeService";
+import {
+  createTourType,
+  deleteTourTypeRequest,
+  getAllTourTypes,
+  updateTourTypeRequest,
+} from "../services/tourTypeService";
+import { Snackbar } from "@mui/material";
+import { TourType } from "../types/TourType";
+import { useNewSnackbar } from "./SnackbarContext";
 
 interface TourTypeContextType {
   tourTypes: any[];
   openDialog: boolean;
   handleClick: () => void;
   registerTourType: (tourTypeData: any) => void;
+  updateTourType: (values: UpdateTourTypeValues, id: string) => void;
+  deleteTourType: (deleteTourType: DeleteTourTypeValues) => void;
+  // handleUpdate: (data: UpdateTourTypeValues) => void;
+}
+
+interface UpdateTourTypeValues {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface DeleteTourTypeValues {
+  id: string;
 }
 
 const TourTypeContext = createContext<TourTypeContextType | undefined>(
@@ -23,10 +44,48 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [tourTypes, setTourTypes] = useState<any>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const { showSnackbar } = useNewSnackbar();
+
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(!openSnackbar);
+  };
 
   const handleClick = () => {
     console.log("click::: ");
     setOpenDialog(!openDialog);
+  };
+
+  // const handleUpdate = (data: UpdateTourTypeValues) => {
+  //   console.log("data::: ", data);
+  //   setOpenDialog(!openDialog);
+  // };
+
+  const updateTourType = async (values: UpdateTourTypeValues, id: string) => {
+    try {
+      const response = await updateTourTypeRequest(values, id);
+      if (!response) {
+        showSnackbar("El tipo de tour no se actualizo", "error");
+        return;
+      }
+      setTourTypes((prevTourTypes: TourType[]) =>
+        prevTourTypes.map((tourType: TourType) =>
+          tourType.id === id ? { ...tourType, ...response.data } : tourType
+        )
+      );
+      showSnackbar("El tipo de tour se actualizo", "success");
+    } catch (error) {
+      console.log(error);
+      showSnackbar("Error al actualizar", "error");
+    }
+  };
+  const deleteTourType = async (deleteTourType: DeleteTourTypeValues) => {
+    try {
+      const response = await deleteTourTypeRequest(deleteTourType.id);
+      console.log("response::: ", response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const registerTourType = async (tourTypeData: any) => {
@@ -56,7 +115,15 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <TourTypeContext.Provider
-      value={{ tourTypes, openDialog, handleClick, registerTourType }}
+      value={{
+        tourTypes,
+        openDialog,
+        handleClick,
+        registerTourType,
+        updateTourType,
+        deleteTourType,
+        // handleUpdate,
+      }}
     >
       {children}
     </TourTypeContext.Provider>

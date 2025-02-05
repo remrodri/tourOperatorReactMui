@@ -3,17 +3,27 @@ import CreateTourTypeDialog from "./CreateTourTypeDialog";
 import { useTourTypeContext } from "../../userManagement/context/TourTypeContext";
 import { useFormik } from "formik";
 import { tourTypeSchema } from "./validation/tourTypeSchema";
+import { useEffect } from "react";
+import NewSnackbar from "../../../utils/snackbar/GlobalSnackbar";
 
+interface CreateTourTypeDialogContainerProps {
+  open: boolean;
+  handleClick: () => void;
+}
 // interface CreateTourTypeDialogContainerProps {
-//   open: boolean;
-//   handleClick: () => void;
+//   tourType: { id: string; name: string; description: string };
 // }
 
-const CreateTourTypeDialogContainer = () => {
-  const { openDialog, handleClick,registerTourType } = useTourTypeContext();
+// const CreateTourTypeDialogContainer: React.FC<CreateTourTypeDialogContainerProps> = ({ tourType}) => {
+const CreateTourTypeDialogContainer: React.FC<
+  CreateTourTypeDialogContainerProps
+> = ({ open, handleClick }) => {
+  // console.log('tourType::: ', tourType);
+  // const { openDialog, handleClick,registerTourType } = useTourTypeContext();
+  const { registerTourType } = useTourTypeContext();
 
-  const onSubmit = (values: any) => {
-    const response = registerTourType(values);
+  const onSubmit = async (values: any) => {
+    await registerTourType(values);
   };
 
   const formik = useFormik({
@@ -25,12 +35,24 @@ const CreateTourTypeDialogContainer = () => {
     onSubmit,
   });
 
+  // useEffect(() => {
+  //   if (tourTypeToUpdate) {
+  //     formik.setValues({
+  //       name: tourTypeToUpdate.name,
+  //       description: tourTypeToUpdate.description,
+  //     })
+  //   }
+  // },[])
+
   return (
-    <CreateTourTypeDialog
-      openDialog={openDialog}
-      handleClick={handleClick}
-      formik={formik}
-    />
+    <>
+      <CreateTourTypeDialog
+        open={open}
+        handleClick={handleClick}
+        formik={formik}
+      />
+      <NewSnackbar />
+    </>
   );
 };
 export default CreateTourTypeDialogContainer;
