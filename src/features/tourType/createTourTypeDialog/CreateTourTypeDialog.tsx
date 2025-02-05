@@ -8,18 +8,18 @@ import {
 } from "@mui/material";
 
 interface CreateTourTypeDialogProps {
-  openDialog: boolean;
+  open: boolean;
   handleClick: () => void;
   formik: any;
 }
 
 const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
-  openDialog,
+  open,
   handleClick,
   formik,
 }) => {
   return (
-    <Dialog open={openDialog} onClose={handleClick}>
+    <Dialog open={open} onClose={handleClick}>
       <DialogTitle>Create Tour Type</DialogTitle>
       <DialogContent>
         <Box
