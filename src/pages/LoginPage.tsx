@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import LoginForm from "../features/auth/LoginForm";
 import loginBackground from "../assets/images/login.webp";
 import LoginFormContainer from "../features/auth/LoginFormContainer";
-import { useRoleContext } from "../features/userManagement/context/RoleContext";
+import { useRoleContext } from "../context/RoleContext";
 
 const LoginPage: React.FC = () => {
   // const { roles } = useRoleContext();

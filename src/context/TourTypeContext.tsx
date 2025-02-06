@@ -10,9 +10,9 @@ import {
   deleteTourTypeRequest,
   getAllTourTypes,
   updateTourTypeRequest,
-} from "../services/tourTypeService";
+} from "../features/userManagement/services/tourTypeService";
 import { Snackbar } from "@mui/material";
-import { TourType } from "../types/TourType";
+import { TourType } from "../features/userManagement/types/TourType";
 import { useNewSnackbar } from "./SnackbarContext";
 
 interface TourTypeContextType {

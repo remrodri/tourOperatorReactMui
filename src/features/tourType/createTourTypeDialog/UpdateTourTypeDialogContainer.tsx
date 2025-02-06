@@ -2,9 +2,9 @@ import { useFormik } from "formik";
 import CreateTourTypeDialog from "./CreateTourTypeDialog";
 import { Description } from "@mui/icons-material";
 import { tourTypeSchema } from "./validation/tourTypeSchema";
-import { useTourTypeContext } from "../../userManagement/context/TourTypeContext";
+import { useTourTypeContext } from "../../../context/TourTypeContext";
 import NewSnackbar from "../../../utils/snackbar/GlobalSnackbar";
-import { useNewSnackbar } from "../../userManagement/context/SnackbarContext";
+import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface CreateTourTypeDialogContainerProps {
   open: boolean;

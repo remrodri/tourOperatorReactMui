@@ -1,5 +1,5 @@
 import { Alert, Snackbar } from "@mui/material";
-import { useNewSnackbar } from "../../features/userManagement/context/SnackbarContext";
+import { useNewSnackbar } from "../../context/SnackbarContext";
 
 const GlobalSnackbar = () => {
   const { openSnackbar, message, severity, closeSnackbar } = useNewSnackbar();

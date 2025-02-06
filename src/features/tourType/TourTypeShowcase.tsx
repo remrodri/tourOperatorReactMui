@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../breadCrumbs/BreadCrumbsContainer";
 import React, { useState } from "react";
-import { useTourTypeContext } from "../userManagement/context/TourTypeContext";
+import { useTourTypeContext } from "../../context/TourTypeContext";
 import CreateTourTypeDialog from "./createTourTypeDialog/CreateTourTypeDialog";
 import CreateTourTypeDialogContainer from "./createTourTypeDialog/CreateTourTypeDialogContainer";
 import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
@@ -11,9 +11,9 @@ interface TourTypeShowcaseProps {
   // open:boolean;
 }
 
-const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick}) => {
+const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
   // const { openDialog, handleClick, tourTypes } = useTourTypeContext();
-  const { openDialog,  tourTypes } = useTourTypeContext();
+  const { openDialog, tourTypes } = useTourTypeContext();
 
   return (
     <Box>
@@ -54,7 +54,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick}) => {
           flexWrap: "wrap",
           overflowY: "auto",
           gap: "1rem",
-          pt:"2rem"
+          pt: "2rem",
         }}
       >
         {tourTypes && tourTypes.length > 0 ? (

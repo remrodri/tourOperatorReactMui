@@ -3,7 +3,7 @@ import LoginPage from "../pages/LoginPage";
 import MainLayout from "../pages/mainLayout/MainLayout";
 import UserManagementPage from "../pages/UserManagementPage";
 import HomePage from "../pages/HomePage";
-import RegisterContainer from "../features/userManagement/components/register/RegisterContainer";
+import RegisterContainer from "../features/userManagement/components/register/UserFormContainer";
 import UserShowcase from "../features/userManagement/components/showcase/UserShowcase";
 import UserShowcasePage from "../pages/UserShowcasePage";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
