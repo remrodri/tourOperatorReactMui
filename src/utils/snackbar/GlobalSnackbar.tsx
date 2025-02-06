@@ -12,7 +12,7 @@ const GlobalSnackbar = () => {
       <Alert
         onClose={closeSnackbar}
         severity={severity}
-        variant="filled"
+        // variant="outlined"
         sx={{ width: "100%" }}
       >
         {message}

@@ -30,10 +30,7 @@ export const updateTourTypeRequest = async (
     name: tourTypeData.name,
     description: tourTypeData.description,
   };
-  const response = await axiosInstance.put(
-    `/tour-types/${id}`,
-    data
-  );
+  const response = await axiosInstance.put(`/tour-types/${id}`, data);
   // console.log("response::: ", response);
   return response.data;
 };
@@ -41,4 +38,5 @@ export const updateTourTypeRequest = async (
 export const deleteTourTypeRequest = async (tourTypeId: string) => {
   // console.log("tourTypeId::: ", tourTypeId);
   const response = await axiosInstance.delete(`/tour-types/${tourTypeId}`);
+  return response.data;
 };

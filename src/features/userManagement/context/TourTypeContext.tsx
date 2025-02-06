@@ -82,7 +82,17 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const deleteTourType = async (deleteTourType: DeleteTourTypeValues) => {
     try {
       const response = await deleteTourTypeRequest(deleteTourType.id);
-      console.log("response::: ", response);
+      if (!response) {
+        showSnackbar("Error al eliminar un tipo de tour", "error");
+        return;
+      }
+      // console.log("response::: ", response);
+      setTourTypes((prevTourTypes: TourType[]) =>
+        prevTourTypes.filter(
+          (tourType: TourType) => tourType.id !== response.data.id
+        )
+      );
+      showSnackbar("Eliminado con exito", "success");
     } catch (error) {
       console.log(error);
     }
@@ -91,10 +101,13 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const registerTourType = async (tourTypeData: any) => {
     try {
       const response = await createTourType(tourTypeData);
-      if (response) {
-        setTourTypes([...tourTypes, response.data]);
-        setOpenDialog(false);
+      if (!response) {
+        showSnackbar("Error al registrar tourType", "error");
       }
+      setTourTypes([...tourTypes, response.data]);
+      // setOpenDialog(false);
+      // handleClick();
+      showSnackbar("Registrado con exito", "success");
     } catch (error) {
       console.log(error);
     }
