@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import { useRoleContext } from "../../context/RoleContext";
-import { useUserContext } from "../../context/UserContext";
+import { useRoleContext } from "../../../../context/RoleContext";
+import { useUserContext } from "../../../../context/UserContext";
 import { User } from "../../types/User";
-import RegisterUserForm from "./RegisterUserForm";
+import RegisterUserForm from "./UserForm";
 import { showToast } from "../../../../utils/modal/toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ const RegisterContainer: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [userToUpdate, setUserToUpdate] = useState<User | undefined>(undefined);
+  const [preview, setPreview] = useState<string | null>(null);
   // const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   //   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,9 +86,10 @@ const RegisterContainer: React.FC = () => {
           alignItems: "center",
           padding: {
             xs: "4.5rem 0 0 0",
-            sm: "3.5rem 0 1rem 0",
+            sm: "7.5rem 0 1rem 0",
           },
           overflowY: "auto",
+          // paddingTop:"20rem"
         }}
       >
         <RegisterUserForm
@@ -96,6 +98,8 @@ const RegisterContainer: React.FC = () => {
           onSubmit={handleRegisterUser}
           error={error || roleError}
           userToUpdate={userToUpdate}
+          preview={preview}
+          setPreview={setPreview}
         />
       </Box>
     </Box>

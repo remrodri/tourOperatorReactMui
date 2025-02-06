@@ -2,21 +2,21 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { useState } from "react";
 
 export default function RegisterUserBreadcrumbs() {
   function handleClick() {
     // event.preventDefault();
     // console.info("You clicked a breadcrumb.");
-    navigate("/gestion-de-usuarios/usuarios")
+    navigate("/gestion-de-usuarios/usuarios");
   }
   const navigate = useNavigate();
   return (
-    <div role="presentation" >
+    <div role="presentation">
       <Breadcrumbs aria-label="breadcrumb">
         <Link
           sx={{
-            cursor:"pointer"
+            cursor: "pointer",
           }}
           underline="hover"
           color="inherit"

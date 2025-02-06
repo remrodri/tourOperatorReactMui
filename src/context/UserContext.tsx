@@ -5,9 +5,9 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User } from "../types/User";
-import { TokenService } from "../../../utils/tokenService";
-import { userService } from "../services/userService";
+import { User } from "../features/userManagement/types/User";
+import { TokenService } from "../utils/tokenService";
+import { userService } from "../features/userManagement/services/userService";
 import { isAxiosError } from "axios";
 
 interface UserContextType {
@@ -74,7 +74,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       try {
         const response = await userService.registerUser(userData, token);
-        console.log('response::: ', response);
+        console.log("response::: ", response);
         if (response) {
           setUsers([...users, response.data]);
           return response.data;

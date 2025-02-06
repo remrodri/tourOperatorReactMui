@@ -23,6 +23,8 @@ interface UserRegistrationFormProps {
   onSubmit: (values: any) => void;
   error?: string | null;
   userToUpdate?: User;
+  preview: string | null;
+  setPreview: (url: string | null) => void;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -43,6 +45,8 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
   onSubmit,
   error,
   userToUpdate,
+  preview,
+  setPreview,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   // console.log("userToUpdate::: ", userToUpdate);
@@ -67,7 +71,9 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      formik.setFieldValue("image", file)
+      formik.setFieldValue("image", file);
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
     }
   };
 
@@ -218,34 +224,62 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
           error={formik.touched.address && Boolean(formik.errors.address)}
           helperText={formik.touched.address && formik.errors.address}
         />
-        <Box sx={{ height: "70px" }}>
-          <VisuallyHiddenInput
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-          <label htmlFor="image">
-            <Button
-              variant="contained"
-              component="span"
-              startIcon={<CloudUpload />}
-              // sx={{ mb: 2 }}
+        <Box sx={{ height: "70px", display:"flex"}}>
+          <Box sx={{height:"100%",width:"50%"}}>
+            <VisuallyHiddenInput
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="image">
+              <Button
+                variant="contained"
+                component="span"
+                startIcon={<CloudUpload />}
+                // sx={{ mb: 2 }}
+              >
+                Subir imagen
+              </Button>
+            </label>
+            {formik.touched.image && formik.errors.image && (
+              <Typography
+                color="error"
+                sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
+              >
+                {formik.errors.image}
+              </Typography>
+            )}
+          </Box>
+          {preview && (
+            <Box
+              sx={{
+                width: "50%",
+                height:"100%",
+                display: "flex",
+                // justifyContent: "center",
+                alignItems:"center"
+                // mt: 2,
+              }}
             >
-              Subir imagen
-            </Button>
-          </label>
-          {formik.touched.image && formik.errors.image && (
-            <Typography
-              color="error"
-              sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
-            >
-              {formik.errors.image}
-            </Typography>
+              <img
+                src={preview}
+                alt="Vista previa"
+                style={{
+                  width: "65px",
+                  height: "65px",
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                }}
+              ></img>
+            </Box>
           )}
         </Box>
-        <Button color="primary" variant="contained" fullWidth type="submit">
+        <Button color="primary" variant="contained" fullWidth type="submit" sx={{
+          mt:"1rem"
+        }}>
           {userToUpdate ? "Actualizar" : "Registrar"}
         </Button>
       </form>

@@ -2,7 +2,7 @@ import { Card, CardHeader } from "@mui/material";
 import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
 import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
-import { useTourTypeContext } from "../../../userManagement/context/TourTypeContext";
+import { useTourTypeContext } from "../../../../context/TourTypeContext";
 import CreateTourTypeDialogContainer from "../../createTourTypeDialog/CreateTourTypeDialogContainer";
 import UpdateTourTypeDialogContainer from "../../createTourTypeDialog/UpdateTourTypeDialogContainer";
 

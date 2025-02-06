@@ -5,8 +5,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Role } from "../types/Role";
-import { roleService } from "../services/roleService";
+import { Role } from "../features/userManagement/types/Role";
+import { roleService } from "../features/userManagement/services/roleService";
 
 interface RoleContextType {
   roles: Role[];
