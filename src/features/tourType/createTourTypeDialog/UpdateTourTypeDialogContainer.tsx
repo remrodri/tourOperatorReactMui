@@ -16,11 +16,9 @@ const UpdateTourTypeDialogContainer: React.FC<
   CreateTourTypeDialogContainerProps
 > = ({ open, handleClick, tourType }) => {
   const { updateTourType } = useTourTypeContext();
-  const { showSnackbar } = useNewSnackbar();
 
   const onSubmit = (values: any) => {
     updateTourType(values, tourType.id);
-    showSnackbar("prueba2", "success");
     handleClick();
   };
 

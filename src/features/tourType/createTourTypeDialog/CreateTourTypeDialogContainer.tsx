@@ -24,6 +24,7 @@ const CreateTourTypeDialogContainer: React.FC<
 
   const onSubmit = async (values: any) => {
     await registerTourType(values);
+    handleClick();
   };
 
   const formik = useFormik({
