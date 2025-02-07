@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User } from "../../../types/User";
 import {
   Avatar,
+  Box,
   Card,
   CardContent,
   CardHeader,
@@ -67,7 +68,16 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
       sx={{
         width: 300,
         // bgcolor: `${roleColor}`,
-        // margin:0
+        p: 0,
+
+        ".MuiCardHeader-root": {
+          p: "10px 10px 10px 10px",
+        },
+        ".MuiCardContent-root": {
+          p: "0 15px 10px 0",
+          display: "flex",
+          justifyContent: "end",
+        },
       }}
     >
       <CardHeader
@@ -75,9 +85,9 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
           <Avatar
             sx={{
               // bgcolor: `${roleColor}`,
-              height: 70,
-              width: 70,
-              border:`4px solid ${roleColor}`
+              height: 100,
+              width: 100,
+              border: `4px solid ${roleColor}`,
               // fontSize:30
             }}
             aria-label="user"
@@ -86,7 +96,6 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
           >
             {`${roleChar}`}
           </Avatar>
-          
         }
         action={
           // <IconButton aria-label="more info">
@@ -94,17 +103,28 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
           // </IconButton>
           <UserCardMenu onOptionSelect={handleMenuOptionSelect} />
         }
-        
         title={`${roleName}`}
-        subheader={`${user.firstName} ${user.lastName}`}
+        subheader={
+          <Box>
+            <Box>{`${user.firstName} ${user.lastName}`}</Box>
+            <Typography
+              sx={{
+                pt:"11px",
+                fontSize: "0.9rem",
+                color:"white"
+              }}
+            >
+              <ContactPhoneIcon /><br/>
+              {user.phone}
+            </Typography>
+          </Box>
+        }
       />
-      <CardContent
+      {/* <CardContent
         sx={{
           // margin:"0 0 0 0",
           padding: 0,
-          paddingLeft:"16px"
-          
-          
+          paddingLeft: "16px",
         }}
       >
         <Typography
@@ -121,7 +141,7 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
           <ContactPhoneIcon />
           {user.phone}
         </Typography>
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 };
