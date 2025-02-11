@@ -103,6 +103,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
       const response = await createTourType(tourTypeData);
       if (!response) {
         showSnackbar("Error al registrar tourType", "error");
+        return;
       }
       setTourTypes([...tourTypes, response.data]);
       // setOpenDialog(false);
