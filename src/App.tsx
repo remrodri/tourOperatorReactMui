@@ -7,6 +7,7 @@ import { RoleProvider } from "./context/RoleContext";
 import { TourTypeProvider } from "./context/TourTypeContext";
 import { SnackbarProvider } from "./context/SnackbarContext";
 import GlobalSnackbar from "./utils/snackbar/GlobalSnackbar";
+import { CancellationPolicyProvider } from "./features/cancellationPolicy/context/CancellationPolicyContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -16,18 +17,20 @@ const darkTheme = createTheme({
 function App() {
   return (
     <SnackbarProvider>
-      <TourTypeProvider>
-        <RoleProvider>
-          <UserProvider>
-            <ThemeProvider theme={darkTheme}>
-              <CssBaseline />
-              <RouterProvider router={AppRouter} />
-              <GlobalSnackbar />
-            </ThemeProvider>
-          </UserProvider>
-        </RoleProvider>
-      </TourTypeProvider>
-    </SnackbarProvider>
+        <CancellationPolicyProvider>
+        <TourTypeProvider>
+          <RoleProvider>
+            <UserProvider>
+              <ThemeProvider theme={darkTheme}>
+                <CssBaseline />
+                <RouterProvider router={AppRouter} />
+                <GlobalSnackbar />
+              </ThemeProvider>
+            </UserProvider>
+          </RoleProvider>
+        </TourTypeProvider>
+    </CancellationPolicyProvider>
+      </SnackbarProvider>
   );
 }
 

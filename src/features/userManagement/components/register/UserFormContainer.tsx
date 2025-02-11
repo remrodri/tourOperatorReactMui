@@ -80,16 +80,17 @@ const RegisterContainer: React.FC = () => {
       </Typography>
       <Box
         sx={{
-          height: "90%",
+          // height: "90%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           padding: {
-            xs: "4.5rem 0 0 0",
-            sm: "7.5rem 0 1rem 0",
+            // xs: "4.5rem 0 0 0",
+            // sm: "7.5rem 0 1rem 0",
           },
-          overflowY: "auto",
+          // overflowY: "auto",
           // paddingTop:"20rem"
+
         }}
       >
         <RegisterUserForm

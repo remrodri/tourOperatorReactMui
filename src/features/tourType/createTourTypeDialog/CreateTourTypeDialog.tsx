@@ -20,7 +20,7 @@ const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClick}>
-      <DialogTitle>Create Tour Type</DialogTitle>
+      <DialogTitle>Crear Tour Type</DialogTitle>
       <DialogContent>
         <Box
           sx={{

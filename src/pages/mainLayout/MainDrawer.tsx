@@ -17,7 +17,14 @@ import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { useState } from "react";
-import { Avatar, Collapse, Menu, MenuItem, Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Collapse,
+  Menu,
+  MenuItem,
+  Tooltip,
+  useMediaQuery,
+} from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
@@ -27,6 +34,7 @@ import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import EventBusyIcon from "@mui/icons-material/EventBusy";
 
 const drawerWidth = 240;
 
@@ -124,7 +132,8 @@ export default function MainDrawer() {
   const { error, logout } = useLogout();
   const [selectedOption, setSelectedOption] = useState("");
   const [menuOption, setMenuOption] = useState(Boolean);
-  const [packageOpen, setPackageOpen] = useState(false);
+  const [packageOpen, setPackageOpen] = useState(true);
+  const matches = useMediaQuery(theme.breakpoints.down("sm"));
 
   const packageHandleClick = () => {
     setPackageOpen(!packageOpen);
@@ -144,6 +153,8 @@ export default function MainDrawer() {
   };
 
   function handleClick(text: string): void {
+    // theme.breakpoints.down("sm") && setOpen(false);
+
     console.log("text::: ", text);
     switch (text) {
       case "Home":
@@ -164,14 +175,17 @@ export default function MainDrawer() {
       case "Tipo de tour":
         navigate("paquetes-turisticos/tipo-de-tour");
         break;
+      case "politicas":
+        navigate("paquetes-turisticos/politicas");
+        break;
       default:
         console.warn("la ruta no existe");
         break;
     }
-    // [theme.breakpoints.down("sm")]: setOpen(false);
-    if (theme.breakpoints.down("sm")) {
-      setOpen(false);
-    }
+    matches && setOpen(false)
+    // if (theme.breakpoints.down("sm")) {
+    //   setOpen(false);
+    // }
   }
 
   const userHandleClick = () => {
@@ -344,6 +358,7 @@ export default function MainDrawer() {
           </Collapse>
         </List>
         <Divider />
+        {/* <Collapse></Collapse> */}
         <List>
           <Tooltip title="Gestion de Paquetes turisticos" placement="right">
             <ListItemButton
@@ -396,7 +411,18 @@ export default function MainDrawer() {
                   <ListItemIcon>
                     <FormatListBulletedIcon />
                   </ListItemIcon>
-                  <ListItemText primary={open ? "Tipo de tour" : ""} />
+                  <ListItemText primary={open ? "Tipos de tour" : ""} />
+                </ListItemButton>
+              </Tooltip>
+              <Tooltip title="Politicas de cancelacion" placement="right">
+                <ListItemButton
+                  sx={{ pl: open ? 4 : 2.5 }}
+                  onClick={() => handleClick("politicas")}
+                >
+                  <ListItemIcon>
+                    <EventBusyIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Politicas " : ""} />
                 </ListItemButton>
               </Tooltip>
             </List>
