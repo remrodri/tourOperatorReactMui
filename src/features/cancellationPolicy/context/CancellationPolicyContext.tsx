@@ -1,19 +1,21 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
-import { createCancellationPolicyRequest } from "../service/CancellationPolicyService";
+import {
+  createCancellationPolicyRequest,
+  deleteCancellationPolicyRequest,
+  getAllCancelationPolicy,
+} from "../service/CancellationPolicyService";
 import { CancellationPolicy } from "../types/CancellationPolicy";
-
-// interface CancellationPolicy {
-//   name: string;
-//   deadLine: number;
-//   refoundPercentage: number;
-//   description: string;
-// }
 
 interface CancellationPolicyContextType {
   cancellationPolicy: CancellationPolicy[];
   createCancellationPolicy: (data: CancellationPolicy) => void;
-  // openDialog: boolean;
 }
 
 const CancellationPolicyContext = createContext<
@@ -23,25 +25,55 @@ const CancellationPolicyContext = createContext<
 export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [cancellationPolicy, setCancelationPolicy] = useState<
+  const [cancellationPolicy, setCancellationPolicy] = useState<
     CancellationPolicy[]
   >([]);
   const { showSnackbar } = useNewSnackbar();
 
+  const deleteCancellationPolicy = async (id: string) => {
+    try {
+      const response = await deleteCancellationPolicyRequest(id);
+      if (!response) {
+        showSnackbar("Error al eliminar", "error");
+        return;
+      }
+      setCancellationPolicy((prevCancellationPolicy: CancellationPolicy[]) =>
+        prevCancellationPolicy.filter(
+          (cp: CancellationPolicy) => cp.id !== response.data.id
+        )
+      );
+      showSnackbar("Eliminado con exito", "success");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const createCancellationPolicy = async (data: CancellationPolicy) => {
     try {
-      // console.log('data::: ', data);
       const response = await createCancellationPolicyRequest(data);
       if (!response) {
         showSnackbar("Error al crear politica de cancelacion", "error");
         return;
       }
-      setCancelationPolicy([...cancellationPolicy, response.data]);
+      setCancellationPolicy([...cancellationPolicy, response.data]);
       showSnackbar("Creado con exito", "success");
     } catch (error) {
       showSnackbar("Error al crear politica de cancelacion", "error");
     }
   };
+
+  const fetchCancellationPolicy = async () => {
+    try {
+      const response = await getAllCancelationPolicy();
+      setCancellationPolicy(response.data);
+    } catch (error) {
+      showSnackbar("Error al cargar", "error");
+    }
+  };
+
+  useEffect(() => {
+    fetchCancellationPolicy();
+  }, []);
 
   return (
     <CancellationPolicyContext.Provider

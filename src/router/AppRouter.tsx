@@ -17,8 +17,7 @@ import TourPackageShowcaseContainer from "../features/tourPackage/components/sho
 import TourPackageformContainer from "../features/tourPackage/register/TourPackageFormContainer";
 import TourType from "../features/tourType/TourTypeShowcase";
 import TourTypeContainer from "../features/tourType/TourTypeShowcaseContainer";
-import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/CancellationPolicyShowcaseContainer";
-
+import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -103,8 +102,8 @@ export const AppRouter = createBrowserRouter(
             },
             {
               path: "politicas",
-              element:<CancellationPolicyShowcaseContainer/>
-            }
+              element: <CancellationPolicyShowcaseContainer />,
+            },
           ],
         },
       ],

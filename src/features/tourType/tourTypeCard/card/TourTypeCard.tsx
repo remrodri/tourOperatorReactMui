@@ -12,7 +12,7 @@ interface TourTypeCardProps {
 
 const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
   // const { handleUpdate } = useTourTypeContext();
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
   const handleClickOpenEdit = () => {

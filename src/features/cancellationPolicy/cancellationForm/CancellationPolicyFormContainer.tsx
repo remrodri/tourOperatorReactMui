@@ -14,12 +14,13 @@ const CancellationPolicyFormContainer: React.FC<
 > = ({ open, handleClick }) => {
   const { createCancellationPolicy } = useCancellationConditionContext();
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
     // console.log("values::: ", values);
-    createCancellationPolicy(values);
+    await createCancellationPolicy(values);
   };
   const formik = useFormik({
     initialValues: {
+      id:"",
       name: "",
       deadLine: 0,
       refoundPercentage: 0,
