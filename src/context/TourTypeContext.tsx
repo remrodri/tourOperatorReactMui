@@ -86,7 +86,6 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
         showSnackbar("Error al eliminar un tipo de tour", "error");
         return;
       }
-      // console.log("response::: ", response);
       setTourTypes((prevTourTypes: TourType[]) =>
         prevTourTypes.filter(
           (tourType: TourType) => tourType.id !== response.data.id

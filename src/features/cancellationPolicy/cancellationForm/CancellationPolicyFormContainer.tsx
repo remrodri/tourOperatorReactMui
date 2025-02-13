@@ -2,25 +2,28 @@ import { useFormik } from "formik";
 import { cancellationSchema } from "./validation/cancellationSchema";
 import CancellationPolicyForm from "./CancellationPolicyForm";
 import { useCancellationConditionContext } from "../context/CancellationPolicyContext";
+import { CancellationPolicy } from "../types/CancellationPolicy";
+import { useEffect } from "react";
 // import GlobalSnackbar from "../../../utils/snackbar/GlobalSnackbar";
 
 interface CancellationPolicyFormContainerProps {
   open: boolean;
   handleClick: () => void;
+  cancellationPolicy?: CancellationPolicy;
 }
 
 const CancellationPolicyFormContainer: React.FC<
   CancellationPolicyFormContainerProps
-> = ({ open, handleClick }) => {
+> = ({ open, handleClick,cancellationPolicy }) => {
   const { createCancellationPolicy } = useCancellationConditionContext();
 
-  const onSubmit = async (values: any) => {
-    // console.log("values::: ", values);
-    await createCancellationPolicy(values);
+  const onSubmit = (values: any) => {
+    createCancellationPolicy(values);
+    handleClick();
   };
   const formik = useFormik({
     initialValues: {
-      id:"",
+      id: "",
       name: "",
       deadLine: 0,
       refoundPercentage: 0,
@@ -29,6 +32,11 @@ const CancellationPolicyFormContainer: React.FC<
     validationSchema: cancellationSchema,
     onSubmit,
   });
+
+  useEffect(() => { 
+    
+  },[])
+
   return (
     <>
       <CancellationPolicyForm

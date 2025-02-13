@@ -16,6 +16,7 @@ import { CancellationPolicy } from "../types/CancellationPolicy";
 interface CancellationPolicyContextType {
   cancellationPolicy: CancellationPolicy[];
   createCancellationPolicy: (data: CancellationPolicy) => void;
+  deleteCancellationPolicy: (id: string) => void;
 }
 
 const CancellationPolicyContext = createContext<
@@ -65,6 +66,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
   const fetchCancellationPolicy = async () => {
     try {
       const response = await getAllCancelationPolicy();
+      // const filtered = response.data.filter((cp:CancellationPolicy) => cp.deleted === false);
       setCancellationPolicy(response.data);
     } catch (error) {
       showSnackbar("Error al cargar", "error");
@@ -80,6 +82,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         cancellationPolicy,
         createCancellationPolicy,
+        deleteCancellationPolicy,
       }}
     >
       {children}

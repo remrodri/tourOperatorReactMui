@@ -59,6 +59,7 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
             <CancellationPolicyCardContainer
               key={cancellationPolicy.id}
               cancellationPolicy={cancellationPolicy}
+              // handleClick={handleClick}
             />
           ))
         ) : (
