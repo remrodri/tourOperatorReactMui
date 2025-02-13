@@ -3,7 +3,7 @@ import axiosInstance from "../../../config/axiosConfig";
 export const getAllTourTypes = async () => {
   try {
     const response = await axiosInstance.get("/tour-types");
-    console.log("response::: ", response);
+    // console.log("response::: ", response);
     return response.data;
   } catch (error) {
     console.log("Error al obtener los tipos de tour::: ", error);
