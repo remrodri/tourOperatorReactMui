@@ -34,6 +34,7 @@ const CreateTourTypeDialogContainer: React.FC<
     },
     validationSchema: tourTypeSchema,
     onSubmit,
+    
   });
 
   // useEffect(() => {
