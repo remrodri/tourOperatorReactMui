@@ -10,12 +10,18 @@ import {
   createCancellationPolicyRequest,
   deleteCancellationPolicyRequest,
   getAllCancelationPolicy,
+  updateCancellationPolicyRequest,
 } from "../service/CancellationPolicyService";
 import { CancellationPolicy } from "../types/CancellationPolicy";
 
 interface CancellationPolicyContextType {
   cancellationPolicy: CancellationPolicy[];
   createCancellationPolicy: (data: CancellationPolicy) => void;
+  deleteCancellationPolicy: (id: string) => void;
+  updateCancellationPolicy: (
+    cancellationPolicy: CancellationPolicy,
+    id: string
+  ) => void;
 }
 
 const CancellationPolicyContext = createContext<
@@ -29,6 +35,26 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
     CancellationPolicy[]
   >([]);
   const { showSnackbar } = useNewSnackbar();
+
+  const updateCancellationPolicy = async (
+    values: CancellationPolicy,
+    id: string
+  ) => {
+    try {
+      const response = await updateCancellationPolicyRequest(values, id);
+      if (!response) {
+        showSnackbar("Error al actualizar", "error");
+        return;
+      }
+      setCancellationPolicy((prevCancellationPolicy: CancellationPolicy[]) =>
+        prevCancellationPolicy.map((cp: CancellationPolicy) =>
+          cp.id === id ? { ...cp, ...response.data } : cp
+        )
+      );
+    } catch (error) {
+      showSnackbar("Error al actualizar", "error");
+    }
+  };
 
   const deleteCancellationPolicy = async (id: string) => {
     try {
@@ -65,6 +91,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
   const fetchCancellationPolicy = async () => {
     try {
       const response = await getAllCancelationPolicy();
+      // const filtered = response.data.filter((cp:CancellationPolicy) => cp.deleted === false);
       setCancellationPolicy(response.data);
     } catch (error) {
       showSnackbar("Error al cargar", "error");
@@ -80,6 +107,8 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         cancellationPolicy,
         createCancellationPolicy,
+        deleteCancellationPolicy,
+        updateCancellationPolicy,
       }}
     >
       {children}
