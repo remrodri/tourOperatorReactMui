@@ -35,7 +35,15 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await createTouristDestinationRequest(values);
       console.log("response::: ", response);
+      if (!response?.data) {
+      // if (!response||!response.data) {
+        // showSnackbar("Error al registrar", "error");
+        throw new Error("Respuesta invalida del servidor")
+      }
+      setTouristDestinations([...touristDestinations, response.data]);
+      showSnackbar("creado con exito", "success");
     } catch (error) {
+      console.error("Error al registrar destino turistico", error);
       showSnackbar("Error al registrar", "error");
     }
   };
