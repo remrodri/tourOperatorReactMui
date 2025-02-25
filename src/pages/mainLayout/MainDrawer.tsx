@@ -35,6 +35,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import ExploreIcon from "@mui/icons-material/Explore";
 
 const drawerWidth = 240;
 
@@ -178,11 +179,14 @@ export default function MainDrawer() {
       case "politicas":
         navigate("paquetes-turisticos/politicas");
         break;
+      case "destinos":
+        navigate("paquetes-turisticos/destinos");
+        break;
       default:
         console.warn("la ruta no existe");
         break;
     }
-    matches && setOpen(false)
+    matches && setOpen(false);
     // if (theme.breakpoints.down("sm")) {
     //   setOpen(false);
     // }
@@ -423,6 +427,17 @@ export default function MainDrawer() {
                     <EventBusyIcon />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Politicas " : ""} />
+                </ListItemButton>
+              </Tooltip>
+              <Tooltip title="Destinos" placement="right">
+                <ListItemButton
+                  sx={{ pl: open ? 4 : 2.5 }}
+                  onClick={() => handleClick("destinos")}
+                >
+                  <ListItemIcon>
+                    <ExploreIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Destinos" : ""} />
                 </ListItemButton>
               </Tooltip>
             </List>
