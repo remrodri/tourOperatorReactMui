@@ -11,7 +11,8 @@ const getUsers = async (token: string): Promise<Response> => {
   const response = await axios.get<Response>(API_URL, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  console.log('response::: ', response);
+  // console.log('response::: ', response.data.data);
+  // console.log('response::: ', response);
   return response.data;
 };
 
@@ -32,7 +33,7 @@ const registerUser = async (
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log("response::: ", response);
+  // console.log("response::: ", response);
   return response.data;
 };
 
@@ -49,7 +50,7 @@ const updateUser = async (
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  console.log("response::: ", response);
+  // console.log("response::: ", response);
   return response.data;
 };
 
