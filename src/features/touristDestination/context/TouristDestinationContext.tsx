@@ -1,7 +1,16 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { TouristDestinationType } from "../types/TouristDestinationType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
-import { createTouristDestinationRequest } from "../touristDestinationForm/service/touristDestinationService";
+import {
+  createTouristDestinationRequest,
+  getAllTouristDestinationRequest,
+} from "../touristDestinationForm/service/touristDestinationService";
 
 interface TouristDestinationContextType {
   touristDestinations: TouristDestinationType[];
@@ -12,6 +21,7 @@ interface TouristDestinationContextType {
     newImages: File[];
     existingImages: string[];
   }) => void;
+  // BASE_URL: string;
 }
 
 const TouristDestinationContext = createContext<
@@ -25,6 +35,26 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
     TouristDestinationType[]
   >([]);
   const { showSnackbar } = useNewSnackbar();
+  // const BASE_URL = "http://localhost:3000";
+
+  const fetchTouristDestination = async () => {
+    try {
+      const response = await getAllTouristDestinationRequest();
+      console.log("response::: ", response.data);
+      if (!response?.data) {
+        throw new Error("Respuesta invalida del servidor");
+      }
+      setTouristDestinations(response.data);
+    } catch (error) {
+      console.error("Error al obtener los destinos turisticos", error);
+      showSnackbar("Error al obtener", "error");
+    }
+  };
+
+  useEffect(() => {
+    fetchTouristDestination();
+  }, []);
+
   const createTouristDestination = async (values: {
     id?: string;
     name: string;
@@ -35,7 +65,15 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await createTouristDestinationRequest(values);
       console.log("response::: ", response);
+      if (!response?.data) {
+        // if (!response || !response.data) {
+        // showSnackbar("Error al registrar", "error");
+        throw new Error("Respuesta invalida del servidor");
+      }
+      setTouristDestinations([...touristDestinations, response.data]);
+      showSnackbar("creado con exito", "success");
     } catch (error) {
+      console.error("Error al registrar destino turistico", error);
       showSnackbar("Error al registrar", "error");
     }
   };
@@ -44,6 +82,7 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         touristDestinations,
         createTouristDestination,
+        // BASE_URL,
       }}
     >
       {children}

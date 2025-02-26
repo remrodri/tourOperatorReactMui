@@ -1,5 +1,10 @@
 import axiosInstance from "../../../../config/axiosConfig";
 
+export const getAllTouristDestinationRequest = async () => {
+  const response = await axiosInstance.get("/tourist-destination");
+  return response.data;
+};
+
 export const createTouristDestinationRequest = async (data: {
   // id?: string;
   name: string;

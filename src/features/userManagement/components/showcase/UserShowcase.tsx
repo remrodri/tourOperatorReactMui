@@ -8,6 +8,7 @@ import UserShowcaseBreadcrumbs from "./userCard/UserShowcaseBreadcrumbs";
 const UserShowcase: React.FC = () => {
   const { roles } = useRoleContext();
   const { users, loading, error } = useUserContext();
+  // console.log('users::: ', users);
   if (loading) return <p>Cargando usuarios...</p>;
   // if (error) return <p>{error}</p>;
   // console.log('users::: ', users);
