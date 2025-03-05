@@ -38,6 +38,7 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
     <Card
       sx={{
         width: 300,
+        // height:90
       }}
     >
       <CardHeader

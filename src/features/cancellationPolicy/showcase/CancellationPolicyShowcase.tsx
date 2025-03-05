@@ -14,7 +14,7 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
 }) => {
   // console.log('cancellationPolicy::: ', cancellationPolicy);
   return (
-    <Box>
+    <>
       <Typography
         variant="h4"
         sx={{
@@ -52,6 +52,7 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
           overflowY: "auto",
           gap: "1rem",
           pt: "2rem",
+          alignContent: "flex-start",
         }}
       >
         {cancellationPolicy && cancellationPolicy.length > 0 ? (
@@ -66,7 +67,7 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
           <p>No hay Cancellation Policy</p>
         )}
       </Box>
-    </Box>
+    </>
   );
 };
 export default CancellaionPolicyShowcase;

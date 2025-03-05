@@ -8,6 +8,7 @@ const TourPackagePage: React.FC = () => {
     //   <CssBaseline />
     <Box
       sx={{
+        display: "flex",
         flexGrow: 1,
         // height:"100%",
         height: {
@@ -15,12 +16,13 @@ const TourPackagePage: React.FC = () => {
           sm: "calc(100vh - 4rem)",
         },
         p: "6px",
-        display: "flex",
       }}
     >
       <Box
         sx={{
-          height:"100%",
+          // display: "flex",
+          // flexDirection:"column",
+          // height:"100%",
           flexGrow: 1,
           background: "rgba(0,0,0,0.2)",
           borderRadius: "16px",

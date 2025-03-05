@@ -5,18 +5,18 @@ import TouristDestinationCardContainer from "./card/TouristDestinationCardContai
 
 interface TouristDestinationShowcaseProps {
   handleClick: () => void;
-  BASE_URL: string;
+  // BASE_URL: string;
   touristDestinations: any[];
 }
 
 const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
   handleClick,
-  BASE_URL,
+  // BASE_URL,
   touristDestinations,
 }) => {
   // console.log('touristDestinations::: ', touristDestinations);
   return (
-    <Box>
+    <>
       <Typography
         variant="h4"
         sx={{
@@ -54,6 +54,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
           overflowY: "auto",
           gap: "1rem",
           pt: "2rem",
+          alignContent:"flex-start"
         }}
       >
         {touristDestinations && touristDestinations.length > 0 ? (
@@ -67,7 +68,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
           <p>No se encuentran destinos turisticos</p>
         )}
       </Box>
-    </Box>
+    </>
   );
 };
 export default TouristDestinationShowcase;

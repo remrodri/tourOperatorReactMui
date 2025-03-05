@@ -9,14 +9,14 @@ import TouristDestinationCardMenu from "./TouristDestinationCardMenu";
 
 interface TouristDestinationCardProps {
   touristDestination: any;
-  handleOption: (option:string) => void;
+  handleOption: (option: string) => void;
 }
 
 const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   touristDestination,
   handleOption,
 }) => {
-  console.log('touristDestination::: ', touristDestination);
+  // console.log("touristDestination::: ", touristDestination);
   const BASE_URL = "http://localhost:3000";
   // console.log(`${BASE_URL}/${touristDestination.images.[0]}`)
   return (
@@ -30,7 +30,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
         // height="150"
         sx={{
           height: "194px",
-          // width:"100%",
+          width: 300,
           // objectFit: "cover",
           // backgroundSize: "cover",
           // backgroundPosition:"center"

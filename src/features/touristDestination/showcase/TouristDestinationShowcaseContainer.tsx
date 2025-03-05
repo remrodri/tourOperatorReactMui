@@ -4,7 +4,7 @@ import TouristDestinationFormContainer from "../touristDestinationForm/TouristDe
 import { useTouristDestinationContext } from "../context/TouristDestinationContext";
 
 const TouristDestinationShowcaseContainer: React.FC = () => {
-  const { BASE_URL, touristDestinations } = useTouristDestinationContext();
+  const {  touristDestinations } = useTouristDestinationContext();
   const [open, setOpen] = useState(false);
   const handleClick = () => {
     setOpen(!open);
@@ -13,7 +13,6 @@ const TouristDestinationShowcaseContainer: React.FC = () => {
     <>
       <TouristDestinationShowcase
         handleClick={handleClick}
-        BASE_URL={BASE_URL}
         touristDestinations={touristDestinations}
       />
       {open && (

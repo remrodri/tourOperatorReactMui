@@ -27,6 +27,8 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
   handleClick,
   formik,
 }) => {
+
+  const BASE_URL = "http://localhost:3000";
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
@@ -76,7 +78,7 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
                 {formik.values.existingImages.map((image, index) => (
                   <img
                     key={index}
-                    src={image}
+                    src={`${BASE_URL}${image}`}
                     alt={`image ${index + 1}`}
                     style={{
                       width: "80px",

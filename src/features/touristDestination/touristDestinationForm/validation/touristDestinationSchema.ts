@@ -43,7 +43,7 @@ export const touristDestinationSchema = Yup.object().shape({
           // file ? file.size <= MAX_FILE_SIZE : false
         )
     )
-    .min(1, "Debe subir al menos una imagen")
+    // .min(1, "Debe subir al menos una imagen")
     .max(MAX_IMAGES, `No puede subir mas de ${MAX_IMAGES} imagenes`)
     // .test("uniqueFiles", "No puede subir imagenes duplicadas", (files) => {
     //   if (!files) return true;

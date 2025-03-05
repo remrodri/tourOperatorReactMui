@@ -27,11 +27,14 @@ const TouristDestinationFormContainer: React.FC<
       (img): img is string => typeof img === "string"
     ) || []
   );
-  const { createTouristDestination } = useTouristDestinationContext();
+  const { createTouristDestination, updateTouristDestination } =
+    useTouristDestinationContext();
 
   const onSubmit = (values: TouristDestinationFormValues) => {
     // console.log("values::: ", values);
-    createTouristDestination(values);
+    touristDestination
+      ? updateTouristDestination(values)
+      : createTouristDestination(values);
     handleClick();
   };
 
