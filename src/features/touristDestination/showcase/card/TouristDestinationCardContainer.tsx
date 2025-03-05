@@ -2,6 +2,7 @@ import { useState } from "react";
 import TouristDestinationCard from "./TouristDestinationCard";
 import TouristDestinationFormContainer from "../../touristDestinationForm/TouristDestinationFormContainer";
 import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
+import GalleryContainer from "../../../gallery/GalleryContainer";
 
 interface TouristDestinationCardContainerProps {
   touristDestination: any;
@@ -11,10 +12,14 @@ const TouristDestinationCardContainer: React.FC<
   TouristDestinationCardContainerProps
 > = ({ touristDestination }) => {
   const [open, setOpen] = useState(false);
+  const [openGallery, setOpenGallery] = useState(false);
   const { deleteTouristDestination } = useTouristDestinationContext();
 
   const handleClick = () => {
     setOpen(!open);
+  };
+  const handleOpenGalleryClick = () => {
+    setOpenGallery(!openGallery);
   };
 
   const handleOption = (option: string) => {
@@ -27,7 +32,8 @@ const TouristDestinationCardContainer: React.FC<
       handleClick();
     }
     if (option === "Ver galeria") {
-      console.log("more");
+      console.log("ver galeria");
+      handleOpenGalleryClick();
     }
   };
 
@@ -42,6 +48,13 @@ const TouristDestinationCardContainer: React.FC<
           open={open}
           handleClick={handleClick}
           touristDestination={touristDestination}
+        />
+      )}
+      {openGallery && (
+        <GalleryContainer
+          open={openGallery}
+          handleClick={handleOpenGalleryClick}
+          images={touristDestination.images}
         />
       )}
     </>
