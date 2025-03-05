@@ -16,7 +16,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
   const { openDialog, tourTypes } = useTourTypeContext();
 
   return (
-    <Box>
+    <>
       <Typography
         variant="h4"
         sx={{
@@ -51,6 +51,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
           height: "90%",
           display: "flex",
           justifyContent: "center",
+          alignContent:"flex-start",
           flexWrap: "wrap",
           overflowY: "auto",
           gap: "1rem",
@@ -65,7 +66,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
           <p>No hay tipos de tour registrados</p>
         )}
       </Box>
-    </Box>
+    </>
   );
 };
 export default TourTypeShowcase;

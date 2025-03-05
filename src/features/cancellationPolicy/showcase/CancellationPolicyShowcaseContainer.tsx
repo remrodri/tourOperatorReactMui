@@ -2,6 +2,7 @@ import { useState } from "react";
 import CancellationPolicyShowcase from "./CancellationPolicyShowcase";
 import CancellationPolicyFormContainer from "../cancellationForm/CancellationPolicyFormContainer";
 import { useCancellationConditionContext } from "../context/CancellationPolicyContext";
+import { Box } from "@mui/material";
 
 const CancellationPolicyShowcaseContainer: React.FC = () => {
   const { cancellationPolicy } = useCancellationConditionContext();
@@ -10,7 +11,14 @@ const CancellationPolicyShowcaseContainer: React.FC = () => {
     setOpen(!open);
   };
   return (
-    <>
+    <
+      // height={"100%"}
+      // sx={{
+        // display: "flex",
+        // flexDirection: "column",
+        // alignItems:"center"
+      // }}
+    >
       <CancellationPolicyShowcase
         handleClick={handleClick}
         cancellationPolicy={cancellationPolicy}

@@ -10,11 +10,19 @@ import { useNewSnackbar } from "../../../context/SnackbarContext";
 import {
   createTouristDestinationRequest,
   getAllTouristDestinationRequest,
+  updateTouristDestinationRequest,
 } from "../touristDestinationForm/service/touristDestinationService";
 
 interface TouristDestinationContextType {
   touristDestinations: TouristDestinationType[];
   createTouristDestination: (data: {
+    id?: string;
+    name: string;
+    description: string;
+    newImages: File[];
+    existingImages: string[];
+  }) => void;
+  updateTouristDestination: (values: {
     id?: string;
     name: string;
     description: string;
@@ -36,6 +44,29 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
   >([]);
   const { showSnackbar } = useNewSnackbar();
   // const BASE_URL = "http://localhost:3000";
+
+  const updateTouristDestination = async (values: {
+    id?: string;
+    name: string;
+    description: string;
+    newImages: File[];
+    existingImages: string[];
+  }) => {
+    try {
+      // console.log("values::: ", values);
+      const response = await updateTouristDestinationRequest(values);
+      if (!response?.data) {
+        throw new Error("Respuesta invalida del servidor");
+      }
+      setTouristDestinations((prev) =>
+        prev.map((dest) => (dest.id === values.id ? response.data : dest))
+      );
+      showSnackbar("Actualizado con exito", "success");
+    } catch (error) {
+      console.error("Error al actualizar el desitno turistico");
+      showSnackbar("Error al actualizar", "error");
+    }
+  };
 
   const fetchTouristDestination = async () => {
     try {
@@ -82,6 +113,7 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         touristDestinations,
         createTouristDestination,
+        updateTouristDestination,
         // BASE_URL,
       }}
     >

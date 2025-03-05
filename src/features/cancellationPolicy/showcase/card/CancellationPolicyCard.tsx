@@ -12,7 +12,7 @@ const CancellationPolicyCard: React.FC<CancellationPolicyCardProps> = ({
   handleOptionMenuCard
 }) => {
   return (
-    <Card sx={{ width: 300,}}>
+    <Card sx={{ width: 300}}>
       <CardHeader
         title={cancellationPolicy.name}
         // subheader={cancellationPolicy.description}
