@@ -9,9 +9,11 @@ import { TouristDestinationType } from "../types/TouristDestinationType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import {
   createTouristDestinationRequest,
+  deleteTouristDestinationRequest,
   getAllTouristDestinationRequest,
   updateTouristDestinationRequest,
 } from "../touristDestinationForm/service/touristDestinationService";
+import { deleteCancellationPolicyRequest } from "../../cancellationPolicy/service/CancellationPolicyService";
 
 interface TouristDestinationContextType {
   touristDestinations: TouristDestinationType[];
@@ -30,6 +32,7 @@ interface TouristDestinationContextType {
     existingImages: string[];
   }) => void;
   // BASE_URL: string;
+  deleteTouristDestination: (id: string) => void;
 }
 
 const TouristDestinationContext = createContext<
@@ -44,6 +47,22 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
   >([]);
   const { showSnackbar } = useNewSnackbar();
   // const BASE_URL = "http://localhost:3000";
+
+  const deleteTouristDestination = async (id: string) => {
+    try {
+      const response = await deleteTouristDestinationRequest(id);
+      if (!response?.data) {
+        throw new Error("Respuesta invalida del servidor");
+      }
+      setTouristDestinations((prev) =>
+        prev.filter((destination) => destination.id !== response.data.id)
+      );
+      showSnackbar("Eliminado con exito", "success");
+    } catch (error) {
+      console.error("Error al eliminar el destino turistico");
+      showSnackbar("Error al eliminar", "error");
+    }
+  };
 
   const updateTouristDestination = async (values: {
     id?: string;
@@ -114,6 +133,7 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
         touristDestinations,
         createTouristDestination,
         updateTouristDestination,
+        deleteTouristDestination,
         // BASE_URL,
       }}
     >

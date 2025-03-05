@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TouristDestinationCard from "./TouristDestinationCard";
 import TouristDestinationFormContainer from "../../touristDestinationForm/TouristDestinationFormContainer";
+import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
 
 interface TouristDestinationCardContainerProps {
   touristDestination: any;
@@ -10,6 +11,7 @@ const TouristDestinationCardContainer: React.FC<
   TouristDestinationCardContainerProps
 > = ({ touristDestination }) => {
   const [open, setOpen] = useState(false);
+  const { deleteTouristDestination } = useTouristDestinationContext();
 
   const handleClick = () => {
     setOpen(!open);
@@ -18,6 +20,7 @@ const TouristDestinationCardContainer: React.FC<
   const handleOption = (option: string) => {
     if (option === "Eliminar") {
       console.log("Eliminar::: ");
+      deleteTouristDestination(touristDestination.id);
     }
     if (option === "Editar") {
       console.log("Editar::: ");
