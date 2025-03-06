@@ -12,8 +12,7 @@ import {
   deleteTouristDestinationRequest,
   getAllTouristDestinationRequest,
   updateTouristDestinationRequest,
-} from "../touristDestinationForm/service/touristDestinationService";
-import { deleteCancellationPolicyRequest } from "../../cancellationPolicy/service/CancellationPolicyService";
+} from "../service/touristDestinationService";
 
 interface TouristDestinationContextType {
   touristDestinations: TouristDestinationType[];

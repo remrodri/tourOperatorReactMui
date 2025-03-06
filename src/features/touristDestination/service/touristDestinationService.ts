@@ -1,4 +1,5 @@
-import axiosInstance from "../../../../config/axiosConfig";
+import axiosInstance from "../../../config/axiosConfig";
+
 
 export const deleteTouristDestinationRequest = async (id: string) => {
   const response = await axiosInstance.delete(`/tourist-destination/${id}`);

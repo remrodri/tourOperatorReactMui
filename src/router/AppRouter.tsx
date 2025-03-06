@@ -12,9 +12,9 @@ import SecurityAnswerContainer from "../features/securitySetup/components/securi
 import EmailFormContainer from "../features/securitySetup/components/ResetPassword/emailForm/EmailFormContainer";
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 import TourPackagePage from "../pages/TourPackagePage";
-import TourPackageShowcase from "../features/tourPackage/components/showcase/TourPackageShowcase";
-import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
-import TourPackageformContainer from "../features/tourPackage/register/TourPackageFormContainer";
+import TourPackageShowcase from "../features/tourPackage/showcase/TourPackageShowcase";
+import TourPackageShowcaseContainer from "../features/tourPackage/showcase/TourPackageShowcaseContainer";
+import TourPackageformContainer from "../features/tourPackage/tourPackageForm/TourPackageFormContainer";
 import TourType from "../features/tourType/TourTypeShowcase";
 import TourTypeContainer from "../features/tourType/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
@@ -107,8 +107,8 @@ export const AppRouter = createBrowserRouter(
             },
             {
               path: "destinos",
-              element:<TouristDestinationShowcaseContainer/>
-            }
+              element: <TouristDestinationShowcaseContainer />,
+            },
           ],
         },
       ],
