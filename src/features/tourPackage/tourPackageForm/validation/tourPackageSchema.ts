@@ -7,4 +7,8 @@ export const tourPackageSchema = Yup.object().shape({
   tourType: Yup.string().required("El campo es necesario"),
   cancellationPolicy: Yup.string().required("El campo es necesario"),
   touristDestination: Yup.string().required("El campo es necesario"),
+  price: Yup.number()
+    .required("El precio es requerido")
+    .positive("Debe ser un valor positivo")
+    .typeError("Debe ser un numero valido"),
 });

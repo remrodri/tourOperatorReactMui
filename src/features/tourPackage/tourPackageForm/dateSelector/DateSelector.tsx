@@ -53,7 +53,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
       </LocalizationProvider>
 
       {/* Mostrar fechas seleccionadas debajo del calendario */}
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2, mb:3 }}>
         <Typography variant="subtitle1">Fechas seleccionadas</Typography>
         {selectedDates.length > 0 ? (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>

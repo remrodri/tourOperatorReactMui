@@ -15,6 +15,7 @@ import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { FormikProps } from "formik";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
+// import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 
 interface TourPackageFormProps {
   open: boolean;
@@ -28,6 +29,7 @@ interface TourPackageFormProps {
     duration: number;
     selectedDates: string[];
     blockedDates: string[];
+    price: number;
   }>;
   tourTypes: any[];
   cancellationPolicy: any[];
@@ -172,20 +174,39 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             type="number"
             {...formik.getFieldProps("duration")}
             onChange={(e) => {
-              const value = Number(e.target.value);
-              if (value > 0) {
-                formik.setFieldValue("duration", value);
-              }
+              // const value = Number(e.target.value);
+              // if (value > 0) {
+              //   formik.setFieldValue("duration", value);
+              // }
+              const value = e.target.value === "" ? "" : Number(e.target.value);
+              formik.setFieldValue("duration", value);
             }}
-            error={formik.touched.duration && Boolean(formik.errors.duration)}
-            helperText={formik.touched.duration && formik.errors.duration}
+            // error={formik.touched.duration && Boolean(formik.errors.duration)}
+            // helperText={formik.touched.duration && formik.errors.duration}
           />
           <DateSelectorContainer
             duration={formik.values.duration}
             selectedDates={formik.values.selectedDates}
             blockedDates={formik.values.blockedDates}
-            onDateChange={(dates)=>formik.setFieldValue("selectedDates",dates)}
+            onDateChange={(dates: any) =>
+              formik.setFieldValue("selectedDates", dates)
+            }
           />
+            <TextField
+              sx={{ height: "70px" }}
+              label="Precio"
+              size="small"
+              type="number"
+              fullWidth
+              {...formik.getFieldProps("price")}
+              onChange={(e) => {
+                const value =
+                  e.target.value === "" ? "" : Number(e.target.value);
+                formik.setFieldValue("price", value);
+              }}
+              error={formik.touched.price && Boolean(formik.errors.price)}
+              helperText={formik.touched.price && formik.errors.price}
+            />
           <Box
             sx={{
               pt: "2rem",
