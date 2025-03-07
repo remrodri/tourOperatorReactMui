@@ -19,6 +19,10 @@ interface TourPackageFormValues {
   tourType: string;
   cancellationPolicy: string;
   touristDestination: string;
+  duration: number;
+  selectedDates: string[];
+  blockedDates: string[];
+  // onDateChange:(dates:any)=>void
 }
 const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
   open,
@@ -40,12 +44,16 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
       tourType: tourPackage?.tourType ?? "",
       cancellationPolicy: tourPackage?.cancellationPolicy ?? "",
       touristDestination: tourPackage?.touristDestination ?? "",
+      duration: tourPackage?.duration ?? 1,
+      selectedDates: tourPackage?.selectedDates ?? [],
+      blockedDates: tourPackage?.blockedDates ?? [],
     },
     validationSchema: tourPackageSchema,
     onSubmit,
   });
 
   return (
+    
     <TourPackageForm
       open={open}
       handleClick={handleClick}

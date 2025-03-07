@@ -11,7 +11,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { FormikProps } from "formik";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 
 interface TourPackageFormProps {
   open: boolean;
@@ -22,6 +25,9 @@ interface TourPackageFormProps {
     tourType: string;
     cancellationPolicy: string;
     touristDestination: string;
+    duration: number;
+    selectedDates: string[];
+    blockedDates: string[];
   }>;
   tourTypes: any[];
   cancellationPolicy: any[];
@@ -37,16 +43,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
   touristDestinations,
 }) => {
   return (
-    <Dialog
-      open={open}
-      onClose={handleClick}
-      maxWidth={false}
-      sx={
-        {
-          // width:"50rem"
-        }
-      }
-    >
+    <Dialog open={open} onClose={handleClick} maxWidth={false}>
       <DialogTitle>Nuevo Paquete turistico</DialogTitle>
       <DialogContent
         sx={{
@@ -56,7 +53,6 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             md: "45rem",
             lg: "65rem",
           },
-          // height:"50rem"
         }}
       >
         <form
@@ -169,7 +165,27 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               </Typography>
             )}
           </Box>
-          
+          <TextField
+            sx={{ height: "70px" }}
+            label="Duracion (dias)"
+            size="small"
+            type="number"
+            {...formik.getFieldProps("duration")}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if (value > 0) {
+                formik.setFieldValue("duration", value);
+              }
+            }}
+            error={formik.touched.duration && Boolean(formik.errors.duration)}
+            helperText={formik.touched.duration && formik.errors.duration}
+          />
+          <DateSelectorContainer
+            duration={formik.values.duration}
+            selectedDates={formik.values.selectedDates}
+            blockedDates={formik.values.blockedDates}
+            onDateChange={(dates)=>formik.setFieldValue("selectedDates",dates)}
+          />
           <Box
             sx={{
               pt: "2rem",
