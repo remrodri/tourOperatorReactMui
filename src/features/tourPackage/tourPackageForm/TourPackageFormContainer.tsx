@@ -22,6 +22,7 @@ interface TourPackageFormValues {
   duration: number;
   selectedDates: string[];
   blockedDates: string[];
+  price: number;
   // onDateChange:(dates:any)=>void
 }
 const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
@@ -47,13 +48,13 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
       duration: tourPackage?.duration ?? 1,
       selectedDates: tourPackage?.selectedDates ?? [],
       blockedDates: tourPackage?.blockedDates ?? [],
+      price: tourPackage?.price ?? 0,
     },
     validationSchema: tourPackageSchema,
     onSubmit,
   });
 
   return (
-    
     <TourPackageForm
       open={open}
       handleClick={handleClick}
