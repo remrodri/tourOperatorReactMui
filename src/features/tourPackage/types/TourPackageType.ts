@@ -1,3 +1,5 @@
+import { ActivityType } from "./ActivityType";
+
 export interface TourPackageType {
   id: string;
   name: string;
@@ -8,4 +10,5 @@ export interface TourPackageType {
   selectedDates: string[];
   blockedDates: string[];
   price: number;
+  activities: ActivityType[];
 }
