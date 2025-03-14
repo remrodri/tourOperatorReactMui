@@ -1,132 +1,308 @@
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Chip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-// import DateSelector from "./DateSelector";
-import { useState, useEffect } from "react";
-import { Box, TextField } from "@mui/material";
-import DateSelector from "./DateSelector";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 
-// Define a new interface for date ranges
 export interface DateRange {
   id: string;
   dates: string[];
 }
 
-interface DateSelectorContainerProps {
+interface SimpleDateSelectorProps {
   duration: number;
   selectedDates: string[];
-  blockedDates: string[];
   onDateChange: (dates: string[]) => void;
 }
 
-const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
+const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
   duration,
   selectedDates,
-  blockedDates,
   onDateChange,
 }) => {
-  // Convert flat array of selectedDates to an array of DateRange objects
+  // Estado para manejar los rangos de fechas
   const [dateRanges, setDateRanges] = useState<DateRange[]>(() => {
-    // If there are selected dates, group them into ranges based on duration
+    // Inicializar desde selectedDates si hay datos
     if (selectedDates.length > 0) {
+      // Ordenar fechas
+      const sortedDates = [...selectedDates].sort(
+        (a, b) =>
+          dayjs(a, "DD-MM-YYYY").valueOf() - dayjs(b, "DD-MM-YYYY").valueOf()
+      );
+
+      // Agrupar por rangos consecutivos de duración
       const ranges: DateRange[] = [];
-      let currentGroup: string[] = [];
 
-      for (let i = 0; i < selectedDates.length; i++) {
-        if (i % duration === 0 && i !== 0) {
-          ranges.push({
-            id: `range-${ranges.length}`,
-            dates: [...currentGroup],
-          });
-          currentGroup = [];
-        }
-        currentGroup.push(selectedDates[i]);
-      }
-
-      if (currentGroup.length > 0) {
+      for (let i = 0; i < sortedDates.length; i += duration) {
+        const chunk = sortedDates.slice(i, i + duration);
         ranges.push({
           id: `range-${ranges.length}`,
-          dates: [...currentGroup],
+          dates: chunk,
         });
       }
 
       return ranges;
     }
-
     return [];
   });
 
-  // Function to handle new date selection
-  const handleDateSelection = (date: Dayjs | null) => {
-    if (!date) return;
+  // Estado para el diálogo de selección de fecha
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
-    const newDates = Array.from({ length: duration }, (_, i) =>
-      dayjs(date).add(i, "day").format("DD-MM-YYYY")
-    );
-
-    // Check if any date in the new range is in the blocked dates
-    if (newDates.some((d) => blockedDates.includes(d))) {
-      alert(
-        "las fechas selecciondas se encuentran en conflicto con otras reservas"
-      );
-      return;
-    }
-
-    // Check if any date in the new range is already in an existing range
-    const allExistingDates = dateRanges.flatMap((range) => range.dates);
-    if (newDates.some((d) => allExistingDates.includes(d))) {
-      alert(
-        "No se puede seleccionar una fecha que ya forma parte de un rango seleccionado"
-      );
-      return;
-    }
-
-    // Add new date range instead of replacing
-    const newDateRanges = [
-      ...dateRanges,
-      {
-        id: `range-${dateRanges.length}`,
-        dates: newDates,
-      },
-    ];
-
-    setDateRanges(newDateRanges);
-
-    // Update parent component with all dates flattened
-    const allDates = newDateRanges.flatMap((range) => range.dates);
-    onDateChange(allDates);
+  // Abrir diálogo para agregar fecha
+  const handleOpenDialog = () => {
+    setSelectedDate(null);
+    setOpenDialog(true);
   };
 
-  // Function to remove a specific date range
-  const handleRemoveDateRange = (rangeId: string) => {
+  // Cerrar diálogo
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  // Agregar un nuevo rango de fechas
+  const handleAddDateRange = () => {
+    if (!selectedDate) return;
+
+    // Generar el rango de fechas según la duración
+    const newDates = Array.from({ length: duration }, (_, i) =>
+      dayjs(selectedDate).add(i, "day").format("DD-MM-YYYY")
+    );
+
+    // Verificar si alguna fecha ya está seleccionada
+    const allExistingDates = dateRanges.flatMap((range) => range.dates);
+    const overlappingDates = newDates.filter((date) =>
+      allExistingDates.includes(date)
+    );
+
+    if (overlappingDates.length > 0) {
+      alert(
+        `Las siguientes fechas ya están seleccionadas: ${overlappingDates.join(
+          ", "
+        )}`
+      );
+      return;
+    }
+
+    // Agregar el nuevo rango
+    const newRange: DateRange = {
+      id: `range-${Date.now()}`, // Usar timestamp para garantizar ID único
+      dates: newDates,
+    };
+
+    const updatedRanges = [...dateRanges, newRange];
+    setDateRanges(updatedRanges);
+
+    // Actualizar componente padre
+    const allDates = updatedRanges.flatMap((range) => range.dates);
+    onDateChange(allDates);
+
+    // Cerrar el diálogo
+    handleCloseDialog();
+  };
+
+  // Eliminar un rango específico
+  const handleRemoveRange = (rangeId: string) => {
     const updatedRanges = dateRanges.filter((range) => range.id !== rangeId);
     setDateRanges(updatedRanges);
 
-    // Update parent component with all dates flattened
+    // Actualizar componente padre
     const allDates = updatedRanges.flatMap((range) => range.dates);
     onDateChange(allDates);
   };
 
-  // Function to clear all date ranges
-  const handleClearAllDates = () => {
+  // Eliminar todos los rangos
+  const handleClearAllRanges = () => {
     setDateRanges([]);
     onDateChange([]);
   };
 
-  // Reset selected dates when duration changes
-  useEffect(() => {
-    setDateRanges([]);
-    onDateChange([]);
-    console.log("::: ");
-  }, [duration]); // Only depend on duration, not onDateChange
+  // Formatear fecha para mostrar
+  const formatDateRange = (range: DateRange): string => {
+    if (range.dates.length === 0) return "";
+    if (range.dates.length === 1) return range.dates[0];
+
+    return `${range.dates[0]} al ${range.dates[range.dates.length - 1]}`;
+  };
 
   return (
-    <DateSelector
-      handleDateSelection={handleDateSelection}
-      blockedDates={blockedDates}
-      selectedDates={selectedDates}
-      dateRanges={dateRanges}
-      onRemoveRange={handleRemoveDateRange}
-      onClearAllDates={handleClearAllDates}
-    />
+    <Box sx={{ mt: 2, width: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <Typography variant="subtitle1">Fechas Disponibles</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleOpenDialog}
+          size="small"
+        >
+          Agregar Fecha
+        </Button>
+      </Box>
+
+      {/* Lista de rangos de fechas */}
+      <Box sx={{ mb: 2 }}>
+        {dateRanges.length > 0 ? (
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {dateRanges.map((range) => (
+                <Box
+                  key={range.id}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    p: 2,
+                    bgcolor: "#5f5f5f",
+                    borderRadius: 1,
+                  }}
+                >
+                  <Box>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: "bold", mb: 1 }}
+                    >
+                      {formatDateRange(range)}
+                    </Typography>
+
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {range.dates.map((date, index) => (
+                        <Chip
+                          key={`${range.id}-${index}`}
+                          label={date}
+                          size="small"
+                          variant="outlined"
+                          sx={{
+                            // bgcolor: "#e3f2fd",
+                            border: "1px solid #90caf9",
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+
+                  <IconButton
+                    color="error"
+                    onClick={() => handleRemoveRange(range.id)}
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+
+            {/* Botón para limpiar todas las fechas */}
+            {dateRanges.length > 1 && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  onClick={handleClearAllRanges}
+                  startIcon={<DeleteIcon />}
+                >
+                  Limpiar todas
+                </Button>
+              </Box>
+            )}
+          </>
+        ) : (
+          <Typography color="error">No hay fechas seleccionadas</Typography>
+        )}
+      </Box>
+
+      {/* Diálogo para seleccionar fechas */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>
+          Seleccionar Fecha Inicial
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent>
+          <Box sx={{ mt: 1 }}>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Se generará un rango de {duration} días a partir de la fecha
+              seleccionada.
+            </Typography>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha inicial"
+                value={selectedDate}
+                onChange={(newDate) => setSelectedDate(newDate)}
+                disablePast
+                sx={{ width: "100%" }}
+              />
+            </LocalizationProvider>
+
+            {selectedDate && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="subtitle2">
+                  Vista previa del rango:
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+                  {Array.from({ length: duration }, (_, i) => (
+                    <Chip
+                      key={i}
+                      label={dayjs(selectedDate)
+                        .add(i, "day")
+                        .format("DD-MM-YYYY")}
+                      size="small"
+                      // sx={{ bgcolor: "#e3f2fd" }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancelar</Button>
+          <Button
+            onClick={handleAddDateRange}
+            variant="contained"
+            color="primary"
+            disabled={!selectedDate}
+          >
+            Agregar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
-export default DateSelectorContainer;
+
+export default SimpleDateSelector;

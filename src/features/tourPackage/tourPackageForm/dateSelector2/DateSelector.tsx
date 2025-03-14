@@ -10,26 +10,23 @@ import { DateRange } from './DateSelectorContainer';
 
 interface DateSelectorProps {
   handleDateSelection: (date: Dayjs | null) => void;
-  blockedDates: string[];
   selectedDates: string[];
   dateRanges: DateRange[];
   onRemoveRange: (rangeId: string) => void;
   onClearAllDates: () => void;
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({
+const DateSelector2: React.FC<DateSelectorProps> = ({
   handleDateSelection,
-  blockedDates,
   selectedDates,
   dateRanges,
   onRemoveRange,
   onClearAllDates,
 }) => {
-  // Función para bloquear fechas
-  const shouldDisableDate = (date: Dayjs) => {
-    const formattedDate = date.format("DD-MM-YYYY");
-    return blockedDates.includes(formattedDate);
-  };
+  // console.log('dateRanges::: ', dateRanges);
+  // Debug log to check selected dates being passed to the component
+  // console.log('DateSelector - selectedDates:', selectedDates);
+  // console.log('DateSelector - dateRanges:', dateRanges);
 
   return (
     <Box>
@@ -37,13 +34,25 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         <DateCalendar
           disablePast
           onChange={(newDate) => handleDateSelection(dayjs(newDate))}
-          shouldDisableDate={shouldDisableDate}
           slotProps={{
             day: (ownerState) => {
               const formattedDate = dayjs(ownerState.day).format("DD-MM-YYYY");
+              
+              // Debug logs to check date comparison
+              const isIncluded = selectedDates.includes(formattedDate);
+              // if (ownerState.day.date() === 1 || ownerState.day.date() === 15) {
+                // Only log for certain days to avoid excessive logs
+                // console.log(`DateSelector - Checking day: ${formattedDate}`, {
+                //   formattedDate,
+                //   isIncluded,
+                //   dayJSFormat: ownerState.day.format("DD-MM-YYYY"),
+                //   selectedDatesArray: selectedDates,
+                //   exactMatch: selectedDates.some(d => d === formattedDate)
+                // });
+              // }
 
               return {
-                sx: selectedDates.includes(formattedDate)
+                sx: isIncluded
                   ? {
                       backgroundColor: "#1976D2",
                       color: "#fff",
@@ -76,6 +85,8 @@ const DateSelector: React.FC<DateSelectorProps> = ({
           )}
         </Box>
         {dateRanges.length > 0 ? (
+          // Debug log when rendering date ranges
+          // console.log('DateSelector - Rendering date ranges:', dateRanges) || 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {dateRanges.map((range) => (
               <Box 
@@ -131,4 +142,4 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   );
 };
 
-export default DateSelector;
+export default DateSelector2;

@@ -2,15 +2,20 @@ import { Box, Typography } from "@mui/material";
 import TourPackageShowcase from "./TourPackageShowcase";
 import { useState } from "react";
 import TourPackageformContainer from "../tourPackageForm/TourPackageFormContainer";
+import { useTourPackageContext } from "../context/TourPackageContext";
 
 const TourPackageShowcaseContainer: React.FC = () => {
+  const { tourPackages } = useTourPackageContext();
   const [open, setOpen] = useState(false);
   const handleClickForm = () => {
     setOpen(!open);
   };
   return (
     <>
-      <TourPackageShowcase handleClick={handleClickForm} />
+      <TourPackageShowcase
+        handleClick={handleClickForm}
+        tourPackages={tourPackages}
+      />
       {open && (
         <TourPackageformContainer open={open} handleClick={handleClickForm} />
       )}
