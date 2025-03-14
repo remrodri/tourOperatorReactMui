@@ -60,8 +60,10 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ childr
     setLoading(true);
     try {
       // Create a complete tour package object with the id for the service call
+      // console.log('tourPackage::: ', tourPackage);
       const tourPackageWithId = { ...tourPackage, id };
-      const updatedTourPackage = await TourPackageService.updateTourPackageRequest(tourPackageWithId);
+      // console.log('tourPackageWithId::: ', tourPackageWithId);
+      const updatedTourPackage = (await TourPackageService.updateTourPackageRequest(tourPackageWithId)).data;
       setTourPackages(prev => 
         prev.map(pkg => pkg.id === id ? updatedTourPackage : pkg)
       );

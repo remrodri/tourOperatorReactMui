@@ -38,10 +38,16 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
   const { tourTypes } = useTourTypeContext();
   const { cancellationPolicy } = useCancellationConditionContext();
   const { touristDestinations } = useTouristDestinationContext();
-  const { createTourPackage } = useTourPackageContext();
+  const { createTourPackage, updateTourPackage } = useTourPackageContext();
 
   const onSubmit = async (data: any) => {
-    console.log("tourPackage.id::: ", tourPackage?.id);
+    // console.log("tourPackage.id::: ", tourPackage?.id);
+    if (tourPackage?.id) {
+      await updateTourPackage(tourPackage.id, data);
+    } else {
+      await createTourPackage(data);
+    }
+    handleClick();
     // createTourPackage(data);
   };
   // console.log('tourPackage.selectedDates::: ', tourPackage.selectedDates);
