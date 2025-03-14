@@ -11,4 +11,17 @@ export const tourPackageSchema = Yup.object().shape({
     .required("El precio es requerido")
     .positive("Debe ser un valor positivo")
     .typeError("Debe ser un numero valido"),
+  itinerary: Yup.object().shape({
+    days: Yup.array().of(
+      Yup.object().shape({
+        dayNumber: Yup.number().required("El número de día es requerido"),
+        activities: Yup.array().of(
+          Yup.object().shape({
+            description: Yup.string().optional(),
+            time: Yup.string().optional(),
+          })
+        ),
+      })
+    ),
+  }).nullable(),
 });

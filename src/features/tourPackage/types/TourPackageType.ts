@@ -1,4 +1,5 @@
 import { ActivityType } from "./ActivityType";
+import { TourItineraryType } from "./DayItineraryType";
 
 export interface TourPackageType {
   id: string;
@@ -8,7 +9,9 @@ export interface TourPackageType {
   touristDestination: string;
   duration: number;
   selectedDates: string[];
-  blockedDates: string[];
+  // blockedDates: string[];
   price: number;
+  /** @deprecated Use itinerary field instead which organizes activities by day */
   activities: ActivityType[];
+  itinerary: TourItineraryType;
 }

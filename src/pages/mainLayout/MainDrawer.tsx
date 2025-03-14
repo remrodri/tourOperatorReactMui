@@ -161,9 +161,9 @@ export default function MainDrawer() {
       case "Home":
         navigate("home");
         break;
-      case "Nuevo":
-        navigate("gestion-de-usuarios/nuevo");
-        break;
+      // case "Nuevo":
+      //   navigate("gestion-de-usuarios/nuevo");
+      //   break;
       case "Ver todos":
         navigate("gestion-de-usuarios/usuarios");
         break;
@@ -381,7 +381,7 @@ export default function MainDrawer() {
           </Tooltip>
           <Collapse in={packageOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <Tooltip title="Crear paquete turistico" placement="right">
+              {/* <Tooltip title="Crear paquete turistico" placement="right">
                 <ListItemButton
                   onClick={() => handleClick("Nuevo paquete turistico")}
                   sx={{
@@ -393,9 +393,9 @@ export default function MainDrawer() {
                     <AddBoxIcon />
                   </ListItemIcon>
                   {/* <ListItemText primary="Nuevo" /> */}
-                  <ListItemText primary={open ? "Nuevo" : ""} />
-                </ListItemButton>
-              </Tooltip>
+                  {/* <ListItemText primary={open ? "Nuevo" : ""} /> */}
+                {/* </ListItemButton> */}
+              {/* </Tooltip> */} 
               <Tooltip title="Ver todos los paquetes" placement="right">
                 <ListItemButton
                   sx={{ pl: open ? 4 : 2.5 }}

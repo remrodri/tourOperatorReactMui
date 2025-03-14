@@ -1,11 +1,15 @@
 import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
+import { TourPackageType } from "../types/TourPackageType";
+import TourPackageCardContainer from "./card/TourPackageCardContainer";
 
 interface TourPackageShowcaseProps {
   handleClick: () => void;
+  tourPackages: TourPackageType[];
 }
 const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
   handleClick,
+  tourPackages,
 }) => {
   return (
     <>
@@ -46,9 +50,17 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
           overflowY: "auto",
           gap: "1rem",
           pt: "2rem",
-          alignContent:"flex-start"
+          alignContent: "flex-start",
         }}
-      >paquetes turisticos</Box>
+      >
+        {tourPackages && tourPackages.length > 0 ? (
+          tourPackages.map((tp) => (
+            <TourPackageCardContainer key={tp.id} tourPackage={tp} />
+          ))
+        ) : (
+          <p>No se encuentran paquetes turisticos</p>
+        )}
+      </Box>
     </>
   );
 };

@@ -14,9 +14,12 @@ import {
 import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { FormikProps } from "formik";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import DateSelectorContainer from "./dateSelector2/DateSelectorContainer";
+import DayItineraryManager from "../itineraryManager/DayItineraryManager";
+import { TourItineraryType } from "../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
+import DateSelectorContainer2 from "./dateSelector2/DateSelectorContainer";
 // import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
-
 interface TourPackageFormProps {
   open: boolean;
   handleClick: () => void;
@@ -28,7 +31,8 @@ interface TourPackageFormProps {
     touristDestination: string;
     duration: number;
     selectedDates: string[];
-    blockedDates: string[];
+    // blockedDates: string[];
+    itinerary: TourItineraryType;
     price: number;
   }>;
   tourTypes: any[];
@@ -44,6 +48,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
   cancellationPolicy,
   touristDestinations,
 }) => {
+  // console.log('formik.values.selectedDates::: ', formik.values.selectedDates);
   return (
     <Dialog open={open} onClose={handleClick} maxWidth={false}>
       <DialogTitle>Nuevo Paquete turistico</DialogTitle>
@@ -58,7 +63,10 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
         }}
       >
         <form
-          onSubmit={formik.handleSubmit}
+          onSubmit={(e) => {
+            // console.log("Form onSubmit event triggered");
+            formik.handleSubmit(e);
+          }}
           style={{
             padding: "0.3rem 0 0 0",
           }}
@@ -187,26 +195,47 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
           <DateSelectorContainer
             duration={formik.values.duration}
             selectedDates={formik.values.selectedDates}
-            blockedDates={formik.values.blockedDates}
+            // blockedDates={formik.values.blockedDates}
             onDateChange={(dates: any) =>
               formik.setFieldValue("selectedDates", dates)
             }
           />
-            <TextField
-              sx={{ height: "70px" }}
-              label="Precio"
-              size="small"
-              type="number"
-              fullWidth
-              {...formik.getFieldProps("price")}
-              onChange={(e) => {
-                const value =
-                  e.target.value === "" ? "" : Number(e.target.value);
-                formik.setFieldValue("price", value);
-              }}
-              error={formik.touched.price && Boolean(formik.errors.price)}
-              helperText={formik.touched.price && formik.errors.price}
-            />
+          {/* <DateSelectorContainer
+            duration={formik.values.duration}
+            selectedDates={formik.values.selectedDates}
+            onDateChange={(dates) =>
+              formik.setFieldValue("selectedDates", dates)
+            }
+          /> */}
+          
+          {/* <DateSelectorContainer
+            duration={formik.values.duration}
+            selectedDates={formik.values.selectedDates}
+            onDateChange={(dates) =>
+              formik.setFieldValue("selectedDates", dates)
+            }
+          /> */}
+          <DayItineraryManager
+            duration={formik.values.duration}
+            itinerary={formik.values.itinerary || { days: [] }}
+            onChange={(itinerary) =>
+              formik.setFieldValue("itinerary", itinerary)
+            }
+          />
+          <TextField
+            sx={{ height: "70px" }}
+            label="Precio"
+            size="small"
+            type="number"
+            fullWidth
+            {...formik.getFieldProps("price")}
+            onChange={(e) => {
+              const value = e.target.value === "" ? "" : Number(e.target.value);
+              formik.setFieldValue("price", value);
+            }}
+            error={formik.touched.price && Boolean(formik.errors.price)}
+            helperText={formik.touched.price && formik.errors.price}
+          />
           <Box
             sx={{
               pt: "2rem",
@@ -214,7 +243,15 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               gap: "1rem",
             }}
           >
-            <Button variant="contained" color="success" type="submit" fullWidth>
+            <Button
+              variant="contained"
+              color="success"
+              type="submit"
+              fullWidth
+              // onClick={() => {
+              //   console.log("Submit button clicked", { formData: formik.values });
+              // }}
+            >
               Enviar
             </Button>
             <Button
