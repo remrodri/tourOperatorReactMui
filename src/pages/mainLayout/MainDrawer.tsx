@@ -161,9 +161,9 @@ export default function MainDrawer() {
       case "Home":
         navigate("home");
         break;
-      // case "Nuevo":
-      //   navigate("gestion-de-usuarios/nuevo");
-      //   break;
+      case "Nuevo":
+        navigate("gestion-de-usuarios/nuevo");
+        break;
       case "Ver todos":
         navigate("gestion-de-usuarios/usuarios");
         break;

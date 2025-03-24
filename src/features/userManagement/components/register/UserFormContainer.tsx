@@ -7,6 +7,7 @@ import { showToast } from "../../../../utils/modal/toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Breadcrumb from "./RegisterUserBreadcrumbs";
+import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 
 const RegisterContainer: React.FC = () => {
   const { registerUser, error, users, updateUser } = useUserContext();
@@ -62,18 +63,19 @@ const RegisterContainer: React.FC = () => {
       }}
     >
       <Typography
-        variant="h5"
+        variant="h4"
         sx={{
           height: "10%",
           display: "flex",
           // alignItems: "center",
+          flexDirection: "column",
           justifyContent: "center",
           p: "0 0 0 1.5rem",
-          flexDirection: "column",
         }}
         // gutterBottom
       >
-        <Breadcrumb />
+        {/* <Breadcrumb /> */}
+        <BreadCrumbsContainer/>
         {params.userId
           ? "Actualizacion de usuario"
           : "Registro de un nuevo usuario"}

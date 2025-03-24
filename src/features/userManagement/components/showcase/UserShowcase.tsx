@@ -3,6 +3,7 @@ import { useUserContext } from "../../../../context/UserContext";
 import UserCard from "./userCard/UserCard";
 import { useRoleContext } from "../../../../context/RoleContext";
 import UserShowcaseBreadcrumbs from "./userCard/UserShowcaseBreadcrumbs";
+import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 // import UserShowcaseBreadcrumbs from "./userCard/userShowcaseBreadcrumbs";
 
 const UserShowcase: React.FC = () => {
@@ -39,7 +40,8 @@ const UserShowcase: React.FC = () => {
           p: "0 0 0 1.5rem",
         }}
       >
-        <UserShowcaseBreadcrumbs />
+        {/* <UserShowcaseBreadcrumbs /> */}
+        <BreadCrumbsContainer/>
         Todos los usuarios
       </Typography>
       <Box
