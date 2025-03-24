@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../breadCrumbs/BreadCrumbsContainer";
 import React, { useState } from "react";
-import { useTourTypeContext } from "../../context/TourTypeContext";
+import { useTourTypeContext } from "./context/TourTypeContext";
 import CreateTourTypeDialog from "./createTourTypeDialog/CreateTourTypeDialog";
 import CreateTourTypeDialogContainer from "./createTourTypeDialog/CreateTourTypeDialogContainer";
 import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
@@ -51,7 +51,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
           height: "90%",
           display: "flex",
           justifyContent: "center",
-          alignContent:"flex-start",
+          alignContent: "flex-start",
           flexWrap: "wrap",
           overflowY: "auto",
           gap: "1rem",

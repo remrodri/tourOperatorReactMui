@@ -4,12 +4,13 @@ import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { useFormik } from "formik";
 import { TourPackageType } from "../types/TourPackageType";
 import { tourPackageSchema } from "./validation/tourPackageSchema";
-import { useTourTypeContext } from "../../../context/TourTypeContext";
+import { useTourTypeContext } from "../../tourType/context/TourTypeContext";
 import { useCancellationConditionContext } from "../../cancellationPolicy/context/CancellationPolicyContext";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 import { DayItineraryType, TourItineraryType } from "../types/DayItineraryType";
 import { useTourPackageContext } from "../context/TourPackageContext";
 import { useEffect } from "react";
+import { DateRangeType } from "../types/DateRangeType";
 interface TourPackageFormContainerProps {
   open: boolean;
   handleClick: () => void;
@@ -23,7 +24,8 @@ interface TourPackageFormValues {
   cancellationPolicy: string;
   touristDestination: string;
   duration: number;
-  selectedDates: string[];
+  dateRanges: DateRangeType[];
+  // dateRanges: string[];
   // blockedDates: string[];
   price: number;
   itinerary: TourItineraryType;
@@ -41,7 +43,8 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
   const { createTourPackage, updateTourPackage } = useTourPackageContext();
 
   const onSubmit = async (data: any) => {
-    // console.log("tourPackage.id::: ", tourPackage?.id);
+    console.log("data::: ", data);
+    console.log("tourPackage.id::: ", tourPackage?.id);
     if (tourPackage?.id) {
       await updateTourPackage(tourPackage.id, data);
     } else {
@@ -50,7 +53,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
     handleClick();
     // createTourPackage(data);
   };
-  // console.log('tourPackage.selectedDates::: ', tourPackage.selectedDates);
+  // console.log('tourPackage.dateRanges::: ', tourPackage.dateRanges);
   const formik = useFormik<TourPackageFormValues>({
     initialValues: {
       id: tourPackage?.id ?? "",
@@ -59,7 +62,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
       cancellationPolicy: tourPackage?.cancellationPolicy ?? "",
       touristDestination: tourPackage?.touristDestination ?? "",
       duration: tourPackage?.duration ?? 1,
-      selectedDates: tourPackage?.selectedDates ?? [],
+      dateRanges: tourPackage?.dateRanges ?? [],
       // blockedDates: tourPackage?.blockedDates ?? [],
       price: tourPackage?.price ?? 0,
       itinerary: tourPackage?.itinerary ?? {
@@ -75,11 +78,11 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
     onSubmit,
   });
   useEffect(() => {
-    if (tourPackage?.selectedDates) {
-      formik.setFieldValue("selectedDates", tourPackage.selectedDates);
+    if (tourPackage?.dateRanges) {
+      formik.setFieldValue("dateRanges", tourPackage.dateRanges);
     }
-  }, [tourPackage?.selectedDates]);
-  // console.log('formik.values.selectedDates::: ', formik.values.selectedDates);
+  }, [tourPackage?.dateRanges]);
+  // console.log('formik.values.dateRanges::: ', formik.values.dateRanges);
   return (
     <TourPackageForm
       open={open}

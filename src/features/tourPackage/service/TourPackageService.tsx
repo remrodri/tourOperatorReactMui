@@ -5,7 +5,7 @@ import { TourPackageType } from "../types/TourPackageType";
  * Create a new tour package
  */
 export const createTourPackageRequest = async (data: Partial<TourPackageType>) => {
-  // console.log('data::: ', data);
+  console.log('data::: ', data);
   const response = await axiosInstance.post("/tour-package", data);
   console.log('response::: ', response.data);
   return response.data;
@@ -16,6 +16,7 @@ export const createTourPackageRequest = async (data: Partial<TourPackageType>) =
  */
 export const getAllTourPackagesRequest = async () => {
   const response = await axiosInstance.get("/tour-package");
+  // console.log('response::: ', response.data.data);
   return response.data;
 };
 

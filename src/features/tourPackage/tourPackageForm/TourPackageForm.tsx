@@ -18,7 +18,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import DayItineraryManager from "../itineraryManager/DayItineraryManager";
 import { TourItineraryType } from "../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
-import DateSelectorContainer2 from "./dateSelector2/DateSelectorContainer";
+import { DateRangeType } from "../types/DateRangeType";
+// import { DateRangeType } from "../types/DateRangeType";
 // import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 interface TourPackageFormProps {
   open: boolean;
@@ -30,7 +31,8 @@ interface TourPackageFormProps {
     cancellationPolicy: string;
     touristDestination: string;
     duration: number;
-    selectedDates: string[];
+    dateRanges: DateRangeType[];
+    // dateRanges: string[];
     // blockedDates: string[];
     itinerary: TourItineraryType;
     price: number;
@@ -48,7 +50,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
   cancellationPolicy,
   touristDestinations,
 }) => {
-  // console.log('formik.values.selectedDates::: ', formik.values.selectedDates);
+  // console.log('formik.values.dateRanges::: ', formik.values.dateRanges);
   return (
     <Dialog open={open} onClose={handleClick} maxWidth={false}>
       <DialogTitle>Nuevo Paquete turistico</DialogTitle>
@@ -177,6 +179,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
           </Box>
           <TextField
             sx={{ height: "70px" }}
+            disabled={formik.values.id ? true : false}
             label="Duracion (dias)"
             size="small"
             type="number"
@@ -192,27 +195,32 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             // error={formik.touched.duration && Boolean(formik.errors.duration)}
             // helperText={formik.touched.duration && formik.errors.duration}
           />
-          <DateSelectorContainer
-            duration={formik.values.duration}
-            selectedDates={formik.values.selectedDates}
-            // blockedDates={formik.values.blockedDates}
-            onDateChange={(dates: any) =>
-              formik.setFieldValue("selectedDates", dates)
-            }
-          />
+          {formik.values.id ? (
+            <Box>bloqueado</Box>
+          ) : (
+              <DateSelectorContainer
+                duration={formik.values.duration}
+                dateRanges={formik.values.dateRanges}
+                // blockedDates={formik.values.blockedDates}
+                onDateChange={(dates: any) =>
+                  formik.setFieldValue("dateRanges", dates)
+                }
+              />
+          )}
+
           {/* <DateSelectorContainer
             duration={formik.values.duration}
-            selectedDates={formik.values.selectedDates}
+            dateRanges={formik.values.dateRanges}
             onDateChange={(dates) =>
-              formik.setFieldValue("selectedDates", dates)
+              formik.setFieldValue("dateRanges", dates)
             }
           /> */}
-          
+
           {/* <DateSelectorContainer
             duration={formik.values.duration}
-            selectedDates={formik.values.selectedDates}
+            dateRanges={formik.values.dateRanges}
             onDateChange={(dates) =>
-              formik.setFieldValue("selectedDates", dates)
+              formik.setFieldValue("dateRanges", dates)
             }
           /> */}
           <DayItineraryManager

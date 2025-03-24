@@ -6,10 +6,12 @@ const options = ["Ver mas", "Editar", "Eliminar"];
 
 interface TourPackageCardMenuProps {
   onOptionSelect: (option: string) => void;
+  // handleClickInfo: () => void;
 }
 
 const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
   onOptionSelect,
+  // handleClickInfo
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

@@ -32,6 +32,7 @@ interface TouristDestinationContextType {
   }) => void;
   // BASE_URL: string;
   deleteTouristDestination: (id: string) => void;
+  getTouristDestinationById: (id: string) => string;
 }
 
 const TouristDestinationContext = createContext<
@@ -46,6 +47,14 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
   >([]);
   const { showSnackbar } = useNewSnackbar();
   // const BASE_URL = "http://localhost:3000";
+
+  const getTouristDestinationById = (id: string) => {
+    const tdFound = touristDestinations.find((td) => td.id === id);
+    if (!tdFound) {
+      return "Destino turistico no encontrado";
+    }
+    return tdFound.name;
+  };
 
   const deleteTouristDestination = async (id: string) => {
     try {
@@ -133,6 +142,7 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
         createTouristDestination,
         updateTouristDestination,
         deleteTouristDestination,
+        getTouristDestinationById,
         // BASE_URL,
       }}
     >

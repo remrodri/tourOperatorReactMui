@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import TourType from "./TourTypeShowcase";
 import { useState } from "react";
-import { useTourTypeContext } from "../../context/TourTypeContext";
+import { useTourTypeContext } from "./context/TourTypeContext";
 import TourTypeShowcase from "./TourTypeShowcase";
 import CreateTourTypeDialogContainer from "./createTourTypeDialog/CreateTourTypeDialogContainer";
 

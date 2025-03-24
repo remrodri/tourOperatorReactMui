@@ -10,10 +10,10 @@ import {
   deleteTourTypeRequest,
   getAllTourTypes,
   updateTourTypeRequest,
-} from "../features/userManagement/services/tourTypeService";
+} from "../../userManagement/services/tourTypeService";
 import { Snackbar } from "@mui/material";
-import { TourType } from "../features/userManagement/types/TourType";
-import { useNewSnackbar } from "./SnackbarContext";
+import { TourType } from "../../userManagement/types/TourType";
+import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface TourTypeContextType {
   tourTypes: any[];
@@ -22,6 +22,7 @@ interface TourTypeContextType {
   registerTourType: (tourTypeData: any) => void;
   updateTourType: (values: UpdateTourTypeValues, id: string) => void;
   deleteTourType: (deleteTourType: DeleteTourTypeValues) => void;
+  getTourTypeNameById: (id: string) => string;
   // handleUpdate: (data: UpdateTourTypeValues) => void;
 }
 
@@ -46,6 +47,14 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const { showSnackbar } = useNewSnackbar();
+
+  const getTourTypeNameById = (id: string) => {
+    const tt = tourTypes.find((tt: any) => tt.id === id);
+    if (!tt) {
+      return "tipo de tour no encontrado";
+    }
+    return tt.name;
+  };
 
   const handleOpenSnackbar = () => {
     setOpenSnackbar(!openSnackbar);
@@ -135,6 +144,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
         registerTourType,
         updateTourType,
         deleteTourType,
+        getTourTypeNameById
         // handleUpdate,
       }}
     >

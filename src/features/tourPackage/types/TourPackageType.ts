@@ -1,5 +1,6 @@
 import { ActivityType } from "./ActivityType";
 import { TourItineraryType } from "./DayItineraryType";
+import { DateRangeType} from "./DateRangeType";
 
 export interface TourPackageType {
   id: string;
@@ -8,7 +9,9 @@ export interface TourPackageType {
   cancellationPolicy: string;
   touristDestination: string;
   duration: number;
-  selectedDates: string[];
+  // selectedDates: string[];
+  dateRanges: DateRangeType[];
+  // dateRanges: string[];
   // blockedDates: string[];
   price: number;
   /** @deprecated Use itinerary field instead which organizes activities by day */

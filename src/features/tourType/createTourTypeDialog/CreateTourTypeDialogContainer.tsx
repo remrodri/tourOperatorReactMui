@@ -1,6 +1,6 @@
 import { Interface } from "readline";
 import CreateTourTypeDialog from "./CreateTourTypeDialog";
-import { useTourTypeContext } from "../../../context/TourTypeContext";
+import { useTourTypeContext } from "../context/TourTypeContext";
 import { useFormik } from "formik";
 import { tourTypeSchema } from "./validation/tourTypeSchema";
 import { useEffect } from "react";
@@ -34,7 +34,6 @@ const CreateTourTypeDialogContainer: React.FC<
     },
     validationSchema: tourTypeSchema,
     onSubmit,
-    
   });
 
   // useEffect(() => {
