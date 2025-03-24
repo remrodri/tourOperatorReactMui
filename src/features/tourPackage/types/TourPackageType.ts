@@ -17,4 +17,5 @@ export interface TourPackageType {
   /** @deprecated Use itinerary field instead which organizes activities by day */
   activities: ActivityType[];
   itinerary: TourItineraryType;
+  status:string
 }

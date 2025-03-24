@@ -37,14 +37,15 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const { getDateRangeById } = useDateRangeContext();
 
   const getTourPackages = async (): Promise<void> => {
     setLoading(true);
     try {
       const response = await TourPackageService.getAllTourPackagesRequest();
+      const tps = response.data.filter((tp:TourPackageType) => tp.status !== "draft");
       // console.log('response::: ', response.data);
-      setTourPackages(response.data);
+      // setTourPackages(response.data);
+      setTourPackages(tps);
       setError(null);
     } catch (err) {
       console.error("Error fetching tour packages:", err);
