@@ -1,14 +1,26 @@
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import { TourPackageType } from '../types/TourPackageType';
-import * as TourPackageService from '../service/TourPackageService';
-import { useNewSnackbar } from '../../../context/SnackbarContext';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+} from "react";
+import { TourPackageType } from "../types/TourPackageType";
+import * as TourPackageService from "../service/TourPackageService";
+import { useNewSnackbar } from "../../../context/SnackbarContext";
+import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
 type TourPackageContextType = {
   tourPackages: TourPackageType[];
   loading: boolean;
   error: string | null;
   getTourPackages: () => Promise<void>;
-  createTourPackage: (tourPackage: Omit<TourPackageType, 'id'>) => Promise<void>;
-  updateTourPackage: (id: string, tourPackage: Partial<TourPackageType>) => Promise<void>;
+  createTourPackage: (
+    tourPackage: Omit<TourPackageType, "id">
+  ) => Promise<void>;
+  updateTourPackage: (
+    id: string,
+    tourPackage: Partial<TourPackageType>
+  ) => Promise<void>;
   deleteTourPackage: (id: string) => Promise<void>;
 };
 
@@ -18,11 +30,14 @@ type TourPackageProviderProps = {
   children: ReactNode;
 };
 
-export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ children }) => {
+export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
+  children,
+}) => {
   const [tourPackages, setTourPackages] = useState<TourPackageType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+  const { getDateRangeById } = useDateRangeContext();
 
   const getTourPackages = async (): Promise<void> => {
     setLoading(true);
@@ -32,45 +47,59 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ childr
       setTourPackages(response.data);
       setError(null);
     } catch (err) {
-      console.error('Error fetching tour packages:', err);
-      setError('Failed to fetch tour packages');
-      showSnackbar('Failed to fetch tour packages', 'error');
+      console.error("Error fetching tour packages:", err);
+      setError("Failed to fetch tour packages");
+      showSnackbar("Failed to fetch tour packages", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const createTourPackage = async (tourPackage: Omit<TourPackageType, 'id'>): Promise<void> => {
-    setLoading(true);
+  const createTourPackage = async (
+    tourPackage: Omit<TourPackageType, "id">
+  ): Promise<void> => {
+    // console.log("tourPackage::: ", tourPackage);
+    // setLoading(true);
     try {
-      const newTourPackage = await TourPackageService.createTourPackageRequest(tourPackage);
-      setTourPackages(prev => [...prev, newTourPackage]);
-      setError(null);
-      showSnackbar('Tour package created successfully!', 'success');
+      const newTourPackage = await TourPackageService.createTourPackageRequest(
+        tourPackage
+      );
+      // const dateRanges = newTourPackage.dateRanges.map((dr:string)=>getDateRangeById(dr))
+      // console.log('dateRanges::: ', dateRanges);
+      setTourPackages((prev) => [...prev, newTourPackage]);
+      // setError(null);
+      showSnackbar("Tour package created successfully!", "success");
     } catch (err) {
-      console.error('Error creating tour package:', err);
-      setError('Failed to create tour package');
-      showSnackbar('Failed to create tour package', 'error');
+      console.error("Error creating tour package:", err);
+      setError("Failed to create tour package");
+      showSnackbar("Failed to create tour package", "error");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
-  const updateTourPackage = async (id: string, tourPackage: Partial<TourPackageType>): Promise<void> => {
+  const updateTourPackage = async (
+    id: string,
+    tourPackage: Partial<TourPackageType>
+  ): Promise<void> => {
     setLoading(true);
     try {
       // Create a complete tour package object with the id for the service call
+      // console.log('tourPackage::: ', tourPackage);
       const tourPackageWithId = { ...tourPackage, id };
-      const updatedTourPackage = await TourPackageService.updateTourPackageRequest(tourPackageWithId);
-      setTourPackages(prev => 
-        prev.map(pkg => pkg.id === id ? updatedTourPackage : pkg)
+      // console.log('tourPackageWithId::: ', tourPackageWithId);
+      const updatedTourPackage = (
+        await TourPackageService.updateTourPackageRequest(tourPackageWithId)
+      ).data;
+      setTourPackages((prev) =>
+        prev.map((pkg) => (pkg.id === id ? updatedTourPackage : pkg))
       );
       setError(null);
-      showSnackbar('Tour package updated successfully!', 'success');
+      showSnackbar("Tour package updated successfully!", "success");
     } catch (err) {
-      console.error('Error updating tour package:', err);
-      setError('Failed to update tour package');
-      showSnackbar('Failed to update tour package', 'error');
+      console.error("Error updating tour package:", err);
+      setError("Failed to update tour package");
+      showSnackbar("Failed to update tour package", "error");
     } finally {
       setLoading(false);
     }
@@ -80,13 +109,13 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ childr
     setLoading(true);
     try {
       await TourPackageService.deleteTourPackageRequest(id);
-      setTourPackages(prev => prev.filter(pkg => pkg.id !== id));
+      setTourPackages((prev) => prev.filter((pkg) => pkg.id !== id));
       setError(null);
-      showSnackbar('Tour package deleted successfully!', 'success');
+      showSnackbar("Tour package deleted successfully!", "success");
     } catch (err) {
-      console.error('Error deleting tour package:', err);
-      setError('Failed to delete tour package');
-      showSnackbar('Failed to delete tour package', 'error');
+      console.error("Error deleting tour package:", err);
+      setError("Failed to delete tour package");
+      showSnackbar("Failed to delete tour package", "error");
     } finally {
       setLoading(false);
     }
@@ -97,7 +126,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ childr
   }, []);
 
   return (
-    <TourPackageContext.Provider 
+    <TourPackageContext.Provider
       value={{
         tourPackages,
         loading,
@@ -105,7 +134,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ childr
         getTourPackages,
         createTourPackage,
         updateTourPackage,
-        deleteTourPackage
+        deleteTourPackage,
       }}
     >
       {children}
@@ -115,11 +144,11 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({ childr
 
 export const useTourPackageContext = (): TourPackageContextType => {
   const context = useContext(TourPackageContext);
-  
   if (!context) {
-    throw new Error('useTourPackageContext must be used within a TourPackageProvider');
+    throw new Error(
+      "useTourPackageContext must be used within a TourPackageProvider"
+    );
   }
-  
+
   return context;
 };
-

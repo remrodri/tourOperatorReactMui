@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TourPackageType } from "../../types/TourPackageType";
 import TourPackageCard from "./TourPackageCard";
 import TourPackageformContainer from "../../tourPackageForm/TourPackageFormContainer";
+import MoreInfoModalContainer from "../../modal/MoreInfoModalContainer";
 
 interface TourPackageCardContainerProps {
   tourPackage: TourPackageType;
@@ -12,6 +13,11 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
 }) => {
   const BASE_URL = "http://localhost:3000";
   const [open, setOpen] = useState(false);
+  const [openInfo, setOpenInfo] = useState(false);
+
+  const handleClickInfo = () => {
+    setOpenInfo(!openInfo);
+  };
 
   const handleClick = () => {
     setOpen(!open);
@@ -20,7 +26,8 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   const handleOption = (option: string) => {
     switch (option) {
       case "Ver mas":
-        console.log("ver mas::: ");
+        // console.log("ver mas::: ");
+        handleClickInfo();
         break;
       case "Editar":
         console.log("Editar::: ");
@@ -44,15 +51,19 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         handleOption={handleOption}
       />
       {open && (
-        <>
-          {/* {console.log("Rendering TourPackageFormContainer with:", tourPackage)}
-          {console.log("selectedDates before passing to form:", tourPackage.selectedDates)} */}
-          <TourPackageformContainer
-            open={open}
-            handleClick={handleClick}
-            tourPackage={tourPackage}
-          />
-        </>
+        <TourPackageformContainer
+          open={open}
+          handleClick={handleClick}
+          tourPackage={tourPackage}
+          // handleClickInfo={handleClickInfo}
+        />
+      )}
+      {openInfo && (
+        <MoreInfoModalContainer
+          open={openInfo}
+          handleClick={handleClickInfo}
+          tourPackage={tourPackage}
+        />
       )}
     </>
   );

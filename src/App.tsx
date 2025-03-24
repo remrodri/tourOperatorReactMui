@@ -4,12 +4,13 @@ import { AppRouter } from "./router/AppRouter";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { UserProvider } from "./context/UserContext";
 import { RoleProvider } from "./context/RoleContext";
-import { TourTypeProvider } from "./context/TourTypeContext";
+import { TourTypeProvider } from "./features/tourType/context/TourTypeContext";
 import { SnackbarProvider } from "./context/SnackbarContext";
 import GlobalSnackbar from "./utils/snackbar/GlobalSnackbar";
 import { CancellationPolicyProvider } from "./features/cancellationPolicy/context/CancellationPolicyContext";
 import { TouristDestinationProvider } from "./features/touristDestination/context/TouristDestinationContext";
 import { TourPackageProvider } from "./features/tourPackage/context/TourPackageContext";
+import { DateRangeProvider } from "./features/dateRange/context/DateRangeContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -19,23 +20,25 @@ const darkTheme = createTheme({
 function App() {
   return (
     <SnackbarProvider>
-      <TouristDestinationProvider>
-        <TourPackageProvider>
-          <CancellationPolicyProvider>
-            <TourTypeProvider>
-              <RoleProvider>
-                <UserProvider>
-                  <ThemeProvider theme={darkTheme}>
-                    <CssBaseline />
-                    <RouterProvider router={AppRouter} />
-                    <GlobalSnackbar />
-                  </ThemeProvider>
-                </UserProvider>
-              </RoleProvider>
-            </TourTypeProvider>
-          </CancellationPolicyProvider>
-        </TourPackageProvider>
-      </TouristDestinationProvider>
+      <DateRangeProvider>
+        <TouristDestinationProvider>
+          <TourPackageProvider>
+            <CancellationPolicyProvider>
+              <TourTypeProvider>
+                <RoleProvider>
+                  <UserProvider>
+                    <ThemeProvider theme={darkTheme}>
+                      <CssBaseline />
+                      <RouterProvider router={AppRouter} />
+                      <GlobalSnackbar />
+                    </ThemeProvider>
+                  </UserProvider>
+                </RoleProvider>
+              </TourTypeProvider>
+            </CancellationPolicyProvider>
+          </TourPackageProvider>
+        </TouristDestinationProvider>
+      </DateRangeProvider>
     </SnackbarProvider>
   );
 }
