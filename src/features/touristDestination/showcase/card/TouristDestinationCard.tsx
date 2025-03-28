@@ -20,7 +20,17 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   const BASE_URL = "http://localhost:3000";
   // console.log(`${BASE_URL}/${touristDestination.images.[0]}`)
   return (
-    <Card sx={{ maxWidth: 345, minWidth: 300 }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        minWidth: 300,
+        borderRadius: "10px",
+        background: " rgba(73, 173, 110, 0.9)",
+        boxShadow: "0 4px 10px rgba(63, 168, 101, 0.6)",
+        // backdropFilter: "blur(10px)",
+        border: "1px solid rgb(63, 168, 101)",
+      }}
+    >
       <CardHeader
         title={touristDestination.name}
         action={<TouristDestinationCardMenu onOptionSelect={handleOption} />}

@@ -5,8 +5,8 @@ export interface User {
   email: string;
   ci: string;
   phone: string;
-  firstLogin: string;
+  firstLogin?: string;
   role: string;
   address: string;
-  imageUrl: string;
+  imageUrl?: string;
 }

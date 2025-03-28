@@ -15,6 +15,9 @@ import { DateRangeProvider } from "./features/dateRange/context/DateRangeContext
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
+    primary: {
+      main: "#1976d2",
+    },
   },
 });
 function App() {

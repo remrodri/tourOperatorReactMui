@@ -12,11 +12,16 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
   tourPackages,
 }) => {
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
-          height: "10%",
+          height: "5rem",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -43,25 +48,38 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
       </Typography>
       <Box
         sx={{
-          height: "90%",
+          height: "calc(100% - 5rem)",
           display: "flex",
-          justifyContent: "center",
-          flexWrap: "wrap",
-          overflowY: "auto",
-          gap: "1rem",
-          pt: "2rem",
-          alignContent: "flex-start",
+          p: "20px",
         }}
       >
-        {tourPackages && tourPackages.length > 0 ? (
-          tourPackages.map((tp,index) => (
-            <TourPackageCardContainer key={index} tourPackage={tp} />
-          ))
-        ) : (
-          <p>No se encuentran paquetes turisticos</p>
-        )}
+        <Box
+          sx={{
+            pt: "30px",
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            overflowY: "auto",
+            gap: "1rem",
+            alignContent: "flex-start",
+            background: "rgba(255, 255, 255, 0.2)",
+            borderRadius: "10px",
+            boxShadow: "0 4px 10px rgba(255, 255, 255,0.2)",
+            // backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
+          {tourPackages && tourPackages.length > 0 ? (
+            tourPackages.map((tp) => (
+              <TourPackageCardContainer key={tp.id} tourPackage={tp} />
+            ))
+          ) : (
+            <p>No se encuentran paquetes turisticos</p>
+          )}
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 export default TourPackageShowcase;

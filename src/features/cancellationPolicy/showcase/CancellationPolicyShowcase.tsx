@@ -14,11 +14,17 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
 }) => {
   // console.log('cancellationPolicy::: ', cancellationPolicy);
   return (
-    <>
+    <Box
+      sx={{
+        flexGrow:1,
+        display: "flex",
+        flexDirection:"column"
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
-          height: "10%",
+          height: "5rem",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -45,29 +51,44 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
       </Typography>
       <Box
         sx={{
-          height: "90%",
+          height: "calc(100% - 5rem)",
+          // pt: "2rem",
           display: "flex",
-          justifyContent: "center",
-          flexWrap: "wrap",
-          overflowY: "auto",
-          gap: "1rem",
-          pt: "2rem",
-          alignContent: "flex-start",
+          p: "20px",
         }}
       >
-        {cancellationPolicy && cancellationPolicy.length > 0 ? (
-          cancellationPolicy.map((cancellationPolicy) => (
-            <CancellationPolicyCardContainer
-              key={cancellationPolicy.id}
-              cancellationPolicy={cancellationPolicy}
-              // handleClick={handleClick}
-            />
-          ))
-        ) : (
-          <p>No hay Cancellation Policy</p>
-        )}
+        <Box
+          sx={{
+            pt: "30px",
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            overflowY: "auto",
+            gap: "1rem",
+            alignContent: "flex-start",
+            background: "rgba(255, 255, 255, 0.2)",
+            borderRadius: "10px",
+            boxShadow: "0 4px 10px rgba(255, 255, 255,0.2)",
+            // backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            // width:"100%"
+          }}
+        >
+          {cancellationPolicy && cancellationPolicy.length > 0 ? (
+            cancellationPolicy.map((cancellationPolicy) => (
+              <CancellationPolicyCardContainer
+                key={cancellationPolicy.id}
+                cancellationPolicy={cancellationPolicy}
+                // handleClick={handleClick}
+              />
+            ))
+          ) : (
+            <p>No hay Cancellation Policy</p>
+          )}
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 export default CancellaionPolicyShowcase;

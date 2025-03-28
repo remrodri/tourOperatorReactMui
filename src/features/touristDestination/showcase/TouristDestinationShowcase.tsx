@@ -16,11 +16,21 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
 }) => {
   // console.log('touristDestinations::: ', touristDestinations);
   return (
-    <>
+    <Box
+      sx={{
+        // position: "relative",
+        // width:"100%",
+        flexGrow:1,
+        display: "flex",
+        flexDirection: "column",
+        // height:"100dvh"
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
-          height: "10%",
+          // height: "12%",
+          height: "5rem",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -47,28 +57,44 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
       </Typography>
       <Box
         sx={{
-          height: "90%",
+          // height: "90%",
+          height: "calc(100% - 5rem)",
           display: "flex",
-          justifyContent: "center",
-          flexWrap: "wrap",
-          overflowY: "auto",
-          gap: "1rem",
-          pt: "2rem",
-          alignContent:"flex-start"
+          p: "20px",
         }}
       >
-        {touristDestinations && touristDestinations.length > 0 ? (
-          touristDestinations.map((touristDestination) => (
-            <TouristDestinationCardContainer
-              key={touristDestination.id}
-              touristDestination={touristDestination}
-            />
-          ))
-        ) : (
-          <p>No se encuentran destinos turisticos</p>
-        )}
+        <Box
+          sx={{
+            // position:"relative",
+            pt: "30px",
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            overflowY: "auto",
+            gap: "1rem",
+            alignContent: "flex-start",
+            background: "rgba(255, 255, 255, 0.2)",
+            borderRadius: "10px",
+            boxShadow: "0 4px 10px rgba(255, 255, 255,0.2)",
+            // backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            
+          }}
+        >
+          {touristDestinations && touristDestinations.length > 0 ? (
+            touristDestinations.map((touristDestination) => (
+              <TouristDestinationCardContainer
+                key={touristDestination.id}
+                touristDestination={touristDestination}
+              />
+            ))
+          ) : (
+            <p>No se encuentran destinos turisticos</p>
+          )}
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 export default TouristDestinationShowcase;

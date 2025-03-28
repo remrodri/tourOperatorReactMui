@@ -5,17 +5,13 @@ import UserManagementPage from "../pages/UserManagementPage";
 import HomePage from "../pages/HomePage";
 import RegisterContainer from "../features/userManagement/components/register/UserFormContainer";
 import UserShowcase from "../features/userManagement/components/showcase/UserShowcase";
-import UserShowcasePage from "../pages/UserShowcasePage";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
 import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
 import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
 import EmailFormContainer from "../features/securitySetup/components/ResetPassword/emailForm/EmailFormContainer";
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 import TourPackagePage from "../pages/TourPackagePage";
-import TourPackageShowcase from "../features/tourPackage/showcase/TourPackageShowcase";
 import TourPackageShowcaseContainer from "../features/tourPackage/showcase/TourPackageShowcaseContainer";
-import TourPackageformContainer from "../features/tourPackage/tourPackageForm/TourPackageFormContainer";
-import TourType from "../features/tourType/TourTypeShowcase";
 import TourTypeContainer from "../features/tourType/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/showcase/TouristDestinationShowcaseContainer";
@@ -71,16 +67,16 @@ export const AppRouter = createBrowserRouter(
             },
             {
               path: "usuarios",
-              element: <UserShowcasePage />,
+              element: <UserShowcase />,
               children: [
-                {
-                  path: "",
-                  element: <UserShowcase />,
-                },
-                {
-                  path: "editar/:userId",
-                  element: <RegisterContainer />,
-                },
+                // {
+                //   path: "",
+                //   element: <UserShowcase />,
+                // },
+                // {
+                //   path: "editar/:userId",
+                //   element: <RegisterContainer />,
+                // },
               ],
             },
           ],
@@ -93,10 +89,10 @@ export const AppRouter = createBrowserRouter(
               path: "ver-todos",
               element: <TourPackageShowcaseContainer />,
             },
-            {
-              path: "nuevo",
-              element: <TourPackageformContainer />,
-            },
+            // {
+            //   path: "nuevo",
+            //   element: <TourPackageformContainer />,
+            // },
             {
               path: "tipo-de-tour",
               element: <TourTypeContainer />,

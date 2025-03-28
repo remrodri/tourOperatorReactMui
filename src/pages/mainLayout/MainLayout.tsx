@@ -1,15 +1,21 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import homeBackground from "../../assets/images/home.webp";
+// import homeBackground from "/src/assets/images/home.webp";
 import MainDrawer from "./MainDrawer";
-import userManagementBackground from "../../assets/images/userManagement.webp";
-import tourPackageBackground from "../../assets/images/tourPackage.webp";
+// import userManagementBackground from "../../assets/images/userManagement.webp";
+// import tourPackageBackground from "../../assets/images/tourPackage.webp";
 // import securitySetupBackground from "../../assets/images/securitySetup.webp";
+
+const userManagementBackground = "/src/assets/images/userManagement.webp";
+const homeBackground = "/src/assets/images/home.webp";
+const tourPackageBackground = "/src/assets/images/tourPackage.webp";
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
-  const [backgroundImg, setBackgroundImg] = useState<string>(homeBackground);
+  const [backgroundImg, setBackgroundImg] = useState<string>(
+    homeBackground
+  );
 
   const backgroundImgs: { [key: string]: string } = {
     ["/home"]: homeBackground,
@@ -27,7 +33,9 @@ const MainLayout: React.FC = () => {
   };
 
   useEffect(() => {
-    setBackgroundImg(backgroundImgs[location.pathname] || homeBackground);
+    setBackgroundImg(
+      backgroundImgs[location.pathname] || "/home"
+    );
     // console.log(
     //   "location.pathname::: ",
     //   location.pathname.includes("/gestion-de-usuarios")
@@ -50,18 +58,20 @@ const MainLayout: React.FC = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        height: "100vh",
+        height: "100dvh",
+        // width:"100wvh",
+        display:"flex"
         // p: "10px",
       }}
     >
       {/* <Typography>HomePage</Typography> */}
       {/* <NavBar /> */}
       <MainDrawer
-        // open={open}
-        // setOpen={setOpen}
-        // selectedOption={selectedOption}
-        // setSelectedOption={setSelectedOption}
-        // handleSelectedOption={handleSelectedOption}
+      // open={open}
+      // setOpen={setOpen}
+      // selectedOption={selectedOption}
+      // setSelectedOption={setSelectedOption}
+      // handleSelectedOption={handleSelectedOption}
       />
     </Box>
   );

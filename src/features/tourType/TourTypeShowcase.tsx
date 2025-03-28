@@ -16,11 +16,16 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
   const { openDialog, tourTypes } = useTourTypeContext();
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection:"column"
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
-          height: "10%",
+          height: "5rem",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -48,25 +53,38 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
       </Typography>
       <Box
         sx={{
-          height: "90%",
+          height: "calc(100% - 5rem)",
           display: "flex",
-          justifyContent: "center",
-          alignContent: "flex-start",
-          flexWrap: "wrap",
-          overflowY: "auto",
-          gap: "1rem",
-          pt: "2rem",
+          p: "20px",
         }}
       >
-        {tourTypes && tourTypes.length > 0 ? (
-          tourTypes.map((tourType) => (
-            <TourTypeCard key={tourType.id} tourType={tourType} />
-          ))
-        ) : (
-          <p>No hay tipos de tour registrados</p>
-        )}
+        <Box
+          sx={{
+            pt: "30px",
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "flex-start",
+            flexWrap: "wrap",
+            overflowY: "auto",
+            gap: "1rem",
+            background: "rgba(255, 255, 255, 0.2)",
+            borderRadius: "10px",
+            boxShadow: "0 4px 10px rgba(255, 255, 255,0.2)",
+            // backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
+          {tourTypes && tourTypes.length > 0 ? (
+            tourTypes.map((tourType) => (
+              <TourTypeCard key={tourType.id} tourType={tourType} />
+            ))
+          ) : (
+            <p>No hay tipos de tour registrados</p>
+          )}
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 export default TourTypeShowcase;
