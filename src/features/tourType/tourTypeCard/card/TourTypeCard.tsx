@@ -38,7 +38,11 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
     <Card
       sx={{
         width: 300,
-        // height:90
+        borderRadius: "10px",
+        background: " rgba(152, 67, 218, 0.9)",
+        boxShadow: "0 4px 10px rgba(142, 44, 218,0.6)",
+        // backdropFilter: "blur(10px)",
+        border: "1px solid rgb(142, 44, 218)",
       }}
     >
       <CardHeader

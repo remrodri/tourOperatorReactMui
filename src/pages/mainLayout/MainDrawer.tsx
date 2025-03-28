@@ -36,6 +36,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExploreIcon from "@mui/icons-material/Explore";
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 
 const drawerWidth = 240;
 
@@ -77,7 +78,12 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
+  position: "static",
+  // padding:"5px",
+  // zIndex: theme.zIndex.drawer + 1,
+  // m:"5px 0 0 0",
+  height: "5.5rem",
+  // p:"5px 0 0 0",
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -86,8 +92,21 @@ const AppBar = styled(MuiAppBar, {
     {
       props: ({ open }) => open,
       style: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
+        // marginLeft: drawerWidth,
+        // width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(["width", "margin"], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+      },
+    },
+    {
+      props: ({ open }) => !open,
+      style: {
+        // marginLeft: drawerWidth,
+        // width: `calc(100% - 5rem)`,
+        // padding:"5px",
+        // height:"4rem",
         transition: theme.transitions.create(["width", "margin"], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
@@ -131,19 +150,24 @@ export default function MainDrawer() {
   const [userOpen, setUserOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
   const { error, logout } = useLogout();
-  const [selectedOption, setSelectedOption] = useState("");
-  const [menuOption, setMenuOption] = useState(Boolean);
+  // const [selectedOption, setSelectedOption] = useState("");
+  // const [menuOption, setMenuOption] = useState(Boolean);
   const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
+  const [bookingOpen, setBookingOpen] = useState(true);
+
+  const handleClickBooking = () => {
+    setBookingOpen(!bookingOpen);
+  };
 
   const packageHandleClick = () => {
     setPackageOpen(!packageOpen);
   };
 
-  const handleSelectedOption = (option: string) => {
-    setSelectedOption(option);
-    // setMenuOpen(!open);
-  };
+  // const handleSelectedOption = (option: string) => {
+  //   setSelectedOption(option);
+  //   // setMenuOpen(!open);
+  // };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -220,98 +244,73 @@ export default function MainDrawer() {
   // const icons = [<HomeIcon />, <SupervisorAccountIcon />];
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        // flexGrow:1,
+        display: "flex",
+        // height: "100%",
+        width:"100%",
+        // p: "10px",
+        // flexDirection: "column",
+      }}
+    >
       {/* <CssBaseline /> */}
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          {/* <Tooltip title="Abrir" placement="right"> */}
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: "none" },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-          {/* </Tooltip> */}
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ alignContent: "center" }}
-            >
-              LOGO
-            </Typography>
-            <Box
-              sx={{
-                flexGrow: 0,
-              }}
-            >
-              <Tooltip title="Configuracion">
-                <IconButton
-                  onClick={handleOpenUserMenu}
-                  sx={{ p: 0, alignSelf: "flex-end" }}
-                >
-                  <Avatar>SN</Avatar>
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{
-                  mt: "45px",
-                }}
-                id="menu-appbar"
-                anchorEl={userMenuOpen}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(userMenuOpen)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => handleOptionUserMenu(setting)}
-                  >
-                    <Typography sx={{ textAlign: "center" }}>
-                      {setting}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{
+          p: "10px",
+          // width:"100rem",
+          "&.MuiDrawer-docked": { width: open ? 240 : 83 }, // Ajusta según tu necesidad
+          "& .MuiDrawer-paper": {
+            position: "relative",
+            width: "100%",
+            background: "rgba(0, 0, 0, 0.6)",
+            boxShadow: "0 4px 10px rgba(0,0,0,1)",
+            borderRadius: "16px",
+            // borderRadius: "30px",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(0,0,0,0.7)",
+
+            // height: "98.7%",
+            // margin: "5px 0 5px 5px",
+            // width: open ? 240 : 60, // Ajuste dinámico del ancho
+            // width:650
+          },
+        }}
+      >
         <DrawerHeader>
-          <Tooltip title="Cerrar" placement="left">
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </Tooltip>
+          {open ? (
+            <Tooltip title="Cerrar" placement="left">
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Abrir" placement="right">
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={[
+                  {
+                    // display: "flex",
+                    // justifyContent:"center"
+                    marginRight: "3px",
+                    // pr:"13px"
+                  },
+                  open && { display: "none" },
+                ]}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </DrawerHeader>
         <Divider />
         <List>
@@ -393,9 +392,9 @@ export default function MainDrawer() {
                     <AddBoxIcon />
                   </ListItemIcon>
                   {/* <ListItemText primary="Nuevo" /> */}
-                  {/* <ListItemText primary={open ? "Nuevo" : ""} /> */}
-                {/* </ListItemButton> */}
-              {/* </Tooltip> */} 
+              {/* <ListItemText primary={open ? "Nuevo" : ""} /> */}
+              {/* </ListItemButton> */}
+              {/* </Tooltip> */}
               <Tooltip title="Ver todos los paquetes" placement="right">
                 <ListItemButton
                   sx={{ pl: open ? 4 : 2.5 }}
@@ -444,25 +443,155 @@ export default function MainDrawer() {
           </Collapse>
         </List>
         <Divider />
+        <List>
+          <Tooltip title="Gestion de Reservas" placement="right">
+            <ListItemButton
+              onClick={handleClickBooking}
+              sx={{ minHeight: 48, px: 2.5 }}
+            >
+              <ListItemIcon>
+                <BookOnlineIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
+        </List>
       </Drawer>
-
       <Box
         sx={{
           flexGrow: 1,
-          // height:"100dvh"
           display: "flex",
           flexDirection: "column",
         }}
       >
+        <AppBar
+          // position="fixed"
+          // position="relative"
+          open={open}
+          sx={{
+            background: "none",
+            // backgroundColor: "rgba(2, 2, 2, 0)",
+            boxShadow: "none",
+            border: "none",
+            // marginTop:"0.5%",
+            // height:"7%",
+            // margin: "5px 5px 0 0",
+            // backgroundColor: "rgba(0, 0, 0, 0.3)",
+            // backdropFilter: "blur(5px)",
+            // boxShadow: "0 4px 30px rgba(0,0,0,0.1)",
+            // border: "1px solid rgba(0,0,0,0.5)",
+            // width: "99.1%",
+            // borderRadius: "16px",
+            // width: open ? "78%" : "93%",
+            p: "10px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Toolbar
+            // disableGutters
+            sx={{
+              background: "rgba(0, 0, 0, 0.6)",
+              borderRadius: "16px",
+              boxShadow: "0 4px 10px rgba(0,0,0,1)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(0,0,0,0.7)",
+              height: "100%", // Ajusta el alto aquí
+              // minHeight: "4rem",
+              // maxHeight: "4rem",
+              // width: "100%", // Asegura que ocupa todo el ancho
+              // px: "1rem", // Añadir padding horizontal
+            }}
+          >
+            {matches && (
+              <Tooltip title="Abrir" placement="right">
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  edge="start"
+                  sx={[
+                    {
+                      // marginRight: 5,
+                    },
+                    open && { display: "none" },
+                  ]}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                height: "100%",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ alignContent: "center" }}
+              >
+                LOGO
+              </Typography>
+              <Box
+                sx={{
+                  flexGrow: 0,
+                }}
+              >
+                <Tooltip title="Configuracion">
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0, alignSelf: "flex-end" }}
+                  >
+                    <Avatar>SN</Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{
+                    mt: "45px",
+                  }}
+                  id="menu-appbar"
+                  anchorEl={userMenuOpen}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(userMenuOpen)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting}
+                      onClick={() => handleOptionUserMenu(setting)}
+                    >
+                      <Typography sx={{ textAlign: "center" }}>
+                        {setting}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </Box>
+          </Toolbar>
+        </AppBar>
         <Box
           sx={{
-            height: {
-              xs: "3.5rem",
-              sm: "4rem",
-            },
+            // height: "100dvh"
+            height:"calc(100% - 5.5rem)"
+            
           }}
-        ></Box>
-        <Outlet />
+        >
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

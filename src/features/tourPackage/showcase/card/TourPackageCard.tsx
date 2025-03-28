@@ -16,7 +16,18 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
   // handleClickInfo,
 }) => {
   return (
-    <Card sx={{ maxWidth: 345, minWidth: 300 }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        minWidth: 300,
+        // rgb(70, 120, 253)
+        borderRadius: "10px",
+        background: " rgba(70, 120, 253,0.7)",
+        boxShadow: "0 4px 10px rgba(50, 104, 253,0.6)",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgb(50, 104, 253)",
+      }}
+    >
       <CardHeader
         title={tourPackage.name}
         action={

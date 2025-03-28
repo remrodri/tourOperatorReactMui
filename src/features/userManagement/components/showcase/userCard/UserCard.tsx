@@ -68,7 +68,12 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
       sx={{
         width: 300,
         // bgcolor: `${roleColor}`,
-        p: 0,
+        // p: 0,
+        borderRadius: "10px",
+        // background: " rgba(77, 75, 80, 1)",
+        boxShadow: "0 4px 10px rgba(10, 10, 10,0.6)",
+        // backdropFilter: "blur(10px)",
+        border: "1px solid rgb(10, 10, 10)",
 
         ".MuiCardHeader-root": {
           p: "10px 10px 10px 10px",
@@ -109,12 +114,13 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
             <Box>{`${user.firstName} ${user.lastName}`}</Box>
             <Typography
               sx={{
-                pt:"11px",
+                pt: "11px",
                 fontSize: "0.9rem",
-                color:"white"
+                color: "white",
               }}
             >
-              <ContactPhoneIcon /><br/>
+              <ContactPhoneIcon />
+              <br />
               {user.phone}
             </Typography>
           </Box>

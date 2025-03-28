@@ -10,7 +10,7 @@ const TourPackageShowcaseContainer: React.FC = () => {
   const handleClickForm = () => {
     setOpen(!open);
   };
-  console.log('tourPackages::: ', tourPackages);
+  // console.log('tourPackages::: ', tourPackages);
   return (
     <>
       <TourPackageShowcase

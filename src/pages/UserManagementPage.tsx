@@ -7,26 +7,29 @@ const UserManagementPage: React.FC = () => {
     //   <CssBaseline />
     <Box
       sx={{
-        flexGrow: 1,
-        // height:"100%",
-        height: {
-          xs: "calc(100vh - 3.5rem)",
-          sm: "calc(100vh - 4rem)",
-        },
-        p: "6px",
-        display: "flex",
+        // flexGrow: 1,
+        display:"flex",
+        // height:"calc(100% - 5.5rem)",
+        // height: {
+        //   xs: "calc(100vh - 3.5rem)",
+        //   sm: "calc(100vh - 4rem)",
+        // },
+        height:"100%",
+        p: "10px",
       }}
     >
       <Box
         sx={{
-          height: "100%",
+          // height: "42.3rem",
+          display:"flex",
           flexGrow: 1,
-          background: "rgba(0,0,0,0.2)",
+          // height:"100%",
+          background: "rgba(0,0,0,0.6)",
           borderRadius: "16px",
-          boxShadow: "0 4px 30px rgba(0,0,0,0.1)",
-          backdropFilter: "blur(5px)",
-          border: "1px solid rgba(0,0,0,0.3)",
-          overflowY: "auto",
+          boxShadow: "0 4px 10px rgba(0,0,0,1)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(0,0,0,0.4)",
+          // overflowY: "auto",
         }}
       >
         <Outlet />
