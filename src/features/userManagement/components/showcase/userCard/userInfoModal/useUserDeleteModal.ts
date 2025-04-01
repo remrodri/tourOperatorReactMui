@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useUserContext } from "../../../../../../context/UserContext";
+import { useUserContext } from "../../../../context/UserContext";
 import { showToast } from "../../../../../../utils/modal/toast";
 
 const MySwal = withReactContent(Swal);

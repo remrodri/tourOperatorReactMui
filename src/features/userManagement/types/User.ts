@@ -9,4 +9,5 @@ export interface User {
   role: string;
   address: string;
   imageUrl?: string;
+  image?: any;
 }

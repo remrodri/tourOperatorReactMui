@@ -224,8 +224,8 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
           error={formik.touched.address && Boolean(formik.errors.address)}
           helperText={formik.touched.address && formik.errors.address}
         />
-        <Box sx={{ height: "70px", display:"flex"}}>
-          <Box sx={{height:"100%",width:"50%"}}>
+        <Box sx={{ height: "70px", display: "flex" }}>
+          <Box sx={{ height: "100%", width: "50%" }}>
             <VisuallyHiddenInput
               type="file"
               id="image"
@@ -243,23 +243,24 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
                 Subir imagen
               </Button>
             </label>
-            {formik.touched.image && formik.errors.image && (
-              <Typography
-                color="error"
-                sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
-              >
-                {formik.errors.image}
-              </Typography>
-            )}
+            {formik.touched.image &&
+              typeof formik.errors.image === "string" && (
+                <Typography
+                  color="error"
+                  sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
+                >
+                  {formik.errors.image}
+                </Typography>
+              )}
           </Box>
           {preview && (
             <Box
               sx={{
                 width: "50%",
-                height:"100%",
+                height: "100%",
                 display: "flex",
                 // justifyContent: "center",
-                alignItems:"center"
+                alignItems: "center",
                 // mt: 2,
               }}
             >
@@ -277,9 +278,15 @@ const RegisterUserForm: React.FC<UserRegistrationFormProps> = ({
             </Box>
           )}
         </Box>
-        <Button color="primary" variant="contained" fullWidth type="submit" sx={{
-          mt:"1rem"
-        }}>
+        <Button
+          color="primary"
+          variant="contained"
+          fullWidth
+          type="submit"
+          sx={{
+            mt: "1rem",
+          }}
+        >
           {userToUpdate ? "Actualizar" : "Registrar"}
         </Button>
       </form>

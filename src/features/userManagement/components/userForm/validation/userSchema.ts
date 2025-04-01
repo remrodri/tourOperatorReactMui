@@ -15,8 +15,9 @@ export const userSchema = Yup.object().shape({
     .min(7, "El ci debe tener al menos 7 caracteres"),
   phone: Yup.string().required("El campo es necesario"),
   role: Yup.string().required("El campo es necesario"),
-  address: Yup.string().required("Debe seleccionar una imagen"),
+  address: Yup.string().required("El campo es necesario"),
   image: Yup.mixed<File>()
+    .required("Debe seleccionar una imagen")
     .test("fileType", "El archivo debe ser una imagen", (value) => {
       if (!value) return false;
       const supportedFormats = [

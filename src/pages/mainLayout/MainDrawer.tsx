@@ -185,9 +185,9 @@ export default function MainDrawer() {
       case "Home":
         navigate("home");
         break;
-      case "Nuevo":
-        navigate("gestion-de-usuarios/nuevo");
-        break;
+      // case "Nuevo":
+      //   navigate("gestion-de-usuarios/nuevo");
+      //   break;
       case "Ver todos":
         navigate("gestion-de-usuarios/usuarios");
         break;
@@ -331,21 +331,19 @@ export default function MainDrawer() {
           </Tooltip>
           <Collapse in={userOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <Tooltip title="Crear usuario" placement="right">
+              {/* <Tooltip title="Crear usuario" placement="right">
                 <ListItemButton
                   onClick={() => handleClick("Nuevo")}
                   sx={{
-                    // pl: 4
                     pl: open ? 4 : 2.5,
                   }}
                 >
                   <ListItemIcon>
                     <PersonAddIcon />
                   </ListItemIcon>
-                  {/* <ListItemText primary="Nuevo" /> */}
                   <ListItemText primary={open ? "Nuevo" : ""} />
                 </ListItemButton>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip title="Listar usuarios" placement="right">
                 <ListItemButton
                   sx={{ pl: open ? 4 : 2.5 }}

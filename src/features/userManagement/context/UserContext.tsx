@@ -5,15 +5,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User } from "../features/userManagement/types/User";
-import { TokenService } from "../utils/tokenService";
-import { userService } from "../features/userManagement/services/userService";
+import { User } from "../types/User";
+import { TokenService } from "../../../utils/tokenService";
+import { userService } from "../services/userService";
 import { isAxiosError } from "axios";
+import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface UserContextType {
   users: User[];
-  loading: boolean;
-  error: string | null;
+  // loading: boolean;
+  // error: string | null;
   registerUser: (userData: Partial<User>) => Promise<any>;
   updateUser: (userData: Partial<User>, userId: string) => Promise<any>;
   deleteUser: (userId: string) => Promise<any>;
@@ -26,13 +27,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const token = TokenService.getToken();
   const [users, setUsers] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
+  const { showSnackbar } = useNewSnackbar();
 
   const deleteUser = async (userId: string): Promise<any> => {
     if (!token) {
-      setError("No se encontro el token");
-      setLoading(false);
+      // setError("No se encontro el token");
+      // setLoading(false);
       return;
     }
     try {
@@ -47,30 +49,37 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         console.log(error.response);
       }
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
   const fetchUsers = async () => {
     if (!token) {
-      setError("No se encontro el token");
-      setLoading(false);
+      // setError("No se encontro el token");
+      // setLoading(false);
+      showSnackbar("No hay token","error")
       return;
     }
     try {
-      const userList = (await userService.getUsers(token)).data;
-      setUsers(userList);
+      const response = (await userService.getUsers(token));
+      if (!response?.data) {
+        showSnackbar("Error al cargar", "error");
+        throw new Error("No se recupero la lista de usuarios");
+      }
+      setUsers(response.data);
     } catch (error) {
-      setError("Error al obtener los usuarios");
+      // setError("Error al obtener los usuarios");
+      console.error("Error al obtener los usuarios", error);
+      showSnackbar("Error al obtener los usuarios", "error");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
   const registerUser = async (userData: Partial<User>): Promise<any> => {
     if (!token) {
-      setError("No se encontro el token");
-      setLoading(false);
+      // setError("No se encontro el token");
+      // setLoading(false);
     } else {
       try {
         const response = await userService.registerUser(userData, token);
@@ -81,7 +90,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
-          setError("Falla al registrar el nuevo usuario");
+          // setError("Falla al registrar el nuevo usuario");
         }
       }
     }
@@ -92,8 +101,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     userId: string
   ): Promise<any> => {
     if (!token) {
-      setError("No se encontro el token");
-      setLoading(false);
+      // setError("No se encontro el token");
+      // setLoading(false);
     } else {
       try {
         const response = await userService.updateUser(userData, userId, token);
@@ -108,19 +117,27 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
           console.log(error.response);
         }
         if (error instanceof Error) {
-          setError("Falla al actualizar el usuario");
+          // setError("Falla al actualizar el usuario");
         }
       }
     }
   };
 
   useEffect(() => {
+    console.log("::: ");
     fetchUsers();
   }, [token]);
 
   return (
     <UserContext.Provider
-      value={{ users, loading, error, registerUser, updateUser, deleteUser }}
+      value={{
+        users,
+        // loading,
+        // error,
+        registerUser,
+        updateUser,
+        deleteUser
+      }}
     >
       {children}
     </UserContext.Provider>
