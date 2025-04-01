@@ -4,7 +4,6 @@ import MainLayout from "../pages/mainLayout/MainLayout";
 import UserManagementPage from "../pages/UserManagementPage";
 import HomePage from "../pages/HomePage";
 import RegisterContainer from "../features/userManagement/components/register/UserFormContainer";
-import UserShowcase from "../features/userManagement/components/showcase/UserShowcase";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
 import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
 import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
@@ -15,6 +14,7 @@ import TourPackageShowcaseContainer from "../features/tourPackage/showcase/TourP
 import TourTypeContainer from "../features/tourType/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/showcase/TouristDestinationShowcaseContainer";
+import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -61,13 +61,13 @@ export const AppRouter = createBrowserRouter(
           path: "gestion-de-usuarios",
           element: <UserManagementPage />,
           children: [
-            {
-              path: "nuevo",
-              element: <RegisterContainer />,
-            },
+            // {
+            //   path: "nuevo",
+            //   element: <RegisterContainer />,
+            // },
             {
               path: "usuarios",
-              element: <UserShowcase />,
+              element: <UserShowcaseContainer />,
               children: [
                 // {
                 //   path: "",

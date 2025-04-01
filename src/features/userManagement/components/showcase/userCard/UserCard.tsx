@@ -1,82 +1,63 @@
-import React, { useEffect, useState } from "react";
+import { Avatar, Box, Card, CardHeader, Typography } from "@mui/material";
 import { User } from "../../../types/User";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-} from "@mui/material";
 import { Role } from "../../../types/Role";
-import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import { useEffect, useState } from "react";
+import { ContactPhone } from "@mui/icons-material";
 import UserCardMenu from "./UserCardMenu";
-import { UserModal } from "./userInfoModal/userModal";
-import { useNavigate } from "react-router-dom";
-import { useUserDeleteModal } from "./userInfoModal/useUserDeleteModal";
 
-interface Props {
+interface UserCardProps {
   user: User;
+  userRole: Role;
   roles: Role[];
+  handleMenuOption: (option:string) => void;
 }
-
-const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
-  const navigate = useNavigate();
-  const { showUserDeleteModal } = useUserDeleteModal();
-
+const UserCard: React.FC<UserCardProps> = ({
+  user,
+  userRole,
+  roles,
+  handleMenuOption,
+}) => {
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
-  const [roleName, setRoleName] = useState("Sin rol");
+
+  const shortenUserName = (name: string) => {
+    if (name.length<15) {
+      return name
+    }
+    const shortenName = name.substring(0,12)
+    return (`${shortenName}...`);
+  };
 
   useEffect(() => {
-    if (!roles || roles.length === 0) {
-      console.warn("Roles no están definidos o están vacíos");
-      return;
+    if (roles && roles.length > 0) {
+      if (user.role === roles[0].id) {
+        setRoleColor("#e06860");
+        setRoleChar("A");
+      }
+      if (user.role === roles[1].id) {
+        setRoleColor("#7abe74");
+        setRoleChar("O");
+      }
+      if (user.role === roles[2].id) {
+        setRoleColor("#61afef");
+        setRoleChar("G");
+      }
     }
-
-    if (user.role === roles[0].id) {
-      setRoleColor("#e06860");
-      setRoleChar("A");
-      setRoleName(roles[0].name);
-    }
-    if (user.role === roles[1].id) {
-      setRoleColor("#7abe74");
-      setRoleChar("O");
-      setRoleName(roles[1].name);
-    }
-    if (user.role === roles[2].id) {
-      setRoleColor("#61afef");
-      setRoleChar("G");
-      setRoleName(roles[2].name);
-    }
-  }, [roles, user.role]);
-
-  const handleMenuOptionSelect = async (option: string) => {
-    if (option === "Ver mas") {
-      UserModal.showUserDetails(user, roleName);
-    }
-    if (option === "Editar") {
-      navigate(`editar/${user.id}`);
-    }
-    if (option === "Eliminar") {
-      showUserDeleteModal(user.id);
-    }
-  };
+  }, [roles, user.role, userRole]);
 
   return (
     <Card
       sx={{
         width: 300,
-        // bgcolor: `${roleColor}`,
-        // p: 0,
+        // height:126,
+        backgroundColor: "rgba(10, 10, 10, 0.7)",
         borderRadius: "10px",
-        // background: " rgba(77, 75, 80, 1)",
-        boxShadow: "0 4px 10px rgba(10, 10, 10,0.6)",
-        // backdropFilter: "blur(10px)",
-        border: "1px solid rgb(10, 10, 10)",
-
+        borderTopLeftRadius: "4rem",
+        borderBottomLeftRadius: "4rem",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        border: "1px solid rgb(10,10,10)",
         ".MuiCardHeader-root": {
-          p: "10px 10px 10px 10px",
+          p: "10px",
         },
         ".MuiCardContent-root": {
           p: "0 15px 10px 0",
@@ -88,66 +69,31 @@ const UserCard: React.FC<Props> = ({ user, roles = [] }) => {
       <CardHeader
         avatar={
           <Avatar
-            sx={{
-              // bgcolor: `${roleColor}`,
-              height: 100,
-              width: 100,
-              border: `4px solid ${roleColor}`,
-              // fontSize:30
-            }}
+            sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
             aria-label="user"
             src={user.imageUrl}
-            variant="rounded"
+            // variant="rounded"
           >
-            {`${roleChar}`}
+            {roleChar}
           </Avatar>
         }
-        action={
-          // <IconButton aria-label="more info">
-          //   <MoreVertIcon />
-          // </IconButton>
-          <UserCardMenu onOptionSelect={handleMenuOptionSelect} />
-        }
-        title={`${roleName}`}
+        action={<UserCardMenu onOptionSelect={handleMenuOption} />}
+        title={`${userRole.name}`}
         subheader={
           <Box>
-            <Box>{`${user.firstName} ${user.lastName}`}</Box>
-            <Typography
-              sx={{
-                pt: "11px",
-                fontSize: "0.9rem",
-                color: "white",
-              }}
-            >
-              <ContactPhoneIcon />
+            {/* <Typography sx={{fontSize:"16px"}} >{`${user.firstName} ${user.lastName}`}</Typography> */}
+            <Typography sx={{ fontSize: "16px" }}>
+              {shortenUserName(`${user.firstName} ${user.lastName}`)}
+            </Typography>
+            <Typography sx={{ pt: "11px", fontSize: "0.9rem", color: "white" }}>
+              <ContactPhone />
               <br />
               {user.phone}
             </Typography>
           </Box>
         }
       />
-      {/* <CardContent
-        sx={{
-          // margin:"0 0 0 0",
-          padding: 0,
-          paddingLeft: "16px",
-        }}
-      >
-        <Typography
-          // variant="body2"
-          sx={{
-            // color: "text.secondary",
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            // margin:0
-            // padding:0
-          }}
-        >
-          <ContactPhoneIcon />
-          {user.phone}
-        </Typography>
-      </CardContent> */}
+      {/* card{userRole.name} */}
     </Card>
   );
 };
