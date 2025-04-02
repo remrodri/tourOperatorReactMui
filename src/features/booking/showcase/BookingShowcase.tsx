@@ -1,13 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
-import { User } from "../../types/User";
-import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
-import UserCardContainer from "./userCard/UserCardContainer";
+import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 
-interface UserShowcaseProps {
+interface BookingShowcaseProps {
   handleClick: () => void;
-  users: User[];
+  // bookings:any
 }
-const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
+
+const BookingShowcase: React.FC<BookingShowcaseProps> = ({ handleClick }) => {
   return (
     <Box
       sx={{
@@ -34,13 +33,10 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
             alignItems: "center",
           }}
         >
-          Usuarios
+          reservas
           <Button
             variant="contained"
-            sx={{
-              height: "2rem",
-              width: "12rem",
-            }}
+            sx={{ height: "2rem", width: "12rem" }}
             onClick={handleClick}
           >
             nuevo
@@ -63,21 +59,15 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
             flexWrap: "wrap",
             overflowY: "auto",
             gap: "1rem",
-            alignContent: "flex-start",
+            alginContent: "flex-start",
             background: "rgba(255,255,255,0.2)",
             borderRadius: "10px",
-            boxShadow: "0 4px 10px rgba(255,255,255,0.2)",
+            boxShadow: "0 4px 10px solid rgba(255,255,255,0.2)",
             border: "1px solid rgba(255,255,255,0.2)",
           }}
-        >
-          {users && users.length > 0 ? (
-            users.map((user) => <UserCardContainer key={user.id} user={user} />)
-          ) : (
-            <p>Cargando usuarios</p>
-          )}
-        </Box>
+        ></Box>
       </Box>
     </Box>
   );
 };
-export default UserShowcase;
+export default BookingShowcase;

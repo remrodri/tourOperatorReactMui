@@ -3,7 +3,6 @@ import LoginPage from "../pages/LoginPage";
 import MainLayout from "../pages/mainLayout/MainLayout";
 import UserManagementPage from "../pages/UserManagementPage";
 import HomePage from "../pages/HomePage";
-import RegisterContainer from "../features/userManagement/components/register/UserFormContainer";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
 import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
 import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
@@ -15,6 +14,8 @@ import TourTypeContainer from "../features/tourType/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/showcase/TouristDestinationShowcaseContainer";
 import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
+import BookingPage from "../pages/BookingPage";
+import BookingShowcaseContainer from "../features/booking/showcase/BookingShowcaseContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -106,6 +107,11 @@ export const AppRouter = createBrowserRouter(
               element: <TouristDestinationShowcaseContainer />,
             },
           ],
+        },
+        {
+          path: "reservas",
+          element: <BookingPage />,
+          children: [{ path: "todos", element: <BookingShowcaseContainer /> }],
         },
       ],
     },

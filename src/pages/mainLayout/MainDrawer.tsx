@@ -1,4 +1,4 @@
-import * as React from "react";
+// import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -16,7 +16,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Collapse,
@@ -37,6 +37,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExploreIcon from "@mui/icons-material/Explore";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
+import { HorizontalSplit } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -150,7 +151,7 @@ export default function MainDrawer() {
   const [userOpen, setUserOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
   const { error, logout } = useLogout();
-  // const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
   // const [menuOption, setMenuOption] = useState(Boolean);
   const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
@@ -179,15 +180,11 @@ export default function MainDrawer() {
 
   function handleClick(text: string): void {
     // theme.breakpoints.down("sm") && setOpen(false);
-
-    console.log("text::: ", text);
+    setSelectedOption(text);
     switch (text) {
       case "Home":
         navigate("home");
         break;
-      // case "Nuevo":
-      //   navigate("gestion-de-usuarios/nuevo");
-      //   break;
       case "Ver todos":
         navigate("gestion-de-usuarios/usuarios");
         break;
@@ -200,11 +197,14 @@ export default function MainDrawer() {
       case "Tipo de tour":
         navigate("paquetes-turisticos/tipo-de-tour");
         break;
-      case "politicas":
+      case "Politicas":
         navigate("paquetes-turisticos/politicas");
         break;
-      case "destinos":
+      case "Destinos":
         navigate("paquetes-turisticos/destinos");
+        break;
+      case "Reservas":
+        navigate("reservas/todos");
         break;
       default:
         console.warn("la ruta no existe");
@@ -243,24 +243,34 @@ export default function MainDrawer() {
 
   // const icons = [<HomeIcon />, <SupervisorAccountIcon />];
 
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes("gestion-de-usuarios/usuarios"))
+      setSelectedOption("Ver todos");
+    if (path.includes("paquetes-turisticos/ver-todos"))
+      setSelectedOption("Paquetes turisticos");
+    if (path.includes("paquetes-turisticos/tipo-de-tour"))
+      setSelectedOption("Tipo de tour");
+    if (path.includes("paquetes-turisticos/politicas"))
+      setSelectedOption("Politicas");
+    if (path.includes("paquetes-turisticos/destinos"))
+      setSelectedOption("Destinos");
+    if (path.includes("reservas/todos")) setSelectedOption("Reservas");
+    // if (path.includes("home")) setSelectedOption("Home");
+  }, [location.pathname]);
+
   return (
     <Box
       sx={{
-        // flexGrow:1,
         display: "flex",
-        // height: "100%",
-        width:"100%",
-        // p: "10px",
-        // flexDirection: "column",
+        width: "100%",
       }}
     >
-      {/* <CssBaseline /> */}
       <Drawer
         variant="permanent"
         open={open}
         sx={{
           p: "10px",
-          // width:"100rem",
           "&.MuiDrawer-docked": { width: open ? 240 : 83 }, // Ajusta según tu necesidad
           "& .MuiDrawer-paper": {
             position: "relative",
@@ -268,14 +278,8 @@ export default function MainDrawer() {
             background: "rgba(0, 0, 0, 0.6)",
             boxShadow: "0 4px 10px rgba(0,0,0,1)",
             borderRadius: "16px",
-            // borderRadius: "30px",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(0,0,0,0.7)",
-
-            // height: "98.7%",
-            // margin: "5px 0 5px 5px",
-            // width: open ? 240 : 60, // Ajuste dinámico del ancho
-            // width:650
           },
         }}
       >
@@ -299,10 +303,7 @@ export default function MainDrawer() {
                 edge="start"
                 sx={[
                   {
-                    // display: "flex",
-                    // justifyContent:"center"
                     marginRight: "3px",
-                    // pr:"13px"
                   },
                   open && { display: "none" },
                 ]}
@@ -331,26 +332,32 @@ export default function MainDrawer() {
           </Tooltip>
           <Collapse in={userOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {/* <Tooltip title="Crear usuario" placement="right">
-                <ListItemButton
-                  onClick={() => handleClick("Nuevo")}
-                  sx={{
-                    pl: open ? 4 : 2.5,
-                  }}
-                >
-                  <ListItemIcon>
-                    <PersonAddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Nuevo" : ""} />
-                </ListItemButton>
-              </Tooltip> */}
               <Tooltip title="Listar usuarios" placement="right">
                 <ListItemButton
-                  sx={{ pl: open ? 4 : 2.5 }}
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Ver todos"
+                        ? "rgba(172, 170, 164, 0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Ver todos"
+                          ? "rgba(255, 255, 255, 0.12)"
+                          : "rgba(172, 170, 164, 0.27)",
+                    },
+                  }}
                   onClick={() => handleClick("Ver todos")}
                 >
                   <ListItemIcon>
-                    <RecentActorsIcon />
+                    <RecentActorsIcon
+                      sx={{
+                        color:
+                          selectedOption === "Ver todos"
+                            ? "#90caf9"
+                            : "inherit",
+                      }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Ver todos" : ""} />
                 </ListItemButton>
@@ -359,8 +366,7 @@ export default function MainDrawer() {
           </Collapse>
         </List>
         <Divider />
-        {/* <Collapse></Collapse> */}
-        <List>
+        <List sx={{ display: "flex", flexDirection: "column", gap: "5px" }}>
           <Tooltip title="Gestion de Paquetes turisticos" placement="right">
             <ListItemButton
               onClick={packageHandleClick}
@@ -378,61 +384,137 @@ export default function MainDrawer() {
           </Tooltip>
           <Collapse in={packageOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {/* <Tooltip title="Crear paquete turistico" placement="right">
-                <ListItemButton
-                  onClick={() => handleClick("Nuevo paquete turistico")}
-                  sx={{
-                    // pl: 4
-                    pl: open ? 4 : 2.5,
-                  }}
-                >
-                  <ListItemIcon>
-                    <AddBoxIcon />
-                  </ListItemIcon>
-                  {/* <ListItemText primary="Nuevo" /> */}
-              {/* <ListItemText primary={open ? "Nuevo" : ""} /> */}
-              {/* </ListItemButton> */}
-              {/* </Tooltip> */}
               <Tooltip title="Ver todos los paquetes" placement="right">
                 <ListItemButton
-                  sx={{ pl: open ? 4 : 2.5 }}
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Paquetes turisticos"
+                        ? "rgba(172, 170, 164, 0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Paquetes turisticos"
+                          ? "rgba(255, 255, 255, 0.12)"
+                          : "rgba(172, 170, 164, 0.27)",
+                    },
+                  }}
                   onClick={() => handleClick("Paquetes turisticos")}
                 >
                   <ListItemIcon>
-                    <ListAltIcon />
+                    <ListAltIcon
+                      sx={{
+                        color:
+                          selectedOption === "Paquetes turisticos"
+                            ? "#90caf9"
+                            : "inherit",
+                      }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Ver todos" : ""} />
                 </ListItemButton>
               </Tooltip>
               <Tooltip title="Tipo de tour" placement="right">
                 <ListItemButton
-                  sx={{ pl: open ? 4 : 2.5 }}
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Tipo de tour"
+                        ? "rgba(172, 170, 164, 0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Tipo de tour"
+                          ? "rgba(255, 255, 255, 0.12)"
+                          : "rgba(172, 170, 164, 0.27)",
+                    },
+                  }}
                   onClick={() => handleClick("Tipo de tour")}
                 >
                   <ListItemIcon>
-                    <FormatListBulletedIcon />
+                    <FormatListBulletedIcon
+                      sx={{
+                        color:
+                          selectedOption === "Tipo de tour"
+                            ? "#90caf9"
+                            : "inherit",
+                      }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Tipos de tour" : ""} />
                 </ListItemButton>
               </Tooltip>
               <Tooltip title="Politicas de cancelacion" placement="right">
                 <ListItemButton
-                  sx={{ pl: open ? 4 : 2.5 }}
-                  onClick={() => handleClick("politicas")}
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Politicas"
+                        ? "rgba(172, 170, 164, 0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Politicas"
+                          ? "rgba(255, 255, 255, 0.12)"
+                          : "rgba(172, 170, 164, 0.27)",
+                    },
+                    // boxShadow:
+                    //   selectedOption === "Politicas"
+                    //     ? "0 4px 10px rgba(255, 255, 255, 0.23)"
+                    //     : "",
+                    // outline:
+                    //   selectedOption === "Politicas"
+                    //     ? "1px solid rgba(255,255,255,0.2)"
+                    //     : "",
+                  }}
+                  onClick={() => handleClick("Politicas")}
                 >
                   <ListItemIcon>
-                    <EventBusyIcon />
+                    <EventBusyIcon
+                      sx={{
+                        color:
+                          selectedOption === "Politicas"
+                            ? "#90caf9"
+                            : "inherit",
+                      }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Politicas " : ""} />
                 </ListItemButton>
               </Tooltip>
               <Tooltip title="Destinos" placement="right">
                 <ListItemButton
-                  sx={{ pl: open ? 4 : 2.5 }}
-                  onClick={() => handleClick("destinos")}
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Destinos"
+                        ? "rgba(172, 170, 164, 0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Destinos"
+                          ? "rgba(255, 255, 255, 0.12)"
+                          : "rgba(172, 170, 164, 0.27)",
+                    },
+                    // boxShadow:
+                    //   selectedOption === "Destinos"
+                    //     ? "0 4px 10px rgba(255, 255, 255, 0.38)"
+                    //     : "",
+                    // outline:
+                    //   selectedOption === "Destinos"
+                    //     ? "1px solid rgba(255, 255, 255, 0.38)"
+                    //     : "",
+                    // m: selectedOption === "Destinos" ? "0 1px" : "0",
+                  }}
+                  onClick={() => handleClick("Destinos")}
                 >
                   <ListItemIcon>
-                    <ExploreIcon />
+                    <ExploreIcon
+                      sx={{
+                        color:
+                          selectedOption === "Destinos" ? "#90caf9" : "inherit",
+                      }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={open ? "Destinos" : ""} />
                 </ListItemButton>
@@ -450,8 +532,42 @@ export default function MainDrawer() {
               <ListItemIcon>
                 <BookOnlineIcon />
               </ListItemIcon>
+              <ListItemText primary="Reservas" />
+              {bookingOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </Tooltip>
+          <Collapse in={bookingOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Tooltip title="Ver todas las reservas" placement="right">
+                <ListItemButton
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Reservas"
+                        ? "rgba(172,170,164,0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Reservas"
+                          ? "rgba(255,255,255,0.12)"
+                          : "rgba(172,170,164,0.27)",
+                    },
+                  }}
+                  onClick={() => handleClick("Reservas")}
+                >
+                  <ListItemIcon>
+                    <HorizontalSplit
+                      sx={{
+                        color:
+                          selectedOption === "Reservas" ? "#90caf9" : "inherit",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Ver todos" : ""} />
+                </ListItemButton>
+              </Tooltip>
+            </List>
+          </Collapse>
         </List>
       </Drawer>
       <Box
@@ -462,31 +578,17 @@ export default function MainDrawer() {
         }}
       >
         <AppBar
-          // position="fixed"
-          // position="relative"
           open={open}
           sx={{
             background: "none",
-            // backgroundColor: "rgba(2, 2, 2, 0)",
             boxShadow: "none",
             border: "none",
-            // marginTop:"0.5%",
-            // height:"7%",
-            // margin: "5px 5px 0 0",
-            // backgroundColor: "rgba(0, 0, 0, 0.3)",
-            // backdropFilter: "blur(5px)",
-            // boxShadow: "0 4px 30px rgba(0,0,0,0.1)",
-            // border: "1px solid rgba(0,0,0,0.5)",
-            // width: "99.1%",
-            // borderRadius: "16px",
-            // width: open ? "78%" : "93%",
             p: "10px",
             display: "flex",
             justifyContent: "center",
           }}
         >
           <Toolbar
-            // disableGutters
             sx={{
               background: "rgba(0, 0, 0, 0.6)",
               borderRadius: "16px",
@@ -494,10 +596,6 @@ export default function MainDrawer() {
               backdropFilter: "blur(10px)",
               border: "1px solid rgba(0,0,0,0.7)",
               height: "100%", // Ajusta el alto aquí
-              // minHeight: "4rem",
-              // maxHeight: "4rem",
-              // width: "100%", // Asegura que ocupa todo el ancho
-              // px: "1rem", // Añadir padding horizontal
             }}
           >
             {matches && (
@@ -584,8 +682,7 @@ export default function MainDrawer() {
         <Box
           sx={{
             // height: "100dvh"
-            height:"calc(100% - 5.5rem)"
-            
+            height: "calc(100% - 5.5rem)",
           }}
         >
           <Outlet />
