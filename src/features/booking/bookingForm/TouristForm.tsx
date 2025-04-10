@@ -79,7 +79,8 @@ const TouristForm: React.FC<TouristFormProps> = ({
         label="Fecha de nacimiento"
         size="small"
         fullWidth
-        value={tourist.ci || ""}
+        // type="date"
+        value={tourist.dateOfBirth || ""}
         onChange={(e) => onChange("dateOfBirth", e.target.value)}
         error={touched?.dateOfBirth && Boolean(errors?.dateOfBirth)}
         helperText={touched?.dateOfBrith && errors?.dateOfBirth}

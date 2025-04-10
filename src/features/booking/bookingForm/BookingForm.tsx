@@ -46,6 +46,9 @@ interface BookingFormProps {
   handleRemoveTourist: (index: number) => void;
   handleTouristChange: (index: number, field: string, value: any) => void;
   handleAddAdditionalTourist: () => void;
+  handlePaymentChange: (index: number, field: string, value: any) => void;
+  handleAddPayment: () => void;
+  handleRemovePayment: (index: number) => void;
 }
 
 const BookingForm: React.FC<BookingFormProps> = ({
@@ -59,6 +62,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
   handleRemoveTourist,
   handleTouristChange,
   handleAddAdditionalTourist,
+  handlePaymentChange,
+  handleAddPayment,
+  handleRemovePayment,
 }) => {
   return (
     <Dialog onClose={handleClick} open={open}>
@@ -231,9 +237,77 @@ const BookingForm: React.FC<BookingFormProps> = ({
             }
             helperText={formik.touched.totalPrice && formik.errors.totalPrice}
           />
-          {/* <PaymentForm payment={payment}/> */}
+          
+          <Box
+            sx={{
+              mt: 3,
+              mb: 2,
+            }}
+          >
+            <Typography variant="h6">Información de Pagos</Typography>
+            {formik.values.payments?.map((payment, index) => (
+              <Box
+                key={index}
+                sx={{ mb: 2, p: 2, border: "1px solid #ddd", borderRadius: 1 }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant="subtitle1">
+                    Pago {index + 1}
+                  </Typography>
+                  {index > 0 && (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      color="error"
+                      onClick={() => handleRemovePayment(index)}
+                    >
+                      Eliminar
+                    </Button>
+                  )}
+                </Box>
+                <PaymentForm
+                  payment={payment}
+                  onChange={(field, value) =>
+                    handlePaymentChange(index, field, value)
+                  }
+                  errors={formik.errors.payments?.[index]}
+                  touched={formik.touched.payments?.[index]}
+                />
+              </Box>
+            ))}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleAddPayment}
+              sx={{ mt: 1 }}
+            >
+              Agregar pago
+            </Button>
+          </Box>
+          <TextField
+            label="Notas"
+            size="small"
+            fullWidth
+            multiline
+            rows={3}
+            {...formik.getFieldProps("notes")}
+            onChange={formik.handleChange}
+            error={formik.touched.notes && Boolean(formik.errors.notes)}
+            helperText={formik.touched.notes && formik.errors.notes}
+          />
+          
           <Box sx={{ pt: "2rem", display: "flex", gap: "1rem" }}>
-            <Button variant="contained" color="success" type="submit" fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+            >
               Enviar
             </Button>
             <Button

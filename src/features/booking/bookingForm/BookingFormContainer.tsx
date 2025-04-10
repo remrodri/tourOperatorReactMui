@@ -83,6 +83,34 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
     formik.setFieldValue(`mainTourist.${field}`, value);
   };
 
+  // Payment handling functions
+  const handlePaymentChange = (index: number, field: string, value: any) => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments[index] = {
+      ...currentPayments[index],
+      [field]: value,
+    };
+    formik.setFieldValue("payments", currentPayments);
+  };
+
+  const handleAddPayment = () => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments.push({
+      id: "",
+      amount: 0,
+      paymentDate: new Date().toString(),
+      paymentMethod: "",
+      transactionId: "",
+    });
+    formik.setFieldValue("payments", currentPayments);
+  };
+
+  const handleRemovePayment = (index: number) => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments.splice(index, 1);
+    formik.setFieldValue("payments", currentPayments);
+  };
+
   const onSubmit = (data: any) => {
     console.log("data::: ", data);
   };
@@ -150,6 +178,9 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       handleRemoveTourist={handleRemoveTourist}
       handleTouristChange={handleTouristChange}
       handleAddAdditionalTourist={handleAddAdditionalTourist}
+      handlePaymentChange={handlePaymentChange}
+      handleAddPayment={handleAddPayment}
+      handleRemovePayment={handleRemovePayment}
     />
   );
 };
