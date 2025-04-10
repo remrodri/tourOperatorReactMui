@@ -1,4 +1,12 @@
-import { Box, TextField, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { PaymentInfoType } from "../types/PaymentInfoType";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -27,9 +35,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   touched,
 }) => {
   // Convert string date to dayjs object for the DatePicker
-  const paymentDate = payment.paymentDate 
-    ? dayjs(payment.paymentDate) 
-    : null;
+  const paymentDate = payment.paymentDate ? dayjs(payment.paymentDate) : null;
 
   const handleDateChange = (date: any) => {
     if (date) {
@@ -40,22 +46,33 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     }
   };
 
+const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Always convert to a number, use 0 when empty
+  const value = e.target.value === "" ? 0 : Number(e.target.value);
+  onChange("amount", value);
+};
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, mb: 2 }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, mb: 2 }}
+    >
       <Typography variant="h6">Información de Pago</Typography>
-      
+
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
           label="Monto"
           type="number"
           size="small"
           fullWidth
-          value={payment.amount || 0}
-          onChange={(e) => onChange("amount", Number(e.target.value))}
+          // Show empty field when amount is 0, but store as number internally
+          value={
+            payment.amount === 0 ? "" : payment.amount 
+          }
+          onChange={handleAmountChange}
           error={touched?.amount && Boolean(errors?.amount)}
           helperText={touched?.amount && errors?.amount}
         />
-        
+
         <Box sx={{ width: "100%" }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
@@ -68,18 +85,18 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                   fullWidth: true,
                   error: touched?.paymentDate && Boolean(errors?.paymentDate),
                   helperText: touched?.paymentDate && errors?.paymentDate,
-                }
+                },
               }}
             />
           </LocalizationProvider>
         </Box>
       </Box>
-      
+
       <Box sx={{ display: "flex", gap: 2 }}>
-        <FormControl 
-          size="small" 
-          fullWidth={payment.paymentMethod !== 'cash'} 
-          sx={{ width: payment.paymentMethod === 'cash' ? '100%' : '50%' }}
+        <FormControl
+          size="small"
+          fullWidth={payment.paymentMethod !== "cash"}
+          sx={{ width: payment.paymentMethod === "cash" ? "100%" : "50%" }}
           error={touched?.paymentMethod && Boolean(errors?.paymentMethod)}
         >
           <InputLabel id="payment-method-label">Método de Pago</InputLabel>
@@ -102,7 +119,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             </Typography>
           )}
         </FormControl>
-        
+
         {payment.paymentMethod && payment.paymentMethod !== "cash" && (
           <TextField
             label="ID de Transacción"

@@ -36,7 +36,6 @@ interface BookingFormProps {
     paymentIds: string[];
     payments: PaymentInfoType[];
     notes?: string;
-    // status: "pending" | "paid" | "cancelled" | "completed";
     status: string;
   }>;
   tourPackages: TourPackageType[];
@@ -66,23 +65,28 @@ const BookingForm: React.FC<BookingFormProps> = ({
   handleAddPayment,
   handleRemovePayment,
 }) => {
+  // Find the selected tour package for displaying price info
+  const selectedTourPackage = tourPackages.find(
+    (tp) => tp.id === formik.values.tourPackageId
+  );
+
+  // Count tourists for displaying
+  const totalTourists =
+    (formik.values.mainTourist &&
+    Object.keys(formik.values.mainTourist).length > 0
+      ? 1
+      : 0) + (formik.values.additionalTourists?.length || 0);
+
   return (
     <Dialog onClose={handleClick} open={open}>
       <DialogTitle>Nueva Reserva</DialogTitle>
-      <DialogContent
-        sx={
-          {
-            // width: {
-            //   xs: "10rem",
-            //   sm: "15rem",
-            //   md: "35rem",
-            //   lg: "55rem",
-            // },
-          }
-        }
-      >
+      <DialogContent>
         <form
           onSubmit={(e) => {
+            e.preventDefault();
+            console.log("Form submission attempted");
+            console.log("Form is valid:", formik.isValid);
+            console.log("Form errors:", formik.errors);
             formik.handleSubmit(e);
           }}
           style={{ padding: "0.3rem 0 0 0" }}
@@ -103,7 +107,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               >
                 {tourPackages.map((tp) => (
                   <MenuItem key={tp.id} value={tp.id}>
-                    {tp.name}
+                    {tp.name} - ${tp.price}
                   </MenuItem>
                 ))}
               </Select>
@@ -136,13 +140,11 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     if (dr.id && dr.dates && dr.dates.length > 0) {
                       return (
                         <MenuItem key={dr.id} value={dr.id}>
-                          {/* {dr.dates[0]} */}
                           {dr.dates.length > 1
                             ? `${dr.dates[0]} / ${
                                 dr.dates[dr.dates.length - 1]
                               }`
                             : `${dr.dates[0]}`}
-                          {/* {showDateRange(dr.dates)} */}
                         </MenuItem>
                       );
                     }
@@ -221,23 +223,29 @@ const BookingForm: React.FC<BookingFormProps> = ({
               Agregar turista
             </Button>
           </Box>
-          <TextField
-            sx={{ height: "70px" }}
-            label="Precio total"
-            size="small"
-            type="number"
-            fullWidth
-            {...formik.getFieldProps("totalPrice")}
-            onChange={(e) => {
-              const value = e.target.value === "" ? "" : Number(e.target.value);
-              formik.setFieldValue("totalPrice", value);
-            }}
-            error={
-              formik.touched.totalPrice && Boolean(formik.errors.totalPrice)
-            }
-            helperText={formik.touched.totalPrice && formik.errors.totalPrice}
-          />
-          
+
+          <Box sx={{ height: "90px" }}>
+            <TextField
+              label="Precio total"
+              size="small"
+              type="number"
+              fullWidth
+              {...formik.getFieldProps("totalPrice")}
+              // InputProps={{
+              //   readOnly: true,
+              // }}
+              error={
+                formik.touched.totalPrice && Boolean(formik.errors.totalPrice)
+              }
+              helperText={
+                (formik.touched.totalPrice && formik.errors.totalPrice) ||
+                (selectedTourPackage
+                  ? `Cálculo: $${selectedTourPackage.price} por pasajero × ${totalTourists} pasajeros`
+                  : "")
+              }
+            />
+          </Box>
+
           <Box
             sx={{
               mt: 3,
@@ -257,9 +265,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     mb: 1,
                   }}
                 >
-                  <Typography variant="subtitle1">
-                    Pago {index + 1}
-                  </Typography>
+                  <Typography variant="subtitle1">Pago {index + 1}</Typography>
                   {index > 0 && (
                     <Button
                       variant="outlined"
@@ -301,13 +307,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
             error={formik.touched.notes && Boolean(formik.errors.notes)}
             helperText={formik.touched.notes && formik.errors.notes}
           />
-          
+
           <Box sx={{ pt: "2rem", display: "flex", gap: "1rem" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-            >
+            <Button type="submit" variant="contained" fullWidth>
               Enviar
             </Button>
             <Button
