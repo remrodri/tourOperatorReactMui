@@ -1,13 +1,18 @@
 import { useState } from "react";
 import BookingShowcase from "./BookingShowcase";
+import BookingFormContainer from "../bookingForm/BookingFormContainer";
 
 const BookingShowcaseContainer: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
-    console.log("click::: ");
     setOpen(!open);
   };
-  return <BookingShowcase handleClick={handleClick} />;
+  return (
+    <>
+      <BookingShowcase handleClick={handleClick} />
+      {open && <BookingFormContainer open={open} handleClick={handleClick} />}
+    </>
+  );
 };
 export default BookingShowcaseContainer;
