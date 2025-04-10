@@ -10,6 +10,8 @@ import * as TourPackageService from "../service/TourPackageService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
 type TourPackageContextType = {
+  tpFound: TourPackageType | null;
+  findTourPackageById: (id: string) => Promise<void>;
   tourPackages: TourPackageType[];
   loading: boolean;
   error: string | null;
@@ -33,16 +35,27 @@ type TourPackageProviderProps = {
 export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
   children,
 }) => {
+  const [tpFound, setTpFound] = useState<TourPackageType | null>(null);
   const [tourPackages, setTourPackages] = useState<TourPackageType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
 
+  const findTourPackageById = async (id: string): Promise<void> => {
+    const tpFound = tourPackages.find((tp) => tp.id === id);
+    if (tpFound) {
+      // console.log('tpFound::: ', tpFound);
+      setTpFound(tpFound);
+    }
+  };
+
   const getTourPackages = async (): Promise<void> => {
     setLoading(true);
     try {
       const response = await TourPackageService.getAllTourPackagesRequest();
-      const tps = response.data.filter((tp:TourPackageType) => tp.status !== "draft");
+      const tps = response.data.filter(
+        (tp: TourPackageType) => tp.status !== "draft"
+      );
       // console.log('response::: ', response.data);
       // setTourPackages(response.data);
       setTourPackages(tps);
@@ -124,11 +137,14 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
 
   useEffect(() => {
     getTourPackages();
+    console.log('tourPackages::: ', tourPackages);
   }, []);
 
   return (
     <TourPackageContext.Provider
       value={{
+        tpFound,
+        findTourPackageById,
         tourPackages,
         loading,
         error,

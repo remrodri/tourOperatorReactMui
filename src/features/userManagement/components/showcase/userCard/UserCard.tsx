@@ -9,7 +9,7 @@ interface UserCardProps {
   user: User;
   userRole: Role;
   roles: Role[];
-  handleMenuOption: (option:string) => void;
+  handleMenuOption: (option: string) => void;
 }
 const UserCard: React.FC<UserCardProps> = ({
   user,
@@ -21,11 +21,11 @@ const UserCard: React.FC<UserCardProps> = ({
   const [roleChar, setRoleChar] = useState("SR");
 
   const shortenUserName = (name: string) => {
-    if (name.length<15) {
-      return name
+    if (name.length < 15) {
+      return name;
     }
-    const shortenName = name.substring(0,12)
-    return (`${shortenName}...`);
+    const shortenName = name.substring(0, 12);
+    return `${shortenName}...`;
   };
 
   useEffect(() => {
