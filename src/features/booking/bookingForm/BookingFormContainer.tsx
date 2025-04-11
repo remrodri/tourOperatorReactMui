@@ -10,6 +10,7 @@ import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import { useFormik } from "formik";
 import { bookingSchema } from "./validation/bookingSchema";
 import { Dayjs } from "dayjs";
+import { useBookingContext } from "../context/BookingContext";
 
 interface BookingFormContainerProps {
   open: boolean;
@@ -43,6 +44,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   const { users } = useUserContext();
   const { dateRangesByTP, findDateRangesByTourPackage } = useDateRangeContext();
   const [dateRanges, setDateRanges] = useState<DateRangeType[]>([]);
+  const { createBooking, updateBooking } = useBookingContext();
 
   // Calculate total price based on selected package and number of tourists
   const calculateTotalPrice = (
@@ -72,9 +74,11 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       email: "",
       phone: "",
       ci: "",
-      nationality: "",
+      nationality: "Bolivia",
       dateOfBirth: "",
-      additionalInformation: "",
+      // additionalInformation: "",
+      passportNumber: "",
+      documentType: "CI",
     });
     formik.setFieldValue("additionalTourists", currentTourists);
 
@@ -115,26 +119,26 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   };
 
   // Payment handling functions
-const handlePaymentChange = (index: number, field: string, value: any) => {
-  const currentPayments = [...(formik.values.payments || [])];
-  currentPayments[index] = {
-    ...currentPayments[index],
-    [field]: value,
+  const handlePaymentChange = (index: number, field: string, value: any) => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments[index] = {
+      ...currentPayments[index],
+      [field]: value,
+    };
+    formik.setFieldValue("payments", currentPayments);
   };
-  formik.setFieldValue("payments", currentPayments);
-};
 
-const handleAddPayment = () => {
-  const currentPayments = [...(formik.values.payments || [])];
-  currentPayments.push({
-    id: "",
-    amount: 0, // Cambiado de 0 a cadena vacía para permitir borrar
-    paymentDate: new Date().toISOString(),
-    paymentMethod: "",
-    transactionId: "",
-  });
-  formik.setFieldValue("payments", currentPayments);
-};
+  const handleAddPayment = () => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments.push({
+      id: "",
+      amount: 0, // Cambiado de 0 a cadena vacía para permitir borrar
+      paymentDate: new Date().toISOString(),
+      paymentMethod: "",
+      transactionId: "",
+    });
+    formik.setFieldValue("payments", currentPayments);
+  };
 
   const handleRemovePayment = (index: number) => {
     const currentPayments = [...(formik.values.payments || [])];
@@ -143,31 +147,13 @@ const handleAddPayment = () => {
   };
 
   const onSubmit = (values: BookingFormValues) => {
-    // Mostrar los datos en la consola con un formato más visible
-    console.log("onSubmit function called!");
-    console.log("---------- DATOS DEL FORMULARIO ENVIADO ----------");
-    console.log("ID:", values.id);
-    console.log("Tour Package ID:", values.tourPackageId);
-    console.log("Date Range ID:", values.dateRangeId);
-    console.log("Seller ID:", values.sellerId);
-    console.log("Main Tourist:", values.mainTourist);
-    console.log("Additional Tourists:", values.additionalTourists);
-    console.log("Total Price:", values.totalPrice);
-    console.log("Payments:", values.payments);
-    console.log("Notes:", values.notes);
-    console.log("Status:", values.status);
-    console.log("---------- FIN DE DATOS DEL FORMULARIO ----------");
+    if (values.id) {
+      // const booking = {...values,status:"pending"}
+      updateBooking(values.id, values as BookingType);
+    } else {
+      createBooking(values as BookingType);
+    }
 
-    // También puedes mostrar el objeto completo
-    console.log("Datos completos:", values);
-
-    // Aquí podrías agregar lógica para guardar los datos
-    // Por ejemplo, llamar a una API o guardar en tu estado global
-
-    // Opcional: Mostrar una alerta para confirmar que se envió
-    alert("Formulario enviado correctamente");
-
-    // Opcional: Cerrar el formulario después de enviar
     handleClick();
   };
 
@@ -185,9 +171,11 @@ const handleAddPayment = () => {
         email: "",
         phone: "",
         ci: "",
-        nationality: "",
-        dateOfBirth: "",
-        additionalInformation: "",
+        nationality: "Bolivia",
+        // dateOfBirth: "",
+        // additionalInformation: "",
+        passportNumber: "",
+        documentType: "CI",
       },
       additionalTouristIds: booking?.additionalTouristIds ?? [],
       additionalTourists: booking?.additionalTourists ?? [],

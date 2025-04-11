@@ -6,7 +6,7 @@ const GlobalSnackbar = () => {
   return (
     <Snackbar
       open={openSnackbar}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       onClose={closeSnackbar}
     >
       <Alert

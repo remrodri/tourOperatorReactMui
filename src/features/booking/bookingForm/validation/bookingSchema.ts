@@ -17,11 +17,11 @@ export const bookingSchema = yup.object().shape({
     .of(paymentInfoSchema)
     .min(1, "Debe haber al menos un pago"),
   notes: yup.string().optional(),
-  status: yup
-    .string()
-    .oneOf(
-      ["pending", "paid", "cancelled", "completed"],
-      "Estado de reserva invalido"
-    )
-    .required("El estado de la es requerido"),
+  // status: yup
+  //   .string()
+  //   .oneOf(
+  //     ["pending", "paid", "cancelled", "completed"],
+  //     "Estado de reserva invalido"
+  //   )
+  //   .required("El estado de la es requerido"),
 });

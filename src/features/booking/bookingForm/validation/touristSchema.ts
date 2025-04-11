@@ -9,6 +9,8 @@ export const touristSchema = yup.object().shape({
   ci: yup.string().required("El campo es requerido"),
   nationality: yup.string().required("El campo es requerido"),
   dateOfBirth: yup.string().required("El campo es requerido"),
+  passportNumber: yup.string().optional(),
+  documentType: yup.string().required("El campo es requerido"),
   // additionalInformation: yup.string().optional(),
 });
 
