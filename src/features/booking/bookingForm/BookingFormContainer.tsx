@@ -175,7 +175,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
         // dateOfBirth: "",
         // additionalInformation: "",
         passportNumber: "",
-        documentType: "CI",
+        documentType: "ci",
       },
       additionalTouristIds: booking?.additionalTouristIds ?? [],
       additionalTourists: booking?.additionalTourists ?? [],

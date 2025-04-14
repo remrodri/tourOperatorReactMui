@@ -226,6 +226,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
           <Box sx={{ height: "90px" }}>
             <TextField
+              disabled
               label="Precio total"
               size="small"
               type="number"

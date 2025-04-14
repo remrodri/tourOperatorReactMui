@@ -59,40 +59,6 @@ const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       <Typography variant="h6">Información de Pago</Typography>
 
       <Box sx={{ display: "flex", gap: 2 }}>
-        <TextField
-          label="Monto"
-          type="number"
-          size="small"
-          fullWidth
-          // Show empty field when amount is 0, but store as number internally
-          value={
-            payment.amount === 0 ? "" : payment.amount 
-          }
-          onChange={handleAmountChange}
-          error={touched?.amount && Boolean(errors?.amount)}
-          helperText={touched?.amount && errors?.amount}
-        />
-
-        <Box sx={{ width: "100%" }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha de pago"
-              value={paymentDate}
-              onChange={handleDateChange}
-              slotProps={{
-                textField: {
-                  size: "small",
-                  fullWidth: true,
-                  error: touched?.paymentDate && Boolean(errors?.paymentDate),
-                  helperText: touched?.paymentDate && errors?.paymentDate,
-                },
-              }}
-            />
-          </LocalizationProvider>
-        </Box>
-      </Box>
-
-      <Box sx={{ display: "flex", gap: 2 }}>
         <FormControl
           size="small"
           fullWidth={payment.paymentMethod !== "cash"}
@@ -131,6 +97,38 @@ const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             helperText={touched?.transactionId && errors?.transactionId}
           />
         )}
+      </Box>
+
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <TextField
+          label="Monto"
+          type="number"
+          size="small"
+          fullWidth
+          // Show empty field when amount is 0, but store as number internally
+          value={payment.amount === 0 ? "" : payment.amount}
+          onChange={handleAmountChange}
+          error={touched?.amount && Boolean(errors?.amount)}
+          helperText={touched?.amount && errors?.amount}
+        />
+
+        <Box sx={{ width: "100%" }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha de pago"
+              value={paymentDate}
+              onChange={handleDateChange}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  fullWidth: true,
+                  error: touched?.paymentDate && Boolean(errors?.paymentDate),
+                  helperText: touched?.paymentDate && errors?.paymentDate,
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Box>
       </Box>
     </Box>
   );
