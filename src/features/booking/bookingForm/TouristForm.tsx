@@ -1,4 +1,12 @@
-import { Box, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { TouristType } from "../types/TouristType";
 
 interface TouristFormProps {
@@ -7,6 +15,11 @@ interface TouristFormProps {
   errors?: any;
   touched?: any;
 }
+
+const documentTypes = [
+  { value: "ci", label: "CI" },
+  { value: "passport", label: "Pasaporte" },
+];
 
 const TouristForm: React.FC<TouristFormProps> = ({
   tourist,
@@ -57,7 +70,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
         error={touched?.phone && Boolean(errors?.phone)}
         helperText={touched?.phone && errors?.phone}
       />
-      <TextField
+      {/* <TextField
         label="CI"
         size="small"
         fullWidth
@@ -65,7 +78,57 @@ const TouristForm: React.FC<TouristFormProps> = ({
         onChange={(e) => onChange("ci", e.target.value)}
         error={touched?.ci && Boolean(errors?.ci)}
         helperText={touched?.ci && errors?.ci}
-      />
+      /> */}
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <FormControl
+          size="small"
+          fullWidth={tourist.documentType !== "passport"}
+          sx={{ width: tourist.documentType === "passport" ? "50%" : "100%" }}
+          error={touched?.documentType && Boolean(errors?.documentType)}
+        >
+          <InputLabel id="document-type-label">Tipo de documento</InputLabel>
+          <Select
+            labelId="document-type-label"
+            id="document-type"
+            value={tourist.documentType || ""}
+            label="Tipo de Documento"
+            onChange={(e) => onChange("documentType", e.target.value)}
+          >
+            {documentTypes.map((type) => (
+              <MenuItem key={type.value} value={type.value}>
+                {type.label}
+              </MenuItem>
+            ))}
+          </Select>
+          {touched?.documentType && errors?.documentType && (
+            <Typography color="error" sx={{ fontsize: "12px", mt: 1 }}>
+              {errors.documentType}
+            </Typography>
+          )}
+        </FormControl>
+        {tourist.documentType === "passport" && (
+          <TextField
+            label="Numero de pasaporte"
+            size="small"
+            fullWidth
+            value={tourist.passportNumber || ""}
+            onChange={(e) => onChange("passportNumber", e.target.value)}
+            error={touched?.passportNumber && Boolean(errors?.passportNumber)}
+            helperText={touched?.passportNumber && errors?.passportNumber}
+          />
+        )}
+        {tourist.documentType === "ci" && (
+          <TextField
+            label="Numero de CI"
+            size="small"
+            fullWidth
+            value={tourist.ci || ""}
+            onChange={(e) => onChange("ci", e.target.value)}
+            error={touched?.ci && Boolean(errors?.ci)}
+            helperText={touched?.ci && errors?.ci}
+          />
+        )}
+      </Box>
       <TextField
         label="Nacionalidad"
         size="small"
@@ -79,7 +142,8 @@ const TouristForm: React.FC<TouristFormProps> = ({
         label="Fecha de nacimiento"
         size="small"
         fullWidth
-        value={tourist.ci || ""}
+        // type="date"
+        value={tourist.dateOfBirth || ""}
         onChange={(e) => onChange("dateOfBirth", e.target.value)}
         error={touched?.dateOfBirth && Boolean(errors?.dateOfBirth)}
         helperText={touched?.dateOfBrith && errors?.dateOfBirth}

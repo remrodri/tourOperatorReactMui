@@ -1,4 +1,4 @@
-import "./App.css";
+// import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import { AppRouter } from "./router/AppRouter";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
@@ -11,6 +11,7 @@ import { CancellationPolicyProvider } from "./features/cancellationPolicy/contex
 import { TouristDestinationProvider } from "./features/touristDestination/context/TouristDestinationContext";
 import { TourPackageProvider } from "./features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "./features/dateRange/context/DateRangeContext";
+import { BookingProvider } from "./features/booking/context/BookingContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -23,25 +24,27 @@ const darkTheme = createTheme({
 function App() {
   return (
     <SnackbarProvider>
-      <DateRangeProvider>
-        <TouristDestinationProvider>
-          <TourPackageProvider>
-            <CancellationPolicyProvider>
-              <TourTypeProvider>
-                <RoleProvider>
-                  <UserProvider>
-                    <ThemeProvider theme={darkTheme}>
-                      <CssBaseline />
-                      <RouterProvider router={AppRouter} />
-                      <GlobalSnackbar />
-                    </ThemeProvider>
-                  </UserProvider>
-                </RoleProvider>
-              </TourTypeProvider>
-            </CancellationPolicyProvider>
-          </TourPackageProvider>
-        </TouristDestinationProvider>
-      </DateRangeProvider>
+      <BookingProvider>
+        <DateRangeProvider>
+          <TouristDestinationProvider>
+            <TourPackageProvider>
+              <CancellationPolicyProvider>
+                <TourTypeProvider>
+                  <RoleProvider>
+                    <UserProvider>
+                      <ThemeProvider theme={darkTheme}>
+                        <CssBaseline />
+                        <RouterProvider router={AppRouter} />
+                        <GlobalSnackbar />
+                      </ThemeProvider>
+                    </UserProvider>
+                  </RoleProvider>
+                </TourTypeProvider>
+              </CancellationPolicyProvider>
+            </TourPackageProvider>
+          </TouristDestinationProvider>
+        </DateRangeProvider>
+      </BookingProvider>
     </SnackbarProvider>
   );
 }

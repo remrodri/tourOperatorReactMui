@@ -8,5 +8,5 @@ export const paymentInfoSchema = yup.object().shape({
     .typeError("Debe ser un numero valido"),
   paymentDate: yup.string().required("El campo es necesario"),
   paymentMethod: yup.string().required("El campo es necesario"),
-  transctionId: yup.string().optional()
+  transactionId: yup.string().optional()
 });

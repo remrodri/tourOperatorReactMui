@@ -10,6 +10,7 @@ import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import { useFormik } from "formik";
 import { bookingSchema } from "./validation/bookingSchema";
 import { Dayjs } from "dayjs";
+import { useBookingContext } from "../context/BookingContext";
 
 interface BookingFormContainerProps {
   open: boolean;
@@ -43,7 +44,26 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   const { users } = useUserContext();
   const { dateRangesByTP, findDateRangesByTourPackage } = useDateRangeContext();
   const [dateRanges, setDateRanges] = useState<DateRangeType[]>([]);
-  // const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const { createBooking, updateBooking } = useBookingContext();
+
+  // Calculate total price based on selected package and number of tourists
+  const calculateTotalPrice = (
+    tourPackageId: string,
+    mainTourist?: TouristType,
+    additionalTourists: TouristType[] = []
+  ) => {
+    // Find the selected tour package
+    const selectedPackage = tourPackages.find((tp) => tp.id === tourPackageId);
+    if (!selectedPackage) return 0;
+
+    // Count tourists (main tourist + additional tourists)
+    const mainTouristCount =
+      mainTourist && Object.keys(mainTourist).length > 0 ? 1 : 0;
+    const totalTourists = mainTouristCount + additionalTourists.length;
+
+    // Calculate total price
+    return selectedPackage.price * totalTourists;
+  };
 
   const handleAddAdditionalTourist = () => {
     const currentTourists = [...(formik.values.additionalTourists || [])];
@@ -51,17 +71,24 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       id: "",
       firstName: "",
       lastName: "",
-      // documentType: "",
-      // documentNumber: "",
       email: "",
       phone: "",
       ci: "",
-      nationality: "",
+      nationality: "Bolivia",
       dateOfBirth: "",
-      additionalInformation: "",
-      // birthDate: "",
+      // additionalInformation: "",
+      passportNumber: "",
+      documentType: "CI",
     });
     formik.setFieldValue("additionalTourists", currentTourists);
+
+    // Recalculate total price
+    const newTotalPrice = calculateTotalPrice(
+      formik.values.tourPackageId,
+      formik.values.mainTourist,
+      currentTourists
+    );
+    formik.setFieldValue("totalPrice", newTotalPrice);
   };
 
   const handleTouristChange = (index: number, field: string, value: any) => {
@@ -77,14 +104,57 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
     const currentTourists = [...(formik.values.additionalTourists || [])];
     currentTourists.splice(index, 1);
     formik.setFieldValue("additionalTourists", currentTourists);
+
+    // Recalculate total price
+    const newTotalPrice = calculateTotalPrice(
+      formik.values.tourPackageId,
+      formik.values.mainTourist,
+      currentTourists
+    );
+    formik.setFieldValue("totalPrice", newTotalPrice);
   };
 
   const handleMainTouristChange = (field: string, value: any) => {
     formik.setFieldValue(`mainTourist.${field}`, value);
   };
 
-  const onSubmit = (data: any) => {
-    console.log("data::: ", data);
+  // Payment handling functions
+  const handlePaymentChange = (index: number, field: string, value: any) => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments[index] = {
+      ...currentPayments[index],
+      [field]: value,
+    };
+    formik.setFieldValue("payments", currentPayments);
+  };
+
+  const handleAddPayment = () => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments.push({
+      id: "",
+      amount: 0, // Cambiado de 0 a cadena vacía para permitir borrar
+      paymentDate: new Date().toISOString(),
+      paymentMethod: "",
+      transactionId: "",
+    });
+    formik.setFieldValue("payments", currentPayments);
+  };
+
+  const handleRemovePayment = (index: number) => {
+    const currentPayments = [...(formik.values.payments || [])];
+    currentPayments.splice(index, 1);
+    formik.setFieldValue("payments", currentPayments);
+  };
+
+  const onSubmit = (values: BookingFormValues) => {
+    if (values.id) {
+      // const booking = {...values,status:"pending"}
+      updateBooking(values.id, values as BookingType);
+    } else {
+      createBooking(values as BookingType);
+    }
+
+    handleClick();
   };
 
   const formik = useFormik<BookingFormValues>({
@@ -101,11 +171,11 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
         email: "",
         phone: "",
         ci: "",
-        nationality: "",
-        dateOfBirth: "",
-        // passportNumber: "",
-        // healthIssues: "",
-        additionalInformation: "",
+        nationality: "Bolivia",
+        // dateOfBirth: "",
+        // additionalInformation: "",
+        passportNumber: "",
+        documentType: "ci",
       },
       additionalTouristIds: booking?.additionalTouristIds ?? [],
       additionalTourists: booking?.additionalTourists ?? [],
@@ -130,8 +200,17 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   useEffect(() => {
     if (formik.values.tourPackageId) {
       findTourPackageById(formik.values.tourPackageId);
+
+      // Recalculate total price when tour package changes
+      const newTotalPrice = calculateTotalPrice(
+        formik.values.tourPackageId,
+        formik.values.mainTourist,
+        formik.values.additionalTourists
+      );
+      formik.setFieldValue("totalPrice", newTotalPrice);
     }
   }, [formik.values.tourPackageId, findTourPackageById]);
+
   useEffect(() => {
     if (tpFound && tpFound.dateRanges) {
       findDateRangesByTourPackage(tpFound.dateRanges);
@@ -150,6 +229,9 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       handleRemoveTourist={handleRemoveTourist}
       handleTouristChange={handleTouristChange}
       handleAddAdditionalTourist={handleAddAdditionalTourist}
+      handlePaymentChange={handlePaymentChange}
+      handleAddPayment={handleAddPayment}
+      handleRemovePayment={handleRemovePayment}
     />
   );
 };
