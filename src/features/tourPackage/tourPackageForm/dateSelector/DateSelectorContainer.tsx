@@ -9,6 +9,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Stack,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,8 +20,10 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import { DateRangeType } from "../../types/DateRangeType";
+import { User } from "../../../userManagement/types/User";
 
 interface SimpleDateSelectorProps {
+  guides: User[];
   duration: number;
   // dateRanges: DateRangeType[];
   dateRanges: DateRangeType[];
@@ -26,12 +31,12 @@ interface SimpleDateSelectorProps {
 }
 
 const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
+  guides,
   duration,
   dateRanges,
   onDateChange,
 }) => {
   const [dateRangesAux, setDateRangesAux] = useState<DateRangeType[]>([]);
-
   // Cargar fechas cuando entra en modo edición
   useEffect(() => {
     setDateRangesAux(dateRanges || []);
@@ -39,9 +44,11 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [selectedGuides, setSelectedGuides] = useState<User[]>([]);
 
   const handleOpenDialog = () => {
     setSelectedDate(null);
+    setSelectedGuides([]);
     setOpenDialog(true);
   };
 
@@ -77,12 +84,15 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
       // id: `range-${Date.now()}`,
       // state: "available", // Estado por defecto (ajustable)
       dates: newDates,
+      guides: selectedGuides.map((guide) => guide.id || ""),
     };
 
     const updatedRanges = [...dateRangesAux, newRange];
     setDateRangesAux(updatedRanges);
     onDateChange(updatedRanges);
 
+    //Reset selected guides
+    setSelectedGuides([]);
     handleCloseDialog();
   };
 
@@ -145,6 +155,23 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
                       <Chip key={index} label={date} size="small" />
                     )) || []}
                   </Box>
+                  {/* Display assigned guides */}
+                  {range.guides && range.guides.length > 0 && (
+                    <Box>
+                      <Typography variant="caption" sx={{ fontWeight: "bold" }}>
+                        Guia(s) asignado(s):
+                      </Typography>
+                      <Box sx={{display:"flex",flexWrap:"wrap",gap:0.5,mt:0.5}}>
+
+                        {range.guides.map((guideId) => {
+                          const guide = guides.find(g => g.id === guideId);
+                          return guide ? (
+                            <Chip key={guide.id} label={`${guide.firstName} ${guide.lastName}`} size="small" variant="filled" color="primary"/>
+                          ) : null;
+                        })}
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
 
                 <IconButton
@@ -227,6 +254,25 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
               </Box>
             </Box>
           )}
+          <Stack spacing={3} sx={{ mt: 2 }}>
+            <Autocomplete
+              multiple
+              id="tags-guide"
+              options={guides}
+              value={selectedGuides}
+              onChange={(event,newValue)=>{setSelectedGuides(newValue)}}
+              getOptionLabel={(guide) => `${guide.firstName} ${guide.lastName}`}
+              filterSelectedOptions
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Guia(s) asignado(s)"
+                  placeholder="Elegir guia"
+                />
+              )}
+            />
+          </Stack>
         </DialogContent>
 
         <DialogActions>

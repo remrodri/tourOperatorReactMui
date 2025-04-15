@@ -73,7 +73,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
     tourPackage: Omit<TourPackageType, "id">
   ): Promise<void> => {
     // console.log("tourPackage::: ", tourPackage);
-    // setLoading(true);
+    setLoading(true);
     try {
       const newTourPackage = await TourPackageService.createTourPackageRequest(
         tourPackage
@@ -81,14 +81,14 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
       // const dateRanges = newTourPackage.dateRanges.map((dr:string)=>getDateRangeById(dr))
       // console.log('dateRanges::: ', dateRanges);
       setTourPackages((prev) => [...prev, newTourPackage]);
-      // setError(null);
+      setError(null);
       showSnackbar("Tour package created successfully!", "success");
     } catch (err) {
       console.error("Error creating tour package:", err);
       setError("Failed to create tour package");
       showSnackbar("Failed to create tour package", "error");
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
