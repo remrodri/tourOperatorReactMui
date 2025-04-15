@@ -12,8 +12,10 @@ import { isAxiosError } from "axios";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface UserContextType {
+  fetchGuides: () => void;
+  guides: User[];
   users: User[];
-  // loading: boolean;
+  loading: boolean;
   // error: string | null;
   registerUser: (userData: Partial<User>) => Promise<any>;
   updateUser: (userData: Partial<User>, userId: string) => Promise<any>;
@@ -27,14 +29,35 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const token = TokenService.getToken();
   const [users, setUsers] = useState<any>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+  const [guides, setGuides] = useState<User[]>([]);
+
+  const fetchGuides = () => {
+    
+    try {
+      if (users.length > 0) {
+        const filteredUsers = users.filter(
+          (user: User) => user.role === "67230105d01b26670d05388c"
+        );
+        setGuides(filteredUsers);
+        console.log('guides::: ', guides);
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar("Error al obtener los guias", "error");
+      }
+    }
+  };
 
   const deleteUser = async (userId: string): Promise<any> => {
     if (!token) {
       // setError("No se encontro el token");
-      // setLoading(false);
+      setLoading(false);
       return;
     }
     try {
@@ -49,19 +72,19 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         console.log(error.response);
       }
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
   const fetchUsers = async () => {
     if (!token) {
       // setError("No se encontro el token");
-      // setLoading(false);
-      showSnackbar("No hay token","error")
+      setLoading(false);
+      showSnackbar("No hay token", "error");
       return;
     }
     try {
-      const response = (await userService.getUsers(token));
+      const response = await userService.getUsers(token);
       if (!response?.data) {
         showSnackbar("Error al cargar", "error");
         throw new Error("No se recupero la lista de usuarios");
@@ -72,14 +95,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       console.error("Error al obtener los usuarios", error);
       showSnackbar("Error al obtener los usuarios", "error");
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
   const registerUser = async (userData: Partial<User>): Promise<any> => {
     if (!token) {
       // setError("No se encontro el token");
-      // setLoading(false);
+      setLoading(false);
     } else {
       try {
         const response = await userService.registerUser(userData, token);
@@ -102,7 +125,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   ): Promise<any> => {
     if (!token) {
       // setError("No se encontro el token");
-      // setLoading(false);
+      setLoading(false);
     } else {
       try {
         const response = await userService.updateUser(userData, userId, token);
@@ -124,19 +147,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    console.log("::: ");
+    // console.log("::: ");
     fetchUsers();
   }, [token]);
 
   return (
     <UserContext.Provider
       value={{
+        guides,
+        fetchGuides,
         users,
-        // loading,
+        loading,
         // error,
         registerUser,
         updateUser,
-        deleteUser
+        deleteUser,
       }}
     >
       {children}

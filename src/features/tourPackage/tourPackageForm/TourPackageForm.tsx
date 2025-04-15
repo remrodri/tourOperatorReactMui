@@ -19,9 +19,11 @@ import DayItineraryManager from "../itineraryManager/DayItineraryManager";
 import { TourItineraryType } from "../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../types/DateRangeType";
+import { User } from "../../userManagement/types/User";
 // import { DateRangeType } from "../types/DateRangeType";
 // import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 interface TourPackageFormProps {
+  guides: User[];
   open: boolean;
   handleClick: () => void;
   formik: FormikProps<{
@@ -43,6 +45,7 @@ interface TourPackageFormProps {
 }
 
 const TourPackageForm: React.FC<TourPackageFormProps> = ({
+  guides,
   open,
   handleClick,
   formik,
@@ -199,13 +202,14 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             <Box>bloqueado</Box>
           ) : (
               <DateSelectorContainer
-                duration={formik.values.duration}
-                dateRanges={formik.values.dateRanges}
-                // blockedDates={formik.values.blockedDates}
-                onDateChange={(dates: any) =>
-                  formik.setFieldValue("dateRanges", dates)
-                }
-              />
+                guides={guides}
+              duration={formik.values.duration}
+              dateRanges={formik.values.dateRanges}
+              // blockedDates={formik.values.blockedDates}
+              onDateChange={(dates: any) =>
+                formik.setFieldValue("dateRanges", dates)
+              }
+            />
           )}
 
           {/* <DateSelectorContainer

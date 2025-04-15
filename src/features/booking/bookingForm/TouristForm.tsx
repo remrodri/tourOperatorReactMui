@@ -90,7 +90,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
           <Select
             labelId="document-type-label"
             id="document-type"
-            value={tourist.documentType || ""}
+            value={tourist.documentType?.toLowerCase() || ""}
             label="Tipo de Documento"
             onChange={(e) => onChange("documentType", e.target.value)}
           >
