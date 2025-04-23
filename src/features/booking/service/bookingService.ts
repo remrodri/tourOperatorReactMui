@@ -5,6 +5,7 @@ const url = "/booking";
 export const createBookingRequest = async (data: Partial<BookingType>):Promise<any> => {
   console.log('data::: ', data);
   const response = await axiosInstance.post(url, data);
+  console.log('response::: ', response.data);
   return response.data.data;
 };
 

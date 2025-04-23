@@ -257,7 +257,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
             {formik.values.payments?.map((payment, index) => (
               <Box
                 key={index}
-                sx={{ mb: 2, p: 2, border: "1px solid #ddd", borderRadius: 1 }}
+                sx={{
+                  mb: 2,
+                  p: 2,
+                  border: "1px solid #ddd",
+                  borderRadius: 1,
+                }}
               >
                 <Box
                   sx={{
@@ -288,15 +293,18 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 />
               </Box>
             ))}
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={handleAddPayment}
-              sx={{ mt: 1 }}
-            >
-              Agregar pago
-            </Button>
+            {formik.values.id && (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleAddPayment}
+                sx={{ mt: 1 }}
+              >
+                Agregar pago
+              </Button>
+            )}
           </Box>
+
           <TextField
             label="Notas"
             size="small"

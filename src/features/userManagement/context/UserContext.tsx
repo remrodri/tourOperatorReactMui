@@ -17,8 +17,11 @@ interface UserContextType {
   users: User[];
   loading: boolean;
   // error: string | null;
-  registerUser: (userData: Partial<User>) => Promise<any>;
-  updateUser: (userData: Partial<User>, userId: string) => Promise<any>;
+  registerUser: (userData: Partial<User> | FormData) => Promise<any>;
+  updateUser: (
+    userData: Partial<User> | FormData,
+    userId: string
+  ) => Promise<any>;
   deleteUser: (userId: string) => Promise<any>;
 }
 
@@ -35,14 +38,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [guides, setGuides] = useState<User[]>([]);
 
   const fetchGuides = () => {
-    
     try {
       if (users.length > 0) {
         const filteredUsers = users.filter(
           (user: User) => user.role === "67230105d01b26670d05388c"
         );
         setGuides(filteredUsers);
-        console.log('guides::: ', guides);
+        console.log("guides::: ", guides);
       }
     } catch (error) {
       if (isAxiosError(error)) {
@@ -99,50 +101,85 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const registerUser = async (userData: Partial<User>): Promise<any> => {
+  const registerUser = async (
+    userData: Partial<User> | FormData
+  ): Promise<any> => {
     if (!token) {
-      // setError("No se encontro el token");
-      setLoading(false);
-    } else {
-      try {
-        const response = await userService.registerUser(userData, token);
-        // console.log("response::: ", response);
-        if (response) {
-          setUsers([...users, response.data]);
-          return response.data;
+      showSnackbar("No se encontró el token", "error");
+      return null;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await userService.registerUser(userData, token);
+
+      if (response && response.data) {
+        // Make sure we have the complete user object from the response
+        const newUser = response.data;
+
+        // Update the users state with the new user
+        setUsers((prevUsers: any) => [...prevUsers, newUser]);
+
+        // Trigger any necessary updates (like fetching guides if this is a guide)
+        if (newUser.role === "67230105d01b26670d05388c") {
+          fetchGuides();
         }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          // setError("Falla al registrar el nuevo usuario");
-        }
+
+        return newUser;
       }
+      return null;
+    } catch (error) {
+      console.error("Error registering user:", error);
+      if (error instanceof Error) {
+        showSnackbar(`Error: ${error.message}`, "error");
+      } else {
+        showSnackbar("Error desconocido al registrar el usuario", "error");
+      }
+      return null;
+    } finally {
+      setLoading(false);
     }
   };
 
   const updateUser = async (
-    userData: Partial<User>,
+    userData: Partial<User> | FormData,
     userId: string
   ): Promise<any> => {
     if (!token) {
-      // setError("No se encontro el token");
       setLoading(false);
-    } else {
-      try {
-        const response = await userService.updateUser(userData, userId, token);
-        if (response) {
-          const newUsers = users.map((user: User) => {
-            return user.id === userId ? { ...user, ...userData } : user;
-          });
-          setUsers(newUsers);
-        }
-      } catch (error) {
-        if (isAxiosError(error)) {
-          console.log(error.response);
-        }
-        if (error instanceof Error) {
-          // setError("Falla al actualizar el usuario");
-        }
+      return null;
+    }
+
+    try {
+      // Indicate loading
+      setLoading(true);
+
+      const response = await userService.updateUser(userData, userId, token);
+      if (response && response.data) {
+        // Get the updated user data from the response
+        const updatedUser = response.data;
+
+        // Update the users array with the updated user data
+        setUsers((prevUsers: any) =>
+          prevUsers.map((user: User) =>
+            user.id === userId ? updatedUser : user
+          )
+        );
+
+        return updatedUser;
       }
+      return null;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar("Error al actualizar el usuario", "error");
+      }
+      return null;
+    } finally {
+      setLoading(false);
     }
   };
 
