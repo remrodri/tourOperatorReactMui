@@ -41,7 +41,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       if (users.length > 0) {
         const filteredUsers = users.filter(
-          (user: User) => user.role === "67230105d01b26670d05388c"
+          (user: User) => user.role === "6807f17065d3a5a25230b2bf"
         );
         setGuides(filteredUsers);
         console.log("guides::: ", guides);
@@ -122,7 +122,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         setUsers((prevUsers: any) => [...prevUsers, newUser]);
 
         // Trigger any necessary updates (like fetching guides if this is a guide)
-        if (newUser.role === "67230105d01b26670d05388c") {
+        if (newUser.role === "6807f17065d3a5a25230b2bf") {
           fetchGuides();
         }
 

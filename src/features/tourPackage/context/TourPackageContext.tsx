@@ -80,7 +80,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
       );
       // const dateRanges = newTourPackage.dateRanges.map((dr:string)=>getDateRangeById(dr))
       // console.log('dateRanges::: ', dateRanges);
-      setTourPackages((prev) => [...prev, newTourPackage]);
+      setTourPackages((prev) => [...prev, newTourPackage.data]);
       setError(null);
       showSnackbar("Tour package created successfully!", "success");
     } catch (err) {

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import BookingShowcase from "./BookingShowcase";
 import BookingFormContainer from "../bookingForm/BookingFormContainer";
+import { useBookingContext } from "../context/BookingContext";
 
 const BookingShowcaseContainer: React.FC = () => {
+  const {bookings }=useBookingContext()
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {

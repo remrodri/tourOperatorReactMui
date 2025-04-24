@@ -19,6 +19,13 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   // console.log("touristDestination::: ", touristDestination);
   const BASE_URL = "http://localhost:3000";
   // console.log(`${BASE_URL}/${touristDestination.images.[0]}`)
+    const shortenDescription = (description: string) => {
+      if (description.length < 38) {
+        return description;
+      }
+      const shortenDescription = description.substring(0, 37);
+      return `${shortenDescription}...`;
+    };
   return (
     <Card
       sx={{
@@ -40,10 +47,10 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
         // height="150"
         sx={{
           height: "194px",
-          width: 300,
-          // objectFit: "cover",
-          // backgroundSize: "cover",
-          // backgroundPosition:"center"
+          // width: 300,
+          objectFit: "cover",
+          backgroundSize: "cover",
+          backgroundPosition:"center"
           // ".MuiCardMedia-img": {
           // }
         }}
@@ -51,7 +58,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
       />
       <CardContent>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {touristDestination.description}
+          {shortenDescription(touristDestination.description)}
         </Typography>
       </CardContent>
     </Card>

@@ -57,7 +57,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
     } else {
       await createTourPackage(data);
     }
-    // handleClick();
+    handleClick();
   };
   // console.log('tourPackage.dateRanges::: ', tourPackage.dateRanges);
   const formik = useFormik<TourPackageFormValues>({

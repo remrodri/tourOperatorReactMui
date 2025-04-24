@@ -14,6 +14,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
   return (
     <Box
       sx={{
+        flexGrow:1,
         display: "flex",
         flexDirection: "column",
       }}
@@ -71,8 +72,8 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
           }}
         >
           {tourPackages && tourPackages.length > 0 ? (
-            tourPackages.map((tp) => (
-              <TourPackageCardContainer key={tp.id} tourPackage={tp} />
+            tourPackages.map((tp,index) => (
+              <TourPackageCardContainer key={index} tourPackage={tp} />
             ))
           ) : (
             <p>No se encuentran paquetes turisticos</p>

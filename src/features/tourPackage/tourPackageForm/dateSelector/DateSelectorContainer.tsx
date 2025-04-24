@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import { DateRangeType } from "../../types/DateRangeType";
 import { User } from "../../../userManagement/types/User";
+import { useNewSnackbar } from "../../../../context/SnackbarContext";
 
 interface SimpleDateSelectorProps {
   guides: User[];
@@ -45,6 +46,7 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedGuides, setSelectedGuides] = useState<User[]>([]);
+  const { showSnackbar } = useNewSnackbar();
 
   const handleOpenDialog = () => {
     setSelectedDate(null);
@@ -71,11 +73,13 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
     );
 
     if (overlappingDates.length > 0) {
-      alert(
-        `Las siguientes fechas ya están seleccionadas: ${overlappingDates.join(
-          ", "
-        )}`
-      );
+      // alert(
+      //   `Las siguientes fechas ya están seleccionadas: ${overlappingDates.join(
+      //     ", "
+      //   )}`
+      // );
+      showSnackbar(`${overlappingDates.join(", ")} ya seleccionado`, "error");
+
       return;
     }
 
@@ -161,12 +165,24 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
                       <Typography variant="caption" sx={{ fontWeight: "bold" }}>
                         Guia(s) asignado(s):
                       </Typography>
-                      <Box sx={{display:"flex",flexWrap:"wrap",gap:0.5,mt:0.5}}>
-
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 0.5,
+                          mt: 0.5,
+                        }}
+                      >
                         {range.guides.map((guideId) => {
-                          const guide = guides.find(g => g.id === guideId);
+                          const guide = guides.find((g) => g.id === guideId);
                           return guide ? (
-                            <Chip key={guide.id} label={`${guide.firstName} ${guide.lastName}`} size="small" variant="filled" color="primary"/>
+                            <Chip
+                              key={guide.id}
+                              label={`${guide.firstName} ${guide.lastName}`}
+                              size="small"
+                              variant="filled"
+                              color="primary"
+                            />
                           ) : null;
                         })}
                       </Box>
@@ -260,7 +276,9 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
               id="tags-guide"
               options={guides}
               value={selectedGuides}
-              onChange={(event,newValue)=>{setSelectedGuides(newValue)}}
+              onChange={(event, newValue) => {
+                setSelectedGuides(newValue);
+              }}
               getOptionLabel={(guide) => `${guide.firstName} ${guide.lastName}`}
               filterSelectedOptions
               renderInput={(params) => (
