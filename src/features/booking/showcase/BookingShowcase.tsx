@@ -1,12 +1,22 @@
 import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
+import { BookingType } from "../types/BookingType";
+import BookingCardContainer from "./card/BookingCardContainer";
 
 interface BookingShowcaseProps {
   handleClick: () => void;
+  bookings: BookingType[] | null;
   // bookings:any
 }
 
-const BookingShowcase: React.FC<BookingShowcaseProps> = ({ handleClick }) => {
+const BookingShowcase: React.FC<BookingShowcaseProps> = ({
+  handleClick,
+  bookings,
+}) => {
+  console.log('bookings::: ', bookings);
+  if (!bookings || bookings.length === 0) {
+    return <Box>No hay reservas disponibles</Box>;
+  }
   return (
     <Box
       sx={{
@@ -59,13 +69,23 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({ handleClick }) => {
             flexWrap: "wrap",
             overflowY: "auto",
             gap: "1rem",
-            alginContent: "flex-start",
-            background: "rgba(255,255,255,0.2)",
+            alignContent: "flex-start",
+            background: "rgba(255, 255, 255, 0.2)",
             borderRadius: "10px",
-            boxShadow: "0 4px 10px solid rgba(255,255,255,0.2)",
-            border: "1px solid rgba(255,255,255,0.2)",
+            boxShadow: "0 4px 10px rgba(255, 255, 255,0.2)",
+            // backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
           }}
-        ></Box>
+        >
+          {
+            bookings.map((booking, index) => (
+              <BookingCardContainer
+                key={index}
+                booking={booking}
+                index={index}
+              />
+            ))}
+        </Box>
       </Box>
     </Box>
   );

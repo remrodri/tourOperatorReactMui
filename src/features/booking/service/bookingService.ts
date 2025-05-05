@@ -1,7 +1,7 @@
 import axiosInstance from "../../../config/axiosConfig";
 import { BookingType } from "../types/BookingType";
 
-const url = "/booking";
+const url = "/bookings";
 export const createBookingRequest = async (data: Partial<BookingType>):Promise<any> => {
   console.log('data::: ', data);
   const response = await axiosInstance.post(url, data);
@@ -11,5 +11,6 @@ export const createBookingRequest = async (data: Partial<BookingType>):Promise<a
 
 export const getAllBookingsRequest = async () => {
   const response = await axiosInstance.get(url);
-  return response.data;
+  console.log('response::: ', response);
+  return response.data.data;
 };

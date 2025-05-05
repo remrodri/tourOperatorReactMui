@@ -23,6 +23,7 @@ interface CancellationPolicyContextType {
     id: string
   ) => void;
   getCancellationPolicyById: (id: string) => string;
+  getCancellationPolicyInfoById(id: string): CancellationPolicy | null;
 }
 
 const CancellationPolicyContext = createContext<
@@ -37,8 +38,22 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
   >([]);
   const { showSnackbar } = useNewSnackbar();
 
-  const getCancellationPolicyById =  (id: string) => {
-    const cpFound =  cancellationPolicy.find((cp) => cp.id === id);
+  const getCancellationPolicyInfoById = (
+    id: string
+  ): CancellationPolicy | null => {
+    if (!id) {
+      console.warn("cancellation policy called without id");
+      return null;
+    }
+    const cpFound = cancellationPolicy.find((cp) => cp.id === id);
+    if (!cpFound) {
+      showSnackbar("Politica de cancelacion no encontrado", "error");
+      return null;
+    }
+    return cpFound;
+  };
+  const getCancellationPolicyById = (id: string) => {
+    const cpFound = cancellationPolicy.find((cp) => cp.id === id);
     if (!cpFound) {
       return "Politica de cancellacion no encontrado";
     }
@@ -119,6 +134,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
         deleteCancellationPolicy,
         updateCancellationPolicy,
         getCancellationPolicyById,
+        getCancellationPolicyInfoById,
       }}
     >
       {children}

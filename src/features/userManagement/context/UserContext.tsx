@@ -16,13 +16,15 @@ interface UserContextType {
   guides: User[];
   users: User[];
   loading: boolean;
-  // error: string | null;
+  error: string | null;
   registerUser: (userData: Partial<User> | FormData) => Promise<any>;
   updateUser: (
     userData: Partial<User> | FormData,
     userId: string
   ) => Promise<any>;
   deleteUser: (userId: string) => Promise<any>;
+  getUserById: (userId: string) => Promise<User | null>; // Cambiado a Promise
+  userFound: User | null;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -33,9 +35,45 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const token = TokenService.getToken();
   const [users, setUsers] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const [guides, setGuides] = useState<User[]>([]);
+  const [userFound, setUserFound] = useState<User | null>(null);
+
+  const getUserById = async (userId: string): Promise<User | null> => {
+    // console.log("Buscando usuario con ID:", userId);
+
+    // Si estamos cargando o no hay usuarios, intentamos cargarlos
+    if (loading || !users || users.length === 0) {
+      // console.log("Cargando usuarios antes de buscar el usuario específico...");
+      try {
+        await fetchUsers();
+      } catch (error) {
+        console.error("Error al cargar usuarios:", error);
+        showSnackbar("Error al cargar los datos de usuarios", "error");
+        return null;
+      }
+    }
+
+    // Verificamos nuevamente si hay usuarios después de intentar cargarlos
+    if (!users || users.length === 0) {
+      // console.log("No se pudieron cargar los usuarios");
+      showSnackbar("No hay datos de usuarios disponibles", "error");
+      return null;
+    }
+
+    // console.log(`Buscando entre ${users.length} usuarios disponibles`);
+
+    const userFound = users.find((user: User) => user.id === userId);
+    // console.log("Usuario encontrado:", userFound || "No encontrado");
+
+    if (!userFound) {
+      showSnackbar("Usuario no encontrado", "error");
+      return null;
+    }
+    setUserFound(userFound);
+    return userFound;
+  };
 
   const fetchGuides = () => {
     try {
@@ -195,10 +233,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         fetchGuides,
         users,
         loading,
-        // error,
+        error,
         registerUser,
         updateUser,
         deleteUser,
+        getUserById,
+        userFound,
       }}
     >
       {children}

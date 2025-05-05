@@ -13,6 +13,7 @@ const getUsers = async (token: string): Promise<ApiResponse> => {
   const response = await axios.get(API_URL, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  // console.log('response::: ', response);
   return response.data;
 };
 

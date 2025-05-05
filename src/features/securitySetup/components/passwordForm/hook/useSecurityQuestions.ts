@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
-import { showToast } from "../../../../../utils/modal/toast";
+// import { showToast } from "../../../../../utils/modal/toast";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../../userManagement/types/User";
 import { response } from "express";
+import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 
 export const useSecurityQuestions = () => {
+  const { showSnackbar } = useNewSnackbar();
   const [error, setError] = useState<string | null>(null);
   const [questionsAnswers, setQuestionsAnswers] = useState<
     {
@@ -37,7 +39,9 @@ export const useSecurityQuestions = () => {
       );
 
       if (!response && response.statusCode !== 200) {
-        showToast("error", "Error al obtener la preguntas de seguridad");
+        // showToast("error", "Error al obtener la preguntas de seguridad");
+        showSnackbar("Error al obtener las preguntas","error")
+
       }
       // const questionsAnswers = response.data;
       // console.log("questionsAnswers::: ", questionsAnswers);
@@ -92,9 +96,11 @@ export const useSecurityQuestions = () => {
       );
       // console.log('response::: ', response);
       if (response.statusCode !== 200) {
-        showToast("error", "Registro fallido");
+        // showToast("error", "Registro fallido");
+        showSnackbar("Error al enviar las respuestas","error")
       }
-      showToast("success", "Registro exitoso");
+      // showToast("success", "Registro exitoso");
+      showSnackbar("Respuestas enviadas","success")
       navigate("/home");
     } catch (error) {
       setError("Error al enviar las respuestas de seguridad");
