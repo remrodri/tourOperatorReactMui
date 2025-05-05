@@ -16,10 +16,15 @@ interface UserContextType {
   guides: User[];
   users: User[];
   loading: boolean;
-  // error: string | null;
-  registerUser: (userData: Partial<User>) => Promise<any>;
-  updateUser: (userData: Partial<User>, userId: string) => Promise<any>;
+  error: string | null;
+  registerUser: (userData: Partial<User> | FormData) => Promise<any>;
+  updateUser: (
+    userData: Partial<User> | FormData,
+    userId: string
+  ) => Promise<any>;
   deleteUser: (userId: string) => Promise<any>;
+  getUserById: (userId: string) => Promise<User | null>; // Cambiado a Promise
+  userFound: User | null;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -30,19 +35,54 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const token = TokenService.getToken();
   const [users, setUsers] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const [guides, setGuides] = useState<User[]>([]);
+  const [userFound, setUserFound] = useState<User | null>(null);
+
+  const getUserById = async (userId: string): Promise<User | null> => {
+    // console.log("Buscando usuario con ID:", userId);
+
+    // Si estamos cargando o no hay usuarios, intentamos cargarlos
+    if (loading || !users || users.length === 0) {
+      // console.log("Cargando usuarios antes de buscar el usuario específico...");
+      try {
+        await fetchUsers();
+      } catch (error) {
+        console.error("Error al cargar usuarios:", error);
+        showSnackbar("Error al cargar los datos de usuarios", "error");
+        return null;
+      }
+    }
+
+    // Verificamos nuevamente si hay usuarios después de intentar cargarlos
+    if (!users || users.length === 0) {
+      // console.log("No se pudieron cargar los usuarios");
+      showSnackbar("No hay datos de usuarios disponibles", "error");
+      return null;
+    }
+
+    // console.log(`Buscando entre ${users.length} usuarios disponibles`);
+
+    const userFound = users.find((user: User) => user.id === userId);
+    // console.log("Usuario encontrado:", userFound || "No encontrado");
+
+    if (!userFound) {
+      showSnackbar("Usuario no encontrado", "error");
+      return null;
+    }
+    setUserFound(userFound);
+    return userFound;
+  };
 
   const fetchGuides = () => {
-    
     try {
       if (users.length > 0) {
         const filteredUsers = users.filter(
-          (user: User) => user.role === "67230105d01b26670d05388c"
+          (user: User) => user.role === "6807f17065d3a5a25230b2bf"
         );
         setGuides(filteredUsers);
-        console.log('guides::: ', guides);
+        console.log("guides::: ", guides);
       }
     } catch (error) {
       if (isAxiosError(error)) {
@@ -99,50 +139,85 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const registerUser = async (userData: Partial<User>): Promise<any> => {
+  const registerUser = async (
+    userData: Partial<User> | FormData
+  ): Promise<any> => {
     if (!token) {
-      // setError("No se encontro el token");
-      setLoading(false);
-    } else {
-      try {
-        const response = await userService.registerUser(userData, token);
-        // console.log("response::: ", response);
-        if (response) {
-          setUsers([...users, response.data]);
-          return response.data;
+      showSnackbar("No se encontró el token", "error");
+      return null;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await userService.registerUser(userData, token);
+
+      if (response && response.data) {
+        // Make sure we have the complete user object from the response
+        const newUser = response.data;
+
+        // Update the users state with the new user
+        setUsers((prevUsers: any) => [...prevUsers, newUser]);
+
+        // Trigger any necessary updates (like fetching guides if this is a guide)
+        if (newUser.role === "6807f17065d3a5a25230b2bf") {
+          fetchGuides();
         }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          // setError("Falla al registrar el nuevo usuario");
-        }
+
+        return newUser;
       }
+      return null;
+    } catch (error) {
+      console.error("Error registering user:", error);
+      if (error instanceof Error) {
+        showSnackbar(`Error: ${error.message}`, "error");
+      } else {
+        showSnackbar("Error desconocido al registrar el usuario", "error");
+      }
+      return null;
+    } finally {
+      setLoading(false);
     }
   };
 
   const updateUser = async (
-    userData: Partial<User>,
+    userData: Partial<User> | FormData,
     userId: string
   ): Promise<any> => {
     if (!token) {
-      // setError("No se encontro el token");
       setLoading(false);
-    } else {
-      try {
-        const response = await userService.updateUser(userData, userId, token);
-        if (response) {
-          const newUsers = users.map((user: User) => {
-            return user.id === userId ? { ...user, ...userData } : user;
-          });
-          setUsers(newUsers);
-        }
-      } catch (error) {
-        if (isAxiosError(error)) {
-          console.log(error.response);
-        }
-        if (error instanceof Error) {
-          // setError("Falla al actualizar el usuario");
-        }
+      return null;
+    }
+
+    try {
+      // Indicate loading
+      setLoading(true);
+
+      const response = await userService.updateUser(userData, userId, token);
+      if (response && response.data) {
+        // Get the updated user data from the response
+        const updatedUser = response.data;
+
+        // Update the users array with the updated user data
+        setUsers((prevUsers: any) =>
+          prevUsers.map((user: User) =>
+            user.id === userId ? updatedUser : user
+          )
+        );
+
+        return updatedUser;
       }
+      return null;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar("Error al actualizar el usuario", "error");
+      }
+      return null;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,10 +233,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         fetchGuides,
         users,
         loading,
-        // error,
+        error,
         registerUser,
         updateUser,
         deleteUser,
+        getUserById,
+        userFound,
       }}
     >
       {children}

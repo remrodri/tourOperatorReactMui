@@ -12,6 +12,8 @@ import { TouristDestinationProvider } from "./features/touristDestination/contex
 import { TourPackageProvider } from "./features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "./features/dateRange/context/DateRangeContext";
 import { BookingProvider } from "./features/booking/context/BookingContext";
+import { TouristProvider } from "./features/tourist/context/TouristContext";
+import { PaymentProvider } from "./features/payment/context/PaymentContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -24,27 +26,31 @@ const darkTheme = createTheme({
 function App() {
   return (
     <SnackbarProvider>
-      <BookingProvider>
-        <DateRangeProvider>
-          <TouristDestinationProvider>
-            <TourPackageProvider>
-              <CancellationPolicyProvider>
-                <TourTypeProvider>
-                  <RoleProvider>
-                    <UserProvider>
-                      <ThemeProvider theme={darkTheme}>
-                        <CssBaseline />
-                        <RouterProvider router={AppRouter} />
-                        <GlobalSnackbar />
-                      </ThemeProvider>
-                    </UserProvider>
-                  </RoleProvider>
-                </TourTypeProvider>
-              </CancellationPolicyProvider>
-            </TourPackageProvider>
-          </TouristDestinationProvider>
-        </DateRangeProvider>
-      </BookingProvider>
+      <PaymentProvider>
+        <TouristProvider>
+          <BookingProvider>
+            <DateRangeProvider>
+              <TouristDestinationProvider>
+                <TourPackageProvider>
+                  <CancellationPolicyProvider>
+                    <TourTypeProvider>
+                      <RoleProvider>
+                        <UserProvider>
+                          <ThemeProvider theme={darkTheme}>
+                            <CssBaseline />
+                            <RouterProvider router={AppRouter} />
+                            <GlobalSnackbar />
+                          </ThemeProvider>
+                        </UserProvider>
+                      </RoleProvider>
+                    </TourTypeProvider>
+                  </CancellationPolicyProvider>
+                </TourPackageProvider>
+              </TouristDestinationProvider>
+            </DateRangeProvider>
+          </BookingProvider>
+        </TouristProvider>
+      </PaymentProvider>
     </SnackbarProvider>
   );
 }

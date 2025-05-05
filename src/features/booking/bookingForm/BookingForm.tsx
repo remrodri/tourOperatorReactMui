@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -77,6 +78,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
       ? 1
       : 0) + (formik.values.additionalTourists?.length || 0);
 
+  // Calcular el total pagado
+  const totalPaid = formik.values.payments.reduce(
+    (sum:any, payment:any) => sum + (payment.amount || 0),
+    0
+  );
+
   return (
     <Dialog onClose={handleClick} open={open}>
       <DialogTitle>Nueva Reserva</DialogTitle>
@@ -107,7 +114,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               >
                 {tourPackages.map((tp) => (
                   <MenuItem key={tp.id} value={tp.id}>
-                    {tp.name} - ${tp.price}
+                    {tp.name} - {tp.price} Bs.
                   </MenuItem>
                 ))}
               </Select>
@@ -241,7 +248,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
               helperText={
                 (formik.touched.totalPrice && formik.errors.totalPrice) ||
                 (selectedTourPackage
-                  ? `Cálculo: $${selectedTourPackage.price} por pasajero × ${totalTourists} pasajeros`
+                  ? // ? `Cálculo: ${selectedTourPackage.price} Bs. por pasajero × ${totalTourists} pasajeros`
+                    `Precio por persona: ${selectedTourPackage.price} Bs.`
                   : "")
               }
             />
@@ -254,10 +262,23 @@ const BookingForm: React.FC<BookingFormProps> = ({
             }}
           >
             <Typography variant="h6">Información de Pagos</Typography>
+
+            {/* Mostrar error global de pagos si existe */}
+            {/* {typeof formik.errors.payments === "string" && (
+              <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
+                {formik.errors.payments}
+              </Alert>
+            )} */}
+
             {formik.values.payments?.map((payment, index) => (
               <Box
                 key={index}
-                sx={{ mb: 2, p: 2, border: "1px solid #ddd", borderRadius: 1 }}
+                sx={{
+                  mb: 2,
+                  p: 2,
+                  border: "1px solid #ddd",
+                  borderRadius: 1,
+                }}
               >
                 <Box
                   sx={{
@@ -285,18 +306,24 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   }
                   errors={formik.errors.payments?.[index]}
                   touched={formik.touched.payments?.[index]}
+                  totalPrice={formik.values.totalPrice}
+                  totalPaid={totalPaid}
+                  currentIndex={index}
                 />
               </Box>
             ))}
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={handleAddPayment}
-              sx={{ mt: 1 }}
-            >
-              Agregar pago
-            </Button>
+            {formik.values.id && (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleAddPayment}
+                sx={{ mt: 1 }}
+              >
+                Agregar pago
+              </Button>
+            )}
           </Box>
+
           <TextField
             label="Notas"
             size="small"

@@ -11,6 +11,7 @@ interface UserCardProps {
   roles: Role[];
   handleMenuOption: (option: string) => void;
 }
+
 const UserCard: React.FC<UserCardProps> = ({
   user,
   userRole,
@@ -19,6 +20,21 @@ const UserCard: React.FC<UserCardProps> = ({
 }) => {
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
+  // Add state to track image loading
+  const [imgKey, setImgKey] = useState(Date.now());
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  // Force reload of image when user or imageUrl changes
+  useEffect(() => {
+    if (user?.imageUrl) {
+      setImgKey(Date.now());
+      // Preload image
+      const img = new Image();
+      img.src = `${user.imageUrl}?t=${imgKey}`;
+      img.onload = () => setImgLoaded(true);
+      img.onerror = () => setImgLoaded(false);
+    }
+  }, [user.id, user.imageUrl]);
 
   const shortenUserName = (name: string) => {
     if (name.length < 15) {
@@ -49,7 +65,6 @@ const UserCard: React.FC<UserCardProps> = ({
     <Card
       sx={{
         width: 300,
-        // height:126,
         backgroundColor: "rgba(10, 10, 10, 0.7)",
         borderRadius: "10px",
         borderTopLeftRadius: "4rem",
@@ -71,8 +86,16 @@ const UserCard: React.FC<UserCardProps> = ({
           <Avatar
             sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
             aria-label="user"
-            src={user.imageUrl}
-            // variant="rounded"
+            // Add timestamp parameter to prevent caching
+            src={user.imageUrl ? `${user.imageUrl}?t=${imgKey}` : undefined}
+            // Handle image loading errors
+            imgProps={{
+              onError: () => {
+                console.log("Image failed to load:", user.imageUrl);
+                setImgLoaded(false);
+              },
+              onLoad: () => setImgLoaded(true),
+            }}
           >
             {roleChar}
           </Avatar>
@@ -81,7 +104,6 @@ const UserCard: React.FC<UserCardProps> = ({
         title={`${userRole.name}`}
         subheader={
           <Box>
-            {/* <Typography sx={{fontSize:"16px"}} >{`${user.firstName} ${user.lastName}`}</Typography> */}
             <Typography sx={{ fontSize: "16px" }}>
               {shortenUserName(`${user.firstName} ${user.lastName}`)}
             </Typography>
@@ -93,8 +115,8 @@ const UserCard: React.FC<UserCardProps> = ({
           </Box>
         }
       />
-      {/* card{userRole.name} */}
     </Card>
   );
 };
+
 export default UserCard;

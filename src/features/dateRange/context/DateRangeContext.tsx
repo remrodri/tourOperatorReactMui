@@ -15,6 +15,7 @@ type DateRangeContextType = {
   fillDateRangesByIds(DateRangeIds: DateRangeType[]): DateRangeType[];
   findDateRangesByTourPackage(ids: DateRangeType[]): void;
   dateRangesByTP: DateRangeType[];
+  
 };
 
 const DateRangeContext = createContext<DateRangeContextType | null>(null);

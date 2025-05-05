@@ -14,14 +14,14 @@ interface Response {
 
 export const securitySetupService = {
   updatePasswordWithoutToken: async (password: string, userId: string) => {
-    // console.log('userId::: ', userId);
-    // console.log('password::: ', password);
+    console.log('userId::: ', userId);
+    console.log('password::: ', password);
     try {
       const response = await axiosInstance.patch<Response>(
         "/security-setup-password",
         { userId: userId, newPassword: password }
       );
-      // console.log("response::: ", response);
+      console.log("response::: ", response);
       return response.data;
     } catch (error) {
       return handleError(error);

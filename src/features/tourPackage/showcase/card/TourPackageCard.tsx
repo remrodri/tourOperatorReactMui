@@ -39,8 +39,8 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
       />
       <CardContent>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          Duracion: {tourPackage.duration} dias <br />
-          Precio: {tourPackage.price} Bs.
+          Duracion (dias): {tourPackage.duration} <br />
+          Precio (Bs.): {tourPackage.price}
         </Typography>
       </CardContent>
     </Card>

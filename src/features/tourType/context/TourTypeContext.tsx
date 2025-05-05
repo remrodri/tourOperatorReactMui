@@ -23,6 +23,7 @@ interface TourTypeContextType {
   updateTourType: (values: UpdateTourTypeValues, id: string) => void;
   deleteTourType: (deleteTourType: DeleteTourTypeValues) => void;
   getTourTypeNameById: (id: string) => string;
+  getTourTypeInfoById: (id: string) => TourType | null;
   // handleUpdate: (data: UpdateTourTypeValues) => void;
 }
 
@@ -47,6 +48,19 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const { showSnackbar } = useNewSnackbar();
+
+  const getTourTypeInfoById = (id: string): TourType | null => {
+    if (!id) {
+      console.warn("tourType caller without id");
+      return null;
+    }
+    const ttFound = tourTypes.find((tt) => tt.id === id);
+    if (!ttFound) {
+      console.warn("tourType not found");
+      return null;
+    }
+    return ttFound;
+  };
 
   const getTourTypeNameById = (id: string) => {
     const tt = tourTypes.find((tt: any) => tt.id === id);
@@ -144,7 +158,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
         registerTourType,
         updateTourType,
         deleteTourType,
-        getTourTypeNameById
+        getTourTypeNameById,
         // handleUpdate,
       }}
     >

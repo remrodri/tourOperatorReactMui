@@ -18,6 +18,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
   return (
     <Box
       sx={{
+        flexGrow:1,
         display: "flex",
         flexDirection:"column"
       }}

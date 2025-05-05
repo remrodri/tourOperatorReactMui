@@ -11,6 +11,7 @@ import {
   styled,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { User } from "../../types/User";
 import { Role } from "../../types/Role";
@@ -24,11 +25,10 @@ interface UserFormValues {
   email: string;
   ci: string;
   phone: string;
-  // firstLogin?: string;
   role: string;
   address: string;
   imageUrl?: string;
-  image?: any;
+  image?: File | null;
 }
 
 interface UserFormProps {
@@ -40,6 +40,7 @@ interface UserFormProps {
   setPreview: (url: string | null) => void;
   formik: FormikProps<UserFormValues>;
   handleFileChange: any;
+  isSubmitting?: boolean;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -63,10 +64,15 @@ const UserForm: React.FC<UserFormProps> = ({
   formik,
   setPreview,
   handleFileChange,
+  isSubmitting = false,
 }) => {
   return (
-    <Dialog onClose={handleClick} open={open}>
-      <DialogTitle>Nuevo usuario</DialogTitle>
+    <Dialog
+      onClose={isSubmitting ? undefined : handleClick}
+      open={open}
+      disableEscapeKeyDown={isSubmitting}
+    >
+      <DialogTitle>{user ? "Editar usuario" : "Nuevo usuario"}</DialogTitle>
       <DialogContent>
         <form
           onSubmit={(e) => {
@@ -84,6 +90,7 @@ const UserForm: React.FC<UserFormProps> = ({
             {...formik.getFieldProps("firstName")}
             error={formik.touched.firstName && Boolean(formik.errors.firstName)}
             helperText={formik.touched.firstName && formik.errors.firstName}
+            disabled={isSubmitting}
           />
           <TextField
             sx={{ height: "70px" }}
@@ -93,6 +100,7 @@ const UserForm: React.FC<UserFormProps> = ({
             {...formik.getFieldProps("lastName")}
             error={formik.touched.lastName && Boolean(formik.errors.lastName)}
             helperText={formik.touched.lastName && formik.errors.lastName}
+            disabled={isSubmitting}
           />
           <TextField
             sx={{ height: "70px" }}
@@ -102,6 +110,7 @@ const UserForm: React.FC<UserFormProps> = ({
             {...formik.getFieldProps("email")}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
+            disabled={isSubmitting}
           />
           <TextField
             sx={{ height: "70px" }}
@@ -111,6 +120,7 @@ const UserForm: React.FC<UserFormProps> = ({
             {...formik.getFieldProps("ci")}
             error={formik.touched.ci && Boolean(formik.errors.ci)}
             helperText={formik.touched.ci && formik.errors.ci}
+            disabled={isSubmitting}
           />
           <TextField
             sx={{ height: "70px" }}
@@ -120,8 +130,14 @@ const UserForm: React.FC<UserFormProps> = ({
             {...formik.getFieldProps("phone")}
             error={formik.touched.phone && Boolean(formik.errors.phone)}
             helperText={formik.touched.phone && formik.errors.phone}
+            disabled={isSubmitting}
           />
-          <FormControl sx={{ height: "70px" }} size="small" fullWidth>
+          <FormControl
+            sx={{ height: "70px" }}
+            size="small"
+            fullWidth
+            disabled={isSubmitting}
+          >
             <InputLabel id="role">Rol</InputLabel>
             <Select
               label="Rol"
@@ -145,6 +161,7 @@ const UserForm: React.FC<UserFormProps> = ({
             {...formik.getFieldProps("address")}
             error={formik.touched.address && Boolean(formik.errors.address)}
             helperText={formik.touched.address && formik.errors.address}
+            disabled={isSubmitting}
           />
           <Box sx={{ height: "70px", display: "flex" }}>
             <Box sx={{ height: "100%", width: "50%" }}>
@@ -154,12 +171,14 @@ const UserForm: React.FC<UserFormProps> = ({
                 name="image"
                 accept="image/*"
                 onChange={handleFileChange}
+                disabled={isSubmitting}
               />
               <label htmlFor="image">
                 <Button
                   variant="contained"
                   component="span"
                   startIcon={<CloudUpload />}
+                  disabled={isSubmitting}
                 >
                   Subir imagen
                 </Button>
@@ -197,14 +216,30 @@ const UserForm: React.FC<UserFormProps> = ({
             )}
           </Box>
           <Box sx={{ pt: "2rem", display: "flex", gap: "1rem" }}>
-            <Button variant="contained" color="success" type="submit" fullWidth>
-              Registrar
+            <Button
+              variant="contained"
+              color="success"
+              type="submit"
+              fullWidth
+              disabled={isSubmitting}
+              startIcon={
+                isSubmitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
+              }
+            >
+              {isSubmitting
+                ? "Procesando..."
+                : user
+                ? "Actualizar"
+                : "Registrar"}
             </Button>
             <Button
               variant="contained"
               color="error"
               fullWidth
               onClick={handleClick}
+              disabled={isSubmitting}
             >
               Cancelar
             </Button>
@@ -214,4 +249,5 @@ const UserForm: React.FC<UserFormProps> = ({
     </Dialog>
   );
 };
+
 export default UserForm;

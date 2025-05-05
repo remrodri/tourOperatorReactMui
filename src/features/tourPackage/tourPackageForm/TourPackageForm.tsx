@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -80,6 +81,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             sx={{ height: "70px" }}
             label="Nombre"
             size="small"
+            fullWidth
             {...formik.getFieldProps("name")}
             error={formik.touched.name && Boolean(formik.errors.name)}
             helperText={formik.touched.name && formik.errors.name}
@@ -180,29 +182,61 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               </Typography>
             )}
           </Box>
-          <TextField
-            sx={{ height: "70px" }}
-            disabled={formik.values.id ? true : false}
-            label="Duracion (dias)"
-            size="small"
-            type="number"
-            {...formik.getFieldProps("duration")}
-            onChange={(e) => {
-              // const value = Number(e.target.value);
-              // if (value > 0) {
-              //   formik.setFieldValue("duration", value);
-              // }
-              const value = e.target.value === "" ? "" : Number(e.target.value);
-              formik.setFieldValue("duration", value);
-            }}
-            // error={formik.touched.duration && Boolean(formik.errors.duration)}
-            // helperText={formik.touched.duration && formik.errors.duration}
-          />
+          <Box sx={{ display: "flex", width:"100%",justifyContent:"space-between"}}>
+            <TextField
+              sx={{ height: "70px", width: "40%" }}
+              disabled={formik.values.id ? true : false}
+              label="Duracion (dias)"
+              size="small"
+              type="number"
+              {...formik.getFieldProps("duration")}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">Dia(s)</InputAdornment>
+                  ),
+                },
+              }}
+              onChange={(e) => {
+                // const value = Number(e.target.value);
+                // if (value > 0) {
+                //   formik.setFieldValue("duration", value);
+                // }
+                const value =
+                  e.target.value === "" ? "" : Number(e.target.value);
+                formik.setFieldValue("duration", value);
+              }}
+              // error={formik.touched.duration && Boolean(formik.errors.duration)}
+              // helperText={formik.touched.duration && formik.errors.duration}
+            />
+            <TextField
+              sx={{ height: "70px", width: "40%" }}
+              label="Precio"
+              size="small"
+              type="number"
+              // fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">Bs.</InputAdornment>
+                  ),
+                },
+              }}
+              {...formik.getFieldProps("price")}
+              onChange={(e) => {
+                const value =
+                  e.target.value === "" ? "" : Number(e.target.value);
+                formik.setFieldValue("price", value);
+              }}
+              error={formik.touched.price && Boolean(formik.errors.price)}
+              helperText={formik.touched.price && formik.errors.price}
+            />
+          </Box>
           {formik.values.id ? (
             <Box>bloqueado</Box>
           ) : (
-              <DateSelectorContainer
-                guides={guides}
+            <DateSelectorContainer
+              guides={guides}
               duration={formik.values.duration}
               dateRanges={formik.values.dateRanges}
               // blockedDates={formik.values.blockedDates}
@@ -234,20 +268,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               formik.setFieldValue("itinerary", itinerary)
             }
           />
-          <TextField
-            sx={{ height: "70px" }}
-            label="Precio"
-            size="small"
-            type="number"
-            fullWidth
-            {...formik.getFieldProps("price")}
-            onChange={(e) => {
-              const value = e.target.value === "" ? "" : Number(e.target.value);
-              formik.setFieldValue("price", value);
-            }}
-            error={formik.touched.price && Boolean(formik.errors.price)}
-            helperText={formik.touched.price && formik.errors.price}
-          />
+
           <Box
             sx={{
               pt: "2rem",

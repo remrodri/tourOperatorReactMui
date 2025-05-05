@@ -9,7 +9,7 @@ export interface TouristType {
   nationality: string;
   dateOfBirth?: string;
   // healthIssues?: string;
-  additionalInformation?: string;
+  // additionalInformation?: string;
   passportNumber?: string;
   documentType: string;
 }

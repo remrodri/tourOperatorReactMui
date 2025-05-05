@@ -30,7 +30,7 @@ const CancellationPolicyForm: React.FC<CancellationPolicyFormProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClick}>
-      <DialogTitle>Nueva politica de cancelacion</DialogTitle>
+      <DialogTitle>Nueva condicion de cancelacion</DialogTitle>
       <DialogContent>
         <form
           onSubmit={formik.handleSubmit}

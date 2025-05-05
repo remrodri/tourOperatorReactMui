@@ -12,10 +12,27 @@ export const bookingSchema = yup.object().shape({
   additionalTourist: yup.array().of(touristSchema).optional(),
   totalPrice: yup.number(),
   paymentIds: yup.array().of(yup.string()).optional(),
+  // payments: yup
+  //   .array()
+  //   .of(paymentInfoSchema)
+  //   .min(1, "Debe haber al menos un pago"),
   payments: yup
     .array()
     .of(paymentInfoSchema)
-    .min(1, "Debe haber al menos un pago"),
+    .min(1, "Debe haber al menos un pago")
+    .test(
+      "payments-total",
+      "No debe exceder el precio total",
+      function (payments, context) {
+        const { totalPrice } = this.parent;
+        if (!payments || !totalPrice) return true;
+        const paymentSum = payments.reduce(
+          (sum, payment) => sum + (payment.amount || 0),
+          0
+        );
+        return paymentSum <= totalPrice;
+      }
+    ),
   notes: yup.string().optional(),
   // status: yup
   //   .string()
