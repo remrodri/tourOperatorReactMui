@@ -58,7 +58,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   cancellationPolicy,
   tourType
 }) => {
-  console.log('tourType::: ', tourType);
+  // console.log('tourType::: ', tourType);
   // Estado local para manejar correctamente la animación
   const [isOpen, setIsOpen] = useState(false);
 
@@ -108,7 +108,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           <TourPackageInfo tourPackage={tourPackageInfo} />
           {/* <Divider/> */}
           <CancellationPolicyInfo cancellationPolicy={cancellationPolicy} />
-          {/* <TourTypeInfo tourType={tourType}/> */}
+          <TourTypeInfo tourType={tourType}/>
         </Box>
       </DialogContent>
     </Dialog>

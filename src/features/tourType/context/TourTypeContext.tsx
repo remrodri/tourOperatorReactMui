@@ -53,8 +53,8 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
     if (!id) {
       console.warn("tourType caller without id");
       return null;
-    }
-    const ttFound = tourTypes.find((tt) => tt.id === id);
+    };
+    const ttFound = tourTypes.find((tt:TourType) => tt.id === id);
     if (!ttFound) {
       console.warn("tourType not found");
       return null;
@@ -159,6 +159,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
         updateTourType,
         deleteTourType,
         getTourTypeNameById,
+        getTourTypeInfoById
         // handleUpdate,
       }}
     >

@@ -10,7 +10,7 @@ const CancellationPolicyInfo: React.FC<CancellationPolicyProps> = ({
 }) => {
   return (
     <Box>
-      <Typography variant="body1">Politica de Cancelacion</Typography>
+      <Typography variant="h5">Politica de Cancelacion</Typography>
       <Typography variant="body1">
         Nombre: {cancellationPolicy?.name || "No disponible"}
       </Typography>
