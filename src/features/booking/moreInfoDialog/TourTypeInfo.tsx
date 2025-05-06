@@ -9,8 +9,8 @@ const TourTypeInfo: React.FC<TourTypeProps> = ({ tourType }) => {
   return (
     <Box>
       <Typography variant="h5">Tipo de tour</Typography>
-      <Typography variant="body1">{tourType?.name}</Typography>
-      <Typography variant="body1">{tourType?.description}</Typography>
+      <Typography variant="body1">Nombre: {tourType?.name}</Typography>
+      <Typography variant="body1">Descripcion: {tourType?.description}</Typography>
     </Box>
   );
 };

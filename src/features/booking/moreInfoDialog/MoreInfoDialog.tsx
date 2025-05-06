@@ -22,6 +22,8 @@ import { CancellationPolicy } from "../../cancellationPolicy/types/CancellationP
 import CancellationPolicyInfo from "./CancellationPolicyInfo";
 import { TourType } from "../../userManagement/types/TourType";
 import TourTypeInfo from "./TourTypeInfo";
+import TouristDestinationInfo from "./TouristDestinationInfo";
+import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
 
 interface MoreInfoDialogProps {
   open: boolean;
@@ -35,6 +37,7 @@ interface MoreInfoDialogProps {
   balance: number;
   cancellationPolicy: CancellationPolicy | null;
   tourType: TourType | null;
+  touristDestination: TouristDestinationType | null;
 }
 
 const Transition = forwardRef(function Transition(
@@ -56,7 +59,8 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   tourPackageInfo,
   balance,
   cancellationPolicy,
-  tourType
+  tourType,
+  touristDestination
 }) => {
   // console.log('tourType::: ', tourType);
   // Estado local para manejar correctamente la animación
@@ -108,7 +112,8 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           <TourPackageInfo tourPackage={tourPackageInfo} />
           {/* <Divider/> */}
           <CancellationPolicyInfo cancellationPolicy={cancellationPolicy} />
-          <TourTypeInfo tourType={tourType}/>
+          <TourTypeInfo tourType={tourType} />
+          <TouristDestinationInfo touristDestination={touristDestination} />
         </Box>
       </DialogContent>
     </Dialog>

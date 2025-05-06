@@ -17,6 +17,12 @@ const CancellationPolicyInfo: React.FC<CancellationPolicyProps> = ({
       <Typography variant="body1">
         Descripcion: {cancellationPolicy?.description || "No disponible"}
       </Typography>
+      <Typography variant="body1">
+        Descuento(%): {cancellationPolicy?.refoundPercentage}
+      </Typography>
+      <Typography variant="body1">
+        Tiempo limite(dias): {cancellationPolicy?.deadLine}
+      </Typography>
     </Box>
   );
 };

@@ -10,6 +10,8 @@ import MoreInfoDialog from "./MoreInfoDialog";
 import { CancellationPolicy } from "../../cancellationPolicy/types/CancellationPolicy";
 import { TourType } from "../../userManagement/types/TourType";
 import { useTourTypeContext } from "../../tourType/context/TourTypeContext";
+import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
+import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 
 interface MoreIndfoDialogContainerProps {
   open: boolean;
@@ -38,22 +40,31 @@ const MoreInfoDialogContainer: React.FC<MoreIndfoDialogContainerProps> = ({
   tourPackageInfo,
   balance,
 }) => {
+  const { getTouristDestinationInfoById } = useTouristDestinationContext();
   const { getTourTypeInfoById } = useTourTypeContext();
   const { getCancellationPolicyInfoById } = useCancellationConditionContext();
   const [cancellationPolicy, setCancellationPolicy] =
     useState<CancellationPolicy | null>(null);
   const [tourType, setTourType] = useState<TourType | null>(null);
+  const [touristDestination, setTouristDestination] =
+    useState<TouristDestinationType | null>(null);
+
+  const getTouristDestination = (id: string) => {
+    const touristDestination = getTouristDestinationInfoById(id);
+    setTouristDestination(touristDestination);
+  };
 
   const getTourType = (id: string) => {
     const tourType = getTourTypeInfoById(id);
     setTourType(tourType);
   };
-  
+
   const getCancellationPolicy = (id: string) => {
     const cp = getCancellationPolicyInfoById(id);
     setCancellationPolicy(cp);
   };
   useEffect(() => {
+    getTouristDestination(tourPackageInfo?.touristDestination || "");
     getCancellationPolicy(tourPackageInfo?.cancellationPolicy || "");
     getTourType(tourPackageInfo?.tourType || "");
   }, []);
@@ -72,6 +83,7 @@ const MoreInfoDialogContainer: React.FC<MoreIndfoDialogContainerProps> = ({
       balance={balance}
       cancellationPolicy={cancellationPolicy}
       tourType={tourType}
+      touristDestination={touristDestination}
     />
   );
 };

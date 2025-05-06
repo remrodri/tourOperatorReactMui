@@ -51,7 +51,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
 
   const getTourTypeInfoById = (id: string): TourType | null => {
     if (!id) {
-      console.warn("tourType caller without id");
+      console.warn("tourType called without id");
       return null;
     };
     const ttFound = tourTypes.find((tt:TourType) => tt.id === id);
