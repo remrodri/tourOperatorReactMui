@@ -24,6 +24,7 @@ import { TourType } from "../../userManagement/types/TourType";
 import TourTypeInfo from "./TourTypeInfo";
 import TouristDestinationInfo from "./TouristDestinationInfo";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
+import SellerInfo from "./SellerInfo";
 
 interface MoreInfoDialogProps {
   open: boolean;
@@ -60,7 +61,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   balance,
   cancellationPolicy,
   tourType,
-  touristDestination
+  touristDestination,
 }) => {
   // console.log('tourType::: ', tourType);
   // Estado local para manejar correctamente la animación
@@ -114,6 +115,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           <CancellationPolicyInfo cancellationPolicy={cancellationPolicy} />
           <TourTypeInfo tourType={tourType} />
           <TouristDestinationInfo touristDestination={touristDestination} />
+          <SellerInfo seller={sellerInfo} />
         </Box>
       </DialogContent>
     </Dialog>
