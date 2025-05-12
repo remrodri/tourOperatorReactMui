@@ -25,6 +25,11 @@ import TourTypeInfo from "./TourTypeInfo";
 import TouristDestinationInfo from "./TouristDestinationInfo";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
 import SellerInfo from "./SellerInfo";
+import PaymentsInfo from "./PaymentsInfo";
+import TouristsInfo from "./TouristsInfo";
+import BookingInfo from "./DateRangeInfo";
+import DateRangeInfo from "./DateRangeInfo";
+import GuidesInfo from "./GuidesInfo";
 
 interface MoreInfoDialogProps {
   open: boolean;
@@ -32,13 +37,17 @@ interface MoreInfoDialogProps {
   booking: BookingType;
   sellerInfo: User | null;
   touristInfo: TouristType | null;
-  paymentsInfo: PaymentInfoType[];
+  // paymentsInfo: PaymentInfoType[];
   dateRangeInfo: DateRangeType | null;
   tourPackageInfo: TourPackageType | null;
   balance: number;
   cancellationPolicy: CancellationPolicy | null;
   tourType: TourType | null;
   touristDestination: TouristDestinationType | null;
+  payments: PaymentInfoType[];
+  tourists: TouristType[];
+  dateRange: DateRangeType | null;
+  guides: User[];
 }
 
 const Transition = forwardRef(function Transition(
@@ -53,16 +62,24 @@ const Transition = forwardRef(function Transition(
 const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   open,
   handleClose,
+  booking,
   sellerInfo,
   touristInfo,
-  paymentsInfo,
+  // paymentsInfo,
   dateRangeInfo,
   tourPackageInfo,
   balance,
   cancellationPolicy,
   tourType,
   touristDestination,
+  payments,
+  tourists,
+  dateRange,
+  guides,
 }) => {
+  // console.log('dateRange::: ', dateRange);
+  // console.log('guides::: ', guides);
+  // console.log("payments::: ", payments);
   // console.log('tourType::: ', tourType);
   // Estado local para manejar correctamente la animación
   const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +111,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
         onExited: handleClose, // Callback cuando la transición de salida termina
       }}
     >
-      <DialogTitle>Detalles de la reserva</DialogTitle>
+      <DialogTitle>Detalle de la reserva</DialogTitle>
       <IconButton
         autoFocus
         aria-label="close"
@@ -109,6 +126,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
       </IconButton>
       <DialogContent dividers>
         <Box>
+          <DateRangeInfo dateRange={dateRange} />
           {/* <Typography gutterBottom>{tourPackageInfo?.name}</Typography> */}
           <TourPackageInfo tourPackage={tourPackageInfo} />
           {/* <Divider/> */}
@@ -116,6 +134,9 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           <TourTypeInfo tourType={tourType} />
           <TouristDestinationInfo touristDestination={touristDestination} />
           <SellerInfo seller={sellerInfo} />
+          <PaymentsInfo payments={payments} />
+          <TouristsInfo tourists={tourists} />
+          <GuidesInfo guides={guides} />
         </Box>
       </DialogContent>
     </Dialog>

@@ -9,8 +9,8 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ seller }) => {
 
   return (
     <Box>
-      <Typography variant="h5">Informacion de/la operador/a</Typography>
-      <Typography variant="body1">
+      <Typography variant="h5" gutterBottom>Informacion del vendedor</Typography>
+      <Typography variant="body1" gutterBottom>
         Nombre: {seller?.firstName} {seller?.lastName}
       </Typography>
     </Box>

@@ -10,7 +10,7 @@ const CancellationPolicyInfo: React.FC<CancellationPolicyProps> = ({
 }) => {
   return (
     <Box>
-      <Typography variant="h5">Politica de Cancelacion</Typography>
+      <Typography variant="h5" gutterBottom>Politica de Cancelacion</Typography>
       <Typography variant="body1">
         Nombre: {cancellationPolicy?.name || "No disponible"}
       </Typography>
@@ -20,7 +20,7 @@ const CancellationPolicyInfo: React.FC<CancellationPolicyProps> = ({
       <Typography variant="body1">
         Descuento(%): {cancellationPolicy?.refoundPercentage}
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" gutterBottom>
         Tiempo limite(dias): {cancellationPolicy?.deadLine}
       </Typography>
     </Box>

@@ -147,6 +147,8 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   };
 
   const onSubmit = (values: BookingFormValues) => {
+    console.log('values::: ', values);
+    
     if (values.id) {
       // const booking = {...values,status:"pending"}
       updateBooking(values.id, values as BookingType);
@@ -154,7 +156,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       createBooking(values as BookingType);
     }
 
-    handleClick();
+    // handleClick();
   };
 
   const formik = useFormik<BookingFormValues>({

@@ -12,6 +12,10 @@ import { TourType } from "../../userManagement/types/TourType";
 import { useTourTypeContext } from "../../tourType/context/TourTypeContext";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
+import { usePaymentContext } from "../../payment/context/PaymentContext";
+import { useTouristContext } from "../../tourist/context/TouristContext";
+import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
+import { useUserContext } from "../../userManagement/context/UserContext";
 
 interface MoreIndfoDialogContainerProps {
   open: boolean;
@@ -40,14 +44,51 @@ const MoreInfoDialogContainer: React.FC<MoreIndfoDialogContainerProps> = ({
   tourPackageInfo,
   balance,
 }) => {
+  const { getDateRangeById } = useDateRangeContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
   const { getTourTypeInfoById } = useTourTypeContext();
   const { getCancellationPolicyInfoById } = useCancellationConditionContext();
+  const { getPaymentInfoByIds } = usePaymentContext();
+  const { getTouristInfoByIds } = useTouristContext();
+  const { getUsersById } = useUserContext();
   const [cancellationPolicy, setCancellationPolicy] =
     useState<CancellationPolicy | null>(null);
   const [tourType, setTourType] = useState<TourType | null>(null);
   const [touristDestination, setTouristDestination] =
     useState<TouristDestinationType | null>(null);
+  const [payments, setPayments] = useState<PaymentInfoType[]>([]);
+  const [tourists, setTourists] = useState<TouristType[]>([]);
+  const [dateRange, setDateRange] = useState<DateRangeType | null>(null);
+  const [guides, setGuides] = useState<User[]>([]);
+
+  const getGuides = () => {
+    const dateRange = getDateRangeById(booking.dateRangeId)
+    const guides = getUsersById(dateRange?.guides||[]);
+    setGuides(guides);
+  };
+
+  const getDateRange = (id: string) => {
+    const dateRange = getDateRangeById(id);
+    setDateRange(dateRange);
+  };
+
+  const getTourists = (mainTouristId: string, additionalTourists: string[]) => {
+    const touristIds = [
+      ...(booking.additionalTouristIds || []),
+      booking.mainTouristId,
+    ].filter((id): id is string => id !== undefined);
+
+    if (!touristIds) {
+      setTourists([]);
+    }
+    const touristInfos = getTouristInfoByIds(touristIds || []);
+    setTourists(touristInfos);
+  };
+
+  const getPayments = (ids: string[]) => {
+    const payments = getPaymentInfoByIds(ids);
+    setPayments(payments);
+  };
 
   const getTouristDestination = (id: string) => {
     const touristDestination = getTouristDestinationInfoById(id);
@@ -67,6 +108,13 @@ const MoreInfoDialogContainer: React.FC<MoreIndfoDialogContainerProps> = ({
     getTouristDestination(tourPackageInfo?.touristDestination || "");
     getCancellationPolicy(tourPackageInfo?.cancellationPolicy || "");
     getTourType(tourPackageInfo?.tourType || "");
+    getPayments(booking.paymentIds || []);
+    getTourists(
+      booking.mainTouristId || "",
+      booking.additionalTouristIds || []
+    );
+    getDateRange(booking.dateRangeId || "");
+    getGuides();
   }, []);
   return (
     <MoreInfoDialog
@@ -77,13 +125,17 @@ const MoreInfoDialogContainer: React.FC<MoreIndfoDialogContainerProps> = ({
       booking={booking}
       sellerInfo={sellerInfo}
       touristInfo={touristInfo}
-      paymentsInfo={paymentsInfo}
+      // paymentsInfo={paymentsInfo}
       dateRangeInfo={dateRangeInfo}
       tourPackageInfo={tourPackageInfo}
       balance={balance}
       cancellationPolicy={cancellationPolicy}
       tourType={tourType}
       touristDestination={touristDestination}
+      payments={payments}
+      tourists={tourists}
+      dateRange={dateRange}
+      guides={guides}
     />
   );
 };

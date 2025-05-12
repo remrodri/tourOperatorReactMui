@@ -14,9 +14,9 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   bookings,
 }) => {
   console.log('bookings::: ', bookings);
-  if (!bookings || bookings.length === 0) {
-    return <Box>No hay reservas disponibles</Box>;
-  }
+  // if (!bookings || bookings.length === 0) {
+  //   return <Box>No hay reservas disponibles</Box>;
+  // }
   return (
     <Box
       sx={{
@@ -77,8 +77,9 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             border: "1px solid rgba(255, 255, 255, 0.2)",
           }}
         >
-          {
-            bookings.map((booking, index) => (
+          {(!bookings || bookings.length===0)
+            ?<p>No hay reservas</p>
+            :bookings.map((booking, index) => (
               <BookingCardContainer
                 key={index}
                 booking={booking}

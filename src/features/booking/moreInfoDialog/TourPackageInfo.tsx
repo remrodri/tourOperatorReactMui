@@ -4,10 +4,10 @@ interface TourPackageInfoProps {
   tourPackage: TourPackageType | null;
 }
 const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
-  console.log("tourPackage::: ", tourPackage);
+  // console.log("tourPackage::: ", tourPackage);
   return (
     <Box>
-      <Typography variant="h5">
+      <Typography variant="h5" gutterBottom>
         Informacion del paquete turistico
       </Typography>
       <Typography variant="body1">
@@ -27,7 +27,7 @@ const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
             {day.activities &&
               day.activities.length > 0 &&
               day.activities.map((activity, index) => (
-                <Typography variant="body2" key={index}>
+                <Typography variant="body2" key={index} gutterBottom>
                   {activity.time} - {activity.description}
                 </Typography>
               ))}

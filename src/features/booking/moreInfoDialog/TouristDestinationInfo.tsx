@@ -11,11 +11,11 @@ const TouristDestinationInfo: React.FC<TouristDestinationInfoProps> = ({
   console.log("touristDestination::: ", touristDestination);
   return (
     <Box>
-      <Typography variant="h5">Destino Turistico</Typography>
+      <Typography variant="h5" gutterBottom>Destino Turistico</Typography>
       <Typography variant="body1">
         Nombre: {touristDestination?.name}
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" gutterBottom>
         Descripcion: {touristDestination?.description}
       </Typography>
     </Box>
