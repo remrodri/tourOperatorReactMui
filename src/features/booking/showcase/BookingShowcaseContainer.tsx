@@ -12,7 +12,11 @@ const BookingShowcaseContainer: React.FC = () => {
   };
   return (
     <>
-      <BookingShowcase handleClick={handleClick} bookings={bookings} />
+      <BookingShowcase
+        handleClick={handleClick}
+        bookings={bookings}
+        open={open}
+      />
       {open && <BookingFormContainer open={open} handleClick={handleClick} />}
     </>
   );

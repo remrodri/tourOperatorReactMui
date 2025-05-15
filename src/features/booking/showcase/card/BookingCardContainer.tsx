@@ -10,15 +10,20 @@ import { useTourPackageContext } from "../../../tourPackage/context/TourPackageC
 import MoreInfoDialogContainer from "../../moreInfoDialog/MoreInfoDialogContainer";
 import { Card, Slide, Typography } from "@mui/material";
 import { TouristType } from "../../types/TouristType";
+import BookingFormContainer from "../../bookingForm/BookingFormContainer";
 
 interface BookingContainerProps {
   booking?: BookingType; // Make booking optional
   index: number;
+  openEditForm: boolean;
+  handleClick: () => void;
 }
 
 const BookingCardContainer: React.FC<BookingContainerProps> = ({
   booking,
   index,
+  openEditForm,
+  handleClick,
 }) => {
   const { getTouristById, touristFound } = useTouristContext();
   const { getUserById, userFound } = useUserContext();
@@ -77,6 +82,7 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
         break;
       case "Editar":
         console.log("Editar::: ");
+        handleClick();
         break;
       case "Registrar pago":
         console.log("pagar::: ");
@@ -215,6 +221,13 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
           dateRangeInfo={dateRangeInfo}
           tourPackageInfo={tpFound}
           balance={getBalance()}
+        />
+      )}
+      {openEditForm && (
+        <BookingFormContainer
+          open={openEditForm}
+          handleClick={handleClick}
+          booking={booking}
         />
       )}
     </>

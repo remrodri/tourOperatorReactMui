@@ -39,6 +39,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   handleClick,
   booking,
 }) => {
+  console.log('booking::: ', booking);
   const { tourPackages, tpFound, findTourPackageById } =
     useTourPackageContext();
   const { users } = useUserContext();

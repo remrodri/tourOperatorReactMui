@@ -7,13 +7,15 @@ interface BookingShowcaseProps {
   handleClick: () => void;
   bookings: BookingType[] | null;
   // bookings:any
+  open: boolean;
 }
 
 const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   handleClick,
   bookings,
+  open,
 }) => {
-  console.log('bookings::: ', bookings);
+  // console.log('bookings::: ', bookings);
   // if (!bookings || bookings.length === 0) {
   //   return <Box>No hay reservas disponibles</Box>;
   // }
@@ -77,15 +79,19 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             border: "1px solid rgba(255, 255, 255, 0.2)",
           }}
         >
-          {(!bookings || bookings.length===0)
-            ?<p>No hay reservas</p>
-            :bookings.map((booking, index) => (
+          {!bookings || bookings.length === 0 ? (
+            <p>No hay reservas</p>
+          ) : (
+            bookings.map((booking, index) => (
               <BookingCardContainer
                 key={index}
                 booking={booking}
                 index={index}
+                openEditForm={open}
+                handleClick={handleClick}
               />
-            ))}
+            ))
+          )}
         </Box>
       </Box>
     </Box>

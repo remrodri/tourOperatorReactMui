@@ -80,13 +80,15 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   // Calcular el total pagado
   const totalPaid = formik.values.payments.reduce(
-    (sum:any, payment:any) => sum + (payment.amount || 0),
+    (sum: any, payment: any) => sum + (payment.amount || 0),
     0
   );
 
   return (
     <Dialog onClose={handleClick} open={open}>
-      <DialogTitle>Nueva Reserva</DialogTitle>
+      <DialogTitle>
+        {formik.values.id ? "Editar Reserva" : "Nueva Reserva"}
+      </DialogTitle>
       <DialogContent>
         <form
           onSubmit={(e) => {
