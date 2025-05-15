@@ -5,7 +5,7 @@ interface SellerInfoProps {
   seller: User | null;
 }
 const SellerInfo: React.FC<SellerInfoProps> = ({ seller }) => {
-  console.log("seller::: ", seller);
+  // console.log("seller::: ", seller);
 
   return (
     <Box>

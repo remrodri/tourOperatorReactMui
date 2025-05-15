@@ -12,7 +12,7 @@ export interface BookingType {
   additionalTourists?: TouristType[];
   totalPrice: number;
   paymentIds?: string[];
-  payments: PaymentInfoType[];
+  payments?: PaymentInfoType[];
   notes?: string;
   status: "pending" | "paid" | "cancelled" | "completed";
 }

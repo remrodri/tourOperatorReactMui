@@ -22,7 +22,7 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
 }) => {
   const { getTouristById, touristFound } = useTouristContext();
   const { getUserById, userFound } = useUserContext();
-  const { getPaymentsById, paymentsFound } = usePaymentContext();
+  const { getPaymentsById, paymentsFound, getTotalPaid } = usePaymentContext();
   const { getDateRangeById } = useDateRangeContext();
   const [dateRangeInfo, setDateRangeInfo] = useState<DateRangeType | null>(
     null
@@ -31,6 +31,8 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [touristInfo, setTouristInfo] = useState<TouristType | null>(null);
+  const [totalPaid, setTotalPaid] = useState(0);
+  const { fetchTourists } = useTouristContext();
 
   // console.log("touristFound::: ", touristFound);
   const getTouristInfo = async (id: string) => {
@@ -46,14 +48,18 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
     setTouristInfo(tourist);
   };
 
-  const getBalance = () => {
-    const price = tpFound?.price || 0;
-    const totalAmountPaid = paymentsFound?.reduce(
-      (sum, payment) => sum + (payment?.amount || 0),
-      0
-    );
+  const getBalance = (): number => {
+    // const price = tpFound?.price || 0;
+    // const totalAmountPaid = paymentsFound?.reduce(
+    //   (sum, payment) => sum + (payment?.amount || 0),
+    //   0
+    // );
 
-    return price - totalAmountPaid;
+    // return price - totalAmountPaid;
+    const totalPrice = booking?.totalPrice || 0;
+    const balance = totalPrice - totalPaid;
+    // return balance.toFixed(2);
+    return balance;
   };
 
   const handleOpenInfo = () => {
@@ -81,6 +87,10 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
     }
   };
 
+  const loadTotalPaid = (paymentIds: string[]): void => {
+    const totalPaid = getTotalPaid(booking?.paymentIds || []);
+    setTotalPaid(totalPaid);
+  };
   const getDateRangeInfo = async (id: string) => {
     if (id) {
       const dateRange = await getDateRangeById(id);
@@ -131,9 +141,11 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
       if (booking.dateRangeId) {
         await getDateRangeInfo(booking.dateRangeId);
       }
-
       if (booking.tourPackageId) {
         await findTourPackageById(booking.tourPackageId);
+      }
+      if (booking.paymentIds) {
+        loadTotalPaid(booking.paymentIds);
       }
     } catch (error) {
       console.error("Error al cargar los datos:", error);
@@ -143,6 +155,7 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
   };
 
   useEffect(() => {
+    // fetchTourists();
     loadAllData();
   }, [booking]);
 
@@ -190,19 +203,19 @@ const BookingCardContainer: React.FC<BookingContainerProps> = ({
         balance={getBalance}
       />
       {openMoreInfo && (
-          <MoreInfoDialogContainer
-            open={openMoreInfo}
-            // handleOpenMoreInfoClick={handleOpenMoreInfoClick}
-            // handleOpen={handleOpenInfo}
-            handleClose={handleCloseInfo}
-            booking={booking}
-            sellerInfo={userFound}
-            touristInfo={touristInfo}
-            paymentsInfo={paymentsFound}
-            dateRangeInfo={dateRangeInfo}
-            tourPackageInfo={tpFound}
-            balance={getBalance()}
-          />
+        <MoreInfoDialogContainer
+          open={openMoreInfo}
+          // handleOpenMoreInfoClick={handleOpenMoreInfoClick}
+          // handleOpen={handleOpenInfo}
+          handleClose={handleCloseInfo}
+          booking={booking}
+          sellerInfo={userFound}
+          touristInfo={touristInfo}
+          paymentsInfo={paymentsFound}
+          dateRangeInfo={dateRangeInfo}
+          tourPackageInfo={tpFound}
+          balance={getBalance()}
+        />
       )}
     </>
   );

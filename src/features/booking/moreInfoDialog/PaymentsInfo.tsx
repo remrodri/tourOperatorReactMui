@@ -6,7 +6,7 @@ interface PaymentsInfoProps {
 }
 
 const PaymentsInfo: React.FC<PaymentsInfoProps> = ({ payments }) => {
-  console.log("payments::: ", payments);
+  // console.log("payments::: ", payments);
   return (
     <Box>
       <Typography variant="h5" gutterBottom>Informacion de pagos</Typography>

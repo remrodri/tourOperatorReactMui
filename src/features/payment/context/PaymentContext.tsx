@@ -17,6 +17,8 @@ type PaymentContextType = {
   getPaymentsById: (ids: string[]) => Promise<void>;
   paymentsFound: PaymentInfoType[];
   getPaymentInfoByIds: (ids: string[]) => PaymentInfoType[];
+  getTotalPaid: (PaymentsId: string[]) => number;
+  addPaymentFromBooking: (payment: any) => void;
 };
 
 const PaymentContext = createContext<PaymentContextType | null>(null);
@@ -41,6 +43,21 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+
+  const addPaymentFromBooking = (payment: any) => {
+    setPayments((prevPayments) => [...prevPayments, payment]);
+  };
+
+  const getTotalPaid = (paymentIds: string[]): number => {
+    const total = paymentIds.reduce((acc, id) => {
+      const payment = payments.find((p) => p.id === id);
+      if (!payment) {
+        return acc;
+      }
+      return acc + payment.amount;
+    }, 0);
+    return total;
+  };
 
   const getPaymentInfoByIds = (ids: string[]): PaymentInfoType[] => {
     return ids
@@ -103,6 +120,8 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
         getPaymentsById,
         paymentsFound,
         getPaymentInfoByIds,
+        getTotalPaid,
+        addPaymentFromBooking,
       }}
     >
       {children}

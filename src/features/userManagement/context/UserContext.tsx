@@ -163,12 +163,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await userService.registerUser(userData, token);
 
-      if (response && response.data) {
+      if (response ) {
         // Make sure we have the complete user object from the response
         const newUser = response.data;
 
         // Update the users state with the new user
-        setUsers((prevUsers: any) => [...prevUsers, newUser]);
+        setUsers((prevUsers: User[]) => [...prevUsers, newUser]);
 
         // Trigger any necessary updates (like fetching guides if this is a guide)
         if (newUser.role === "6807f17065d3a5a25230b2bf") {
@@ -250,7 +250,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         deleteUser,
         getUserById,
         userFound,
-        getUsersById
+        getUsersById,
       }}
     >
       {children}

@@ -6,7 +6,7 @@ const API_URL = "http://localhost:3000/api/v1/users";
 interface ApiResponse {
   statusCode: number;
   message: string;
-  data: any;
+  data: User;
 }
 
 const getUsers = async (token: string): Promise<ApiResponse> => {

@@ -3,9 +3,9 @@ import { BookingType } from "../types/BookingType";
 
 const url = "/bookings";
 export const createBookingRequest = async (data: Partial<BookingType>):Promise<any> => {
-  console.log('data::: ', data);
+  // console.log('data::: ', data);
   const response = await axiosInstance.post(url, data);
-  console.log('response::: ', response.data);
+  // console.log('response::: ', response.data);
   return response.data.data;
 };
 

@@ -8,7 +8,7 @@ interface TouristDestinationInfoProps {
 const TouristDestinationInfo: React.FC<TouristDestinationInfoProps> = ({
   touristDestination,
 }) => {
-  console.log("touristDestination::: ", touristDestination);
+  // console.log("touristDestination::: ", touristDestination);
   return (
     <Box>
       <Typography variant="h5" gutterBottom>Destino Turistico</Typography>

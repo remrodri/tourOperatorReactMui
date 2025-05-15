@@ -12,4 +12,5 @@ export interface TouristType {
   // additionalInformation?: string;
   passportNumber?: string;
   documentType: string;
+  bookingIds?:string[]
 }

@@ -156,7 +156,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       createBooking(values as BookingType);
     }
 
-    // handleClick();
+    handleClick();
   };
 
   const formik = useFormik<BookingFormValues>({

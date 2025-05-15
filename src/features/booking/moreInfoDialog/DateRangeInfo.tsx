@@ -7,7 +7,7 @@ interface DateRangeInfoProps {
 }
 
 const DateRangeInfo: React.FC<DateRangeInfoProps> = ({ dateRange }) => {
-  console.log("dateRange::: ", dateRange);
+  // console.log("dateRange::: ", dateRange);
 
   return (
     <Box>
