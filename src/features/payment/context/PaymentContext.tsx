@@ -16,6 +16,9 @@ type PaymentContextType = {
   // paymentFound: (id: string) => PaymentInfoType;
   getPaymentsById: (ids: string[]) => Promise<void>;
   paymentsFound: PaymentInfoType[];
+  getPaymentInfoByIds: (ids: string[]) => PaymentInfoType[];
+  getTotalPaid: (PaymentsId: string[]) => number;
+  addPaymentFromBooking: (payment: any) => void;
 };
 
 const PaymentContext = createContext<PaymentContextType | null>(null);
@@ -41,14 +44,36 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
 
+  const addPaymentFromBooking = (payment: any) => {
+    setPayments((prevPayments) => [...prevPayments, payment]);
+  };
+
+  const getTotalPaid = (paymentIds: string[]): number => {
+    const total = paymentIds.reduce((acc, id) => {
+      const payment = payments.find((p) => p.id === id);
+      if (!payment) {
+        return acc;
+      }
+      return acc + payment.amount;
+    }, 0);
+    return total;
+  };
+
+  const getPaymentInfoByIds = (ids: string[]): PaymentInfoType[] => {
+    return ids
+      .map((id) => payments.find((p) => p.id === id))
+      .filter((p): p is PaymentInfoType => p !== undefined);
+  };
+
   const getPaymentsById = async (ids: string[]): Promise<void> => {
     // const payment = payments.find((payment) => payment.id === id);
     // if (!payment) {
     //   throw new Error("Payment not found");
     // }
     // return payment;
-    console.log("payments::: ", payments);
-    console.log("ids::: ", ids);
+    // console.log("payments::: ", payments);
+    // console.log("ids::: ", ids);
+
     const paymentsInfoFound = ids.map((id) =>
       payments.find((payment) => payment.id === id)
     );
@@ -88,7 +113,16 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
 
   return (
     <PaymentContext.Provider
-      value={{ payments, loading, error, getPaymentsById, paymentsFound }}
+      value={{
+        payments,
+        loading,
+        error,
+        getPaymentsById,
+        paymentsFound,
+        getPaymentInfoByIds,
+        getTotalPaid,
+        addPaymentFromBooking,
+      }}
     >
       {children}
     </PaymentContext.Provider>

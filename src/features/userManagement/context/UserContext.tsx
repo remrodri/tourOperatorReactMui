@@ -25,6 +25,7 @@ interface UserContextType {
   deleteUser: (userId: string) => Promise<any>;
   getUserById: (userId: string) => Promise<User | null>; // Cambiado a Promise
   userFound: User | null;
+  getUsersById: (ids: string[]) => User[];
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -40,6 +41,16 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [guides, setGuides] = useState<User[]>([]);
   const [userFound, setUserFound] = useState<User | null>(null);
 
+  const getUsersById = (ids: string[]): User[] => {
+    if (!ids || ids.length === 0) {
+      console.warn("no hay ids");
+      return [];
+    }
+    const usersFound = ids
+      .map((id) => users.find((user: User) => user.id === id))
+      .filter((user) => user !== undefined);
+    return usersFound;
+  };
   const getUserById = async (userId: string): Promise<User | null> => {
     // console.log("Buscando usuario con ID:", userId);
 
@@ -152,12 +163,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await userService.registerUser(userData, token);
 
-      if (response && response.data) {
+      if (response ) {
         // Make sure we have the complete user object from the response
         const newUser = response.data;
 
         // Update the users state with the new user
-        setUsers((prevUsers: any) => [...prevUsers, newUser]);
+        setUsers((prevUsers: User[]) => [...prevUsers, newUser]);
 
         // Trigger any necessary updates (like fetching guides if this is a guide)
         if (newUser.role === "6807f17065d3a5a25230b2bf") {
@@ -239,6 +250,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         deleteUser,
         getUserById,
         userFound,
+        getUsersById,
       }}
     >
       {children}

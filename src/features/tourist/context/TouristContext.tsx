@@ -14,8 +14,10 @@ type TouristContextType = {
   loading: boolean;
   error: string | null;
   touristFound: TouristType | null;
-  // fetchTourists: () => Promise<void>;
-  getTouristById: (id: string) => Promise<TouristType|null>;
+  fetchTourists: () => Promise<void>;
+  getTouristById: (id: string) => Promise<TouristType | null>;
+  getTouristInfoByIds: (id: string[]) => TouristType[];
+  addTouristFromBooking: (tourist: any) => void;
 };
 
 const TouristContext = createContext<TouristContextType | null>(null);
@@ -41,7 +43,18 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   const { showSnackbar } = useNewSnackbar();
   const [touristFound, setTouristFound] = useState<TouristType | null>(null);
 
-  const getTouristById = async (id: string): Promise<TouristType|null> => {
+  const addTouristFromBooking = (tourist: any) => {
+    // setTourists([...tourists, tourist]);
+    setTourists((prevTourists) => [...prevTourists, tourist]);
+  };
+
+  const getTouristInfoByIds = (ids: string[]): TouristType[] => {
+    return ids
+      .map((id) => tourists.find((tourist) => tourist.id === id))
+      .filter((tourist) => tourist !== undefined);
+  };
+
+  const getTouristById = async (id: string): Promise<TouristType | null> => {
     const touristFound = tourists.find((tourist) => tourist.id === id);
     if (!touristFound) {
       showSnackbar("No se encontro al turista", "error");
@@ -79,6 +92,7 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
       dateOfBirth: touristData.dateOfBirth,
       passportNumber: touristData.passportNumber,
       documentType: touristData.documentType,
+      bookingIds: touristData.bookingIds,
     };
   };
   useEffect(() => {
@@ -87,7 +101,16 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
 
   return (
     <TouristContext.Provider
-      value={{ tourists, loading, error, getTouristById, touristFound }}
+      value={{
+        tourists,
+        loading,
+        error,
+        getTouristById,
+        touristFound,
+        getTouristInfoByIds,
+        fetchTourists,
+        addTouristFromBooking,
+      }}
     >
       {children}
     </TouristContext.Provider>

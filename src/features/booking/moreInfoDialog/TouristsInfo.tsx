@@ -1,0 +1,27 @@
+import { Box, Typography } from "@mui/material";
+import { TouristType } from "../types/TouristType";
+interface TouristsInfoProps {
+  tourists: TouristType[];
+}
+
+const TouristsInfo: React.FC<TouristsInfoProps> = ({ tourists }) => {
+  // console.log("tourists::: ", tourists);
+  return (
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        Informacion de turistas
+      </Typography>
+      {tourists.map((tourist, index) => (
+        <Box key={index}>
+          <Typography variant="body1">
+            {index + 1}. {tourist.firstName} {tourist.lastName}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Celular: {tourist.phone}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
+};
+export default TouristsInfo;

@@ -15,6 +15,10 @@ import {
   getAllBookingsRequest,
 } from "../service/bookingService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
+import { useTouristContext } from "../../tourist/context/TouristContext";
+import { string } from "yup";
+import { TourType } from "../../userManagement/types/TourType";
+import { usePaymentContext } from "../../payment/context/PaymentContext";
 
 type BookingContextType = {
   bookings: BookingType[];
@@ -51,6 +55,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+  const { fetchTourists } = useTouristContext();
+  const { addPaymentFromBooking } = usePaymentContext();
+  const { addTouristFromBooking } = useTouristContext();
 
   const updateBooking = async (id: string, booking: Partial<BookingType>) => {
     console.log("update::: ", id, booking);
@@ -92,23 +99,6 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       notes: apiBooking.notes,
       status: apiBooking.status,
     };
-    // return {
-    //   id: apiBooking.id,
-    //   tourPackageId: apiBooking.tourPackageId,
-    //   dateRangeId: apiBooking.dateRangeId,
-    //   sellerId: apiBooking.sellerId,
-    //   mainTouristId: apiBooking.mainTouristId,
-    //   additionalTouristIds: apiBooking.additionalTouristIds || [],
-    //   totalPrice: apiBooking.totalPrice,
-    //   paymentIds: apiBooking.paymentIds || [],
-    //   // Initialize with empty arrays if detailed objects aren't available yet
-    //   payments: Array.isArray(apiBooking.payments) ? apiBooking.payments : [],
-    //   additionalTourists: Array.isArray(apiBooking.additionalTourists)
-    //     ? apiBooking.additionalTourists
-    //     : [],
-    //   notes: apiBooking.notes || "",
-    //   status: apiBooking.status,
-    // };
   };
 
   const createBooking = async (
@@ -131,9 +121,85 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         tourPackageId: booking.tourPackageId as string,
       };
       const response = await createBookingRequest(bookingToCreate);
+      console.log("response::: ", response);
+      if (!response) {
+        console.warn("response is null");
+        setError("Error creating booking");
+        setLoading(false);
+        return;
+      }
+      if (response.error) {
+        setError(response.error);
+        setLoading(false);
+        return;
+      }
+      response.mainTourist && addTouristFromBooking(response.mainTourist);
+      if (
+        response.additionalTourists &&
+        response.additionalTourists.length > 0
+      ) {
+        for (const tourist of response.additionalTourists) {
+          addTouristFromBooking(tourist);
+        }
+      }
+      if (response.payments && response.payments.length > 0) {
+        for (const payment of response.payments) {
+          addPaymentFromBooking(payment);
+        }
+      }
 
-      setBookings((prevBookings) => [...prevBookings, response.data]);
+      const additionalTouristIds = () => {
+        if (
+          response.aditionalTourists &&
+          response.additionalTourists.length > 0
+        ) {
+          return response.additionalTourists
+            .map((tourist: TourType) => tourist.id)
+            .filter((id: string) => id !== undefined);
+        } else {
+          return [];
+        }
+      };
+
+      const paymentIds = () => {
+        if (response.payments && response.payments.length > 0) {
+          return (
+            response.payments
+              .map((payment: PaymentInfoType) => payment.id)
+              .filter((id: string) => id !== undefined) || []
+          );
+        } else {
+          return [];
+        }
+      };
+
+      const apiBooking: BookingType = {
+        id: response.id ?? "",
+        tourPackageId: response.tourPackageId,
+        dateRangeId: response.dateRangeId,
+        sellerId: response.sellerId,
+        mainTouristId: response.mainTourist.id,
+        //   additionalTouristIds: apiBooking.additionalTouristIds || [],
+        additionalTouristIds: additionalTouristIds(),
+        totalPrice: response.totalPrice,
+        //   paymentIds: apiBooking.paymentIds || [],
+        paymentIds: paymentIds(),
+        notes: response.notes,
+        status: response.status,
+        //   // Initialize with empty arrays if detailed objects aren't available yet
+        //   payments: Array.isArray(apiBooking.payments) ? apiBooking.payments : [],
+        //   additionalTourists: Array.isArray(apiBooking.additionalTourists)
+        //     ? apiBooking.additionalTourists
+        //     : [],
+        //   notes: apiBooking.notes || "",
+        //   status: apiBooking.status,
+      };
+
+      // setBookings((prevBookings) => [...prevBookings, response]);
+      setBookings((prevBookings) => [...prevBookings, apiBooking]);
       showSnackbar("Creado con exito", "success");
+      // await fetchTourists();
+      // setLoading(false);
     } catch (error) {
       // setError(
       //   error instanceof Error

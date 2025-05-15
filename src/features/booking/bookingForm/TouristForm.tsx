@@ -8,7 +8,14 @@ import {
   Typography,
 } from "@mui/material";
 import { TouristType } from "../types/TouristType";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+dayjs.locale("es");
 
 interface TouristFormProps {
   tourist: Partial<TouristType>;
@@ -28,19 +35,49 @@ const TouristForm: React.FC<TouristFormProps> = ({
   errors,
   touched,
 }) => {
+  const [birthDate, setBirthDate] = useState<Dayjs | null>(
+    // tourist?.dateOfBirth ? dayjs(tourist.dateOfBirth) : null
+    () => {
+      if (!tourist?.dateOfBirth) return null;
+      if (tourist.dateOfBirth.includes("-")) {
+        const parts = tourist.dateOfBirth.split("-");
+        if (parts.length === 3 && parts[0].length === 2) {
+          return dayjs(tourist.dateOfBirth, "DD-MM-YYYY");
+        }
+      }
+      return dayjs(tourist.dateOfBirth);
+    }
+  );
+
+  const handleChange = (newDate: Dayjs | null) => {
+    setBirthDate(newDate);
+    onChange("dateOfBirth", newDate ? newDate.format("DD-MM-YYYY") : "");
+  };
   // Asegurémonos de que documentType tenga un valor por defecto de "ci"
   // si no está definido o es un string vacío
   const documentType = tourist?.documentType || "ci";
 
   // Efecto para establecer el valor inicial si está vacío
   useEffect(() => {
+    if (tourist?.dateOfBirth) {
+      if (tourist.dateOfBirth.includes("-")) {
+        const parts = tourist.dateOfBirth.split("-");
+        if (parts.length === 3 && parts[0].length === 2) {
+          setBirthDate(dayjs(tourist.dateOfBirth, "DD-MM-YYYY"));
+          return;
+        }
+      }
+      setBirthDate(dayjs(tourist.dateOfBirth, "DD-MM-YYYY"));
+    } else {
+      setBirthDate(null);
+    }
     if (!tourist.documentType) {
       onChange("documentType", "ci");
     } else if (tourist.documentType === "CI") {
       // Corregir el valor "CI" a "ci" para asegurar la coincidencia con las opciones
       onChange("documentType", "ci");
     }
-  }, []);
+  }, [tourist?.dateOfBirth]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -146,18 +183,37 @@ const TouristForm: React.FC<TouristFormProps> = ({
         helperText={touched?.nationality && errors?.nationality}
       />
 
-      <TextField
+      {/* <TextField
         label="Fecha de nacimiento"
         size="small"
         type="date"
         fullWidth
         // InputLabelProps={{ shrink: true }}
-        slotProps={{inputLabel:{shrink:true}}}
+        slotProps={{ inputLabel: { shrink: true } }}
         value={tourist?.dateOfBirth || ""}
         onChange={(e) => onChange("dateOfBirth", e.target.value)}
         error={touched?.dateOfBirth && Boolean(errors?.dateOfBirth)}
         helperText={touched?.dateOfBirth && errors?.dateOfBirth}
-      />
+      /> */}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Fecha de nacimiento"
+          // value={birthDate}
+          value={birthDate}
+          // onChange={(newDate) => setSelectedDate(newDate)}
+          onChange={handleChange}
+          // format="DD-MM-YYYY"
+          slotProps={{
+            textField: {
+              size: "small",
+              fullWidth: true,
+              error: touched?.dateOfBirth && Boolean(errors?.dateOfBirth),
+              helperText: touched?.dateOfBirth && errors?.dateOfBirth,
+              placeholder: "DD-MM-YYYY",
+            },
+          }}
+        />
+      </LocalizationProvider>
     </Box>
   );
 };

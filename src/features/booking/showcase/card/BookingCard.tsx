@@ -72,12 +72,12 @@ const BookingCard: React.FC<BookingCardProps> = ({
       />
       <CardContent>
         <Typography variant="h6" component="div">
-          {`Costo total: ${totalPrice} Bs.`}
+          {`Costo total: ${totalPrice.toFixed(2)} Bs.`}
         </Typography>
         <Typography variant="h6" component="div">
           {currentBalance === 0
-            ? "Saldo: Pagado"
-            : `Saldo: ${currentBalance} Bs.`}
+            ? "Saldo: No tiene"
+            : `Saldo: ${currentBalance.toFixed(2)} Bs.`}
         </Typography>
       </CardContent>
     </Card>
