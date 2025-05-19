@@ -11,6 +11,7 @@ import { useFormik } from "formik";
 import { bookingSchema } from "./validation/bookingSchema";
 import { Dayjs } from "dayjs";
 import { useBookingContext } from "../context/BookingContext";
+import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 
 interface BookingFormContainerProps {
   open: boolean;
@@ -39,31 +40,66 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   handleClick,
   booking,
 }) => {
-  console.log('booking::: ', booking);
-  const { tourPackages, tpFound, findTourPackageById } =
+  // console.log('booking::: ', booking);
+  const { tourPackages,getTourPackageInfoById} =
     useTourPackageContext();
   const { users } = useUserContext();
-  const { dateRangesByTP, findDateRangesByTourPackage } = useDateRangeContext();
-  const [dateRanges, setDateRanges] = useState<DateRangeType[]>([]);
+  // const { dateRangesByTP, findDateRangesByTourPackage } = useDateRangeContext();
+  const [dateRangesSelected, setDateRangesSelected] = useState<DateRangeType[]>([]);
   const { createBooking, updateBooking } = useBookingContext();
+  const { getDateRangeInfoById } = useDateRangeContext();
+  const [tourPackageSelected, setTourPackageSelected] = useState<TourPackageType | null>(null);
+
+  // const handleDateRangesChange = (id:string[])=>{
+
+  // }
+
+  const handleTourPackageChange = (tourPackageId: string) => {
+    const tourPackage = getTourPackageInfoById(tourPackageId);
+    console.log('tourPackage::: ', tourPackage);
+    if (tourPackage) {
+      setTourPackageSelected(tourPackage);
+      formik.setFieldValue("tourPackageId", tourPackageId);
+      formik.setFieldValue("totalPrice", tourPackage.price);
+    }
+  };
 
   // Calculate total price based on selected package and number of tourists
-  const calculateTotalPrice = (
-    tourPackageId: string,
-    mainTourist?: TouristType,
-    additionalTourists: TouristType[] = []
+  // const calculateTotalPrice = (
+  //   tourPackageId: string,
+  //   mainTourist?: TouristType,
+  //   additionalTourists: TouristType[] = []
+  // ) => {
+  //   // Find the selected tour package
+  //   const selectedPackage = tourPackages.find((tp) => tp.id === tourPackageId);
+  //   if (!selectedPackage) return 0;
+
+  //   // Count tourists (main tourist + additional tourists)
+  //   const mainTouristCount =
+  //     mainTourist && Object.keys(mainTourist).length > 0 ? 1 : 0;
+  //   const totalTourists = mainTouristCount + additionalTourists.length;
+
+  //   // Calculate total price
+  //   return selectedPackage.price * totalTourists;
+  // };
+
+  const calculateTotalPrice2 = (
+    // tourPackageId: string,
+    // mainTourist?: TouristType,
+    additionalTourists: number
   ) => {
     // Find the selected tour package
-    const selectedPackage = tourPackages.find((tp) => tp.id === tourPackageId);
-    if (!selectedPackage) return 0;
+    // const selectedPackage = tourPackages.find((tp) => tp.id === tourPackageId);
+    // if (!selectedPackage) return 0;
 
     // Count tourists (main tourist + additional tourists)
-    const mainTouristCount =
-      mainTourist && Object.keys(mainTourist).length > 0 ? 1 : 0;
-    const totalTourists = mainTouristCount + additionalTourists.length;
+    // const mainTouristCount =
+    //   mainTourist && Object.keys(mainTourist).length > 0 ? 1 : 0;
+    // const totalTourists = mainTouristCount + additionalTourists.length;
 
     // Calculate total price
-    return selectedPackage.price * totalTourists;
+    // return selectedPackage.price * totalTourists;
+    return tourPackageSelected?.price ? tourPackageSelected.price * (1 + additionalTourists) : 0;
   };
 
   const handleAddAdditionalTourist = () => {
@@ -84,11 +120,12 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
     formik.setFieldValue("additionalTourists", currentTourists);
 
     // Recalculate total price
-    const newTotalPrice = calculateTotalPrice(
-      formik.values.tourPackageId,
-      formik.values.mainTourist,
-      currentTourists
-    );
+    // const newTotalPrice = calculateTotalPrice(
+    //   formik.values.tourPackageId,
+    //   formik.values.mainTourist,
+    //   currentTourists
+    // );
+    const newTotalPrice = calculateTotalPrice2(currentTourists.length);
     formik.setFieldValue("totalPrice", newTotalPrice);
   };
 
@@ -107,11 +144,12 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
     formik.setFieldValue("additionalTourists", currentTourists);
 
     // Recalculate total price
-    const newTotalPrice = calculateTotalPrice(
-      formik.values.tourPackageId,
-      formik.values.mainTourist,
-      currentTourists
-    );
+    // const newTotalPrice = calculateTotalPrice(
+    //   formik.values.tourPackageId,
+    //   formik.values.mainTourist,
+    //   currentTourists
+    // );
+    const newTotalPrice = calculateTotalPrice2(currentTourists.length);
     formik.setFieldValue("totalPrice", newTotalPrice);
   };
 
@@ -202,23 +240,27 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
 
   useEffect(() => {
     if (formik.values.tourPackageId) {
-      findTourPackageById(formik.values.tourPackageId);
-
-      // Recalculate total price when tour package changes
-      const newTotalPrice = calculateTotalPrice(
-        formik.values.tourPackageId,
-        formik.values.mainTourist,
-        formik.values.additionalTourists
-      );
-      formik.setFieldValue("totalPrice", newTotalPrice);
+      handleTourPackageChange(formik.values.tourPackageId);
     }
-  }, [formik.values.tourPackageId, findTourPackageById]);
+  }, [formik.values.tourPackageId]);
+
+  // Cargar las fechas iniciales si hay un booking existente
+  useEffect(() => {
+    if (booking?.tourPackageId) {
+      handleTourPackageChange(booking.tourPackageId);
+    }
+  }, [booking]);
 
   useEffect(() => {
-    if (tpFound && tpFound.dateRanges) {
-      findDateRangesByTourPackage(tpFound.dateRanges);
+    if (tourPackageSelected?.dateRanges) {
+      const dateRanges = tourPackageSelected.dateRanges.map(dr=>dr.id).filter(id=>id!==undefined)
+      // console.log('dateRanges::: ', dateRanges);
+      const dateRangesInfo = dateRanges.map(dr=>getDateRangeInfoById(dr))
+      // console.log('dateRangesInfo::: ', dateRangesInfo);
+      setDateRangesSelected(dateRangesInfo.filter(dr=>dr!==null))
+      // findDateRangesByTourPackage(tourPackageSelected.dateRanges);
     }
-  }, [tpFound]);
+  }, [tourPackageSelected]);
 
   return (
     <BookingForm
@@ -226,7 +268,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
       handleClick={handleClick}
       formik={formik}
       tourPackages={tourPackages}
-      dateRanges={dateRangesByTP}
+      dateRanges={dateRangesSelected}
       sellers={users}
       handleMainTouristChange={handleMainTouristChange}
       handleRemoveTourist={handleRemoveTourist}

@@ -11,6 +11,7 @@ const TourPackageShowcaseContainer: React.FC = () => {
     setOpen(!open);
   };
   // console.log('tourPackages::: ', tourPackages);
+  console.log('tourPackages::: ', tourPackages);
   return (
     <>
       <TourPackageShowcase

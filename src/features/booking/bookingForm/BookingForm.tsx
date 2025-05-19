@@ -138,11 +138,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 id="dateRangeId"
                 label="Fechas"
                 {...formik.getFieldProps("dateRangeId")}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  formik.setFieldValue("dateRangeId", e.target.value);
+                }}
                 error={
                   formik.touched.dateRangeId &&
                   Boolean(formik.errors.dateRangeId)
                 }
+                value={dateRanges.some(dr => dr.id === formik.values.dateRangeId) ? formik.values.dateRangeId : ""}
               >
                 {dateRanges && dateRanges.length > 0 ? (
                   dateRanges.map((dr) => {
@@ -160,7 +163,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     return null;
                   })
                 ) : (
-                  <MenuItem disabled>No hay fechas disponibles</MenuItem>
+                  <MenuItem value="" disabled>
+                    No hay fechas disponibles
+                  </MenuItem>
                 )}
               </Select>
             </FormControl>
