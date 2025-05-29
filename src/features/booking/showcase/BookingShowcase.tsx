@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { BookingType } from "../types/BookingType";
 import BookingCardContainer from "./card/BookingCardContainer";
+import BookingCardContainer2 from "./card/BookingCardContainer2";
 
 interface BookingShowcaseProps {
   handleClick: () => void;
@@ -83,12 +84,10 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             <p>No hay reservas</p>
           ) : (
             bookings.map((booking, index) => (
-              <BookingCardContainer
-                key={index}
+              <BookingCardContainer2
+                key={booking.id}
                 booking={booking}
                 index={index}
-                openEditForm={open}
-                handleClick={handleClick}
               />
             ))
           )}

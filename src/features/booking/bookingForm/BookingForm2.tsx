@@ -1,5 +1,4 @@
 import {
-  Alert,
   Box,
   Button,
   Dialog,
@@ -12,98 +11,70 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FormikProps } from "formik";
-import { TouristType } from "../types/TouristType";
-import { PaymentInfoType } from "../types/PaymentInfoType";
+import type { FormikProps } from "formik";
+import { BookingType } from "../types/BookingType";
 import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
-import { User } from "../../userManagement/types/User";
 import TouristForm from "./TouristForm";
 import PaymentForm from "./PaymentForm";
+import { PaymentInfoType } from "../types/PaymentInfoType";
+import { BookingFormValues } from "./BookingFormContainer2";
 
-interface BookingFormProps {
+interface BookingForm2Props {
+  formik: FormikProps<BookingFormValues>;
   open: boolean;
   handleClick: () => void;
-  formik: FormikProps<{
-    id?: string;
-    tourPackageId: string;
-    dateRangeId: string;
-    sellerId: string;
-    mainTouristId?: string;
-    mainTourist?: TouristType;
-    additionalTouristIds: string[];
-    additionalTourists: TouristType[];
-    totalPrice: number;
-    paymentIds: string[];
-    payments: PaymentInfoType[];
-    notes?: string;
-    status: string;
-  }>;
   tourPackages: TourPackageType[];
   dateRanges: DateRangeType[];
-  sellers: User[];
   handleMainTouristChange: (field: string, value: any) => void;
-  handleRemoveTourist: (index: number) => void;
   handleTouristChange: (index: number, field: string, value: any) => void;
+  handleRemoveTourist: (index: number) => void;
   handleAddAdditionalTourist: () => void;
-  handlePaymentChange: (index: number, field: string, value: any) => void;
-  handleAddPayment: () => void;
-  handleRemovePayment: (index: number) => void;
+  selectedTourPackage: TourPackageType | null;
+  // handleRemovePayment: (index: number) => void;
+  handlePaymentChange: (field: string, value: any) => void;
+  totalPaid: number;
+  isEditing: boolean;
+  // DEFAULT_PAYMENT: PaymentInfoType;
 }
 
-const BookingForm: React.FC<BookingFormProps> = ({
+const BookingForm2: React.FC<BookingForm2Props> = ({
+  formik,
   open,
   handleClick,
-  formik,
   tourPackages,
   dateRanges,
-  sellers,
   handleMainTouristChange,
   handleRemoveTourist,
-  handleTouristChange,
   handleAddAdditionalTourist,
+  handleTouristChange,
+  selectedTourPackage,
+  // handleRemovePayment,
   handlePaymentChange,
-  handleAddPayment,
-  handleRemovePayment,
+  totalPaid,
+  isEditing,
+  // DEFAULT_PAYMENT,
 }) => {
-  // Find the selected tour package for displaying price info
-  const selectedTourPackage = tourPackages.find(
-    (tp) => tp.id === formik.values.tourPackageId
-  );
-
-  // Count tourists for displaying
-  const totalTourists =
-    (formik.values.mainTourist &&
-    Object.keys(formik.values.mainTourist).length > 0
-      ? 1
-      : 0) + (formik.values.additionalTourists?.length || 0);
-
-  // Calcular el total pagado
-  const totalPaid = formik.values.payments.reduce(
-    (sum: any, payment: any) => sum + (payment.amount || 0),
-    0
-  );
+  // console.log('isEditing::: ', isEditing);
+  // console.log('booking::: ', booking);
+  // console.log('formik::: ', formik.values);
+  // console.log('totalPaid::: ', totalPaid);
 
   return (
-    <Dialog onClose={handleClick} open={open}>
+    <Dialog open={open} onClose={handleClick}>
       <DialogTitle>
         {formik.values.id ? "Editar Reserva" : "Nueva Reserva"}
       </DialogTitle>
       <DialogContent>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("Form submission attempted");
-            console.log("Form is valid:", formik.isValid);
-            console.log("Form errors:", formik.errors);
-            formik.handleSubmit(e);
-          }}
+          onSubmit={formik.handleSubmit}
           style={{ padding: "0.3rem 0 0 0" }}
         >
           <Box sx={{ height: "70px" }}>
             <FormControl size="small" fullWidth>
               <InputLabel id="tourPackageId">Paquete Turistico</InputLabel>
               <Select
+                disabled={isEditing}
                 labelId="tourPackageId"
                 id="tourPackageId"
                 label="Paquete turistico"
@@ -138,18 +109,15 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 id="dateRangeId"
                 label="Fechas"
                 {...formik.getFieldProps("dateRangeId")}
-                onChange={(e) => {
-                  formik.setFieldValue("dateRangeId", e.target.value);
-                }}
+                onChange={formik.handleChange}
                 error={
                   formik.touched.dateRangeId &&
                   Boolean(formik.errors.dateRangeId)
                 }
-                value={dateRanges.some(dr => dr.id === formik.values.dateRangeId) ? formik.values.dateRangeId : ""}
               >
                 {dateRanges && dateRanges.length > 0 ? (
                   dateRanges.map((dr) => {
-                    if (dr.id && dr.dates && dr.dates.length > 0) {
+                    if (dr.dates && dr.dates.length > 0) {
                       return (
                         <MenuItem key={dr.id} value={dr.id}>
                           {dr.dates.length > 1
@@ -160,7 +128,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
                         </MenuItem>
                       );
                     }
-                    return null;
                   })
                 ) : (
                   <MenuItem value="" disabled>
@@ -187,12 +154,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               touched={formik.touched.mainTourist}
             />
           </Box>
-          <Box
-            sx={{
-              mt: 3,
-              mb: 2,
-            }}
-          >
+          <Box sx={{ mt: 3, mb: 2 }}>
             <Typography variant="h6">Turistas Adicionales</Typography>
             {formik.values.additionalTourists?.map((tourist, index) => (
               <Box
@@ -203,28 +165,36 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
+                    alignItems: "center",
                     mb: 1,
                   }}
                 >
                   <Typography variant="subtitle1">
-                    Turista {index + 1}
+                    Turista {index + 2}
                   </Typography>
-                  <Button
+                  {!tourist.id&&(<Button
                     variant="outlined"
                     size="small"
                     color="error"
                     onClick={() => handleRemoveTourist(index)}
                   >
                     Eliminar
-                  </Button>
+                  </Button>)}
+                  
                 </Box>
                 <TouristForm
                   tourist={tourist}
                   onChange={(field, value) =>
                     handleTouristChange(index, field, value)
                   }
-                  errors={formik.errors.additionalTourists?.[index]}
-                  touched={formik.touched.additionalTourists?.[index]}
+                  errors={
+                    formik.errors.additionalTourists &&
+                    (formik.errors.additionalTourists as any)[index]
+                  }
+                  touched={
+                    formik.touched.additionalTourists &&
+                    (formik.touched.additionalTourists as any)[index]
+                  }
                 />
               </Box>
             ))}
@@ -237,100 +207,40 @@ const BookingForm: React.FC<BookingFormProps> = ({
               Agregar turista
             </Button>
           </Box>
-
-          <Box sx={{ height: "90px" }}>
+          <Box sx={{ height: "70px" }}>
             <TextField
               disabled
               label="Precio total"
               size="small"
-              type="number"
               fullWidth
               {...formik.getFieldProps("totalPrice")}
-              // InputProps={{
-              //   readOnly: true,
-              // }}
-              error={
+                            error={
                 formik.touched.totalPrice && Boolean(formik.errors.totalPrice)
               }
               helperText={
-                (formik.touched.totalPrice && formik.errors.totalPrice) ||
-                (selectedTourPackage
-                  ? // ? `Cálculo: ${selectedTourPackage.price} Bs. por pasajero × ${totalTourists} pasajeros`
-                    `Precio por persona: ${selectedTourPackage.price} Bs.`
-                  : "")
+                selectedTourPackage
+                  ? `Precio por persona: ${selectedTourPackage.price} Bs.`
+                  : ""
               }
             />
           </Box>
-
-          <Box
-            sx={{
-              mt: 3,
-              mb: 2,
-            }}
-          >
-            <Typography variant="h6">Información de Pagos</Typography>
-
-            {/* Mostrar error global de pagos si existe */}
-            {/* {typeof formik.errors.payments === "string" && (
-              <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
-                {formik.errors.payments}
-              </Alert>
-            )} */}
-
-            {formik.values.payments?.map((payment, index) => (
-              <Box
-                key={index}
-                sx={{
-                  mb: 2,
-                  p: 2,
-                  border: "1px solid #ddd",
-                  borderRadius: 1,
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    mb: 1,
-                  }}
-                >
-                  <Typography variant="subtitle1">Pago {index + 1}</Typography>
-                  {index > 0 && (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      color="error"
-                      onClick={() => handleRemovePayment(index)}
-                    >
-                      Eliminar
-                    </Button>
-                  )}
-                </Box>
-                <PaymentForm
-                  payment={payment}
-                  onChange={(field, value) =>
-                    handlePaymentChange(index, field, value)
-                  }
-                  errors={formik.errors.payments?.[index]}
-                  touched={formik.touched.payments?.[index]}
-                  totalPrice={formik.values.totalPrice}
-                  totalPaid={totalPaid}
-                  currentIndex={index}
-                />
-              </Box>
-            ))}
-            {formik.values.id && (
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleAddPayment}
-                sx={{ mt: 1 }}
-              >
-                Agregar pago
-              </Button>
-            )}
+          <Box sx={{ mt: 3, mb: 2 }}>
+            <Typography variant="h6">Información de pago</Typography>
+            {/* <Box> */}
+              <PaymentForm
+                payment={formik.values.firstPayment}
+                onChange={(field, value) =>
+                  handlePaymentChange(field, value)
+                }
+                errors={formik.errors.firstPayment}
+                touched={formik.touched.firstPayment}
+                isEditing={isEditing}
+                // totalPrice={formik.values.totalPrice}
+                // totalPaid={totalPaid}
+                // isEditing={isEditing}
+              />
+            {/* </Box> */}
           </Box>
-
           <TextField
             label="Notas"
             size="small"
@@ -342,7 +252,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
             error={formik.touched.notes && Boolean(formik.errors.notes)}
             helperText={formik.touched.notes && formik.errors.notes}
           />
-
           <Box sx={{ pt: "2rem", display: "flex", gap: "1rem" }}>
             <Button type="submit" variant="contained" fullWidth>
               Enviar
@@ -361,4 +270,4 @@ const BookingForm: React.FC<BookingFormProps> = ({
     </Dialog>
   );
 };
-export default BookingForm;
+export default BookingForm2;

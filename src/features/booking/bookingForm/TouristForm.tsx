@@ -30,11 +30,12 @@ const documentTypes = [
 ];
 
 const TouristForm: React.FC<TouristFormProps> = ({
-  tourist = {},
+  tourist,
   onChange,
   errors,
   touched,
 }) => {
+  // console.log('tourist::: ', tourist);
   const [birthDate, setBirthDate] = useState<Dayjs | null>(
     // tourist?.dateOfBirth ? dayjs(tourist.dateOfBirth) : null
     () => {

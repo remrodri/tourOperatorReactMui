@@ -36,7 +36,7 @@ interface MoreInfoDialogProps {
   handleClose: () => void;
   booking: BookingType;
   sellerInfo: User | null;
-  touristInfo: TouristType | null;
+  // touristInfo: TouristType | null;
   // paymentsInfo: PaymentInfoType[];
   dateRangeInfo: DateRangeType | null;
   tourPackageInfo: TourPackageType | null;
@@ -64,7 +64,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   handleClose,
   booking,
   sellerInfo,
-  touristInfo,
+  // touristInfo,
   // paymentsInfo,
   dateRangeInfo,
   tourPackageInfo,

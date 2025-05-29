@@ -6,7 +6,7 @@ const options = ["Ver detalles", "Editar", "Registrar pago"];
 
 interface BookingCardMenuProps {
   onOptionSelect: (option: string) => void;
-  balance: () => number;
+  balance:number;
 }
 
 const BookingCardMenu: React.FC<BookingCardMenuProps> = ({
@@ -59,7 +59,7 @@ const BookingCardMenu: React.FC<BookingCardMenuProps> = ({
       >
         {options.map((option) => 
         {
-          if (option === "Registrar pago" && balance() === 0) { 
+          if (option === "Registrar pago" && balance === 0) { 
             return null
           }
           return <MenuItem key={option} onClick={() => handleOptionClick(option)}>

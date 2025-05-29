@@ -147,7 +147,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
 
   useEffect(() => {
     getTourPackages();
-    console.log('tourPackages::: ', tourPackages);
+    // console.log('tourPackages::: ', tourPackages);
   }, []);
 
   return (

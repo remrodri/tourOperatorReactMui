@@ -4,6 +4,6 @@ const url = "/tourists";
 
 export const getAllTouristsRequest = async () => {
   const response = await axiosInstance.get(url);
-  console.log('response::: ', response);
+  // console.log('response::: ', response);
   return response.data.data;
 };
