@@ -26,6 +26,7 @@ const BookingCard2: React.FC<BookingCardContainerProps> = ({
   balance,
   mainTouristInfo,
 }) => {
+  // console.log('booking::: ', booking);
   if(!booking){
     return<Card sx={{ width: 300, borderRadius: "10px" }}>
     <CardContent>

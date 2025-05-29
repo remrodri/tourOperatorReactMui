@@ -61,7 +61,11 @@ const BookingForm2: React.FC<BookingForm2Props> = ({
   // console.log('totalPaid::: ', totalPaid);
 
   return (
-    <Dialog open={open} onClose={handleClick}>
+    console.log('formik::: ', formik.values),
+    <Dialog 
+    open={open} 
+    onClose={handleClick}
+    >
       <DialogTitle>
         {formik.values.id ? "Editar Reserva" : "Nueva Reserva"}
       </DialogTitle>

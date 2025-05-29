@@ -18,7 +18,7 @@ export const createBooking2Request = async (data:CreateBookingType):Promise<any>
 
 export const getAllBookingsRequest = async () => {
   const response = await axiosInstance.get(url);
-  // console.log("response::: ", response.data.data);
+  console.log("response::: ", response.data.data);
   return response.data.data;
 };
 
@@ -26,7 +26,7 @@ export const updateBookingRequest = async (
   id: string,
   data: Partial<BookingType>
 ): Promise<any> => {
-  console.log('data::: ', data);
+  // console.log('data::: ', data);
   const response = await axiosInstance.put(`${url}/${id}`, data);
   console.log('response::: ', response.data.data);
   return response.data.data;
