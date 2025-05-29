@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BookingShowcase from "./BookingShowcase";
-import BookingFormContainer from "../bookingForm/BookingFormContainer";
 import { useBookingContext } from "../context/BookingContext";
+import BookingFormContainer2 from "../bookingForm/BookingFormContainer2";
 
 const BookingShowcaseContainer: React.FC = () => {
   const { bookings } = useBookingContext();
@@ -12,8 +12,12 @@ const BookingShowcaseContainer: React.FC = () => {
   };
   return (
     <>
-      <BookingShowcase handleClick={handleClick} bookings={bookings} />
-      {open && <BookingFormContainer open={open} handleClick={handleClick} />}
+      <BookingShowcase
+        handleClick={handleClick}
+        bookings={bookings}
+        open={open}
+      />
+      {open && <BookingFormContainer2 open={open} handleClick={handleClick} booking={null} />}
     </>
   );
 };

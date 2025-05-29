@@ -24,6 +24,7 @@ type TourPackageContextType = {
     tourPackage: Partial<TourPackageType>
   ) => Promise<void>;
   deleteTourPackage: (id: string) => Promise<void>;
+  getTourPackageInfoById: (id: string) => TourPackageType | null;
 };
 
 const TourPackageContext = createContext<TourPackageContextType | null>(null);
@@ -40,6 +41,15 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+
+  const getTourPackageInfoById = (id: string): TourPackageType | null => {
+    if (!id) {
+      console.warn("tourPackage called without id");
+      return null;
+    }
+    const tpFound = tourPackages.find((tp) => tp.id === id);
+    return tpFound || null;
+  };
 
   const findTourPackageById = async (id: string): Promise<void> => {
     const tpFound = tourPackages.find((tp) => tp.id === id);
@@ -137,7 +147,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
 
   useEffect(() => {
     getTourPackages();
-    console.log('tourPackages::: ', tourPackages);
+    // console.log('tourPackages::: ', tourPackages);
   }, []);
 
   return (
@@ -152,6 +162,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
         createTourPackage,
         updateTourPackage,
         deleteTourPackage,
+        getTourPackageInfoById
       }}
     >
       {children}

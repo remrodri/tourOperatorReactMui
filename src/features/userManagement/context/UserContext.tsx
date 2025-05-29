@@ -23,7 +23,7 @@ interface UserContextType {
     userId: string
   ) => Promise<any>;
   deleteUser: (userId: string) => Promise<any>;
-  getUserById: (userId: string) => Promise<User | null>; // Cambiado a Promise
+  getUserById: (userId: string) => User | null; // Cambiado a Promise
   userFound: User | null;
   getUsersById: (ids: string[]) => User[];
 }
@@ -51,20 +51,20 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       .filter((user) => user !== undefined);
     return usersFound;
   };
-  const getUserById = async (userId: string): Promise<User | null> => {
+  const getUserById = (userId: string): User | null => {
     // console.log("Buscando usuario con ID:", userId);
 
     // Si estamos cargando o no hay usuarios, intentamos cargarlos
-    if (loading || !users || users.length === 0) {
-      // console.log("Cargando usuarios antes de buscar el usuario específico...");
-      try {
-        await fetchUsers();
-      } catch (error) {
-        console.error("Error al cargar usuarios:", error);
-        showSnackbar("Error al cargar los datos de usuarios", "error");
-        return null;
-      }
-    }
+    // if (loading || !users || users.length === 0) {
+    //   // console.log("Cargando usuarios antes de buscar el usuario específico...");
+    //   try {
+    //     await fetchUsers();
+    //   } catch (error) {
+    //     console.error("Error al cargar usuarios:", error);
+    //     showSnackbar("Error al cargar los datos de usuarios", "error");
+    //     return null;
+    //   }
+    // }
 
     // Verificamos nuevamente si hay usuarios después de intentar cargarlos
     if (!users || users.length === 0) {

@@ -113,7 +113,7 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
   const fetchTouristDestination = async () => {
     try {
       const response = await getAllTouristDestinationRequest();
-      console.log("response::: ", response.data);
+      // console.log("response::: ", response.data);
       if (!response?.data) {
         throw new Error("Respuesta invalida del servidor");
       }

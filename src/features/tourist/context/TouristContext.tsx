@@ -15,9 +15,11 @@ type TouristContextType = {
   error: string | null;
   touristFound: TouristType | null;
   fetchTourists: () => Promise<void>;
-  getTouristById: (id: string) => Promise<TouristType | null>;
+  getTouristById: (id: string) => TouristType | null;
   getTouristInfoByIds: (id: string[]) => TouristType[];
   addTouristFromBooking: (tourist: any) => void;
+  updateTourist: (tourist: TouristType) => void;
+  handleTouristBookingIds:(tourist:TouristType,bookingId:string)=>void
 };
 
 const TouristContext = createContext<TouristContextType | null>(null);
@@ -43,6 +45,44 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   const { showSnackbar } = useNewSnackbar();
   const [touristFound, setTouristFound] = useState<TouristType | null>(null);
 
+  const handleTouristBookingIds=(tourist:TouristType,bookingId:string)=>{
+    console.log('tourist::: ', tourist);
+    console.log('bookingId::: ', bookingId);
+  //   if (!tourist.bookingIds) {
+  //     tourist.bookingIds=[];
+  //   }
+  //   const updatedTourist={...tourist,bookingIds:[...tourist.bookingIds!,bookingId]}
+  //   updateTourist(updatedTourist);
+  //   return updatedTourist
+  }
+
+  const updateTourist = (tourist: TouristType) => {
+    if (!tourists.find((tourist) => tourist.id === tourist.id)) {
+      setTourists((prevTourists) => [...prevTourists, tourist]);
+      showSnackbar("Turista actualizado exitosamente", "success");
+    }else{
+      setTourists((prevTourists) =>
+        prevTourists
+      .map((prevTourist) =>
+          {return prevTourist.id === tourist?.id 
+            ? {...prevTourist, 
+              tourPackageId:tourist.id,
+              bookingIds:tourist.bookingIds,
+              documentType:tourist.documentType,
+              firstName:tourist.firstName,
+              lastName:tourist.lastName,
+              phone:tourist.phone,
+              ci:tourist.ci,
+              nationality:tourist.nationality,
+              dateOfBirth:tourist.dateOfBirth,
+              passportNumber:tourist.passportNumber} 
+            : prevTourist})
+      .filter((tourist) => tourist !== null)
+      );
+      showSnackbar("Turista actualizado exitosamente", "success");
+    }
+  };
+
   const addTouristFromBooking = (tourist: any) => {
     // setTourists([...tourists, tourist]);
     setTourists((prevTourists) => [...prevTourists, tourist]);
@@ -54,7 +94,7 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
       .filter((tourist) => tourist !== undefined);
   };
 
-  const getTouristById = async (id: string): Promise<TouristType | null> => {
+  const getTouristById = (id: string): TouristType | null => {
     const touristFound = tourists.find((tourist) => tourist.id === id);
     if (!touristFound) {
       showSnackbar("No se encontro al turista", "error");
@@ -69,7 +109,9 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
     try {
       const response = await getAllTouristsRequest();
       const touristData = response.data ? response.data : response;
+      // console.log('touristData::: ', touristData);
       const transformedTourists = touristData.map(transformApiTourist);
+      console.log('transformedTourists::: ', transformedTourists);
       setTourists(transformedTourists);
       setError(null);
     } catch (error) {
@@ -110,6 +152,8 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
         getTouristInfoByIds,
         fetchTourists,
         addTouristFromBooking,
+        updateTourist,
+        handleTouristBookingIds
       }}
     >
       {children}

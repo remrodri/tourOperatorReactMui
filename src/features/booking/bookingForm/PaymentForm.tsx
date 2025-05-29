@@ -19,9 +19,9 @@ interface PaymentFormProps {
   onChange: (field: string, value: any) => void;
   errors?: any;
   touched?: any;
-  totalPrice?: number;
-  totalPaid?: number;
-  currentIndex?: number;
+  // totalPrice?: number;
+  // totalPaid?: number;
+  isEditing?: boolean;
 }
 
 const paymentMethods = [
@@ -37,11 +37,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   onChange,
   errors,
   touched,
-  totalPrice = 0,
-  totalPaid = 0,
-  currentIndex = 0,
+  // totalPrice = 0,
+  // totalPaid = 0,
+  isEditing = false,
 }) => {
-  // Convert string date to dayjs object for the DatePicker
+  
   const paymentDate = payment.paymentDate ? dayjs(payment.paymentDate) : null;
 
   const handleDateChange = (date: any) => {
@@ -60,22 +60,24 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   };
 
   // Calcular si el pago actual excede el precio total
-  const currentAmount = payment.amount || 0;
-  // Calcular el total pagado sin considerar el pago actual
-  const otherPaymentsTotal = totalPaid - currentAmount;
-  // Verificar si excede el precio total
-  const willExceedTotal = otherPaymentsTotal + currentAmount > totalPrice;
-  // Calcular cuánto resta por pagar
-  const remainingAmount = Math.max(0, totalPrice - otherPaymentsTotal);
+  // const currentAmount = payment.amount || 0;
+  // console.log('currentAmount::: ', currentAmount);
+  // // Calcular el total pagado sin considerar el pago actual
+  // const otherPaymentsTotal = isEditing ? totalPaid : totalPaid - currentAmount;
+  // // Verificar si excede el precio total
+  // const willExceedTotal = otherPaymentsTotal + currentAmount > totalPrice;
+  // // Calcular cuánto resta por pagar
+  // const remainingAmount = Math.max(0, totalPrice - otherPaymentsTotal);
+  // console.log('remainingAmount::: ', remainingAmount);
 
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, mb: 2 }}
     >
-      <Typography variant="h6">Información de Pago</Typography>
+      {/* <Typography variant="h6">Información de Pago</Typography> */}
 
       {/* Información del pago y saldo */}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 1 }}>
+      {/* <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="body2">
             Precio total: {totalPrice.toFixed(2)} Bs.
@@ -94,12 +96,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       </Box>
 
       {/* Alerta de error si excede el total */}
-      {willExceedTotal && (
+      {/* {willExceedTotal && (
         <Alert severity="error" sx={{ mb: 2 }}>
           El monto del pago excede el saldo pendiente por{" "}
           {(otherPaymentsTotal + currentAmount - totalPrice).toFixed(2)} Bs.
-        </Alert>
-      )}
+        </Alert> */}
+      {/* )} */}
 
       <Box sx={{ display: "flex", gap: 2 }}>
         <FormControl
@@ -110,6 +112,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         >
           <InputLabel id="payment-method-label">Método de Pago</InputLabel>
           <Select
+            disabled={isEditing}
             labelId="payment-method-label"
             id="payment-method"
             value={payment.paymentMethod || ""}
@@ -144,6 +147,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
+          disabled={isEditing}
           label="Monto"
           type="number"
           size="small"
@@ -158,6 +162,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         <Box sx={{ width: "100%" }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
+              disabled={isEditing}
               label="Fecha de pago"
               value={paymentDate}
               onChange={handleDateChange}
