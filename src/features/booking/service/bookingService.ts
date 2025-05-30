@@ -26,8 +26,8 @@ export const updateBookingRequest = async (
   id: string,
   data: Partial<BookingType>
 ): Promise<any> => {
-  console.log('data::: ', data);
+  // console.log('data::: ', data);
   const response = await axiosInstance.put(`${url}/${id}`, data);
-  console.log('response::: ', response.data.data);
+  // console.log('response::: ', response.data.data);
   return response.data.data;
 };

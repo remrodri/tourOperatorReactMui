@@ -18,17 +18,16 @@ import {
 } from "../service/bookingService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useTouristContext } from "../../tourist/context/TouristContext";
-import { TourType } from "../../userManagement/types/TourType";
 import { usePaymentContext } from "../../payment/context/PaymentContext";
 import { CreateBookingType } from "../types/CreateBookingType";
 import { BookingFormValues } from "../bookingForm/BookingFormContainer2";
+import { TouristType } from "../types/TouristType";
 
 type BookingContextType = {
   bookings: BookingType[];
   loading: boolean;
   error: string | null;
-  createBooking: (booking: Partial<BookingType>) => Promise<void>;
-  getBookingById: (id: string) => BookingType | undefined;
+  getBookingById: (id: string) => BookingType | null;
   updateBookingStatus: (
     id: string,
     status: BookingType["status"]
@@ -59,14 +58,13 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const { fetchTourists } = useTouristContext();
-  const { addPaymentFromBooking } = usePaymentContext();
-  const { addTouristFromBooking, getTouristInfoByIds, updateTourist } = useTouristContext();
+  const { addPaymentFromBooking,getPaymentInfoByIds, payments } = usePaymentContext();
+  const { tourists,addTouristFromBooking, getTouristInfoByIds, updateTourist,getTouristInfoById,fetchTourists } = useTouristContext();
+
 
   const updateBooking = async (booking: Partial<BookingType>) => {
     setLoading(true);
     try {
-      // console.log('booking::: ', booking);
       const response = await updateBookingRequest(booking.id!, booking);
       // console.log('response::: ', response);
       if (!response) {
@@ -81,9 +79,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         return;
       }
       showSnackbar("Reserva actualizada exitosamente", "success");
-      updateTourist(booking.mainTourist!);
-      if (booking.additionalTourists&&booking.additionalTourists.length>0) {
-        for (const tourist of booking.additionalTourists) {
+      updateTourist(response.mainTourist);
+      if (response.additionalTourists&&response.additionalTourists.length>0) {
+        for (const tourist of response.additionalTourists) {
           updateTourist(tourist);
         }
       }
@@ -98,8 +96,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
             sellerId:response.sellerId, 
             // mainTouristId:response.mainTouristId, 
             mainTourist:response.mainTourist, 
-            additionalTouristIds:response.additionalTourists.map((tourist: TourType) => tourist.id), 
-            additionalTourists:response.additionalTourists, 
+            additionalTouristIds:response.additionalTourists.map((tourist: TouristType) => tourist.id), 
+            // additionalTourists:getTouristInfoByIds(response.additionalTouristIds), 
+            additionalTourists:response.additionalTourists,
             totalPrice:response.totalPrice, 
             // paymentIds:response.paymentIds, 
             // payments:response.payments, 
@@ -109,6 +108,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         }
         )
       );
+      // console.log('bookings::: ', bookings);
       setLoading(false);
     } catch (error) {
       console.error("Error updating booking", error);
@@ -119,14 +119,14 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     }
   };
 
-  const getBookings = async (): Promise<void> => {
-    setLoading(true);
+  const fetchBookings = async (): Promise<void> => {
+    // setLoading(true);
     try {
       const response = await getAllBookingsRequest();
-      // console.log("response::: ", response.data);
-      const bookingData = response.data ? response.data : response;
-      const transformedBookings = bookingData.map(transformApiBooking);
-      console.log('transformedBookings::: ', transformedBookings);
+      // console.log('response::: ', response);
+      
+      const transformedBookings = response.map((booking:any)=>transformApiBooking(booking));
+      // console.log('transformedBookings::: ', transformedBookings);
       // setBookings(response.data);
       setBookings(transformedBookings);
       setError(null);
@@ -141,22 +141,29 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
   // Transform API response to match BookingType format
   const transformApiBooking = (apiBooking: any): BookingType => {
-    return {
+    const additionalTourists = apiBooking.additionalTouristIds.map((id:string)=>getTouristInfoById(id))
+    const mainTourist = getTouristInfoById(apiBooking.mainTouristId)
+    // console.log('additionalTourists::: ', additionalTourists);
+    // console.log('apiBooking::: ', apiBooking);
+    const booking:BookingType = {
       id: apiBooking.id,
       tourPackageId: apiBooking.tourPackageId,
       dateRangeId: apiBooking.dateRangeId,
       sellerId: apiBooking.sellerId,
       mainTouristId: apiBooking.mainTouristId,
-      mainTourist: apiBooking.mainTourist,
+      mainTourist:mainTourist!,
       additionalTouristIds: apiBooking.additionalTouristIds,
       // additionalTourists: apiBooking.additionalTourists,
-      additionalTourists: getTouristInfoByIds(apiBooking.additionalTouristIds),
+      additionalTourists: additionalTourists,
       totalPrice: apiBooking.totalPrice,
       paymentIds: apiBooking.paymentIds,
-      payments: apiBooking.payments,
+      // payments: apiBooking.payments,
+      payments: getPaymentInfoByIds(apiBooking.paymentIds),
       notes: apiBooking.notes,
       status: apiBooking.status,
     };
+    // console.log('booking::: ', booking);
+    return booking;
   };
 
   const createBooking2 = async (booking: BookingFormValues): Promise<void> => {
@@ -214,7 +221,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
           response.additionalTourists.length > 0
         ) {
           return response.additionalTourists
-            .map((tourist: TourType) => tourist.id)
+            .map((tourist: TouristType) => tourist.id)
             .filter((id: string) => id !== undefined);
         } else {
           return [];
@@ -260,121 +267,10 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     }
   };
 
-  const createBooking = async (
-    booking: Partial<BookingType>
-  ): Promise<void> => {
-    try {
-      setLoading(true);
-      setError(null);
-      // console.log("booking::: ", booking);
-      const seller: User = jwtDecode(TokenService.getToken() as string);
-      const bookingToCreate: BookingType = {
-        additionalTourists: booking.additionalTourists,
-        dateRangeId: booking.dateRangeId as string,
-        mainTourist: booking.mainTourist,
-        notes: booking.notes,
-        payments: booking.payments as PaymentInfoType[],
-        sellerId: seller.id,
-        status: booking.status as BookingType["status"],
-        totalPrice: booking.totalPrice as number,
-        tourPackageId: booking.tourPackageId as string,
-      };
-      const response = await createBookingRequest(bookingToCreate);
-      console.log("response::: ", response);
-      if (!response) {
-        console.warn("response is null");
-        setError("Error creating booking");
-        setLoading(false);
-        return;
-      }
-      if (response.error) {
-        setError(response.error);
-        setLoading(false);
-        return;
-      }
-      response.mainTourist && addTouristFromBooking(response.mainTourist);
-      if (
-        response.additionalTourists &&
-        response.additionalTourists.length > 0
-      ) {
-        for (const tourist of response.additionalTourists) {
-          addTouristFromBooking(tourist);
-        }
-      }
-      if (response.payments && response.payments.length > 0) {
-        for (const payment of response.payments) {
-          addPaymentFromBooking(payment);
-        }
-      }
 
-      const additionalTouristIds = () => {
-        if (
-          response.aditionalTourists &&
-          response.additionalTourists.length > 0
-        ) {
-          return response.additionalTourists
-            .map((tourist: TourType) => tourist.id)
-            .filter((id: string) => id !== undefined);
-        } else {
-          return [];
-        }
-      };
 
-      const paymentIds = () => {
-        if (response.payments && response.payments.length > 0) {
-          return (
-            response.payments
-              .map((payment: PaymentInfoType) => payment.id)
-              .filter((id: string) => id !== undefined) || []
-          );
-        } else {
-          return [];
-        }
-      };
-
-      const apiBooking: BookingType = {
-        id: response.id ?? "",
-        tourPackageId: response.tourPackageId,
-        dateRangeId: response.dateRangeId,
-        sellerId: response.sellerId,
-        mainTouristId: response.mainTourist.id,
-        //   additionalTouristIds: apiBooking.additionalTouristIds || [],
-        additionalTouristIds: additionalTouristIds(),
-        totalPrice: response.totalPrice,
-        //   paymentIds: apiBooking.paymentIds || [],
-        paymentIds: paymentIds(),
-        notes: response.notes,
-        status: response.status,
-        //   // Initialize with empty arrays if detailed objects aren't available yet
-        //   payments: Array.isArray(apiBooking.payments) ? apiBooking.payments : [],
-        //   additionalTourists: Array.isArray(apiBooking.additionalTourists)
-        //     ? apiBooking.additionalTourists
-        //     : [],
-        //   notes: apiBooking.notes || "",
-        //   status: apiBooking.status,
-      };
-
-      // setBookings((prevBookings) => [...prevBookings, response]);
-      setBookings((prevBookings) => [...prevBookings, apiBooking]);
-      showSnackbar("Creado con exito", "success");
-      // await fetchTourists();
-      // setLoading(false);
-    } catch (error) {
-      // setError(
-      //   error instanceof Error
-      //     ? error.message
-      //     : "ocurrio un error mientras se creaba la reserva"
-      // );
-      console.error("Error al crear la reserva: ", error);
-      showSnackbar("Error al crear la reserva", "error");
-      // throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getBookingById = (id: string): BookingType | undefined => {
-    return bookings.find((booking) => booking.id === id);
+  const getBookingById = (id: string): BookingType | null => {
+    return bookings.find((booking) => booking.id === id) || null;
   };
 
   const updateBookingStatus = async (
@@ -383,8 +279,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   ): Promise<void> => {};
 
   useEffect(() => {
-    getBookings();
-  }, []);
+    fetchBookings();
+    // fetchTourists();
+  }, [tourists,payments]);
 
   return (
     <BookingContext.Provider
@@ -392,7 +289,6 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         bookings,
         loading,
         error,
-        createBooking,
         getBookingById,
         updateBookingStatus,
         updateBooking,

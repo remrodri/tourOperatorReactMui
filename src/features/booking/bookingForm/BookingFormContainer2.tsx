@@ -77,9 +77,9 @@ const BookingFormContainer2: React.FC<BookingFormContainer2Props> = ({
   const {createBooking2,updateBooking}=useBookingContext()
   const [additionalTourists, setAdditionalTourists] = useState<TouristType[]>([]);
   const {tourists}=useTouristContext()
-  console.log('tourists::: ', tourists);
+  // console.log('tourists::: ', tourists);
 
-  console.log('booking::: ', booking);
+  // console.log('booking::: ', booking);
   // const [totalPrice, setTotalPrice] = useState<number>(0);
     
   const isEditing = booking?.id ? true : false;
