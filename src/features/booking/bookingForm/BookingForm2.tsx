@@ -61,7 +61,7 @@ const BookingForm2: React.FC<BookingForm2Props> = ({
   // console.log('totalPaid::: ', totalPaid);
 
   return (
-    console.log('formik::: ', formik.values),
+    // console.log('formik::: ', formik.values),
     <Dialog 
     open={open} 
     onClose={handleClick}

@@ -47,12 +47,12 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   const [touristFound, setTouristFound] = useState<TouristType | null>(null);
 
   const getTouristInfoById=(id:string):TouristType|null=>{
-    console.log('tourists::: ', tourists);
+    // console.log('tourists::: ', tourists);
     // console.log('id::: ', id);
     const touristFound = tourists.find((tourist) => tourist.id === id);
-    console.log('touristFound::: ', touristFound);console.log('::: ', );
+    // console.log('touristFound::: ', touristFound);console.log('::: ', );
     if (!touristFound) {
-      showSnackbar("No se encontro al turista", "error");
+      
       return null;
     }
     // setTouristFound(touristFound || null);
@@ -60,8 +60,8 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   }
 
   const handleTouristBookingIds=(tourist:TouristType,bookingId:string)=>{
-    console.log('tourist::: ', tourist);
-    console.log('bookingId::: ', bookingId);
+    // console.log('tourist::: ', tourist);
+    // console.log('bookingId::: ', bookingId);
   //   if (!tourist.bookingIds) {
   //     tourist.bookingIds=[];
   //   }

@@ -65,7 +65,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     setLoading(true);
     try {
       const response = await updateBookingRequest(booking.id!, booking);
-      console.log('response::: ', response);
+      // console.log('response::: ', response);
       if (!response) {
         console.warn("response is null");
         setError("Error updating booking");
@@ -122,10 +122,10 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     // setLoading(true);
     try {
       const response = await getAllBookingsRequest();
-      console.log('response::: ', response);
+      // console.log('response::: ', response);
       
       const transformedBookings = response.map((booking:any)=>transformApiBooking(booking));
-      console.log('transformedBookings::: ', transformedBookings);
+      // console.log('transformedBookings::: ', transformedBookings);
       // setBookings(response.data);
       setBookings(transformedBookings);
       setError(null);
@@ -142,8 +142,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const transformApiBooking = (apiBooking: any): BookingType => {
     const additionalTourists = apiBooking.additionalTouristIds.map((id:string)=>getTouristInfoById(id))
     const mainTourist = getTouristInfoById(apiBooking.mainTouristId)
-    console.log('additionalTourists::: ', additionalTourists);
-    console.log('apiBooking::: ', apiBooking);
+    // console.log('additionalTourists::: ', additionalTourists);
+    // console.log('apiBooking::: ', apiBooking);
     const booking:BookingType = {
       id: apiBooking.id,
       tourPackageId: apiBooking.tourPackageId,
