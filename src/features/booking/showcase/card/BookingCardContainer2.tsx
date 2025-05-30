@@ -24,6 +24,7 @@ const BookingCardContainer2: React.FC<BookingCardContainer2Props> = ({
   // open,
   // handleClick,
 }) => {
+  console.log('booking::: ', booking);
   const {getTourPackageInfoById}=useTourPackageContext()
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const {getTotalPaid}=usePaymentContext();

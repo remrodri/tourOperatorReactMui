@@ -58,8 +58,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const { addPaymentFromBooking } = usePaymentContext();
+  const { addPaymentFromBooking,getPaymentInfoByIds, payments } = usePaymentContext();
   const { tourists,addTouristFromBooking, getTouristInfoByIds, updateTourist,getTouristInfoById,fetchTourists } = useTouristContext();
+
 
   const updateBooking = async (booking: Partial<BookingType>) => {
     setLoading(true);
@@ -156,7 +157,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       additionalTourists: additionalTourists,
       totalPrice: apiBooking.totalPrice,
       paymentIds: apiBooking.paymentIds,
-      payments: apiBooking.payments,
+      // payments: apiBooking.payments,
+      payments: getPaymentInfoByIds(apiBooking.paymentIds),
       notes: apiBooking.notes,
       status: apiBooking.status,
     };
@@ -279,7 +281,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   useEffect(() => {
     fetchBookings();
     // fetchTourists();
-  }, [tourists]);
+  }, [tourists,payments]);
 
   return (
     <BookingContext.Provider
