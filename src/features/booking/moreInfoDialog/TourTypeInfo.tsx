@@ -7,8 +7,10 @@ interface TourTypeProps {
 
 const TourTypeInfo: React.FC<TourTypeProps> = ({ tourType }) => {
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>
+    <Box
+    
+    >
+      <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>
         Tipo de tour
       </Typography>
       <Typography variant="body1">Nombre: {tourType?.name}</Typography>

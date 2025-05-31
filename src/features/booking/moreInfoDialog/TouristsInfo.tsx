@@ -7,9 +7,11 @@ interface TouristsInfoProps {
 const TouristsInfo: React.FC<TouristsInfoProps> = ({ tourists }) => {
   // console.log("tourists::: ", tourists);
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>
-        Informacion de turistas
+    <Box
+    
+    >
+      <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>
+        Turistas
       </Typography>
       {tourists.map((tourist, index) => (
         <Box key={index}>

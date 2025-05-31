@@ -6,12 +6,13 @@ interface TourPackageInfoProps {
 const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
   // console.log("tourPackage::: ", tourPackage);
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>
-        Informacion del paquete turistico
+    <Box
+    >
+      <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>
+        Paquete turistico
       </Typography>
       <Typography variant="body1">
-        Nombre: {tourPackage?.name || "No disponible"}
+        Nombre: {tourPackage?.name ?? "No disponible"}
       </Typography>
       <Typography variant="body1">
         Precio (por persona): {tourPackage?.price} Bs.
