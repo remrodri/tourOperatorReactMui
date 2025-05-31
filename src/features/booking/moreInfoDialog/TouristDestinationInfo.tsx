@@ -10,8 +10,9 @@ const TouristDestinationInfo: React.FC<TouristDestinationInfoProps> = ({
 }) => {
   // console.log("touristDestination::: ", touristDestination);
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>Destino Turistico</Typography>
+    <Box
+    >
+      <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>Destino Turistico</Typography>
       <Typography variant="body1">
         Nombre: {touristDestination?.name}
       </Typography>

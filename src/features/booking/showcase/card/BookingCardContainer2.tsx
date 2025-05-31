@@ -3,12 +3,9 @@ import { BookingType } from "../../types/BookingType";
 import BookingCard2 from "./BookingCard2";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { usePaymentContext } from "../../../payment/context/PaymentContext";
-import { useUserContext } from "../../../userManagement/context/UserContext";
-import { User } from "../../../userManagement/types/User";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../types/TouristType";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
-import MoreInfoDialogContainer from "../../moreInfoDialog/MoreInfoDialogContainer";
 import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer2";
 import BookingFormContainer2 from "../../bookingForm/BookingFormContainer2";
 

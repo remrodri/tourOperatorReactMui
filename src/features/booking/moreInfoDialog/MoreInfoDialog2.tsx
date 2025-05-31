@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Slide } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, Grid2, IconButton, Slide } from "@mui/material"
 import { TransitionProps } from "@mui/material/transitions";
 import { forwardRef, ReactElement, Ref, useEffect, useState } from "react";
 import { BookingType } from "../types/BookingType";
@@ -20,6 +20,8 @@ import SellerInfo from "./SellerInfo";
 import PaymentsInfo from "./PaymentsInfo";
 import TouristsInfo from "./TouristsInfo";
 import GuidesInfo from "./GuidesInfo";
+import BookingDialogStyledBox from "./template/BookingDialogStyledBox";
+import background from "../../../assets/images/home.webp";
 
 interface MoreInfoDialog2Props {
     open: boolean;
@@ -85,6 +87,14 @@ interface MoreInfoDialog2Props {
           timeout: 300,
           onExited: handleClose,
         }}
+        PaperProps={{
+          sx:{
+            backgroundImage:`url(${background})`,
+            backgroundSize:"cover",
+            backgroundPosition:"center",
+            backgroundRepeat:"no-repeat",
+          }
+        }}
         >
           <DialogTitle>Detalle de la reserva</DialogTitle>
           <IconButton
@@ -99,27 +109,114 @@ interface MoreInfoDialog2Props {
           >
             <Close />
           </IconButton>
-          <DialogContent dividers
-          // sx={{
-          //   display: "flex",
-          //   flexWrap: "wrap",
-          //   // flexDirection: "column",
-          //   height: "100%",
-          //   overflowY: "auto",
-          //   gap: 2,
-          // }}
-          >
-            <Grid container spacing={2}>
-              <DateRangeInfo dateRange={dateRangeInfo} />
-              <SellerInfo seller={sellerInfo} />
-              <GuidesInfo guides={guides??[]} />
-              <TourPackageInfo tourPackage={tourPackageInfo} />
-              <CancellationPolicyInfo cancellationPolicy={cancellationPolicy} />
+          <DialogContent dividers>
+            <Box 
+            sx={{
+              display:"grid",
+              gridTemplateColumns:"1fr 1fr 1fr 1fr",
+              gridTemplateRows:"1fr 1fr 1fr 1fr",
+              height:"100%",
+              width:"100%",
+              overflowY:"auto",
+              p:1,
+              gap:1,
+              
+            }}
+            >
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'1 / 2',
+                gridColumn:'1 / 3',
+                p:1,
+              }}
+              >
+              
               <TourTypeInfo tourType={tourType} />
-              <TouristDestinationInfo touristDestination={touristDestination} />    
-              <PaymentsInfo payments={payments??[]} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'2 / 4',
+                gridColumn:'2 / 4',
+                p:1,
+              }}
+              >
+              
+              <TourPackageInfo tourPackage={tourPackageInfo} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'1 / 2',
+                gridColumn:'3 / 4',
+                p:1,
+              }}
+              >
+              <GuidesInfo guides={guides??[]} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox 
+              sx={{
+                gridRow:'1 / 3',
+                gridColumn:'4 / 5',
+                p:1,
+              }}
+              >
+                <PaymentsInfo payments={payments??[]} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'3 / 5',
+                gridColumn:'1 / 2',
+                p:1,
+              }}
+              >
+              <CancellationPolicyInfo cancellationPolicy={cancellationPolicy} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'3 / 4',
+                gridColumn:'4 / 5',
+                p:1,
+              }}
+              >
+                <DateRangeInfo dateRange={dateRangeInfo} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'4 / 5',
+                gridColumn:'3 / 5',
+                p:1,
+              }}
+              >
+              <TouristDestinationInfo touristDestination={touristDestination} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'4 / 5',
+                gridColumn:'2 / 3',
+                p:1,
+              }}
+              >
+              
+              <SellerInfo seller={sellerInfo} />
+              </BookingDialogStyledBox>
+              
+              <BookingDialogStyledBox
+              sx={{
+                gridRow:'2 / 3',
+                gridColumn:'1 / 2',
+                p:1,
+              }}
+              >
               <TouristsInfo tourists={tourists??[]} />
-            </Grid>
+              </BookingDialogStyledBox>
+
+            </Box>
 
           </DialogContent>
         </Dialog>
