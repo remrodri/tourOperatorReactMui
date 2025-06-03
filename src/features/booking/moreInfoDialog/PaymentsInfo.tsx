@@ -9,6 +9,7 @@ const PaymentsInfo: React.FC<PaymentsInfoProps> = ({ payments }) => {
   // console.log("payments::: ", payments);
   return (
     <Box
+    sx={{p:1}}
     >
       <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>Informacion de pagos</Typography>
       <Box>
@@ -16,7 +17,7 @@ const PaymentsInfo: React.FC<PaymentsInfoProps> = ({ payments }) => {
           payments.length > 0 &&
           payments.map((payment, index) => (
             <Box key={index}>
-              <Typography variant="body1">pago {index + 1}</Typography>
+              <Typography variant="body1">pago N° {index + 1}</Typography>
               <Typography variant="body1">Monto: {payment.amount}</Typography>
               <Typography variant="body1" gutterBottom>
                 Tipo de deposito:

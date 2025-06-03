@@ -9,7 +9,7 @@ const SellerInfo: React.FC<SellerInfoProps> = ({ seller }) => {
 
   return (
     <Box
-    
+    sx={{p:1}}
     >
       <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>Operador(a)</Typography>
       <Typography variant="body1" gutterBottom sx={{display:'flex',justifyContent:'center'}}>

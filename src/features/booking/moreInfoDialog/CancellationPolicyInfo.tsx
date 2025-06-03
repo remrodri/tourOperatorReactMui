@@ -10,19 +10,19 @@ const CancellationPolicyInfo: React.FC<CancellationPolicyProps> = ({
 }) => {
   return (
     <Box
-    
+    sx={{p:1}}
     >
       <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>Politica de Cancelacion</Typography>
-      <Typography variant="body1">
-        Nombre: {cancellationPolicy?.name ?? "No disponible"}
-      </Typography>
-      <Typography variant="body1">
-        Descripcion: {cancellationPolicy?.description ?? "No disponible"}
-      </Typography>
-      <Typography variant="body1">
-        Descuento(%): {cancellationPolicy?.refoundPercentage}
+      <Typography variant="body1" gutterBottom>
+        {cancellationPolicy?.name ?? "No disponible"}
       </Typography>
       <Typography variant="body1" gutterBottom>
+        {cancellationPolicy?.description ?? "No disponible"}
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Descuento(%): {cancellationPolicy?.refoundPercentage}
+      </Typography>
+      <Typography variant="body1" >
         Tiempo limite(dias): {cancellationPolicy?.deadLine}
       </Typography>
     </Box>

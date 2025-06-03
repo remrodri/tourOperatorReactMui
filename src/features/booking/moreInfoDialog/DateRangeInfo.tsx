@@ -8,7 +8,7 @@ interface DateRangeInfoProps {
 const DateRangeInfo: React.FC<DateRangeInfoProps> = ({ dateRange }) => {
 
   return (
-    <Box>
+    <Box sx={{p:1}}>
       <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>
         Fecha del paquete
       </Typography>
