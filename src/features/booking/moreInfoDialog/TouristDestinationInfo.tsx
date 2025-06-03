@@ -8,16 +8,16 @@ interface TouristDestinationInfoProps {
 const TouristDestinationInfo: React.FC<TouristDestinationInfoProps> = ({
   touristDestination,
 }) => {
-  // console.log("touristDestination::: ", touristDestination);
   return (
     <Box
+    sx={{p:1}}
     >
       <Typography variant="h5" gutterBottom sx={{display:'flex',justifyContent:'center'}}>Destino Turistico</Typography>
-      <Typography variant="body1">
-        Nombre: {touristDestination?.name}
+      <Typography variant="body1" gutterBottom>
+        {touristDestination?.name}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Descripcion: {touristDestination?.description}
+        {touristDestination?.description}
       </Typography>
     </Box>
   );

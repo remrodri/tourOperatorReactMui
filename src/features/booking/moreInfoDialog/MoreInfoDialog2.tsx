@@ -78,7 +78,7 @@ interface MoreInfoDialog2Props {
     };
 
     return (
-        <Dialog 
+        <Dialog
         fullScreen
         open={isOpen} 
         onClose={handleCloseWithTransition}
@@ -96,20 +96,32 @@ interface MoreInfoDialog2Props {
           }
         }}
         >
-          <DialogTitle>Detalle de la reserva</DialogTitle>
+          <DialogTitle sx={{
+            // p:2,
+            background: "rgba(0, 0, 0, 0.45)",
+            // borderRadius: "16px",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: "1px solid rgba(0, 0, 0, 0.45)",
+          }}>Detalle de la reserva</DialogTitle>
           <IconButton
             autoFocus
             aria-label="close"
             onClick={handleCloseWithTransition}
             sx={{
               position: "absolute",
-              right: 8,
-              top: 8,
+              right: 12,
+              top: 12,
             }}
           >
             <Close />
           </IconButton>
-          <DialogContent dividers>
+          <DialogContent
+          sx={{
+            p:1,
+          }}
+          >
             <Box 
             sx={{
               display:"grid",
