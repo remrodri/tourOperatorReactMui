@@ -4,4 +4,5 @@ export interface PaymentInfoType {
   paymentDate: string;
   paymentMethod: string;
   transactionId?: string;
+  bookingId?: string;
 }

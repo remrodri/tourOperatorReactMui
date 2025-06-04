@@ -8,6 +8,8 @@ import { TouristType } from "../../types/TouristType";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer2";
 import BookingFormContainer2 from "../../bookingForm/BookingFormContainer2";
+import PaymentForm from "../../../payment/paymentForm/PaymentForm";
+import PaymentFormContainer from "../../../payment/paymentForm/PaymentFormContainer";
 
 interface BookingCardContainer2Props {
     booking: BookingType;
@@ -29,6 +31,15 @@ const BookingCardContainer2: React.FC<BookingCardContainer2Props> = ({
   const [mainTouristInfo, setMainTouristInfo] = useState<TouristType | null>(null);
   const [tpInfo, setTpInfo] = useState<TourPackageType | null>(null);
   const [openEditForm,setOpenEditForm]=useState(false);
+  const [openPaymentForm,setOpenPaymentForm]=useState(false);
+
+  const handleOpenPaymentForm=()=>{
+    setOpenPaymentForm(true);
+  }
+
+  const handleClosePaymentForm=()=>{
+    setOpenPaymentForm(false);
+  }
 
   const handleOpenEditForm=()=>{
     setOpenEditForm(true);
@@ -50,6 +61,7 @@ const BookingCardContainer2: React.FC<BookingCardContainer2Props> = ({
           break;
         case "Registrar pago":
           console.log("pagar::: ");
+          handleOpenPaymentForm();
           break;
         default:
           console.log("Opcion invalida");
@@ -134,6 +146,13 @@ const BookingCardContainer2: React.FC<BookingCardContainer2Props> = ({
       <BookingFormContainer2
       open={openEditForm}
       handleClick={handleCloseEditForm}
+      booking={booking}
+      />
+    )}
+    {openPaymentForm && (
+      <PaymentFormContainer
+      open={openPaymentForm}
+      onClose={handleClosePaymentForm}
       booking={booking}
       />
     )}
