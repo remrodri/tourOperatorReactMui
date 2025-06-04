@@ -7,7 +7,7 @@ import {
 } from "react";
 import { PaymentInfoType } from "../../booking/types/PaymentInfoType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
-import { getAllPaymentsRequest } from "../service/paymentService";
+import { createPaymentRequest, getAllPaymentsRequest } from "../service/paymentService";
 
 type PaymentContextType = {
   payments: PaymentInfoType[];
@@ -19,6 +19,7 @@ type PaymentContextType = {
   getPaymentInfoByIds: (ids: string[]) => PaymentInfoType[];
   getTotalPaid: (PaymentsId: string[]) => number;
   addPaymentFromBooking: (payment: any) => void;
+  createPayment: (payment: PaymentInfoType) => Promise<void>;
 };
 
 const PaymentContext = createContext<PaymentContextType | null>(null);
@@ -43,6 +44,22 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+
+  const createPayment = async (payment: PaymentInfoType): Promise<void> => {
+    setLoading(true);
+    try {
+      const paymentData = await createPaymentRequest(payment);
+      const transformedPayment = transformApiPayment(paymentData);
+      setPayments((prevPayments) => [...prevPayments, transformedPayment]);
+      setError(null);
+    } catch (error) {
+      console.error("Error creating payment", error);
+      setError("Failed to create payment");
+      showSnackbar("Error al crear pago", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addPaymentFromBooking = (payment: any) => {
     setPayments((prevPayments) => [...prevPayments, payment]);
@@ -105,6 +122,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
       paymentDate: paymentData.paymentDate,
       paymentMethod: paymentData.paymentMethod,
       transactionId: paymentData.transactionId,
+      bookingId: paymentData.bookingId,
     };
   };
   useEffect(() => {
@@ -122,6 +140,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
         getPaymentInfoByIds,
         getTotalPaid,
         addPaymentFromBooking,
+        createPayment,
       }}
     >
       {children}

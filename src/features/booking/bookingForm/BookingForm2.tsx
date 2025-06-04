@@ -228,9 +228,9 @@ const BookingForm2: React.FC<BookingForm2Props> = ({
               }
             />
           </Box>
+          {!isEditing&&(
           <Box sx={{ mt: 3, mb: 2 }}>
             <Typography variant="h6">Información de pago</Typography>
-            {/* <Box> */}
               <PaymentForm
                 payment={formik.values.firstPayment}
                 onChange={(field, value) =>
@@ -239,12 +239,10 @@ const BookingForm2: React.FC<BookingForm2Props> = ({
                 errors={formik.errors.firstPayment}
                 touched={formik.touched.firstPayment}
                 isEditing={isEditing}
-                // totalPrice={formik.values.totalPrice}
-                // totalPaid={totalPaid}
-                // isEditing={isEditing}
               />
-            {/* </Box> */}
           </Box>
+          )}
+          <Box sx={{ mt: 3, mb: 2 }}>
           <TextField
             label="Notas"
             size="small"
@@ -256,6 +254,7 @@ const BookingForm2: React.FC<BookingForm2Props> = ({
             error={formik.touched.notes && Boolean(formik.errors.notes)}
             helperText={formik.touched.notes && formik.errors.notes}
           />
+          </Box>
           <Box sx={{ pt: "2rem", display: "flex", gap: "1rem" }}>
             <Button type="submit" variant="contained" fullWidth>
               Enviar
