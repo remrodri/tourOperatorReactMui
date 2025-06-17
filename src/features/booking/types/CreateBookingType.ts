@@ -1,14 +1,13 @@
-import { PaymentInfoType } from "./PaymentInfoType";
+import { PaymentType } from "./PaymentType";
 import { TouristType } from "./TouristType";
-
-export interface CreateBookingType {
-  tourPackageId: string;
-  dateRangeId: string;
-  sellerId: string;
-  mainTourist: TouristType;
-  additionalTourists: TouristType[];
-  totalPrice: number;
-  payments: PaymentInfoType[];
-  notes: string;
-  status: "pending" | "paid" | "cancelled" | "completed";    
+export interface CreateBookingType{
+    tourPackageId:string;
+    dateRangeId:string;
+    tourists:TouristType[];
+    firstPayment:PaymentType;
+    notes:string;
+    totalPrice:number;
+    sellerId:string;
+    paymentProofFolder:string;
+    status:string;
 }

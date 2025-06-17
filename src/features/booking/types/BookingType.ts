@@ -1,4 +1,4 @@
-import { PaymentInfoType } from "./PaymentInfoType";
+import { PaymentType } from "./PaymentType";
 import { TouristType } from "./TouristType";
 
 export interface BookingType {
@@ -6,13 +6,10 @@ export interface BookingType {
   tourPackageId: string;
   dateRangeId: string;
   sellerId: string;
-  mainTouristId?: string;
-  mainTourist?: TouristType;
-  additionalTouristIds?: string[];
-  additionalTourists?: TouristType[];
+  touristIds:string[];
   totalPrice: number;
-  paymentIds?: string[];
-  payments?: PaymentInfoType[];
-  notes?: string;
+  paymentIds: string[];
+  notes: string;
   status: "pending" | "paid" | "cancelled" | "completed";
+  paymentProofFolder:string;
 }

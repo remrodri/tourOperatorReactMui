@@ -1,11 +1,12 @@
 import { useState } from "react";
 import BookingShowcase from "./BookingShowcase";
-import { useBookingContext } from "../context/BookingContext";
-import BookingFormContainer2 from "../bookingForm/BookingFormContainer2";
+import { useBookingContext2 } from "../context/BookingContext2";
+import BookingFormContainer from "../bookingForm2/BookingFormContainer";
 
 const BookingShowcaseContainer: React.FC = () => {
-  const { bookings } = useBookingContext();
+  const { bookings } = useBookingContext2();
   const [open, setOpen] = useState(false);
+  // console.log('bookings::: ', bookings);
 
   const handleClick = () => {
     setOpen(!open);
@@ -17,7 +18,7 @@ const BookingShowcaseContainer: React.FC = () => {
         bookings={bookings}
         open={open}
       />
-      {open && <BookingFormContainer2 open={open} handleClick={handleClick} booking={null} />}
+      {open && <BookingFormContainer open={open} handleClose={handleClick} />}
     </>
   );
 };

@@ -15,9 +15,9 @@ type TouristContextType = {
   error: string | null;
   touristFound: TouristType | null;
   fetchTourists: () => Promise<void>;
-  getTouristById: (id: string) => TouristType | null;
+  // getTouristById: (id: string) => TouristType | null;
   getTouristInfoByIds: (id: string[]) => TouristType[];
-  addTouristFromBooking: (tourist: any) => void;
+  addTouristFromBooking: (tourist: any) => TouristType;
   updateTourist: (tourist: TouristType) => void;
   handleTouristBookingIds:(tourist:TouristType,bookingId:string)=>void
   getTouristInfoById:(id:string)=>TouristType|null
@@ -47,15 +47,12 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   const [touristFound, setTouristFound] = useState<TouristType | null>(null);
 
   const getTouristInfoById=(id:string):TouristType|null=>{
-    // console.log('tourists::: ', tourists);
     // console.log('id::: ', id);
     const touristFound = tourists.find((tourist) => tourist.id === id);
-    // console.log('touristFound::: ', touristFound);console.log('::: ', );
     if (!touristFound) {
       
       return null;
     }
-    // setTouristFound(touristFound || null);
     return touristFound;
   }
 
@@ -99,22 +96,24 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
 
   const addTouristFromBooking = (tourist: any) => {
     // setTourists([...tourists, tourist]);
-    setTourists((prevTourists) => [...prevTourists, tourist]);
+    const touristData = transformApiTourist(tourist);
+    setTourists((prevTourists) => [...prevTourists, touristData]);
+    return touristData;
   };
 
   const getTouristInfoByIds = (ids: string[]): TouristType[] => {
     return ids && ids.length > 0 ? tourists.filter((tourist) => ids.includes(tourist.id!)) : [];
   };
 
-  const getTouristById = (id: string): TouristType | null => {
-    const touristFound = tourists.find((tourist) => tourist.id === id);
-    if (!touristFound) {
-      showSnackbar("No se encontro al turista", "error");
-      return null;
-    }
-    // setTouristFound(touristFound || null);
-    return touristFound;
-  };
+  // const getTouristById = (id: string): TouristType | null => {
+  //   const touristFound = tourists.find((tourist) => tourist.id === id);
+  //   if (!touristFound) {
+  //     showSnackbar("No se encontro al turista", "error");
+  //     return null;
+  //   }
+  //   // setTouristFound(touristFound || null);
+  //   return touristFound;
+  // };
 
   const fetchTourists = async (): Promise<void> => {
     setLoading(true);
@@ -159,7 +158,7 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
         tourists,
         loading,
         error,
-        getTouristById,
+        // getTouristById,
         touristFound,
         getTouristInfoByIds,
         fetchTourists,

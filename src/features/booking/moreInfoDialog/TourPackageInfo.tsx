@@ -19,7 +19,7 @@ const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
         Precio (por persona): {tourPackage?.price} Bs.
       </Typography>
       </Box>
-      <Box sx={{width:'49.5%'}}>
+      <Box sx={{width:'49%'}}>
       <Typography variant="h6" gutterBottom>Itinerario</Typography>
       <Typography variant="body1" gutterBottom>
         Duracion (dias): {tourPackage?.duration ?? "No disponible"}

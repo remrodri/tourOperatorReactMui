@@ -8,7 +8,7 @@ import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { CancellationPolicy } from "../../cancellationPolicy/types/CancellationPolicy";
 import { TourType } from "../../userManagement/types/TourType";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
-import { PaymentInfoType } from "../types/PaymentInfoType";
+import { PaymentType } from "../types/PaymentType";
 import { TouristType } from "../types/TouristType";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import { User } from "../../userManagement/types/User";
@@ -23,6 +23,7 @@ interface MoreInfoDialogContainer2Props {
   handleClose: () => void;
   booking: BookingType;
   balance: number;
+  
 }
 
 const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
@@ -44,7 +45,7 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
   const [cancellationPolicyInfo,setCancellationPolicyInfo]=useState<CancellationPolicy | null>(null)
   const [tourType,setTourType]=useState<TourType | null>(null)
   const [touristDestination,setTouristDestination]=useState<TouristDestinationType | null>(null)
-  const [payments,setPayments]=useState<PaymentInfoType[]>([])
+  const [payments,setPayments]=useState<PaymentType[]>([])
   const [tourists,setTourists]=useState<TouristType[]>([])
   const [dateRange,setDateRange]=useState<DateRangeType | null>(null)
   const [guides,setGuides]=useState<User[]>([])
@@ -80,9 +81,9 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
     setPayments(payments)
   }
 
-  const getTourists=(mainTouristId:string,additionalTouristIds:string[])=>{
-    const tourists=getTouristInfoByIds([...additionalTouristIds,mainTouristId])
-    setTourists(tourists)
+  const getTourists=(tourists:string[])=>{
+    const touristsInfo=getTouristInfoByIds(tourists)
+    setTourists(touristsInfo)
   }
 
   const getDateRange=(id:string)=>{
@@ -98,14 +99,14 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
 
   useEffect(()=>{
     getTourPackageInfo(booking.tourPackageId ??"")
+    getTourists(booking.touristIds??[])
+    getDateRange(booking.dateRangeId??"")
+    getGuides()
+    getSellerInfo(booking.sellerId??"")
     getCancellationPolicyInfo(tourPackageInfo?.cancellationPolicy??"")
     getTourType(tourPackageInfo?.tourType??"")
     getTouristDestination(tourPackageInfo?.touristDestination??"")
     getPayments(booking.paymentIds??[])
-    getTourists(booking.mainTouristId??"",booking.additionalTouristIds??[])
-    getDateRange(booking.dateRangeId??"")
-    getGuides()
-    getSellerInfo(booking.sellerId??"")
   },[booking,tourPackageInfo])
 
   return (
