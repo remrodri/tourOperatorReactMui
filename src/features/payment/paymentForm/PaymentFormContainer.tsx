@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BookingType } from "../../booking/types/BookingType";
 import PaymentForm from "./PaymentForm";
-import { PaymentInfoType } from "../../booking/types/PaymentInfoType";
+import { PaymentInfoType } from "../../booking/types/PaymentType";
 import { usePaymentContext } from "../context/PaymentContext";
 import { paymentInfoSchema } from "../../booking/bookingForm/validation/paymentInfoSchema";
 import { useFormik } from "formik";

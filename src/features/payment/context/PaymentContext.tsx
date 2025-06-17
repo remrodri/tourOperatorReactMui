@@ -5,21 +5,21 @@ import {
   useEffect,
   useState,
 } from "react";
-import { PaymentInfoType } from "../../booking/types/PaymentInfoType";
+import { PaymentType } from "../../booking/types/PaymentType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { createPaymentRequest, getAllPaymentsRequest } from "../service/paymentService";
 
 type PaymentContextType = {
-  payments: PaymentInfoType[];
+  payments: PaymentType[];
   loading: boolean;
   error: string | null;
   // paymentFound: (id: string) => PaymentInfoType;
   getPaymentsById: (ids: string[]) => Promise<void>;
-  paymentsFound: PaymentInfoType[];
-  getPaymentInfoByIds: (ids: string[]) => PaymentInfoType[];
+  paymentsFound: PaymentType[];
+  getPaymentInfoByIds: (ids: string[]) => PaymentType[];
   getTotalPaid: (PaymentsId: string[]) => number;
-  addPaymentFromBooking: (payment: any) => void;
-  createPayment: (payment: PaymentInfoType) => Promise<void>;
+  addPaymentFromBooking: (payment: any) => PaymentType;
+  createPayment: (payment: PaymentType) => Promise<void>;
 };
 
 const PaymentContext = createContext<PaymentContextType | null>(null);
@@ -39,13 +39,13 @@ type PaymentProviderProps = {
 export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   children,
 }) => {
-  const [paymentsFound, setPaymentsFound] = useState<PaymentInfoType[]>([]);
-  const [payments, setPayments] = useState<PaymentInfoType[]>([]);
+  const [paymentsFound, setPaymentsFound] = useState<PaymentType[]>([]);
+  const [payments, setPayments] = useState<PaymentType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
 
-  const createPayment = async (payment: PaymentInfoType): Promise<void> => {
+  const createPayment = async (payment: PaymentType): Promise<void> => {
     setLoading(true);
     try {
       const paymentData = await createPaymentRequest(payment);
@@ -62,7 +62,9 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   };
 
   const addPaymentFromBooking = (payment: any) => {
-    setPayments((prevPayments) => [...prevPayments, payment]);
+    const paymentData = transformApiPayment(payment);
+    setPayments((prevPayments) => [...prevPayments, paymentData]);
+    return paymentData;
   };
 
   const getTotalPaid = (paymentIds: string[]): number => {
@@ -76,10 +78,10 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
     return total;
   };
 
-  const getPaymentInfoByIds = (ids: string[]): PaymentInfoType[] => {
+  const getPaymentInfoByIds = (ids: string[]): PaymentType[] => {
     return ids
       .map((id) => payments.find((p) => p.id === id))
-      .filter((p): p is PaymentInfoType => p !== undefined);
+      .filter((p): p is PaymentType => p !== undefined);
   };
 
   const getPaymentsById = async (ids: string[]): Promise<void> => {
@@ -94,7 +96,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
     const paymentsInfoFound = ids.map((id) =>
       payments.find((payment) => payment.id === id)
     );
-    setPaymentsFound(paymentsInfoFound as PaymentInfoType[]);
+    setPaymentsFound(paymentsInfoFound as PaymentType[]);
     // return [];
   };
 
@@ -102,7 +104,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
     setLoading(true);
     try {
       const response = await getAllPaymentsRequest();
-      const paymentData = response.data ? response.data : response;
+      const paymentData = response;
       const transformedPayments = paymentData.map(transformApiPayment);
       setPayments(transformedPayments);
       setError(null);
@@ -115,14 +117,16 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
     }
   };
 
-  const transformApiPayment = (paymentData: any): PaymentInfoType => {
+  const transformApiPayment = (paymentData: any): PaymentType => {
     return {
       id: paymentData.id,
       amount: paymentData.amount,
       paymentDate: paymentData.paymentDate,
       paymentMethod: paymentData.paymentMethod,
-      transactionId: paymentData.transactionId,
       bookingId: paymentData.bookingId,
+      sellerId:paymentData.sellerId,
+      touristId:paymentData.touristId,
+      paymentProofImageURL:paymentData.paymentProofImageURL,
     };
   };
   useEffect(() => {

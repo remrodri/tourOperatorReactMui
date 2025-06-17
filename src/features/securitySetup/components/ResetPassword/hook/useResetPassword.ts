@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
-import { showToast } from "../../../../../utils/modal/toast";
+import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 
 export const useResetPassword = () => {
   const [error, setError] = useState<string | null>(null);
+  const {showSnackbar} = useNewSnackbar();
   // const token = TokenService.getToken();
   const [question, setQuestion] = useState<{
     questionId: string;
@@ -26,7 +27,7 @@ export const useResetPassword = () => {
       );
       // console.log("response::: ", response);
       if (response.statusCode !== 200) {
-        showToast("error", response.message);
+        showSnackbar(response.message,"error");
         return;
       }
       const userId = response.data.userId;
@@ -43,7 +44,7 @@ export const useResetPassword = () => {
       const response = await securitySetupService.getRandomQuestion(userId);
       // console.log("response::: ", response);
       if (response.statusCode !== 200) {
-        showToast("error", response.message);
+        showSnackbar(response.message,"error");
         return;
       }
       setQuestion(response.data);
@@ -61,10 +62,10 @@ export const useResetPassword = () => {
       const response = await securitySetupService.checkSecurityAnswer(answer);
       console.log("response::: ", response);
       if (response.statusCode !== 200) {
-        showToast("error", response.message);
+        showSnackbar(response.message,"error");
         return;
       }
-      showToast("success", "Respuesta correcta");
+      showSnackbar("Respuesta correcta","success");
       navigate(`../actualizar-contraseña/${answer.userId}`);
     } catch (error) {
       setError("Error al revisar la respuesta de seguridad");

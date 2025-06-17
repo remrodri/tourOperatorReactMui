@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { PaymentInfoType } from "../types/PaymentInfoType";
+import { PaymentInfoType } from "../types/PaymentType";
 
 interface PaymentsInfoProps {
   payments: PaymentInfoType[];

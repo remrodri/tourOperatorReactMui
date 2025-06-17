@@ -81,7 +81,15 @@ const TouristForm: React.FC<TouristFormProps> = ({
   }, [tourist?.dateOfBirth]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box 
+      sx={{ 
+
+      display: "flex", 
+      flexDirection: "column", 
+      gap: 2,
+        
+      }}
+      >
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
           label="Nombre(s)"
@@ -92,7 +100,10 @@ const TouristForm: React.FC<TouristFormProps> = ({
           error={touched?.firstName && Boolean(errors?.firstName)}
           helperText={touched?.firstName && errors?.firstName}
         />
-        <TextField
+        
+      </Box>
+      <Box sx={{ display: "flex", gap: 2 }}>
+      <TextField
           label="Apellido(s)"
           size="small"
           fullWidth
@@ -130,12 +141,12 @@ const TouristForm: React.FC<TouristFormProps> = ({
           sx={{ width: "50%" }}
           error={touched?.documentType && Boolean(errors?.documentType)}
         >
-          <InputLabel id="document-type-label">Tipo de documento</InputLabel>
+          <InputLabel id="document-type-label">Documento</InputLabel>
           <Select
             labelId="document-type-label"
             id="document-type"
             value={documentType.toLowerCase()} // Asegurarse de que siempre sea minúsculas
-            label="Tipo de Documento"
+            label="Documento"
             onChange={(e) => onChange("documentType", e.target.value)}
           >
             {documentTypes.map((type) => (
@@ -184,18 +195,6 @@ const TouristForm: React.FC<TouristFormProps> = ({
         helperText={touched?.nationality && errors?.nationality}
       />
 
-      {/* <TextField
-        label="Fecha de nacimiento"
-        size="small"
-        type="date"
-        fullWidth
-        // InputLabelProps={{ shrink: true }}
-        slotProps={{ inputLabel: { shrink: true } }}
-        value={tourist?.dateOfBirth || ""}
-        onChange={(e) => onChange("dateOfBirth", e.target.value)}
-        error={touched?.dateOfBirth && Boolean(errors?.dateOfBirth)}
-        helperText={touched?.dateOfBirth && errors?.dateOfBirth}
-      /> */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Fecha de nacimiento"
@@ -203,7 +202,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
           value={birthDate}
           // onChange={(newDate) => setSelectedDate(newDate)}
           onChange={handleChange}
-          // format="DD-MM-YYYY"
+          format="DD-MM-YYYY"
           slotProps={{
             textField: {
               size: "small",

@@ -14,6 +14,7 @@ import { DateRangeProvider } from "./features/dateRange/context/DateRangeContext
 import { BookingProvider } from "./features/booking/context/BookingContext";
 import { TouristProvider } from "./features/tourist/context/TouristContext";
 import { PaymentProvider } from "./features/payment/context/PaymentContext";
+import { BookingProvider2 } from "./features/booking/context/BookingContext2";
 
 const darkTheme = createTheme({
   palette: {
@@ -28,7 +29,8 @@ function App() {
     <SnackbarProvider>
       <PaymentProvider>
         <TouristProvider>
-          <BookingProvider>
+          {/* <BookingProvider> */}
+          <BookingProvider2>
             <DateRangeProvider>
               <TouristDestinationProvider>
                 <TourPackageProvider>
@@ -48,7 +50,8 @@ function App() {
                 </TourPackageProvider>
               </TouristDestinationProvider>
             </DateRangeProvider>
-          </BookingProvider>
+            </BookingProvider2>
+          {/* </BookingProvider> */}
         </TouristProvider>
       </PaymentProvider>
     </SnackbarProvider>

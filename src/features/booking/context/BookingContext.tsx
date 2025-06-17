@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { BookingType } from "../types/BookingType";
-import { PaymentInfoType } from "../types/PaymentInfoType";
+import { PaymentInfoType } from "../types/PaymentType";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../userManagement/types/User";

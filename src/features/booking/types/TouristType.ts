@@ -5,11 +5,8 @@ export interface TouristType {
   email: string;
   phone: string;
   ci?: string;
-  // address?: string
   nationality: string;
-  dateOfBirth?: string;
-  // healthIssues?: string;
-  // additionalInformation?: string;
+  dateOfBirth: string;
   passportNumber?: string;
   documentType: string;
   bookingIds?:string[]

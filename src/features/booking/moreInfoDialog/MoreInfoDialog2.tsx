@@ -11,7 +11,7 @@ import { CancellationPolicy } from "../../cancellationPolicy/types/CancellationP
 import CancellationPolicyInfo from "./CancellationPolicyInfo";
 import { TourType } from "../../userManagement/types/TourType";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
-import { PaymentInfoType } from "../types/PaymentInfoType";
+import { PaymentType } from "../types/PaymentType";
 import { TouristType } from "../types/TouristType";
 import { User } from "../../userManagement/types/User";
 import TourTypeInfo from "./TourTypeInfo";
@@ -32,7 +32,7 @@ interface MoreInfoDialog2Props {
     cancellationPolicy: CancellationPolicy | null;
     tourType: TourType | null;
     touristDestination: TouristDestinationType | null;
-    payments: PaymentInfoType[] | null;
+    payments: PaymentType[] | null;
     tourists: TouristType[] | null;
     dateRange: DateRangeType | null;
     guides: User[] | null;
@@ -64,7 +64,7 @@ interface MoreInfoDialog2Props {
     sellerInfo
   }) => {
     const [isOpen, setIsOpen] = useState(false);
-    console.log('tourPackageInfo::: ', tourPackageInfo);
+    // console.log('tourPackageInfo::: ', tourPackageInfo);
 
     useEffect(() => {
       setIsOpen(open);
