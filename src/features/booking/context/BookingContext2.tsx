@@ -11,6 +11,7 @@ import { User } from "../../userManagement/types/User";
 import { v4 as uuidv4 } from 'uuid';
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
+import { UpdateBookingType } from "../types/UpdateBookingType";
 
 interface BookingContextType2 {
   bookings: BookingType[];
@@ -21,10 +22,10 @@ interface BookingContextType2 {
   updateBooking:(booking:any)=>Promise<void>
 }
 
-const BookingContext2 = createContext<BookingContextType2 | null>(null);
+const BookingContext = createContext<BookingContextType2 | null>(null);
 
 export const useBookingContext2 = () => {
-  const context = useContext(BookingContext2);
+  const context = useContext(BookingContext);
   if (!context) {
     throw new Error("useBookingContext2 must be used within a BookingProvider2");
   }
@@ -126,8 +127,15 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
 
   const updateBooking = async (booking:any): Promise<void> => {
     setLoading(true);
+    const tourists = [...booking.additionalTourists,booking.mainTourist]
+    const bookingToUpdate:UpdateBookingType = {
+      totalPrice: booking.totalPrice,
+      notes: booking.notes,
+      status: booking.status??"pending",
+      tourists:tourists,
+    }
     try {
-      const response = await updateBookingRequest(booking.id!, booking);
+      const response = await updateBookingRequest(booking.id, bookingToUpdate);
       if (!response) {
         console.warn("response is null");
         setError("Error updating booking");
@@ -139,8 +147,29 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
         setLoading(false);
         return;
       }
+      const updatedTouristIds = response.tourists.map((tourists:any)=>addTouristFromBooking(tourists).id)
+      const bookingFound = bookings.find((booking) => booking.id === response.id);
+      if (!bookingFound) {
+        console.warn("bookingFound is null");
+        setError("Error updating booking");
+        setLoading(false);
+        return;
+      }
+      const transformedBooking = transformApiBooking({
+        ...bookingFound,
+        notes:booking.notes,
+        status:booking.status,
+        totalPrice:booking.totalPrice,
+        touristIds:updatedTouristIds,
+      })
+      setBookings(
+        (prevBookings)=>
+          prevBookings.map((booking)=>
+            booking.id===response.id?transformedBooking:booking
+          )
+      )
       showSnackbar("Reserva actualizada exitosamente", "success");
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.error("Error updating booking", error);
       setError("Failed to update booking");
@@ -195,7 +224,7 @@ useEffect(()=>{
 },[])
 
 return (
-  <BookingContext2.Provider
+  <BookingContext.Provider
     value={{
       bookings,
       loading,
@@ -206,6 +235,6 @@ return (
     }}
   >
     {children}
-  </BookingContext2.Provider>
+  </BookingContext.Provider>
 )
 }

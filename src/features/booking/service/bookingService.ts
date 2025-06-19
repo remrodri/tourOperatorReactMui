@@ -1,5 +1,6 @@
 import axiosInstance from "../../../config/axiosConfig";
 import { BookingType } from "../types/BookingType";
+import { UpdateBookingType } from "../types/UpdateBookingType";
 // import { CreateBookingType } from "../types/CreateBookingType";
 import { getAllBookingsResponse } from "./getAllBookingsResponse";
 
@@ -12,7 +13,7 @@ export const createBookingRequest = async (
   //   console.log(`${key}: `,value);
   // }
   const response = await axiosInstance.post(url, data);
-  console.log('response::: ', response.data.data);
+  // console.log('response::: ', response.data.data);
   return response.data.data;
 };
 // export const createBooking2Request = async (data:any):Promise<any>=>{
@@ -23,16 +24,17 @@ export const createBookingRequest = async (
 export const getAllBookingsRequest = async () => {
   const response = await axiosInstance.get(url);
   // console.log("response::: ", response.data.data);
-  // return response.data.data;
-  return getAllBookingsResponse;
+  return response.data.data;
+  // return getAllBookingsResponse;
 };
 
 export const updateBookingRequest = async (
   id: string,
-  data: Partial<BookingType>
+  data: UpdateBookingType
 ): Promise<any> => {
   // console.log('data::: ', data);
+
   const response = await axiosInstance.put(`${url}/${id}`, data);
-  // console.log('response::: ', response.data.data);
+  console.log('response::: ', response.data.data);
   return response.data.data;
 };

@@ -7,6 +7,10 @@ export const bookingSchema=yup.object().shape({
   dateRangeId:yup.string().required("El rango de fechas es requerido"),
   mainTourist:touristSchema,
   additionalTourists:yup.array().of(touristSchema).optional(),
-  firstPayment:paymentSchema,
+  // firstPayment:yup.object().when('$isEditing',([isEditing],schema)=>isEditing===true ? paymentSchema : schema.notRequired()),
+  firstPayment: yup.object().when('$isEditing', ([isEditing], schema) => {
+    return isEditing === false ? paymentSchema : yup.object().optional();
+  }),
+  // firstPayment:paymentSchema,
   notes:yup.string().optional(),
 })
