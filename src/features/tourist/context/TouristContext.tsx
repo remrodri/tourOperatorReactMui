@@ -95,9 +95,30 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   };
 
   const addTouristFromBooking = (tourist: any) => {
-    // setTourists([...tourists, tourist]);
+    if (!tourists.find((prevTourist) => prevTourist.id === tourist.id)) {
+      const touristData = transformApiTourist(tourist);
+      setTourists((prevTourists) => [...prevTourists, touristData]);
+      return touristData;
+    }
     const touristData = transformApiTourist(tourist);
-    setTourists((prevTourists) => [...prevTourists, touristData]);
+      setTourists((prevTourists)=>
+      prevTourists
+    .map((prevTourist) =>
+        {return prevTourist.id === tourist?.id 
+          ? {...prevTourist, 
+            id:tourist.id,
+            bookingIds:tourist.bookingIds,
+            documentType:tourist.documentType,
+            firstName:tourist.firstName,
+            lastName:tourist.lastName,
+            phone:tourist.phone,
+            ci:tourist.ci,
+            nationality:tourist.nationality,
+            dateOfBirth:tourist.dateOfBirth,
+            passportNumber:tourist.passportNumber} 
+          : prevTourist})
+    .filter((tourist) => tourist !== null)
+    );
     return touristData;
   };
 
@@ -122,7 +143,7 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
       const touristData = response.data ? response.data : response;
       // console.log('touristData::: ', touristData);
       const transformedTourists = touristData.map(transformApiTourist);
-      console.log('transformedTourists::: ', transformedTourists);
+      // console.log('transformedTourists::: ', transformedTourists);
       setTourists(transformedTourists);
       setError(null);
     } catch (error) {

@@ -7,6 +7,7 @@ import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../types/TouristType";
 import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer2";
 import BookingFormContainer from "../../bookingForm2/BookingFormContainer";
+import { usePaymentContext } from "../../../payment/context/PaymentContext";
 
 interface BookingCardContainerProps{
     booking:BookingType;
@@ -15,6 +16,7 @@ interface BookingCardContainerProps{
 const BookingCardContainer:React.FC<BookingCardContainerProps>=({booking,index})=>{
   const {getTourPackageInfoById}=useTourPackageContext()
   const {getTouristInfoById,tourists}=useTouristContext()
+  const {getTotalPaid}=usePaymentContext()
   const [openMoreInfo,setOpenMoreInfo]=useState(false);
   const [tpInfo,setTpInfo]=useState<TourPackageType | null>(null);
   const [mainTouristInfo,setMainTouristInfo]=useState<TouristType | null>(null);
@@ -39,10 +41,10 @@ const BookingCardContainer:React.FC<BookingCardContainerProps>=({booking,index})
     if(!booking){
       return;
     }
-    if(!booking.tourists || booking.tourists.length === 0){
+    if(!booking.touristIds || booking.touristIds.length === 0){
       return;
     }
-    const touristId=booking.tourists[0];
+    const touristId=booking.touristIds[0];
     const tourist=getTouristInfoById(touristId);
     if(!tourist){
       return;
@@ -97,10 +99,9 @@ const BookingCardContainer:React.FC<BookingCardContainerProps>=({booking,index})
     if(!booking){
       return;
     }
-    // const totalPaid=getTotalPaid(booking.paymentIds);
-    // const balance=booking.totalPrice-totalPaid;
-    // setBalance(balance);
-    setBalance(booking.totalPrice);
+    const totalPaid=getTotalPaid(booking.paymentIds);
+    const balance=booking.totalPrice-totalPaid;
+    setBalance(balance);
   }
 
   useEffect(()=>{

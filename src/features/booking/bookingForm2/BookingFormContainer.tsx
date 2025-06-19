@@ -4,7 +4,7 @@ import { PaymentType } from "../types/PaymentType";
 import { TouristType } from "../types/TouristType";
 import BookingForm from "./BookingForm";
 import { useTouristContext } from "../../tourist/context/TouristContext";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { bookingSchema } from "./validation/BookingSchema";
 import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
@@ -14,6 +14,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 import { useBookingContext2 } from "../context/BookingContext2";
+import { usePaymentContext } from "../../payment/context/PaymentContext";
+import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("es");
@@ -70,7 +72,10 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
   const [openAlert,setOpenAlert]=useState<boolean>(false);
   const [alertMessage,setAlertMessage]=useState<string>("");
   const [destinationImages,setDestinationImages]=useState<(string|File)[]>([]);
-  const {createBooking}=useBookingContext2()
+  const {createBooking,updateBooking}=useBookingContext2()
+  const {getTotalPaid}=usePaymentContext()
+  const [totalPrice,setTotalPrice]=useState<number>(0);
+
 
   const loadGallery=(tourPackage:TourPackageType)=>{
     if(tourPackage?.touristDestination){
@@ -82,14 +87,16 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     }
   }
 
-  const getTotalPaid=()=>{
-    const payments=booking?.payments || [];
-    const totalPaid=payments.reduce((total,payment)=>total+payment.amount,0);
-    return totalPaid;
-  }
+  // console.log('booking::: ', booking);
+
+  // const getTotalPaid=()=>{
+  //   const payments=booking?.payments || [];
+  //   const totalPaid=payments.reduce((total,payment)=>total+payment.amount,0);
+  //   return totalPaid;
+  // }
 
   const handleAmountChange=(amount:number)=>{
-    const willExccedTotal= amount+getTotalPaid() > formik.values.totalPrice;
+    const willExccedTotal= amount+getTotalPaid(booking?.paymentIds || []) > formik.values.totalPrice;
     if(willExccedTotal){
       setAlertMessage("El monto excede el total");
       setOpenAlert(true);
@@ -177,7 +184,7 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     if(!booking){
       return;
     }
-    const mainTourist=getTouristInfoById(booking.tourists[0]);
+    const mainTourist=getTouristInfoById(booking.touristIds[0]);
     if(!mainTourist){
       return;
     }
@@ -190,7 +197,7 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     if(!booking){
       return;
     }
-    const additionalTouristIds=booking.tourists.filter((touristId)=>touristId!==booking.tourists[0]);
+    const additionalTouristIds=booking.touristIds.filter((touristId)=>touristId!==booking.touristIds[0]);
     const additionalTourists=getTouristInfoByIds(additionalTouristIds);
     if(!additionalTourists){
       return;
@@ -202,12 +209,16 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
   }
 
   const onSubmit=(values:BookingFormValues)=>{
+    console.log('formik.errors::: ', formik.errors);
+    console.log('values::: ', values);
     if(isEditing){
-      console.log('actualizar values::: ', values);
+      // console.log('actualizar values::: ', values);
+      updateBooking(values);
     }else{
-      console.log('crear values::: ', values);
+      // console.log('crear values::: ', values);
       createBooking(values);
     }
+    handleClose();
   }
 
   const formik = useFormik<BookingFormValues>({
@@ -218,11 +229,12 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
       // sellerId:booking?.sellerId || "",
       mainTourist:DEFAULT_TOURIST,
       additionalTourists:[],
-      totalPrice:booking?.totalPrice ?? 0,
+      totalPrice:booking?.totalPrice || 0,
       firstPayment:DEFAULT_PAYMENT,
       notes:booking?.notes || "",
     },
-    validationSchema:bookingSchema,
+    // validationSchema:bookingSchema,
+    validationSchema:bookingSchemaWithContext({isEditing}),
     onSubmit,
     enableReinitialize:true,
     validateOnChange:false,
@@ -238,11 +250,24 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     }
     getMainTourist();
     getAdditionalTourists();
+    setTotalPrice(booking.totalPrice);
     // formik.resetForm();
     // formik.setErrors({});
     // formik.setTouched({});
+    const tourPackage=getTourPackageInfoById(booking.tourPackageId);
+    if(tourPackage){
+      setTourPackageSelected(tourPackage);
+    }
+    const destination=getTouristDestinationInfoById(tourPackage?.touristDestination || "");
+    if(destination){
+      setDestinationImages(destination.images);
+    }
+    if(!tourPackageSelected){
+      return;
+    }
+    // loadGallery(tourPackageSelected);
   },[booking]);
-  
+
     return(
       <>
         <BookingForm

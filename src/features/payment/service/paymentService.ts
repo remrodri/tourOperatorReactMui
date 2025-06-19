@@ -12,6 +12,6 @@ export const createPaymentRequest = async (payment: PaymentType) => {
 
 export const getAllPaymentsRequest = async () => {
   const response = await axiosInstance.get(url);
-  console.log('response::: ', response);
+  // console.log('response::: ', response);
   return response.data.data;
 };

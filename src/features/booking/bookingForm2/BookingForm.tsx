@@ -63,6 +63,8 @@ const BookingForm:React.FC<BookingFormProps>=({
   handleAmountChange,
   destinationImages,
 })=>{
+  // console.log('destinationImages::: ', destinationImages);
+  // console.log('isEditing::: ', isEditing);
   // console.log('formik::: ', formik.values);
   // console.log('selectedTourPackage::: ', selectedTourPackage);
   const [isOpen,setIsOpen]=useState(false);
@@ -130,7 +132,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                 <Box
                 sx={{
                   display:"grid",
-                  gridTemplateColumns:"1fr 1fr 1fr",
+                  gridTemplateColumns:!isEditing ? "1fr 1fr 1fr" : "1fr 1fr 1fr 1fr",
                   gridTemplateRows:"1fr 1fr 1fr 1fr 1fr 1fr",
                   gap:1,
                   height:"100%",
@@ -142,8 +144,8 @@ const BookingForm:React.FC<BookingFormProps>=({
                 >
                   <Box
                   sx={{
-                    gridRow:"1/7",
-                    gridColumn:"1/2",
+                    gridRow:!isEditing ? "1/7" : "1/6",
+                    gridColumn:!isEditing ? "1/2" : "1/3",
                     p:1,
                     
                   }}
@@ -220,8 +222,11 @@ const BookingForm:React.FC<BookingFormProps>=({
                   </Box>
                   <Box
                   sx={{
-                    gridRow:"1/6",
-                    gridColumn:"2/3",
+                    gridRow:!isEditing ? "1/6" : "1/6",
+                    gridColumn:!isEditing ? "2/3" : "3/5",
+                    // ...(isEditing && {
+                    //   display:"none"
+                    // }),
                     p:1,
                   }}
                   >
@@ -358,8 +363,8 @@ const BookingForm:React.FC<BookingFormProps>=({
                             display:"flex",
                             flexWrap:"wrap",
                             gap:1,
+                            ...(isEditing ? {justifyContent:"center"} : {}),
                           }}
-
                         >
                           {
                             destinationImages?.length > 0 && (
@@ -386,6 +391,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                         </Box>
                     </Box>
                   </Box>
+                  {!isEditing && (
                   <Box
                   sx={{
                     gridRow:"1/7",
@@ -400,14 +406,14 @@ const BookingForm:React.FC<BookingFormProps>=({
                         overflowY:"auto",
                         background: "rgba(20, 34, 64, 0.7)",
                         borderRadius: "6px",
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.7)",
-                      backdropFilter: "blur(10px)",
-                      WebkitBackdropFilter: "blur(10px)",
-                      border: "1px solid rgba(0, 0, 0, 0.85)",
-                      height:"100%",
-                      p:1,
-                      gap:2,
-                    }}
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.7)",
+                        backdropFilter: "blur(10px)",
+                        WebkitBackdropFilter: "blur(10px)",
+                        border: "1px solid rgba(0, 0, 0, 0.85)",
+                        height:"100%",
+                        p:1,
+                        gap:2,
+                      }}
                     >
                       <Box
                       sx={{
@@ -432,18 +438,26 @@ const BookingForm:React.FC<BookingFormProps>=({
                     </Box>
                     
                   </Box>
+                  )}
                   <Box
                   sx={{
                     gridRow:"6/7",
-                    gridColumn:"2/3",
+                    gridColumn: !isEditing ? "2/3" : "1/5",
+                    ...(isEditing && {
+                      display:"flex",
+                      // alignItems:"center",
+                      // justifyContent:"center",
+                      width:"100%",
+                    }),
                     p:1,
-                    
                   }}
                   >
                     <Box
                     sx={{
+                      flexGrow:1,
                       display:"flex",
                       alignItems:"center",
+                      justifyContent:"center",
                       gap:2,
                       background: "rgba(0, 0, 0, 0.45)",
                       borderRadius: "6px",
@@ -459,8 +473,10 @@ const BookingForm:React.FC<BookingFormProps>=({
                     variant="contained"
                     color="primary"
                     type="submit"
+                    disabled={formik.isSubmitting}
                     sx={{
                       height:"2rem",
+                      width:!isEditing ? "100%" : "20rem",
                     }}
                     >
                       {isEditing ? "Editar" : "Guardar"}
@@ -472,6 +488,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                     onClick={handleClose}
                     sx={{
                       height:"2rem",
+                      width:!isEditing ? "100%" : "20rem",
                     }}
                     >
                       Cancelar
