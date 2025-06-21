@@ -38,7 +38,6 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
   const {getCancellationPolicyInfoById,cancellationPolicy}=useCancellationConditionContext();
   const {getTourTypeInfoById}=useTourTypeContext();
   const {getTouristDestinationInfoById}=useTouristDestinationContext();
-  const {getPaymentInfoByIds}=usePaymentContext();
   const {getTouristInfoByIds}=useTouristContext();
   const {getUserById}=useUserContext();
   const [tourPackageInfo,setTourPackageInfo]=useState<TourPackageType | null>(null)
@@ -76,8 +75,7 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
     setTouristDestination(td)
   }
 
-  const getPayments=(ids:string[])=>{
-    const payments=getPaymentInfoByIds(ids)
+  const getPayments=(payments:PaymentType[])=>{
     setPayments(payments)
   }
 
@@ -106,7 +104,7 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
     getCancellationPolicyInfo(tourPackageInfo?.cancellationPolicy??"")
     getTourType(tourPackageInfo?.tourType??"")
     getTouristDestination(tourPackageInfo?.touristDestination??"")
-    getPayments(booking.paymentIds??[])
+    getPayments(booking.payments??[])
   },[booking,tourPackageInfo])
 
   return (

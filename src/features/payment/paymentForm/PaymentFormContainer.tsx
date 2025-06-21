@@ -1,66 +1,81 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { BookingType } from "../../booking/types/BookingType";
 import PaymentForm from "./PaymentForm";
-import { PaymentInfoType } from "../../booking/types/PaymentType";
-import { usePaymentContext } from "../context/PaymentContext";
-import { paymentInfoSchema } from "../../booking/bookingForm/validation/paymentInfoSchema";
 import { useFormik } from "formik";
-import { paymentSchema } from "./validation/PaymentSchema";
+import { paymentSchema } from "./validation/paymentSchema";
 import DialogAlert from "./DialogAlert";
+import { useTouristContext } from "../../tourist/context/TouristContext";
+import { TouristType } from "../../booking/types/TouristType";
+import dayjs from "dayjs";
+import { usePaymentContext } from "../context/PaymentContext";
 
 interface PaymentFormContainerProps {
     open: boolean;
     onClose: () => void;
     booking: BookingType;
+    balance:number;
 }
 
-const DEFAULT_PAYMENT: PaymentInfoType = {
-  id: "",
-  amount: 0,
-  paymentDate: new Date().toISOString(),
-  paymentMethod: "cash",
-  transactionId: "",
-};
-
 export interface PaymentFormContainerValues{
-    id?: string;
     amount: number;
     paymentDate: string;
     paymentMethod: string;
-    transactionId: string;
+    paymentProofImage: File | null;
+    touristId:string;
 }
 
-const paymentMethods = [
+const paymentMethods = [  
     { value: "cash", label: "Efectivo" },
     { value: "bank_transfer", label: "Transferencia Bancaria" },
 ];
 
-const PaymentFormContainer:React.FC<PaymentFormContainerProps> = ({open, onClose, booking}: PaymentFormContainerProps) => {
-  const [bookingPayments, setBookingPayments] = useState<PaymentInfoType[]>([]);
-  const {getPaymentInfoByIds, getTotalPaid, createPayment}=usePaymentContext();
+const PaymentFormContainer:React.FC<PaymentFormContainerProps> = ({
+  open, 
+  onClose, 
+  booking,
+  balance
+}: PaymentFormContainerProps) => {
   const [openDialogAlert, setOpenDialogAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
+  const {getTouristInfoById}=useTouristContext();
+  const [touristsInfo, setTouristsInfo] = useState<TouristType[]>([]);
 
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [fileSelected, setFileSelected] = useState<File | null>(null);
+  const {createPayment}=usePaymentContext();
 
-  const calculateTotalPaid =()=>{
-    const total = bookingPayments.reduce((acc,payment)=>acc+payment.amount,0)
-    return total;
+  const handleFileChange = (event:ChangeEvent<HTMLInputElement>)=>{
+    const file = event.target.files?.[0];
+    if(!file){
+      return;
+    }
+    setFileSelected(file);
+    formik.setFieldValue("paymentProofImage",file);
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewImage(objectUrl);
   }
 
+const getTourists =()=>{
+  const tourists=booking.touristIds
+    .map(
+      (touristId)=>
+        getTouristInfoById(touristId))
+    .filter((tourist)=>tourist!==null);
+  setTouristsInfo(tourists);
+}
+
   const handleAmountChange = (amount: number) => {
-    const willExceedTotal = calculateTotalPaid() + amount > booking.totalPrice;
+    const willExceedTotal = amount > booking.totalPrice - balance;
     if(willExceedTotal){
-      // formik.setFieldError("amount", "El pago excede el precio total");
       setAlertMessage(
-        `La reserva tiene un saldo de ${booking.totalPrice - calculateTotalPaid()} Bs, el pago que intentas ingresar de ${amount} Bs, excede el saldo por ${calculateTotalPaid() + amount - booking.totalPrice} Bs.`
+        `La reserva tiene un saldo de ${booking.totalPrice - balance} Bs, el pago que intentas ingresar de ${amount} Bs, excede el saldo por ${amount - (booking.totalPrice - balance)} Bs.`
       );
       setOpenDialogAlert(true);
       formik.setFieldValue("amount", 0);
     }else{
-      // formik.setFieldError("amount", "");
       formik.setFieldValue("amount", amount);
     }
-      };
+  };
 
   const handleDateChange = (date: string) => {
     formik.setFieldValue("paymentDate", date);
@@ -70,14 +85,18 @@ const PaymentFormContainer:React.FC<PaymentFormContainerProps> = ({open, onClose
     formik.setFieldValue("paymentMethod", method);
   };
 
-  const getBookingPayments=()=>{
-    const payments = getPaymentInfoByIds(booking.paymentIds ?? []);
-    setBookingPayments(payments);
-  }
-
   const onSubmit = async(values:PaymentFormContainerValues)=>{
+    if(!booking.id){
+      console.error("No se encontro el id de la reserva");
+      return;
+    }
     try {
-      await createPayment({...values, bookingId: booking.id});
+      const paymentTocreate = {
+        ...values,
+        bookingId: booking.id,
+        paymentProofFolder:booking.paymentProofFolder,
+      }
+      await createPayment(paymentTocreate);
     } catch (error) {
       console.error('Error al guardar el pago:', error);
     }finally{
@@ -87,30 +106,35 @@ const PaymentFormContainer:React.FC<PaymentFormContainerProps> = ({open, onClose
 
   const formik = useFormik<PaymentFormContainerValues>({
     initialValues: {
-      id: "",
       amount: 0,
-      paymentDate: new Date().toISOString(),
+      paymentDate: dayjs().format("DD/MM/YYYY"),
       paymentMethod: "cash",
-      transactionId: "",
+      paymentProofImage: null,
+      touristId:touristsInfo[0]?.id||"",
     },
     validationSchema: paymentSchema,
-    onSubmit
+    onSubmit,
+    enableReinitialize:true,
   });
 
   useEffect(() => {
-    getBookingPayments();
-    // calculateTotalPaid();
+    getTourists();
   }, [booking]);
 
   return <>
     <PaymentForm 
       open={open} 
-  onClose={onClose} 
-  formik={formik} 
-  paymentMethods={paymentMethods} 
-  handleMethodChange={handleMethodChange}
-  handleAmountChange={handleAmountChange}
-  handleDateChange={handleDateChange}/>
+      onClose={onClose} 
+      formik={formik} 
+      paymentMethods={paymentMethods} 
+      handleMethodChange={handleMethodChange}
+      handleAmountChange={handleAmountChange}
+      handleDateChange={handleDateChange}
+      tourists={touristsInfo}
+      handleFileChange={handleFileChange}
+      previewImage={previewImage}
+      fileSelected={fileSelected}
+    />
   {
   openDialogAlert && 
   <DialogAlert 

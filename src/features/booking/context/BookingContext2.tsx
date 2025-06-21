@@ -1,14 +1,23 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { BookingType } from "../types/BookingType";
-import { createBookingRequest, getAllBookingsRequest, updateBookingRequest } from "../service/bookingService";
+import {
+  createBookingRequest,
+  getAllBookingsRequest,
+  updateBookingRequest,
+} from "../service/bookingService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useTouristContext } from "../../tourist/context/TouristContext";
-import { usePaymentContext } from "../../payment/context/PaymentContext";
-import { BookingFormValues } from '../bookingForm2/BookingFormContainer';
+import { BookingFormValues } from "../bookingForm2/BookingFormContainer";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../userManagement/types/User";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
@@ -18,8 +27,10 @@ interface BookingContextType2 {
   loading: boolean;
   error: string | null;
   getBookingById: (id: string) => BookingType | null;
-  createBooking:(booking:BookingFormValues)=>Promise<void>
-  updateBooking:(booking:any)=>Promise<void>
+  createBooking: (booking: BookingFormValues) => Promise<void>;
+  updateBooking: (booking: any) => Promise<void>;
+  setBookings: (bookings: BookingType[]) => void;
+  addPaymentToBooking: (payment: PaymentType) => void;
 }
 
 const BookingContext = createContext<BookingContextType2 | null>(null);
@@ -41,81 +52,72 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const {addTouristFromBooking} = useTouristContext();
-  const {addPaymentFromBooking} = usePaymentContext();
+  const { addTouristFromBooking } = useTouristContext();
 
-  const createBooking = async (booking:BookingFormValues): Promise<void> => {
+  const addPaymentToBooking = (payment: PaymentType) => {
+    setBookings((prevBookings) =>
+      prevBookings.map((booking) => {
+        if (booking.id === payment.bookingId) {
+          // Verificamos si ya existe ese pago para evitar duplicados
+          const alreadyExists = booking.payments.some((p) => p.id === payment.id);
+          if (!alreadyExists) {
+            return {
+              ...booking,
+              payments: [...booking.payments, payment],
+            };
+          }
+        }
+        return booking;
+      })
+    );
+  };
+
+  const createBooking = async (booking: BookingFormValues): Promise<void> => {
     const token = TokenService.getToken();
     if (!token) {
       showSnackbar("Error al crear la reserva", "error");
       return;
     }
-    const seller:User = jwtDecode(token)
-    const tourists = [...booking.additionalTourists,booking.mainTourist]
-    const paymentProofFolder=uuidv4()
+
+    const seller: User = jwtDecode(token);
+    const tourists = [...booking.additionalTourists, booking.mainTourist];
+    const paymentProofFolder = uuidv4();
+
     const formData = new FormData();
-    formData.append("tourPackageId",booking.tourPackageId);
-    formData.append("dateRangeId",booking.dateRangeId);
-    formData.append("sellerId",seller.id);
-    formData.append("status","pending");
-    formData.append("totalPrice",booking.totalPrice.toString());
-    formData.append("notes",booking.notes ||"");
-    formData.append("paymentProofImage",booking.firstPayment.paymentProofImage);
-    formData.append("tourists",JSON.stringify(tourists));
-    formData.append("paymentProofFolder",paymentProofFolder);
-    formData.append("firstPayment",JSON.stringify({
-      amount:booking.firstPayment.amount,
-      paymentDate:booking.firstPayment.paymentDate,
+    formData.append("tourPackageId", booking.tourPackageId);
+    formData.append("dateRangeId", booking.dateRangeId);
+    formData.append("sellerId", seller.id);
+    formData.append("status", "pending");
+    formData.append("totalPrice", booking.totalPrice.toString());
+    formData.append("notes", booking.notes || "");
+    formData.append("paymentProofImage", booking.firstPayment.paymentProofImage);
+    formData.append("tourists", JSON.stringify(tourists));
+    formData.append("paymentProofFolder", paymentProofFolder);
+    formData.append("firstPayment", JSON.stringify({
+      amount: booking.firstPayment.amount,
+      paymentDate: booking.firstPayment.paymentDate,
       paymentMethod: booking.firstPayment.paymentMethod,
-      sellerId:seller.id,
-    }))
-    // for (const [key,value] of formData.entries()) {
-    //   console.log(`${key}: `,value);
-    // }
+      sellerId: seller.id,
+    }));
+
     setLoading(true);
     try {
       const response = await createBookingRequest(formData);
-      if (!response) {
-        console.warn("response is null");
-        setError("Error creating booking");
-        setLoading(false);
-        return;
-      }
-      if (response.error) {
-        setError(response.error);
-        setLoading(false);
+      if (!response || response.error) {
+        setError(response?.error || "Error creating booking");
         return;
       }
 
-      const tourists = response.tourists.map((tourist:any)=>addTouristFromBooking(tourist));
-      const payments = response.payments.map((payment:any)=>addPaymentFromBooking(payment));
+      const newTourists = response.tourists.map((t: any) => addTouristFromBooking(t));
+      const touristIds = newTourists.map((t: TouristType) => t.id);
 
-      // response.tourists.forEach((tourist:any)=>{
-      //   addTouristFromBooking(tourist);
-      // })
-
-      // response.payments.forEach((payment:any)=>{
-      //   addPaymentFromBooking(payment);
-      // })
-
-      const touristIds = tourists.map((tourist:TouristType)=>tourist.id);
-      const paymentIds = payments.map((payment:PaymentType)=>payment.id);
-
-      const apiBooking:BookingType = transformApiBooking({
-        id: response.id,
-        tourPackageId: response.tourPackageId,
-        dateRangeId: response.dateRangeId,
-        sellerId: response.sellerId,
-        touristIds:touristIds,
-        totalPrice: response.totalPrice,
-        paymentIds: paymentIds,
-        notes: response.notes,
-        status: response.status,
-        paymentProofFolder:response.paymentProofFolder
+      const newBooking: BookingType = transformApiBooking({
+        ...response,
+        touristIds,
       });
-      setBookings([...bookings, apiBooking]);
+
+      setBookings((prev) => [...prev, newBooking]);
       showSnackbar("Reserva creada exitosamente", "success");
-      setLoading(false);
     } catch (error) {
       console.error("Error creating booking", error);
       setError("Failed to create booking");
@@ -125,51 +127,38 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
     }
   };
 
-  const updateBooking = async (booking:any): Promise<void> => {
+  const updateBooking = async (booking: any): Promise<void> => {
     setLoading(true);
-    const tourists = [...booking.additionalTourists,booking.mainTourist]
-    const bookingToUpdate:UpdateBookingType = {
+    const tourists = [...booking.additionalTourists, booking.mainTourist];
+    const bookingToUpdate: UpdateBookingType = {
       totalPrice: booking.totalPrice,
       notes: booking.notes,
-      status: booking.status??"pending",
-      tourists:tourists,
-    }
+      status: booking.status ?? "pending",
+      tourists,
+    };
+
     try {
       const response = await updateBookingRequest(booking.id, bookingToUpdate);
-      if (!response) {
-        console.warn("response is null");
-        setError("Error updating booking");
-        setLoading(false);
+      if (!response || response.error) {
+        setError(response?.error || "Error updating booking");
         return;
       }
-      if (response.error) {
-        setError(response.error);
-        setLoading(false);
-        return;
-      }
-      const updatedTouristIds = response.tourists.map((tourists:any)=>addTouristFromBooking(tourists).id)
-      const bookingFound = bookings.find((booking) => booking.id === response.id);
-      if (!bookingFound) {
-        console.warn("bookingFound is null");
-        setError("Error updating booking");
-        setLoading(false);
-        return;
-      }
-      const transformedBooking = transformApiBooking({
-        ...bookingFound,
-        notes:booking.notes,
-        status:booking.status,
-        totalPrice:booking.totalPrice,
-        touristIds:updatedTouristIds,
-      })
-      setBookings(
-        (prevBookings)=>
-          prevBookings.map((booking)=>
-            booking.id===response.id?transformedBooking:booking
-          )
-      )
+
+      const updatedTouristIds = response.tourists.map((t: any) => addTouristFromBooking(t).id);
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === response.id
+            ? transformApiBooking({
+                ...b,
+                notes: booking.notes,
+                status: booking.status,
+                totalPrice: booking.totalPrice,
+                touristIds: updatedTouristIds,
+              })
+            : b
+        )
+      );
       showSnackbar("Reserva actualizada exitosamente", "success");
-      // setLoading(false);
     } catch (error) {
       console.error("Error updating booking", error);
       setError("Failed to update booking");
@@ -183,7 +172,7 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
     setLoading(true);
     try {
       const response = await getAllBookingsRequest();
-      const transformedBookings = response.map((booking:any)=>transformApiBooking(booking));
+      const transformedBookings = response.map((b: any) => transformApiBooking(b));
       setBookings(transformedBookings);
       setError(null);
     } catch (error) {
@@ -195,46 +184,45 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
   };
 
   const getBookingById = (id: string): BookingType | null => {
-    const bookingFound = bookings.find((booking) => booking.id === id);
+    const bookingFound = bookings.find((b) => b.id === id);
     if (!bookingFound) {
-      showSnackbar("No se encontro la reserva", "error");
+      showSnackbar("No se encontró la reserva", "error");
       return null;
     }
     return bookingFound;
   };
 
-const transformApiBooking = (apiBooking: any): BookingType => {
-  const booking:BookingType = {
+  const transformApiBooking = (apiBooking: any): BookingType => ({
     id: apiBooking.id,
     tourPackageId: apiBooking.tourPackageId,
     dateRangeId: apiBooking.dateRangeId,
     sellerId: apiBooking.sellerId,
-    touristIds:apiBooking.touristIds,
+    touristIds: apiBooking.touristIds,
     totalPrice: apiBooking.totalPrice,
-    paymentIds: apiBooking.paymentIds,
+    payments: apiBooking.payments,
     notes: apiBooking.notes,
     status: apiBooking.status,
-    paymentProofFolder:apiBooking.paymentProofFolder
-  };
-  return booking;
-}
+    paymentProofFolder: apiBooking.paymentProofFolder,
+  });
 
-useEffect(()=>{
-  fetchBookings();
-},[])
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
-return (
-  <BookingContext.Provider
-    value={{
-      bookings,
-      loading,
-      error,
-      getBookingById,
-      createBooking,
-      updateBooking
-    }}
-  >
-    {children}
-  </BookingContext.Provider>
-)
-}
+  return (
+    <BookingContext.Provider
+      value={{
+        bookings,
+        loading,
+        error,
+        getBookingById,
+        createBooking,
+        updateBooking,
+        addPaymentToBooking,
+        setBookings,
+      }}
+    >
+      {children}
+    </BookingContext.Provider>
+  );
+};

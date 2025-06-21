@@ -1,148 +1,109 @@
 import { useEffect, useState } from "react";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
+import { useBookingContext2 } from "../../context/BookingContext2";
 import { BookingType } from "../../types/BookingType";
 import BookingCard from "./BookingCard";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../types/TouristType";
 import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer2";
 import BookingFormContainer from "../../bookingForm2/BookingFormContainer";
-import { usePaymentContext } from "../../../payment/context/PaymentContext";
+import PaymentFormContainer from "../../../payment/paymentForm/PaymentFormContainer";
 
-interface BookingCardContainerProps{
-    booking:BookingType;
-    index:number;
+interface BookingCardContainerProps {
+  booking: BookingType;
+  index: number;
 }
-const BookingCardContainer:React.FC<BookingCardContainerProps>=({booking,index})=>{
-  const {getTourPackageInfoById}=useTourPackageContext()
-  const {getTouristInfoById,tourists}=useTouristContext()
-  const {getTotalPaid}=usePaymentContext()
-  const [openMoreInfo,setOpenMoreInfo]=useState(false);
-  const [tpInfo,setTpInfo]=useState<TourPackageType | null>(null);
-  const [mainTouristInfo,setMainTouristInfo]=useState<TouristType | null>(null);
-  const [balance,setBalance]=useState(0);
-  const [openEditForm,setOpenEditForm]=useState(false);
-  const [openPaymentForm,setOpenPaymentForm]=useState(false);
 
-  // console.log('booking::: ', booking);
+const BookingCardContainer: React.FC<BookingCardContainerProps> = ({ booking, index }) => {
+  const { getTourPackageInfoById } = useTourPackageContext();
+  const { getTouristInfoById } = useTouristContext();
+  const { bookings } = useBookingContext2();
 
-  const loadTourPackageInfo=()=>{
-    if(!booking){
-      return;
+  const [openMoreInfo, setOpenMoreInfo] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [openPaymentForm, setOpenPaymentForm] = useState(false);
+
+  const [tpInfo, setTpInfo] = useState<TourPackageType | null>(null);
+  const [mainTouristInfo, setMainTouristInfo] = useState<TouristType | null>(null);
+  const [balance, setBalance] = useState(0);
+  const [localBooking, setLocalBooking] = useState<BookingType | null>(null);
+
+  // Cargar datos de un booking dado
+  const loadBookingData = (booking: BookingType) => {
+    setLocalBooking(booking);
+    setTpInfo(getTourPackageInfoById(booking.tourPackageId) ?? null);
+    const mainTourist = booking.touristIds[0];
+    setMainTouristInfo(getTouristInfoById(mainTourist) ?? null);
+    calculateBalance(booking);
+  };
+
+  const calculateBalance = (booking: BookingType) => {
+    const totalPaid = booking.payments.reduce((acc, payment) => acc + payment.amount, 0);
+    setBalance(booking.totalPrice - totalPaid);
+  };
+
+  // Escuchar cambios en bookings del contexto
+  useEffect(() => {
+    const updatedBooking = bookings.find((b) => b.id === booking.id);
+    if (updatedBooking) {
+      loadBookingData(updatedBooking);
     }
-    const tp=getTourPackageInfoById(booking.tourPackageId);
-    if(!tp){
-      return;
-    }
-    setTpInfo(tp);
-  }
+  }, [bookings]);
 
-  const loadMainTouristInfo=()=>{
-    if(!booking){
-      return;
-    }
-    if(!booking.touristIds || booking.touristIds.length === 0){
-      return;
-    }
-    const touristId=booking.touristIds[0];
-    const tourist=getTouristInfoById(touristId);
-    if(!tourist){
-      return;
-    }
-    setMainTouristInfo(tourist);
-  }
-
-
-
-  const handleOpenMoreInfoClick=()=>{
-    setOpenMoreInfo(true);
-  }
-
-  const handleCloseMoreInfoClick=()=>{
-    setOpenMoreInfo(false);
-  }
-
-  const handleOpenEditForm=()=>{
-    setOpenEditForm(true);
-  }
-
-  const handleCloseEditForm=()=>{
-    setOpenEditForm(false);
-  }
-
-  const handleOpenPaymentForm=()=>{
-    setOpenPaymentForm(true);
-  }
-
-  const handleClosePaymentForm=()=>{
-    setOpenPaymentForm(false);
-  }
-
-  const handleMenuOptions=(option:string)=>{
+  const handleMenuOptions = (option: string) => {
     switch (option) {
       case "Ver detalles":
-        handleOpenMoreInfoClick();
+        setOpenMoreInfo(true);
         break;
       case "Editar":
-        handleOpenEditForm();
+        setOpenEditForm(true);
         break;
       case "Registrar pago":
-        handleOpenPaymentForm();
+        setOpenPaymentForm(true);
         break;
       default:
-        console.log("Opcion invalida");
-        break;
+        console.warn("Opción inválida");
     }
-  }
+  };
 
-  const loadBalance=()=>{
-    if(!booking){
-      return;
-    }
-    const totalPaid=getTotalPaid(booking.paymentIds);
-    const balance=booking.totalPrice-totalPaid;
-    setBalance(balance);
-  }
-
-  useEffect(()=>{
-    loadTourPackageInfo();
-    loadMainTouristInfo();
-    loadBalance();
-  },[booking,tourists]);
-
-    return(
-      <>  
-        <BookingCard 
-        booking={booking} 
-        index={index}
-        tpInfo={tpInfo}
-        mainTouristInfo={mainTouristInfo}
-        balance={balance}
-        handleMenuOptions={handleMenuOptions}
-        />
-        {openMoreInfo && (
-          <MoreInfoDialogContainer2
-          open={openMoreInfo}
-          handleClose={handleCloseMoreInfoClick}
-          booking={booking}
+  return (
+    <>
+      {localBooking && (
+        <BookingCard
+          booking={localBooking}
+          index={index}
+          tpInfo={tpInfo}
+          mainTouristInfo={mainTouristInfo}
           balance={balance}
-          />
-        )}
-        {openEditForm && (
-          <BookingFormContainer
+          handleMenuOptions={handleMenuOptions}
+        />
+      )}
+      {openMoreInfo && localBooking && (
+        <MoreInfoDialogContainer2
+          open={openMoreInfo}
+          handleClose={() => setOpenMoreInfo(false)}
+          booking={localBooking}
+          balance={balance}
+        />
+      )}
+      {openEditForm && localBooking && (
+        <BookingFormContainer
           open={openEditForm}
-          handleClose={handleCloseEditForm}
-          booking={booking}
-          />
-        )}
-        {/* {openPaymentForm && (
-          <PaymentFormContainer
+          handleClose={() => setOpenEditForm(false)}
+          booking={localBooking}
+        />
+      )}
+      {openPaymentForm && localBooking && (
+        <PaymentFormContainer
           open={openPaymentForm}
-          onClose={handleClosePaymentForm}
-          booking={booking}
-          />
-        )} */}
-      </>
-    )
-}
+          onClose={() => setOpenPaymentForm(false)}
+          booking={localBooking}
+          balance={balance}
+        />
+      )}
+    </>
+  );
+};
+
 export default BookingCardContainer;

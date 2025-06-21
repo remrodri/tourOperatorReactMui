@@ -6,15 +6,24 @@ import BookingCardMenu from "./BookingCardMenu";
 
 
 interface BookingCardProps{
-    booking:BookingType;
+    booking:BookingType | null;
     index:number;
     tpInfo:TourPackageType | null;
     mainTouristInfo:TouristType | null;
     balance:number;
     handleMenuOptions:(option:string)=>void;
+    // getBalance:(booking:BookingType)=>number;
 }
-const BookingCard:React.FC<BookingCardProps>=({booking,index,tpInfo,mainTouristInfo,balance,handleMenuOptions})=>{
-    
+const BookingCard:React.FC<BookingCardProps>=({
+  booking,
+  index,
+  tpInfo,
+  mainTouristInfo,
+  balance,
+  handleMenuOptions,
+  // getBalance
+})=>{
+  //   console.log('booking::: ', booking);
   // console.log('tpInfo::: ', tpInfo);
   // console.log('mainTouristInfo::: ', mainTouristInfo);
   // console.log('balance::: ', balance);

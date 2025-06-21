@@ -16,6 +16,8 @@ import { useTouristDestinationContext } from "../../touristDestination/context/T
 import { useBookingContext2 } from "../context/BookingContext2";
 import { usePaymentContext } from "../../payment/context/PaymentContext";
 import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext";
+import { useCancellationConditionContext } from "../../cancellationPolicy/context/CancellationPolicyContext";
+import { CancellationPolicy } from "../../cancellationPolicy/types/CancellationPolicy";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("es");
@@ -73,9 +75,22 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
   const [alertMessage,setAlertMessage]=useState<string>("");
   const [destinationImages,setDestinationImages]=useState<(string|File)[]>([]);
   const {createBooking,updateBooking}=useBookingContext2()
-  const {getTotalPaid}=usePaymentContext()
+  // const {getTotalPaid}=usePaymentContext()
   const [totalPrice,setTotalPrice]=useState<number>(0);
+  const{getCancellationPolicyInfoById} = useCancellationConditionContext()
 
+  const loadMinimumAmount=()=>{
+    if(!tourPackageSelected){
+      return 0;
+    }
+    const cancellationPolicy=getCancellationPolicyInfoById(tourPackageSelected.cancellationPolicy);
+    if(!cancellationPolicy){
+      return 0;
+    }
+    const percentage = cancellationPolicy.refoundPercentage/100;
+    const amount = percentage * totalPrice;
+    formik.setFieldValue("firstPayment.amount",amount);
+  }
 
   const loadGallery=(tourPackage:TourPackageType)=>{
     if(tourPackage?.touristDestination){
@@ -94,11 +109,13 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
   //   const totalPaid=payments.reduce((total,payment)=>total+payment.amount,0);
   //   return totalPaid;
   // }
+  
 
   const handleAmountChange=(amount:number)=>{
-    const willExccedTotal= amount+getTotalPaid(booking?.paymentIds || []) > formik.values.totalPrice;
-    if(willExccedTotal){
-      setAlertMessage("El monto excede el total");
+    const totalPaid=booking?.payments.reduce((total,payment)=>total+payment.amount,0);
+    const willExceedTotal= amount+(totalPaid || 0) > formik.values.totalPrice;
+    if(willExceedTotal){
+      setAlertMessage("El monto excede el saldo");
       setOpenAlert(true);
       formik.setFieldValue('firstPayment.amount',0);
       setTimeout(()=>{
@@ -208,15 +225,15 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     // return additionalTourists;
   }
 
-  const onSubmit=(values:BookingFormValues)=>{
+  const onSubmit=async(values:BookingFormValues)=>{
     console.log('formik.errors::: ', formik.errors);
     console.log('values::: ', values);
     if(isEditing){
       // console.log('actualizar values::: ', values);
-      updateBooking(values);
+      await updateBooking(values);
     }else{
       // console.log('crear values::: ', values);
-      createBooking(values);
+      await createBooking(values);
     }
     handleClose();
   }
@@ -265,6 +282,7 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     if(!tourPackageSelected){
       return;
     }
+    // formik.setFieldValue("firstPayment.amount",booking.totalPrice);
     // loadGallery(tourPackageSelected);
   },[booking]);
 
@@ -307,3 +325,5 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
 }
 
 export default BookingFormContainer;
+
+
