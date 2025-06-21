@@ -52,6 +52,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
     }
     return cpFound;
   };
+  
   const getCancellationPolicyById = (id: string) => {
     const cpFound = cancellationPolicy.find((cp) => cp.id === id);
     if (!cpFound) {

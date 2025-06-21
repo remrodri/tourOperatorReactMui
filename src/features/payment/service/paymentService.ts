@@ -1,12 +1,13 @@
 import axiosInstance from "../../../config/axiosConfig";
-import { PaymentType } from "../../booking/types/PaymentType";
 
 const url = "/payments";
 
-export const createPaymentRequest = async (payment: PaymentType) => {
-  console.log('payment::: ', payment);
+export const createPaymentRequest = async (payment: FormData) => {
+  // for (const [key,value] of payment.entries()) {
+  //   console.log(`${key}: `,value);
+  // }
   const response = await axiosInstance.post(url, payment);
-  console.log('response::: ', response);
+  // console.log('response::: ', response);
   return response.data.data;
 };
 

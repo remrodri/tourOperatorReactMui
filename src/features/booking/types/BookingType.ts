@@ -8,7 +8,8 @@ export interface BookingType {
   sellerId: string;
   touristIds:string[];
   totalPrice: number;
-  paymentIds: string[];
+  // paymentIds: string[];
+  payments:PaymentType[];
   notes: string;
   status: "pending" | "paid" | "cancelled" | "completed";
   paymentProofFolder:string;

@@ -71,6 +71,7 @@ const PaymentForm:React.FC<PaymentFormProps>=({
             </Typography>
             </Box>
             <TextField
+                // defaultValue={minimumAmount}
                 size="small"
                 fullWidth
                 label="Monto"
