@@ -13,4 +13,5 @@ export interface BookingType {
   notes: string;
   status: "pending" | "paid" | "cancelled" | "completed";
   paymentProofFolder:string;
+  createdAt: string;
 }

@@ -206,6 +206,9 @@ export default function MainDrawer() {
       case "Reservas":
         navigate("reservas/todos");
         break;
+      case "Reportes":
+        navigate("reportes/dashboard");
+        break;
       default:
         console.warn("la ruta no existe");
         break;
@@ -256,6 +259,7 @@ export default function MainDrawer() {
     if (path.includes("paquetes-turisticos/destinos"))
       setSelectedOption("Destinos");
     if (path.includes("reservas/todos")) setSelectedOption("Reservas");
+    if (path.includes("reportes/dashboard")) setSelectedOption("Reportes");
     // if (path.includes("home")) setSelectedOption("Home");
   }, [location.pathname]);
 
@@ -568,6 +572,39 @@ export default function MainDrawer() {
               </Tooltip>
             </List>
           </Collapse>
+        </List>
+        <Divider />
+        <List>
+        <Tooltip title="Reportes" placement="right">
+                <ListItemButton
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Reportes"
+                        ? "rgba(172, 170, 164, 0.27)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedOption === "Reportes"
+                          ? "rgba(255, 255, 255, 0.12)"
+                          : "rgba(172, 170, 164, 0.27)",
+                    },
+                  }}
+                  onClick={() => handleClick("Reportes")}
+                >
+                  <ListItemIcon>
+                    <ListAltIcon
+                      sx={{
+                        color:
+                          selectedOption === "Reportes"
+                            ? "#90caf9"
+                            : "inherit",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Ver todos" : ""} />
+                </ListItemButton>
+              </Tooltip>
         </List>
       </Drawer>
       <Box

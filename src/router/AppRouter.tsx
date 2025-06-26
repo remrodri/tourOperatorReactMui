@@ -16,6 +16,8 @@ import TouristDestinationShowcaseContainer from "../features/touristDestination/
 import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
 import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/showcase/BookingShowcaseContainer";
+import ReportsPage from "../pages/ReportsPage";
+import DashboardContainer from "../features/reports/dashboard/DashboardContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -112,6 +114,11 @@ export const AppRouter = createBrowserRouter(
           path: "reservas",
           element: <BookingPage />,
           children: [{ path: "todos", element: <BookingShowcaseContainer /> }],
+        },
+        {
+          path: "reportes",
+          element: <ReportsPage />,
+          children: [{ path: "dashboard", element: <DashboardContainer /> }],
         },
       ],
     },

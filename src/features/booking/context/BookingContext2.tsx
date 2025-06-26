@@ -203,6 +203,7 @@ export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) =
     notes: apiBooking.notes,
     status: apiBooking.status,
     paymentProofFolder: apiBooking.paymentProofFolder,
+    createdAt: apiBooking.createdAt,
   });
 
   useEffect(() => {
