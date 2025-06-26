@@ -11,6 +11,7 @@ const userManagementBackground = "/src/assets/images/userManagement.webp";
 const homeBackground = "/src/assets/images/home.webp";
 const tourPackageBackground = "/src/assets/images/tourPackage.webp";
 const bookingBackground = "/src/assets/images/booking.webp";
+const reportsBackground = "/src/assets/images/reports.webp";
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const MainLayout: React.FC = () => {
     ["/gestion-de-usuarios"]: userManagementBackground,
     ["/gestion-de-paquetes-turisticos"]: tourPackageBackground,
     ["/reservas"]: bookingBackground,
-
+    ["/reportes"]: reportsBackground,
     // ["/configuracion-de-seguridad"]: securitySetupBackground,
   };
 
@@ -46,6 +47,9 @@ const MainLayout: React.FC = () => {
     }
     if (location.pathname.includes("reservas")) {
       setBackgroundImg(bookingBackground);
+    }
+    if (location.pathname.includes("reportes")) {
+      setBackgroundImg(reportsBackground);
     }
     // if (location.pathname.includes("/configuracion-de-seguridad")) {
     //   setBackgroundImg(securitySetupBackground);
