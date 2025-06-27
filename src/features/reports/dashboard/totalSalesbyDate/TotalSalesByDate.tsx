@@ -7,6 +7,7 @@ interface TotalSalesByDateProps {
     countedBookings: any[];
     loading: boolean;
     error: string | null;
+    mountsByMonth: any[];
 }
 const TotalSalesByDate: React.FC<TotalSalesByDateProps> = ({
     handleChange,
@@ -14,7 +15,8 @@ const TotalSalesByDate: React.FC<TotalSalesByDateProps> = ({
     year,
     countedBookings,
     loading,
-    error
+    error,
+    mountsByMonth
 }) => {
     return (
         <Box
@@ -71,6 +73,7 @@ const TotalSalesByDate: React.FC<TotalSalesByDateProps> = ({
             key={year + "-" + JSON.stringify(countedBookings)}
             year={year}
             countedBookings={countedBookings}
+            mountsByMonth={mountsByMonth}
             />
             </Box>
           
