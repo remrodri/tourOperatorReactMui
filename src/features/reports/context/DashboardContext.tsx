@@ -5,6 +5,7 @@ import { useTourPackageContext } from "../../tourPackage/context/TourPackageCont
 import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
 import { BookingType } from "../../booking/types/BookingType";
+import dayjs from "dayjs";
 interface DashboardContextType {
   loading: boolean;
   error: string | null;
@@ -12,7 +13,34 @@ interface DashboardContextType {
   touristDestinations: any[];
   tourPackages: any[];
   touristDestinationWithBookings: any[];
+  totalBookings: number;
+  getBokingsByYear: (year: string) => void;
+  countedBookings: any[];
+  yearSelected: string;
+  getBookingsByMonth: () => void;
+  getBookingsByTouristDestination: () => void;
+  bookingsByTouristDestination:{name:string,value:number}[];
 }
+
+interface Month {
+  name: string;
+  counts: number[];
+}
+// Inicializar months vacío y nuevo en cada ejecución
+const months: Month[] = [
+  { name: 'Ene', counts: [] },
+  { name: 'Feb', counts: [] },
+  { name: 'Mar', counts: [] },
+  { name: 'Abr', counts: [] },
+  { name: 'May', counts: [] },
+  { name: 'Jun', counts: [] },
+  { name: 'Jul', counts: [] },
+  { name: 'Ago', counts: [] },
+  { name: 'Sep', counts: [] },
+  { name: 'Oct', counts: [] },
+  { name: 'Nov', counts: [] },
+  { name: 'Dic', counts: [] }
+];
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
 
@@ -35,6 +63,59 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
   const {touristDestinations}=useTouristDestinationContext();
   const {tourPackages}=useTourPackageContext();
   const [touristDestinationWithBookings,setTouristDestinationWithBookings]=useState<any>([])
+  const [countedBookings,setCountedBookings]=useState<any>([])
+  const [yearSelected,setYearSelected]=useState<string>(new Date().getFullYear().toString());
+  const [totalBookings,setTotalBookings]=useState<number>(0);
+  const [bookingsByTouristDestination,setBookingsByTouristDestination]=useState<any>([])
+
+  const getBookingsByTouristDestination = () => {
+    try {
+      setLoading(true);
+      const res = touristDestinationWithBookings.map((td:any)=>{
+        // const bookingCount = td.filteredBookings.length;
+        return {name:td.name,value:td.filteredBookings.length}
+      })
+      setBookingsByTouristDestination(res);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setError(error as string);
+    }
+  }
+
+  const getBookingsByMonth = () => {
+    try {
+          setLoading(true);
+          touristDestinationWithBookings.forEach((destination: any) => {
+            const monthCounts = new Array(12).fill(0); // Inicializar para este destino
+            destination.filteredBookings.forEach((booking: BookingType) => {
+            const bookingDate = dayjs(booking.createdAt);
+            if (bookingDate.year() === Number(yearSelected)) {
+              const monthIndex = bookingDate.month(); // 0 = enero
+              monthCounts[monthIndex]++;
+            }
+            });
+                      // Agregar los conteos al arreglo months
+            monthCounts.forEach((value, index: number) => {
+              months[index].counts.push(value);
+            });
+          });
+          setCountedBookings(months);
+          setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setError(error as string);
+    }
+  };
+
+  const getBokingsByYear = (year: string) => {
+    const bookingsByYear = bookings.filter((booking: BookingType) => {
+      const bookingDate = dayjs(booking.createdAt);
+      return bookingDate.year() === Number(year);
+    });
+    // setCountedBookings(bookingsByYear);
+    setTotalBookings(bookingsByYear.length);
+  };
 
   const getTourPackageById = (id:string) => {
     const tourPackage = tourPackages.find((tourPackage:TourPackageType) => tourPackage.id === id)
@@ -56,7 +137,15 @@ const getTouristDestinationWithBookings = () => {
 
 useEffect(() => {
     getTouristDestinationWithBookings();
-}, [bookings]);
+    getBokingsByYear(yearSelected);
+}, [bookings,yearSelected]);
+
+useEffect(() => {
+    getBookingsByMonth();
+}, [yearSelected]);
+useEffect(() => {
+    getBookingsByTouristDestination();
+}, [touristDestinationWithBookings]);
 
 // console.log('touristDestinations::: ', touristDestinations);
 // const touristDestinationsCounted = touristDestinations.length;
@@ -68,7 +157,14 @@ return (
       bookings,
       touristDestinations,
       tourPackages,
-      touristDestinationWithBookings 
+      touristDestinationWithBookings,
+      totalBookings,
+      getBokingsByYear,
+      getBookingsByMonth,
+      getBookingsByTouristDestination,
+      bookingsByTouristDestination,
+      yearSelected,
+      countedBookings
       }}>
       {children}
     </DashboardContext.Provider>
