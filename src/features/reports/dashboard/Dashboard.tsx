@@ -7,6 +7,7 @@ import { BarChartThinBreakdown } from "./thinBreakdownBarChart/BarChartThinBreak
 import BarChartMultiVertical from "./totalSalesbyDate/multiVerticalBarChart/BarChartMultiVertical";
 import TotalSalesByDateContainer from "./totalSalesbyDate/TotalSalesByDateContainer";
 import { BookingType } from "../../booking/types/BookingType";
+import TotalSalesByYearContainer from "./totalSalesByYear/TotalSalesByYearContainer";
 
 interface DashboardProps {
     // bookings: BookingType[];
@@ -91,7 +92,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                       
                     }}
                   >
-                    <AnimatedDonutChart />
+                    {/* <AnimatedDonutChart /> */}
+                    <TotalSalesByYearContainer />
                   </Box>
                   {/* <Box
                     sx={{

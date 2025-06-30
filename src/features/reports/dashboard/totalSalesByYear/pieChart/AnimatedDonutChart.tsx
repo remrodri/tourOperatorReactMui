@@ -1,22 +1,29 @@
 import { pie, arc, PieArcDatum } from "d3";
 import { AnimatedSlice } from "./AnimatedSliace";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
+import { useDashboardContext } from "../../../context/DashboardContext";
 
 type Item = { name: string; value: number };
 const data: Item[] = [
-  { name: "AAPL", value: 23 },
-  { name: "BTC", value: 18 },
+  { name: "INCACHACA", value: 23 },
+  { name: "SALAR DE UYUNI", value: 18 },
   { name: "GOLD", value: 11 },
   { name: "PLTR", value: 9 },
   { name: "ADA", value: 7 },
   { name: "MSFT", value: 3 },
 ];
 
-export function AnimatedDonutChart({
-  singleColor,
-}: {
-  singleColor?: "purple" | "blue" | "fuchsia" | "yellow";
-}) {
+interface AnimatedDonutChartProps {
+    singleColor?: "purple" | "blue" | "fuchsia" | "yellow";
+    countedBookings: any[];
+}
+
+const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
+  singleColor,countedBookings
+}) => {
+  const {bookingsByTouristDestination}=useDashboardContext();
+  // console.log('bookingsByTouristDestination::: ', bookingsByTouristDestination);
+  // console.log('countedBookings::: ', countedBookings);
   const radius = 420; // Chart base dimensions
   const gap = 0.01; // Gap between slices
   const lightStrokeEffect = 10; // 3d light effect around the slice
@@ -43,7 +50,7 @@ export function AnimatedDonutChart({
   const labelRadius = radius * 0.825;
   const arcLabel = arc<PieArcDatum<Item>>().innerRadius(labelRadius).outerRadius(labelRadius);
 
-  const arcs = pieLayout(data);
+  const arcs = pieLayout(bookingsByTouristDestination);
 
   // Calculate the angle for each slice
   function computeAngle(d: PieArcDatum<Item>) {
@@ -63,7 +70,10 @@ export function AnimatedDonutChart({
   // console.log(arcs);
 
   return (
-    <div className="relative mt-4">
+    
+      
+      <div className="relative">
+      {/* Add a new div for centered text */}
       <svg
         viewBox={`-${radius} -${radius} ${radius * 2} ${radius * 2}`}
         className="max-w-[16rem] mx-auto overflow-visible"
@@ -92,22 +102,29 @@ export function AnimatedDonutChart({
               />
               {/* Labels with conditional rendering */}
               <g opacity={angle > minAngle ? 1 : 0}>
-                <text transform={`translate(${centroid})`} textAnchor="middle" fontSize={38}>
+                <text 
+                  transform={`translate(${centroid})`} 
+                  textAnchor="middle" 
+                  fontSize={47}
+                >
                   <tspan
+                  fillOpacity={0.7}
                     y="-0.4em"
                     fontWeight="600"
-                    fill={singleColor === "purple" ? "#eee" : "#444"}
+                    // fill={singleColor === "purple" ? "#eee" : "#444"}
+                    fill={singleColor === "purple" ? "#FFFFFF" : "#FFFFFF"}
                   >
                     {d.data.name}
                   </tspan>
                   {angle > minAngle && (
                     <tspan
+                    
                       x={0}
-                      y="0.7em"
-                      fillOpacity={0.7}
-                      fill={singleColor === "purple" ? "#eee" : "#444"}
+                      y="1em"
+                      // fillOpacity={0.7}
+                      fill={singleColor === "purple" ? "#FFFFFF" : "#FFFFFF"}
                     >
-                      {d.data.value.toLocaleString("en-US")}%
+                      {d.data.value.toLocaleString("en-US")}
                     </tspan>
                   )}
                 </text>
@@ -124,5 +141,7 @@ export function AnimatedDonutChart({
         })}
       </svg>
     </div>
+    
   );
 }
+export default AnimatedDonutChart;
