@@ -1,29 +1,54 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { scaleTime, scaleLinear, max, line as d3_line, curveNatural as d3_curveNatural } from "d3";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
+import dayjs from "dayjs";
 
-let sales = [
-  { date: "2023-01-01", value: 0 },
-  { date: "2023-02-01", value: 0 },
-  { date: "2023-03-01", value: 0 },
-  { date: "2023-04-01", value: 0 },
-  { date: "2023-05-01", value: 0 },
-  { date: "2023-06-01", value: 3 },
-  { date: "2023-07-01", value: 0 },
-  { date: "2023-08-01", value: 0 },
-  { date: "2023-09-01", value: 0 },
-  { date: "2023-10-01", value: 0 },
-  { date: "2023-11-01", value: 0 },
-  { date: "2023-12-31", value: 0 },
-];
-let data = sales.map((d) => ({ ...d, date: new Date(Date.UTC(Number(d.date.split("-")[0]), Number(d.date.split("-")[1]), Number(d.date.split("-")[2]))) }));
+interface LineChartPulseProps {
+    cumulativeBookings: { date: string; value: number }[];
+}
 
-export function LineChartPulse() {
+// let sales = [
+//   { date: "2023-04-30", value: 4 },
+//   { date: "2023-05-01", value: 6 },
+//   { date: "2023-05-02", value: 8 },
+//   { date: "2023-05-03", value: 7 },
+//   { date: "2023-05-04", value: 10 },
+//   { date: "2023-05-05", value: 12 },
+//   { date: "2023-05-06", value: 11 },
+//   { date: "2023-05-07", value: 8 },
+//   { date: "2023-05-08", value: 7 },
+//   { date: "2023-05-09", value: 9 },
+// ];
+// let data = sales.map((d) => ({ ...d, date: new Date(d.date) }));
+
+const LineChartPulse:React.FC<LineChartPulseProps> = ({ cumulativeBookings }) => {
+  const [data, setData] = useState<{date:Date,value:number}[]>([]);
+
+  const getData = ()=>{
+    const formatedDates = cumulativeBookings.map((d):{date:Date,value:number}=>({
+      date: dayjs(d.date).toDate(),
+      value: Number(d.value)
+    }))
+    .sort((a,b)=>a.date.getTime()-b.date.getTime())
+    setData(formatedDates)
+  }
+
+  useEffect(() => {
+    if(cumulativeBookings.length>0){
+      getData()
+    }
+  }, [cumulativeBookings]);
+  // console.log('cumulativeBookings::: ', cumulativeBookings);
+  // console.log('data::: ', data);
+
+  // let data = cumulativeBookings.map((d) => ({ ...d, date: new Date(Date.UTC(Number(d.date.split("-")[0]), Number(d.date.split("-")[1]), Number(d.date.split("-")[2]))) }));
+  // const data = cumulativeBookings.map((d) => ({ ...d, date: new Date(Date.UTC(Number(d.date.split("-")[0]), Number(d.date.split("-")[1]), Number(d.date.split("-")[2]))) }));
+  if(data.length===0) return null;
   let xScale = scaleTime()
     .domain([data[0].date, data[data.length - 1].date])
     .range([0, 100]);
   let yScale = scaleLinear()
-    .domain([0, max(data.map((d) => d.value)) ?? 0])
+    .domain([0, max(data.map((d) => Number(d.value))) ?? 0])
     .range([100, 0]);
 
   let line = d3_line<(typeof data)[number]>()
@@ -216,3 +241,4 @@ export function LineChartPulse() {
     </div>
   );
 }
+export default LineChartPulse

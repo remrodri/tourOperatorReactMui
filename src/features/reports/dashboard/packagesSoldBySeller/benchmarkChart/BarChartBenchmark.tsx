@@ -31,18 +31,18 @@ export function BarChartBenchmark() {
           return getTouristDestinationInfoById(tourPackage.touristDestination)?.name||""
         }
       }).filter((d)=>d!==null)
-      console.log('touristDestinations::: ', touristDestinations);
+      // console.log('touristDestinations::: ', touristDestinations);
 
       const uniqueDestinationNames = [...new Set(touristDestinations)]
-      console.log('uniqueDestinationNames::: ', uniqueDestinationNames);
+      // console.log('uniqueDestinationNames::: ', uniqueDestinationNames);
       const destinationsCounter = uniqueDestinationNames.map((destinationName:any)=>{
         const filteredBookings = touristDestinations.filter((d:any)=>d.includes(destinationName))
         return {name:destinationName,value:filteredBookings.length}
       })
-      console.log('destinationsCounter::: ', destinationsCounter);
+      // console.log('destinationsCounter::: ', destinationsCounter);
       return destinationsCounter
     })
-    console.log('touristDestinationInfos::: ', touristDestinationInfos);
+    // console.log('touristDestinationInfos::: ', touristDestinationInfos);
     if(touristDestinationInfos.length===0){
       return setData([])
     }
@@ -50,7 +50,7 @@ export function BarChartBenchmark() {
     for (let i = 0; i < packagesSoldBySeller.length; i++) {
       
       touristDestinationInfosWithDestinations.push({...packagesSoldBySeller[i],destinationsCounter:touristDestinationInfos[i]})
-      console.log('touristDestinationInfosWithDestinations::: ', touristDestinationInfosWithDestinations);
+      // console.log('touristDestinationInfosWithDestinations::: ', touristDestinationInfosWithDestinations);
     }
     setData(touristDestinationInfosWithDestinations)
   }
@@ -75,6 +75,7 @@ export function BarChartBenchmark() {
                     alignItems: "center",
                     gap: "0.5rem",
                   }}
+                  
                   >
                   <Box
                     sx={{
@@ -89,9 +90,8 @@ export function BarChartBenchmark() {
                     <Typography variant="body2">{d.name}</Typography>
                   </Box>
                 </div>
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5" >
                   <div
-                    key={index}
                     className="relative rounded-sm h-3 bg-gray-200 dark:bg-zinc-800 overflow-hidden w-full"
                   >
                     <div
@@ -136,8 +136,8 @@ export function BarChartBenchmark() {
               >
                 <Typography variant="body2">{d.name}</Typography>
                 <Typography variant="body2">Total vendidos: {d.value}</Typography>
-                {d.destinationsCounter.map((destination:any)=>{
-                  return <Typography variant="body2" sx={{color:"#B89DFB"}}>{destination.name}: {destination.value}</Typography>
+                {d.destinationsCounter.map((destination:any,index:any)=>{
+                  return <Typography variant="body2" sx={{color:"#B89DFB"}} key={index}>{destination.name}: {destination.value}</Typography>
                 })}
               </Box>
               </Box>

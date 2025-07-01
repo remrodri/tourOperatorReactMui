@@ -24,6 +24,8 @@ interface DashboardContextType {
   bookingsByTouristDestination:{name:string,value:number}[];
   packagesSoldBySeller:{name:string,value:number,img:string,bookings:BookingType[]}[];
   getPackagesSoldBySeller: () => void;
+  getCumulativeBookings: () => void;
+  cumulativeBookings: any[];
 }
 
 interface Month {
@@ -73,6 +75,31 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
   const [bookingsByTouristDestination,setBookingsByTouristDestination]=useState<any>([])
   const [packagesSoldBySeller,setPackagesSoldBySeller]=useState<{name:string,value:number,img:string,bookings:BookingType[]}[]>([])
   const {users}=useUserContext()
+  const [cumulativeBookings,setCumulativeBookings]=useState<any>([])
+
+  const getCumulativeBookings = ()=>{
+    try {
+      setLoading(true);
+      const bookingsByYear = bookings.filter((booking: BookingType) => {
+        const bookingDate = dayjs(booking.createdAt);
+        return bookingDate.year() === Number(yearSelected);
+      });
+      const dates = bookingsByYear.map((booking:BookingType)=>dayjs(booking.createdAt).format("YYYY-MM-DD"))
+      const uniqueDates = Array.from(new Set(dates))
+      // console.log('uniqueDates::: ', uniqueDates);
+      const res = uniqueDates.map((date:string)=>{
+        const bookingDate = dayjs(date);
+        const filteredBookings = bookingsByYear.filter((booking:BookingType)=>dayjs(booking.createdAt).format("YYYY-MM-DD")===bookingDate.format("YYYY-MM-DD"))
+        return {date:bookingDate.format("YYYY-MM-DD"),value:filteredBookings.length}
+      })
+      // console.log('res::: ', res);
+      setCumulativeBookings(res);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setError(error as string);
+    }
+  }
 
   const getPackagesSoldBySeller = () => {
     try {
@@ -114,6 +141,7 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
               const monthCounts = new Array(12).fill(0); // Inicializar para este destino
               destination.filteredBookings.forEach((booking: BookingType) => {
               const bookingDate = dayjs(booking.createdAt);
+              // console.log('bookingDate::: ', bookingDate);
               if (bookingDate.year() === Number(yearSelected)) {
                 const monthIndex = bookingDate.month(); // 0 = enero
                 monthCounts[monthIndex]++;
@@ -162,6 +190,7 @@ const getTouristDestinationWithBookings = () => {
 useEffect(() => {
     getTouristDestinationWithBookings();
     getBokingsByYear(yearSelected);
+    getCumulativeBookings();
 }, [bookings,yearSelected]);
 
 useEffect(() => {
@@ -193,7 +222,9 @@ return (
       yearSelected,
       countedBookings,
       getPackagesSoldBySeller,
-      packagesSoldBySeller
+      packagesSoldBySeller,
+      getCumulativeBookings,
+      cumulativeBookings
       }}>
       {children}
     </DashboardContext.Provider>

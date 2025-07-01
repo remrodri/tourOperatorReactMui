@@ -10,6 +10,8 @@ import { BookingType } from "../../booking/types/BookingType";
 import TotalSalesByYearContainer from "./totalSalesByYear/TotalSalesByYearContainer";
 import PackagesSoldBySellerContainer from "./packagesSoldBySeller/PackagesSoldBySellerContainer";
 import { LineChartPulse } from "./LineChartPulse/LineChartPulse";
+import { LineChart } from "./lineChart/LineChart";
+import CumulativeBookingTrendContainer from '../cumulativeBookingTrend/CumulativeBookingTrendContainer';
 
 interface DashboardProps {
     // bookings: BookingType[];
@@ -164,8 +166,10 @@ const Dashboard: React.FC<DashboardProps> = ({
                     }}
                   >
                     {/* <BarChartBenchmark /> */}
-                    <BarChartAnimated />
+                    {/* <BarChartAnimated />
                     <LineChartPulse/>
+                    <LineChart/> */}
+                    <CumulativeBookingTrendContainer/>
                   </Box>
                   <Box
                     sx={{

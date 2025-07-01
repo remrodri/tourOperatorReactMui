@@ -1,7 +1,8 @@
 import { CSSProperties } from "react";
-import { scaleTime, scaleLinear, max, line as d3_line, curveNatural as d3_curveNatural } from "d3";
+import { scaleTime, scaleLinear, max, line as d3_line } from "d3";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
 
+/* Original component: https://buildui.com/recipes/responsive-line-chart */
 let sales = [
   { date: "2023-01-01", value: 0 },
   { date: "2023-02-01", value: 0 },
@@ -12,13 +13,18 @@ let sales = [
   { date: "2023-07-01", value: 0 },
   { date: "2023-08-01", value: 0 },
   { date: "2023-09-01", value: 0 },
-  { date: "2023-10-01", value: 0 },
   { date: "2023-11-01", value: 0 },
   { date: "2023-12-31", value: 0 },
 ];
-let data = sales.map((d) => ({ ...d, date: new Date(Date.UTC(Number(d.date.split("-")[0]), Number(d.date.split("-")[1]), Number(d.date.split("-")[2]))) }));
+let data = sales.map((d) => {
+  const [year,month,day]=d.date.split("-").map(Number)
+  return{
+    ...d,
+    date:new Date(Date.UTC(year,month-1,day))
+  }
+});
 
-export function LineChartPulse() {
+export function LineChart() {
   let xScale = scaleTime()
     .domain([data[0].date, data[data.length - 1].date])
     .range([0, 100]);
@@ -28,8 +34,7 @@ export function LineChartPulse() {
 
   let line = d3_line<(typeof data)[number]>()
     .x((d) => xScale(d.date))
-    .y((d) => yScale(d.value))
-    .curve(d3_curveNatural);
+    .y((d) => yScale(d.value));
 
   let d = line(data);
 
@@ -85,17 +90,6 @@ export function LineChartPulse() {
           overflow-visible
         "
       >
-        {/* Pulsating dot */}
-        <div
-          className="absolute size-2"
-          style={{
-            left: `${xScale(data[data.length - 1].date)}%`,
-            top: `${yScale(data[data.length - 1].value)}%`,
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <div className="animate-ping w-full h-full rounded-full bg-white dark:bg-pink-500 border-2 border-pink-400" />
-        </div>
         <svg
           viewBox="0 0 100 100"
           className="overflow-visible w-full h-full"
@@ -125,21 +119,25 @@ export function LineChartPulse() {
           <path
             d={d}
             fill="none"
-            stroke="url(#linePulse-gradient)"
+            className="stroke-fuchsia-400"
             strokeWidth="2"
             vectorEffect="non-scaling-stroke"
           />
-          <defs>
-            <linearGradient id="linePulse-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="currentColor" className="text-purple-500" />
-              <stop offset="100%" stopColor="currentColor" className="text-pink-400" />
-            </linearGradient>
-          </defs>
 
           {/* Circles and Tooltips */}
           {data.map((d, index) => (
             <ClientTooltip key={index}>
               <TooltipTrigger>
+                <path
+                  key={index}
+                  d={`M ${xScale(d.date)} ${yScale(d.value)} l 0.0001 0`}
+                  vectorEffect="non-scaling-stroke"
+                  strokeWidth="7"
+                  strokeLinecap="round"
+                  fill="none"
+                  stroke="currentColor"
+                  className="text-fuchsia-300"
+                />
                 <g className="group/tooltip">
                   {/* Tooltip Line */}
                   <line
@@ -186,8 +184,8 @@ export function LineChartPulse() {
           ))}
         </svg>
 
+        {/* X Axis */}
         <div className="translate-y-2">
-          {/* X Axis */}
           {data.map((day, i) => {
             const isFirst = i === 0;
             const isLast = i === data.length - 1;

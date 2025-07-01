@@ -16,6 +16,7 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
   countedBookings,
   mountsByMonth,
 }) => {
+  // console.log('mountsByMonth::: ', mountsByMonth);
   const { touristDestinations } = useTouristDestinationContext();
 
   if (!mountsByMonth || mountsByMonth.length === 0) return null;
