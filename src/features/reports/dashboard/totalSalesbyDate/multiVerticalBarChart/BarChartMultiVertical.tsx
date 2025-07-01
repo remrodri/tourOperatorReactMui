@@ -53,7 +53,7 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
         {
           "--marginTop": "0px",
           "--marginRight": "25px",
-          "--marginBottom": "55px",
+          "--marginBottom": "30px",
           "--marginLeft": "25px",
         } as CSSProperties
       }

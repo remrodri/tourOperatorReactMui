@@ -26,7 +26,7 @@ const TotalSalesByDate: React.FC<TotalSalesByDateProps> = ({
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
           // backdropFilter: "blur(5px)",
           border: "1px solid rgba(0, 0, 0, 0.51)",
-          p:"1rem",
+          p:"1rem 1rem 0.5rem 1rem",
           display:"flex",
           gap:"1rem",
           flexDirection:"column",
