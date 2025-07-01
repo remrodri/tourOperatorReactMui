@@ -16,6 +16,7 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
   countedBookings,
   mountsByMonth,
 }) => {
+  // console.log('mountsByMonth::: ', mountsByMonth);
   const { touristDestinations } = useTouristDestinationContext();
 
   if (!mountsByMonth || mountsByMonth.length === 0) return null;
@@ -53,7 +54,7 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
         {
           "--marginTop": "0px",
           "--marginRight": "25px",
-          "--marginBottom": "55px",
+          "--marginBottom": "30px",
           "--marginLeft": "25px",
         } as CSSProperties
       }

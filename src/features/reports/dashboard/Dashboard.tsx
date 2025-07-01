@@ -8,6 +8,10 @@ import BarChartMultiVertical from "./totalSalesbyDate/multiVerticalBarChart/BarC
 import TotalSalesByDateContainer from "./totalSalesbyDate/TotalSalesByDateContainer";
 import { BookingType } from "../../booking/types/BookingType";
 import TotalSalesByYearContainer from "./totalSalesByYear/TotalSalesByYearContainer";
+import PackagesSoldBySellerContainer from "./packagesSoldBySeller/PackagesSoldBySellerContainer";
+import { LineChartPulse } from "./LineChartPulse/LineChartPulse";
+import { LineChart } from "./lineChart/LineChart";
+import CumulativeBookingTrendContainer from '../cumulativeBookingTrend/CumulativeBookingTrendContainer';
 
 interface DashboardProps {
     // bookings: BookingType[];
@@ -147,7 +151,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                       border: "1px solid rgba(0, 0, 0, 0.51)",
                     }}
                   >
-                    <BarChartAnimated />
+                    {/* <BarChartAnimated /> */}
+                    <PackagesSoldBySellerContainer/>
                   </Box>
                   <Box
                     sx={{
@@ -160,8 +165,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                       border: "1px solid rgba(0, 0, 0, 0.51)",
                     }}
                   >
-                    <BarChartBenchmark />
-
+                    {/* <BarChartBenchmark /> */}
+                    {/* <BarChartAnimated />
+                    <LineChartPulse/>
+                    <LineChart/> */}
+                    <CumulativeBookingTrendContainer/>
                   </Box>
                   <Box
                     sx={{
