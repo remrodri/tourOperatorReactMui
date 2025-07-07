@@ -13,11 +13,12 @@ import AlertDialog from "../../../context/AlertDialog";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
-import { useBookingContext2 } from "../context/BookingContext2";
+import { useBookingContext } from "../context/BookingContext";
 import { usePaymentContext } from "../../payment/context/PaymentContext";
 import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext";
 import { useCancellationConditionContext } from "../../cancellationPolicy/context/CancellationPolicyContext";
 import { CancellationPolicy } from "../../cancellationPolicy/types/CancellationPolicy";
+import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("es");
@@ -74,10 +75,16 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
   const [openAlert,setOpenAlert]=useState<boolean>(false);
   const [alertMessage,setAlertMessage]=useState<string>("");
   const [destinationImages,setDestinationImages]=useState<(string|File)[]>([]);
-  const {createBooking,updateBooking}=useBookingContext2()
+  const {createBooking,updateBooking}=useBookingContext()
   // const {getTotalPaid}=usePaymentContext()
   const [totalPrice,setTotalPrice]=useState<number>(0);
   const{getCancellationPolicyInfoById} = useCancellationConditionContext()
+  const [filteredDateRanges,setFilteredDateRanges]=useState<DateRangeType[]>([]);
+
+  const getFilteredDateRanges=(tourPackageId:string)=>{
+    const filteredDateRanges=dateRanges.filter((dateRange)=>dateRange.tourPackageId===tourPackageId);
+    setFilteredDateRanges(filteredDateRanges);
+  }
 
   const loadMinimumAmount=()=>{
     if(!tourPackageSelected){
@@ -285,6 +292,12 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
     // formik.setFieldValue("firstPayment.amount",booking.totalPrice);
     // loadGallery(tourPackageSelected);
   },[booking]);
+  useEffect(()=>{
+    if(!tourPackageSelected){
+      return;
+    }
+    getFilteredDateRanges(tourPackageSelected.id);
+  },[tourPackageSelected]);
 
     return(
       <>
@@ -299,7 +312,7 @@ const BookingFormContainer:React.FC<BookingFormProps>=({open,handleClose,booking
         handleAddAdditionalTourist={handleAddAdditionalTourist}
         handleTourPackageChange={handleTourPackageChange}
         tourPackages={tourPackages}
-        dateRanges={dateRanges}
+        dateRanges={filteredDateRanges}
         selectedTourPackage={tourPackageSelected}
         handleDateRangeChange={handleDateRangeChange}
         handlePaymentChange={handlePaymentChange}

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
-import { useBookingContext2 } from "../../context/BookingContext2";
+import { useBookingContext } from "../../context/BookingContext";
 import { BookingType } from "../../types/BookingType";
 import BookingCard from "./BookingCard";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../types/TouristType";
 import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer2";
-import BookingFormContainer from "../../bookingForm2/BookingFormContainer";
+import BookingFormContainer from "../../bookingForm/BookingFormContainer";
 import PaymentFormContainer from "../../../payment/paymentForm/PaymentFormContainer";
 
 interface BookingCardContainerProps {
@@ -18,7 +18,7 @@ interface BookingCardContainerProps {
 const BookingCardContainer: React.FC<BookingCardContainerProps> = ({ booking, index }) => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getTouristInfoById } = useTouristContext();
-  const { bookings } = useBookingContext2();
+  const { bookings } = useBookingContext();
 
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);

@@ -11,7 +11,7 @@ import { createPaymentRequest } from "../service/paymentService";
 import { jwtDecode } from "jwt-decode";
 import { TokenService } from "../../../utils/tokenService";
 import { User } from "../../userManagement/types/User";
-import { useBookingContext2 } from "../../booking/context/BookingContext2";
+import { useBookingContext } from "../../booking/context/BookingContext";
 
 interface PaymentContextType {
   // payments: PaymentType[];
@@ -52,7 +52,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const {bookings,setBookings,addPaymentToBooking}=useBookingContext2();
+  const {bookings,setBookings,addPaymentToBooking}=useBookingContext();
 
   // const addPaymentToBooking=(payment:PaymentType)=>{
   //   const bookingFound=bookings.find((booking)=>booking.id===payment.bookingId);

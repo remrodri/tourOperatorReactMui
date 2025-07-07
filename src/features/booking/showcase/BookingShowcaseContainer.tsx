@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import BookingShowcase from "./BookingShowcase";
-import { useBookingContext2 } from "../context/BookingContext2";
-import BookingFormContainer from "../bookingForm2/BookingFormContainer";
+import { useBookingContext } from "../context/BookingContext";
+import BookingFormContainer from "../bookingForm/BookingFormContainer";
 
 const BookingShowcaseContainer: React.FC = () => {
-  const { bookings } = useBookingContext2();
+  const { bookings } = useBookingContext();
   const [open, setOpen] = useState(false);
   // console.log('bookings::: ', bookings);
 

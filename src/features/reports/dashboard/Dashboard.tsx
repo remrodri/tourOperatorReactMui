@@ -11,7 +11,10 @@ import TotalSalesByYearContainer from "./totalSalesByYear/TotalSalesByYearContai
 import PackagesSoldBySellerContainer from "./packagesSoldBySeller/PackagesSoldBySellerContainer";
 import { LineChartPulse } from "./LineChartPulse/LineChartPulse";
 import { LineChart } from "./lineChart/LineChart";
-import CumulativeBookingTrendContainer from '../cumulativeBookingTrend/CumulativeBookingTrendContainer';
+import CumulativeBookingTrendContainer from './cumulativeBookingTrend/CumulativeBookingTrendContainer';
+import GuideRankingByDestination from "./GuideRankingByDestination/GuideRankingByDestination";
+import GuideRankingByDestinationContainer from "./GuideRankingByDestination/GuideRankingByDestinationContainer";
+import GlobalStatsContainer from "./globalStats/GlobalStatsContainer";
 
 interface DashboardProps {
     // bookings: BookingType[];
@@ -80,14 +83,22 @@ const Dashboard: React.FC<DashboardProps> = ({
                     // border: "1px solid rgba(255, 255, 255, 0.2)",
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                    gridTemplateRows: "1fr 1fr 1fr",
+                    gridTemplateRows: "1fr 1fr 1fr 1fr",
                     gap: "10px 10px",
                 }}
                 >
                   <Box
+                  sx={{
+                    gridColumn: "1 /5",
+                    gridRow: "1 / 2",
+                  }}
+                  >
+                  <GlobalStatsContainer/>
+                  </Box>
+                  <Box
                     sx={{
                       gridColumn: "3 / 5",
-                      gridRow: "2 / 3",
+                      gridRow: "3 / 4",
                       background: "rgba(0, 0, 0, 0.41)",
                       borderRadius: "10px",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -131,7 +142,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <Box
                   sx={{
                     gridColumn: "1 / 5",
-                    gridRow: "1 / 2",
+                    gridRow: "2 / 3",
                   }}
                   >
                   <TotalSalesByDateContainer 
@@ -143,7 +154,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <Box
                     sx={{
                       gridColumn: "1 / 3",
-                      gridRow: "2 / 3",
+                      gridRow: "3 / 4",
                       background: "rgba(0, 0, 0, 0.41)",
                       borderRadius: "10px",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -157,7 +168,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <Box
                     sx={{
                       gridColumn: "1 / 3",
-                      gridRow: "3 / 4",
+                      gridRow: "4 / 5",
                       background: "rgba(0, 0, 0, 0.41)",
                       borderRadius: "10px",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -174,7 +185,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <Box
                     sx={{
                       gridColumn: "3 / 5",
-                      gridRow: "3 / 4",
+                      gridRow: "4 / 5",
                       background: "rgba(0, 0, 0, 0.41)",
                       borderRadius: "10px",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -182,10 +193,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                       border: "1px solid rgba(0, 0, 0, 0.51)",
                     }}
                   >
+                    {/* <BarChartThinBreakdown />
                     <BarChartThinBreakdown />
                     <BarChartThinBreakdown />
-                    <BarChartThinBreakdown />
-                    <BarChartThinBreakdown />
+                    <BarChartThinBreakdown /> */}
+                    <GuideRankingByDestinationContainer/>
                   </Box>
                 </Box>
                 

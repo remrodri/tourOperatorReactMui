@@ -93,7 +93,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
           (user: User) => user.role === "6807f17065d3a5a25230b2bf"
         );
         setGuides(filteredUsers);
-        console.log("guides::: ", guides);
+        // console.log("guides::: ", guides);
       }
     } catch (error) {
       if (isAxiosError(error)) {

@@ -77,7 +77,7 @@ export function BarChartBenchmark() {
                   }}
                   
                   >
-                  <Box
+                  {/* <Box
                     sx={{
                       width: "2.5rem",
                       height: "2.5rem",
@@ -86,7 +86,7 @@ export function BarChartBenchmark() {
                     }}
                   >
                     <img src={d.img} alt="" width="100%" height="100%" />
-                  </Box>
+                  </Box> */}
                     <Typography variant="body2">{d.name}</Typography>
                   </Box>
                 </div>

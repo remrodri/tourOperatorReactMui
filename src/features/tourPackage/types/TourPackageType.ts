@@ -9,12 +9,9 @@ export interface TourPackageType {
   cancellationPolicy: string;
   touristDestination: string;
   duration: number;
-  // selectedDates: string[];
-  dateRanges: DateRangeType[];
-  // dateRanges: string[];
-  // blockedDates: string[];
+  // dateRanges: DateRangeType[];
+  dateRanges: {id:string}[];
   price: number;
-  /** @deprecated Use itinerary field instead which organizes activities by day */
   activities: ActivityType[];
   itinerary: TourItineraryType;
   status:string
