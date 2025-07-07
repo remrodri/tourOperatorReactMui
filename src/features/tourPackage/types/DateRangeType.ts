@@ -3,4 +3,5 @@ export interface DateRangeType {
   state?: string;
   dates?: string[];
   guides: string[];
+  tourPackageId: string;
 }

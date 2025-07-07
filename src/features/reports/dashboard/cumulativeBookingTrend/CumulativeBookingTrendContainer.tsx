@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import LineChartPulse from "./LineChartPulse/LineChartPulse";
-import { useDashboardContext } from "../context/DashboardContext";
+import { useDashboardContext } from "../../context/DashboardContext";
 const CumulativeBookingTrendContainer = () => {
     const {cumulativeBookings}=useDashboardContext()
 

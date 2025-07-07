@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { useBookingContext2 } from "../../booking/context/BookingContext2";
+import { useBookingContext } from "../../booking/context/BookingContext";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
 import { TourPackageType } from "../../tourPackage/types/TourPackageType";
@@ -8,6 +8,12 @@ import { BookingType } from "../../booking/types/BookingType";
 import dayjs from "dayjs";
 import { useUserContext } from "../../userManagement/context/UserContext";
 import { User } from "../../userManagement/types/User";
+import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
+import { date } from "yup";
+import { useRoleContext } from "../../Role/context/RoleContext";
+import { DateRangeType } from "../../tourPackage/types/DateRangeType";
+import { TouristType } from "../../booking/types/TouristType";
+
 interface DashboardContextType {
   loading: boolean;
   error: string | null;
@@ -26,6 +32,7 @@ interface DashboardContextType {
   getPackagesSoldBySeller: () => void;
   getCumulativeBookings: () => void;
   cumulativeBookings: any[];
+  guidesStats:GuideStatsType[];
 }
 
 interface Month {
@@ -48,6 +55,16 @@ const months: Month[] = [
   { name: 'Dic', counts: [] }
 ];
 
+export interface GuideStatsType {
+  guideId: string;
+  guideName: string;
+  guideImage:string;
+  destinations: {
+    destinationName: string;
+    count: number;
+  }[];
+};
+
 const DashboardContext = createContext<DashboardContextType | null>(null);
 
 export const useDashboardContext = () => {
@@ -65,7 +82,7 @@ interface DashboardProviderProps {
 export const DashboardProvider = ({ children }: DashboardProviderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const {bookings}=useBookingContext2()
+  const {bookings}=useBookingContext()
   const {touristDestinations}=useTouristDestinationContext();
   const {tourPackages}=useTourPackageContext();
   const [touristDestinationWithBookings,setTouristDestinationWithBookings]=useState<any>([])
@@ -74,8 +91,60 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
   const [totalBookings,setTotalBookings]=useState<number>(0);
   const [bookingsByTouristDestination,setBookingsByTouristDestination]=useState<any>([])
   const [packagesSoldBySeller,setPackagesSoldBySeller]=useState<{name:string,value:number,img:string,bookings:BookingType[]}[]>([])
-  const {users}=useUserContext()
+  const {users,guides,fetchGuides}=useUserContext()
   const [cumulativeBookings,setCumulativeBookings]=useState<any>([])
+  const {dateRanges,getDateRangeInfoById}=useDateRangeContext();
+  const [guidesStats,setGuidesStats]=useState<GuideStatsType[]>([])
+
+  const getGuidesStats = () => {
+    const guideStats: Record<string, Record<string, number>> = {};
+  
+    // Mapeamos todos los dateRanges por su id
+    const dateRangeMap = new Map<string, DateRangeType>();
+    for (const dr of dateRanges) {
+      if (dr.id) {
+        dateRangeMap.set(dr.id, dr);
+      }
+    }
+  
+    for (const pkg of tourPackages) {
+      const destinationId = pkg.touristDestination;
+  
+      for (const { id: drId } of pkg.dateRanges) {
+        const dateRange = dateRangeMap.get(drId);
+        if (!dateRange) continue;
+  
+        for (const guideId of dateRange.guides) {
+          if (!guideStats[guideId]) guideStats[guideId] = {};
+          if (!guideStats[guideId][destinationId]) guideStats[guideId][destinationId] = 0;
+  
+          guideStats[guideId][destinationId]++;
+        }
+      }
+    }
+  
+    // Definir orden fijo de destinos
+    const orderedDestinations = touristDestinations.map(dest => ({
+      id: dest.id,
+      name: dest.name,
+    }));
+  
+    const result: GuideStatsType[] = Object.entries(guideStats).map(([guideId, destMap]) => {
+      const guide = guides.find(g => g.id === guideId);
+      return {
+        guideId,
+        guideName: guide ? `${guide.firstName} ${guide.lastName}` : "Guía desconocido",
+        guideImage: guide?.imageUrl || "",
+        destinations: orderedDestinations.map(dest => ({
+          destinationName: dest.name,
+          count: destMap[dest.id] || 0,
+        })),
+      };
+    });
+  
+    setGuidesStats(result);
+  };
+  
 
   const getCumulativeBookings = ()=>{
     try {
@@ -202,6 +271,11 @@ useEffect(() => {
 useEffect(() => {
     getPackagesSoldBySeller();
 }, [bookings,users]);
+useEffect(() => {
+  fetchGuides();
+  // getGuidesRankingByDestination();
+  getGuidesStats();
+}, [dateRanges,users,touristDestinations,tourPackages]);
 
 // console.log('touristDestinations::: ', touristDestinations);
 // const touristDestinationsCounted = touristDestinations.length;
@@ -224,7 +298,8 @@ return (
       getPackagesSoldBySeller,
       packagesSoldBySeller,
       getCumulativeBookings,
-      cumulativeBookings
+      cumulativeBookings,
+      guidesStats
       }}>
       {children}
     </DashboardContext.Provider>

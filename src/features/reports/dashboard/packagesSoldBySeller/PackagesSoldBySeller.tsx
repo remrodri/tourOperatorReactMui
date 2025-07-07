@@ -11,7 +11,7 @@ const PackagesSoldBySeller = () => {
                 p:"1rem",
             }}
         >
-          <Typography variant="h6">Paquetes vendidos por vendedor</Typography>
+            <Typography variant="h6">Paquetes vendidos por vendedor</Typography>
             <BarChartBenchmark/>
         </Box>
     );

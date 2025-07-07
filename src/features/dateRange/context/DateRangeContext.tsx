@@ -16,6 +16,7 @@ type DateRangeContextType = {
   findDateRangesByTourPackage(ids: DateRangeType[]): void;
   dateRangesByTP: DateRangeType[];
   getDateRangeInfoById(id: string): DateRangeType | null;
+  addDateRange(dateRange: DateRangeType): void;
 };
 
 const DateRangeContext = createContext<DateRangeContextType | null>(null);
@@ -30,6 +31,10 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
   const [dateRanges, setDateRanges] = useState<DateRangeType[]>([]);
   const { showSnackbar } = useNewSnackbar();
   const [dateRangesByTP, setDateRangesByTP] = useState<DateRangeType[]>([]);
+
+  const addDateRange = (dateRange: DateRangeType): void => {
+    setDateRanges((prev) => [...prev, dateRange]);
+  };
 
   const getDateRangeInfoById =(id:string): DateRangeType|null => {
     const dateRangeFound = dateRanges.find((dr) => dr.id === id);
@@ -82,7 +87,8 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
         fillDateRangesByIds,
         findDateRangesByTourPackage,
         dateRangesByTP,
-        getDateRangeInfoById
+        getDateRangeInfoById,
+        addDateRange,
       }}
     >
       {children}

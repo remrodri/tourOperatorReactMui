@@ -13,7 +13,7 @@ import {
 } from "../service/bookingService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useTouristContext } from "../../tourist/context/TouristContext";
-import { BookingFormValues } from "../bookingForm2/BookingFormContainer";
+import { BookingFormValues } from "../bookingForm/BookingFormContainer";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../userManagement/types/User";
@@ -22,7 +22,7 @@ import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
 
-interface BookingContextType2 {
+interface BookingContextType {
   bookings: BookingType[];
   loading: boolean;
   error: string | null;
@@ -33,12 +33,12 @@ interface BookingContextType2 {
   addPaymentToBooking: (payment: PaymentType) => void;
 }
 
-const BookingContext = createContext<BookingContextType2 | null>(null);
+const BookingContext = createContext<BookingContextType | null>(null);
 
-export const useBookingContext2 = () => {
+export const useBookingContext = () => {
   const context = useContext(BookingContext);
   if (!context) {
-    throw new Error("useBookingContext2 must be used within a BookingProvider2");
+    throw new Error("useBookingContext must be used within a BookingProvider");
   }
   return context;
 };
@@ -47,7 +47,7 @@ interface BookingProviderProps {
   children: ReactNode;
 }
 
-export const BookingProvider2: React.FC<BookingProviderProps> = ({ children }) => {
+export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) => {
   const [bookings, setBookings] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

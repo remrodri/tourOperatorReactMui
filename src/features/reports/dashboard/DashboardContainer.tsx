@@ -1,4 +1,4 @@
-import { useBookingContext2 } from "../../booking/context/BookingContext2";
+import { useBookingContext2 } from "../../booking/context/BookingContext";
 import Dashboard from "./Dashboard";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 import { useEffect, useState } from "react";

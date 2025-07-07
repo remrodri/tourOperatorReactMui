@@ -27,8 +27,13 @@ const TotalSalesByYear: React.FC<TotalSalesByYearProps> = ({
     // console.log('totalBookings::: ', totalBookings);
     // console.log('countedBookings::: ', countedBookings);
     return (
-        <Box sx={{display:"flex", flexDirection:"column", gap:"1rem"}}>
-        <Typography variant="h6">Total Sales By Year</Typography>
+        <Box sx={{
+            display:"flex", 
+            flexDirection:"column", 
+            gap:"1rem",
+            p:"1rem",
+            }}>
+        <Typography variant="h6">Cantidad de paquetes vendidos</Typography>
         <Box sx={{position:"relative"}}>
             <div className="absolute inset-0 flex items-center justify-center z-index--10">
                 <div className="text-center">

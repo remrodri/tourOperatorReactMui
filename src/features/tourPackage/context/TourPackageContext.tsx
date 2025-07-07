@@ -9,6 +9,7 @@ import { TourPackageType } from "../types/TourPackageType";
 import * as TourPackageService from "../service/TourPackageService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
+import { DateRangeType } from "../types/DateRangeType";
 type TourPackageContextType = {
   tpFound: TourPackageType | null;
   findTourPackageById: (id: string) => Promise<void>;
@@ -41,6 +42,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
+  const {addDateRange}=useDateRangeContext();
 
   const getTourPackageInfoById = (id: string): TourPackageType | null => {
     if (!id) {
@@ -88,9 +90,12 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
       const newTourPackage = await TourPackageService.createTourPackageRequest(
         tourPackage
       );
-      // const dateRanges = newTourPackage.dateRanges.map((dr:string)=>getDateRangeById(dr))
-      // console.log('dateRanges::: ', dateRanges);
-      setTourPackages((prev) => [...prev, newTourPackage.data]);
+      newTourPackage.data.dateRanges.forEach((dr:DateRangeType)=>addDateRange(dr));
+      const formatedTourPackage = {
+        ...newTourPackage.data,
+        dateRanges:newTourPackage.data.dateRanges.map((dr:any)=>{return {id:dr.id}})
+      }
+      setTourPackages((prev) => [...prev, formatedTourPackage]);
       setError(null);
       showSnackbar("Tour package created successfully!", "success");
     } catch (err) {
