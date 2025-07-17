@@ -14,4 +14,8 @@ export interface BookingType {
   status: "pending" | "paid" | "cancelled" | "completed";
   paymentProofFolder:string;
   createdAt: string;
+  attendance:{
+    touristId:string,
+    status:"present" | "absent"
+  }[]
 }

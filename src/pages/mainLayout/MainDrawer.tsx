@@ -1,4 +1,3 @@
-// import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -15,7 +14,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { useEffect, useState } from "react";
 import {
   Avatar,
@@ -25,19 +23,21 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { ExpandLess, ExpandMore,HorizontalSplit } from "@mui/icons-material";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import { useLogout } from "../../features/auth/hook/useLogout";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExploreIcon from "@mui/icons-material/Explore";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
-import { HorizontalSplit } from "@mui/icons-material";
+import { TokenService } from "../../utils/tokenService";
+import { jwtDecode } from "jwt-decode";
+import { useRoleContext } from "../../features/Role/context/RoleContext";
+import { User } from "../../features/userManagement/types/User";
+import GuideDrawer from "./Guide/GuideDrawer3";
 
 const drawerWidth = 240;
 
@@ -152,7 +152,6 @@ export default function MainDrawer() {
   const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
   const { error, logout } = useLogout();
   const [selectedOption, setSelectedOption] = useState("");
-  // const [menuOption, setMenuOption] = useState(Boolean);
   const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
   const [bookingOpen, setBookingOpen] = useState(true);
@@ -164,11 +163,6 @@ export default function MainDrawer() {
   const packageHandleClick = () => {
     setPackageOpen(!packageOpen);
   };
-
-  // const handleSelectedOption = (option: string) => {
-  //   setSelectedOption(option);
-  //   // setMenuOpen(!open);
-  // };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -262,6 +256,22 @@ export default function MainDrawer() {
     if (path.includes("reportes/dashboard")) setSelectedOption("Reportes");
     // if (path.includes("home")) setSelectedOption("Home");
   }, [location.pathname]);
+
+
+  const [roleName, setRoleName] = useState<string>("");
+  const token = TokenService.getToken()
+  const user:User = jwtDecode(token as string)
+  // console.log(user)
+  const {getRoleById}=useRoleContext();
+  const getRoleName = ()=>{
+    const role=getRoleById(user.role)
+    setRoleName(role.name)
+  }
+  // console.log(roleName)
+  
+  useEffect(()=>{
+    getRoleName()
+  },[ user ])
 
   return (
     <Box

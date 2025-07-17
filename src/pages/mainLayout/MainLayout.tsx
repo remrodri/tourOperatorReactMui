@@ -12,6 +12,7 @@ const homeBackground = "/src/assets/images/home.webp";
 const tourPackageBackground = "/src/assets/images/tourPackage.webp";
 const bookingBackground = "/src/assets/images/booking.webp";
 const reportsBackground = "/src/assets/images/reports.webp";
+// const guideBackground = "/src/assets/images/guide.webp";
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const MainLayout: React.FC = () => {
     ["/gestion-de-paquetes-turisticos"]: tourPackageBackground,
     ["/reservas"]: bookingBackground,
     ["/reportes"]: reportsBackground,
+    // ["/guia-de-turismo"]: guideBackground,
     // ["/configuracion-de-seguridad"]: securitySetupBackground,
   };
 
@@ -39,10 +41,10 @@ const MainLayout: React.FC = () => {
     //   "location.pathname::: ",
     //   location.pathname.includes("/gestion-de-usuarios")
     // );
-    if (location.pathname.includes("/gestion-de-usuarios")) {
+    if (location.pathname.includes("gestion-de-usuarios")) {
       setBackgroundImg(userManagementBackground);
     }
-    if (location.pathname.includes("/paquetes-turisticos")) {
+    if (location.pathname.includes("paquetes-turisticos")) {
       setBackgroundImg(tourPackageBackground);
     }
     if (location.pathname.includes("reservas")) {
@@ -51,6 +53,9 @@ const MainLayout: React.FC = () => {
     if (location.pathname.includes("reportes")) {
       setBackgroundImg(reportsBackground);
     }
+    // if (location.pathname.includes("guia-de-turismo")) {
+    //   setBackgroundImg(guideBackground);
+    // }
     // if (location.pathname.includes("/configuracion-de-seguridad")) {
     //   setBackgroundImg(securitySetupBackground);
     // }

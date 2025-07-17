@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { User } from "../../../../userManagement/types/User";
 import { response } from "express";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
+import { useRoleContext } from "../../../../Role/context/RoleContext";
 
 export const useSecurityQuestions = () => {
   const { showSnackbar } = useNewSnackbar();
@@ -19,6 +20,7 @@ export const useSecurityQuestions = () => {
     }[]
   >([]);
   const navigate = useNavigate();
+  const { getRoleById } = useRoleContext();
 
   useEffect(() => {
     getSecurityQuestions();
@@ -101,6 +103,10 @@ export const useSecurityQuestions = () => {
       }
       // showToast("success", "Registro exitoso");
       showSnackbar("Respuestas enviadas","success")
+      if(getRoleById(user.role).name==="guia de turismo"){
+        navigate("../../guia-de-turismo");
+        return;
+      }
       navigate("/home");
     } catch (error) {
       setError("Error al enviar las respuestas de seguridad");

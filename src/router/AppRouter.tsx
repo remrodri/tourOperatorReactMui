@@ -18,6 +18,16 @@ import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/showcase/BookingShowcaseContainer";
 import ReportsPage from "../pages/ReportsPage";
 import DashboardContainer from "../features/reports/dashboard/DashboardContainer";
+import GuidePage from "../pages/mainLayout/Guide/GuidePage";
+import GuidePageContainer from "../pages/mainLayout/Guide/GuidePageContainer";
+import GuideShowcaseContainer from "../features/guide/touristList/TouristListContainer";
+import GuideDrawer from "../pages/mainLayout/Guide/GuideDrawer";
+import GuideShowcase from "../features/guide/touristList/TouristList";
+import GuideDrawerContainer from "../pages/mainLayout/Guide/GuideDrawerContainer";
+import TouristListContainer from "../features/guide/touristList/TouristListContainer";
+import TourPackageContainer from "../features/guide/tourPackage/TourPackageContainer";
+import TouristDestinationContainer from "../features/guide/touristDestination/TouristDestinationContainer";
+import ItineraryContainer from "../features/guide/itinerary/ItineraryContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -119,6 +129,34 @@ export const AppRouter = createBrowserRouter(
           path: "reportes",
           element: <ReportsPage />,
           children: [{ path: "dashboard", element: <DashboardContainer /> }],
+        },
+      ],
+    },
+    {
+      path: "guia-de-turismo",
+      element: <GuidePageContainer />,
+      children: [
+        {
+          path: "",
+          element: <GuideDrawerContainer />,
+          children: [
+            {
+              path: "turistas",
+              element: <TouristListContainer />,
+            },
+            {
+              path: "paquete-turistico",
+              element: <TourPackageContainer />,
+            },
+            {
+              path: "destino-turistico",
+              element: <TouristDestinationContainer />,
+            },
+            {
+              path: "itinerario",
+              element: <ItineraryContainer />,
+            },
+          ],
         },
       ],
     },

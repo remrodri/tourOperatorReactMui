@@ -38,3 +38,18 @@ export const updateBookingRequest = async (
   console.log('response::: ', response.data.data);
   return response.data.data;
 };
+
+export const updateAttendanceRequest = async (data: any): Promise<any> => {
+  console.log('data que se enviará::: ', data);
+
+  const response = await axiosInstance.put(`${url}/attendance-lists`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  console.log('response::: ', response.data.data);
+  return response.data.data;
+};
+
+
