@@ -23,7 +23,7 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
-import { ExpandLess, ExpandMore,HorizontalSplit } from "@mui/icons-material";
+import { ExpandLess, ExpandMore, HorizontalSplit } from "@mui/icons-material";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import { useLogout } from "../../features/auth/hook/useLogout";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
@@ -37,7 +37,7 @@ import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/userManagement/types/User";
-import GuideDrawer from "./Guide/GuideDrawer3";
+import GuideDrawer from "../Guide/GuideDrawer3";
 
 const drawerWidth = 240;
 
@@ -257,21 +257,20 @@ export default function MainDrawer() {
     // if (path.includes("home")) setSelectedOption("Home");
   }, [location.pathname]);
 
-
   const [roleName, setRoleName] = useState<string>("");
-  const token = TokenService.getToken()
-  const user:User = jwtDecode(token as string)
+  const token = TokenService.getToken();
+  const user: User = jwtDecode(token as string);
   // console.log(user)
-  const {getRoleById}=useRoleContext();
-  const getRoleName = ()=>{
-    const role=getRoleById(user.role)
-    setRoleName(role.name)
-  }
+  const { getRoleById } = useRoleContext();
+  const getRoleName = () => {
+    const role = getRoleById(user.role);
+    setRoleName(role.name);
+  };
   // console.log(roleName)
-  
-  useEffect(()=>{
-    getRoleName()
-  },[ user ])
+
+  useEffect(() => {
+    getRoleName();
+  }, [user]);
 
   return (
     <Box
@@ -585,36 +584,34 @@ export default function MainDrawer() {
         </List>
         <Divider />
         <List>
-        <Tooltip title="Reportes" placement="right">
-                <ListItemButton
+          <Tooltip title="Reportes" placement="right">
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Reportes"
+                    ? "rgba(172, 170, 164, 0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Reportes"
+                      ? "rgba(255, 255, 255, 0.12)"
+                      : "rgba(172, 170, 164, 0.27)",
+                },
+              }}
+              onClick={() => handleClick("Reportes")}
+            >
+              <ListItemIcon>
+                <ListAltIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    backgroundColor:
-                      selectedOption === "Reportes"
-                        ? "rgba(172, 170, 164, 0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Reportes"
-                          ? "rgba(255, 255, 255, 0.12)"
-                          : "rgba(172, 170, 164, 0.27)",
-                    },
+                    color:
+                      selectedOption === "Reportes" ? "#90caf9" : "inherit",
                   }}
-                  onClick={() => handleClick("Reportes")}
-                >
-                  <ListItemIcon>
-                    <ListAltIcon
-                      sx={{
-                        color:
-                          selectedOption === "Reportes"
-                            ? "#90caf9"
-                            : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Ver todos" : ""} />
-                </ListItemButton>
-              </Tooltip>
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Ver todos" : ""} />
+            </ListItemButton>
+          </Tooltip>
         </List>
       </Drawer>
       <Box
