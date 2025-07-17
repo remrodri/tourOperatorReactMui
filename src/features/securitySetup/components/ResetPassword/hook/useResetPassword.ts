@@ -3,6 +3,7 @@ import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
+import { useRoleContext } from "../../../../Role/context/RoleContext";
 
 export const useResetPassword = () => {
   const [error, setError] = useState<string | null>(null);
@@ -13,7 +14,7 @@ export const useResetPassword = () => {
     questionText: string;
   }>({ questionId: "", questionText: "" });
   const navigate = useNavigate();
-
+  const { getRoleById } = useRoleContext();
   const findUserByEmail = async (email: string) => {
     // console.log('password::: ', password);
     // if (!token) {
@@ -66,6 +67,10 @@ export const useResetPassword = () => {
         return;
       }
       showSnackbar("Respuesta correcta","success");
+      if(getRoleById(answer.userId as string).name==="guia de turismo"){
+        navigate("guia-de-turismo");
+        return;
+      }
       navigate(`../actualizar-contraseña/${answer.userId}`);
     } catch (error) {
       setError("Error al revisar la respuesta de seguridad");

@@ -9,6 +9,7 @@ import { BookingType } from "../types/BookingType";
 import {
   createBookingRequest,
   getAllBookingsRequest,
+  updateAttendanceRequest,
   updateBookingRequest,
 } from "../service/bookingService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
@@ -21,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
+import { Group } from "../../guide/context/GuideContext";
 
 interface BookingContextType {
   bookings: BookingType[];
@@ -31,6 +33,7 @@ interface BookingContextType {
   updateBooking: (booking: any) => Promise<void>;
   setBookings: (bookings: BookingType[]) => void;
   addPaymentToBooking: (payment: PaymentType) => void;
+  updateAttendance: (data:any) => Promise<void>;
 }
 
 const BookingContext = createContext<BookingContextType | null>(null);
@@ -53,6 +56,31 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
+
+  const updateAttendance = async (data:any):Promise<any>=>{
+    setLoading(true);
+    try {
+      const attendanceList = await updateAttendanceRequest(data);
+      const updatedBookings = attendanceList.map((attendance: Group) => {
+        const booking = bookings.find((b: BookingType) => b.id === attendance.bookingId);
+        if (booking) {
+          return {
+            ...booking,
+            attendance: attendance.group,
+          };
+        }
+        return booking;
+      });
+      setBookings(updatedBookings);
+      showSnackbar("Asistencia actualizada exitosamente", "success");
+    } catch (error) {
+      console.error("Error updating attendance", error);
+      setError("Failed to update attendance");
+      showSnackbar("Error al actualizar la asistencia", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const addPaymentToBooking = (payment: PaymentType) => {
     setBookings((prevBookings) =>
@@ -204,6 +232,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     status: apiBooking.status,
     paymentProofFolder: apiBooking.paymentProofFolder,
     createdAt: apiBooking.createdAt,
+    attendance: apiBooking.attendance,
   });
 
   useEffect(() => {
@@ -220,6 +249,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
         createBooking,
         updateBooking,
         addPaymentToBooking,
+        updateAttendance,
         setBookings,
       }}
     >
