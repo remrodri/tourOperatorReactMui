@@ -69,7 +69,7 @@ const GuideDrawer:React.FC<GuideDrawerProps>=({drawerItems})=> {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
             Menu
           </Typography>
-      <Tooltip title="Cerrar menu">
+      <Tooltip title="Cerrar menu" disableInteractive>
       <IconButton
             size="large"
             edge="start"
@@ -127,9 +127,9 @@ const GuideDrawer:React.FC<GuideDrawerProps>=({drawerItems})=> {
         width:"100%",
         height:"100%",
         display: "flex",
-        p:"10px",
+        // p:"10px",
         flexDirection:"column",
-        gap:"10px",
+        // gap:"10px",
     }}
     > 
     <Box>
@@ -158,7 +158,15 @@ const GuideDrawer:React.FC<GuideDrawerProps>=({drawerItems})=> {
         onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
       <Outlet/>
+      </Box>
     </Box>
   );
 }

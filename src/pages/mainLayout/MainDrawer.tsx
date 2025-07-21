@@ -37,7 +37,6 @@ import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/userManagement/types/User";
-import GuideDrawer from "../Guide/GuideDrawer3";
 
 const drawerWidth = 240;
 

@@ -60,7 +60,10 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
     getImage()
   },[])
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{
+      flexGrow: 1,
+      p:"10px 10px 10px 10px",
+    }}>
       {/* <FormGroup>
         <FormControlLabel
           control={
@@ -73,28 +76,28 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
           label={auth ? 'Logout' : 'Login'}
         />
       </FormGroup> */}
-      <AppBar 
-      position="static" 
-      sx={{
-        borderRadius:"16px",
-        background: "rgba(0, 0, 0, 0.6)",
-        boxShadow: "0 4px 10px rgba(0,0,0,1)",
-        backdropFilter: "blur(10px)",
-        border: "1px solid rgba(0,0,0,0.7)",
-      }}
+      <AppBar
+        position="static"
+        sx={{
+          background: "rgba(88, 83, 79, 0.4)",
+          borderRadius: "16px",
+          boxShadow: "0 4px 10px rgb(41, 39, 37)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(191, 182, 174, 1)",
+        }}
       >
         <Toolbar>
-          <Tooltip title="Abrir menu">
+          <Tooltip title="Abrir menu" disableInteractive>
             <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={toggleDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
           </Tooltip>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Guia de turismo
@@ -109,19 +112,23 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
                 onClick={handleMenu}
                 color="inherit"
               >
-                {imageUrl?<Avatar src={imageUrl}/>:<AccountCircle fontSize="large"/>}
+                {imageUrl ? (
+                  <Avatar src={imageUrl} />
+                ) : (
+                  <AccountCircle fontSize="large" />
+                )}
               </IconButton>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}

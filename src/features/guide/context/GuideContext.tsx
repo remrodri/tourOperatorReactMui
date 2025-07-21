@@ -19,7 +19,8 @@ import { BookingType } from "../../booking/types/BookingType";
 import { useBookingContext } from "../../booking/context/BookingContext";
 import { useTouristContext } from "../../tourist/context/TouristContext";
 import { TouristType } from "../../booking/types/TouristType";
-import { getAttendanceListFromLocalStorage,  } from "../localStorageService/localStorageService";
+import { getAttendanceListFromLocalStorage } from "../localStorageService/localStorageService";
+import { useUserContext } from "../../userManagement/context/UserContext";
 
 export interface TouristWithStatus {
   tourist: TouristType;
@@ -41,6 +42,7 @@ interface GuideContextType {
   toggleTouristAttendanceStatus: (touristId: string) => void;
   resetAttendanceList: () => void;
   saveAttendance: () => void;
+  pendingDateRange: DateRangeType | null;
 }
 
 const GuideContext = createContext<GuideContextType | null>(null);
@@ -63,42 +65,42 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
   const { getTouristInfoById } = useTouristContext();
-  const { bookings,updateAttendance } = useBookingContext();
+  const { bookings, updateAttendance } = useBookingContext();
 
   const [guideDateRanges, setGuideDateRanges] = useState<DateRangeType[]>([]);
-  const [pendingDateRange, setPendingDateRange] = useState<DateRangeType | null>(null);
+  const [pendingDateRange, setPendingDateRange] =
+    useState<DateRangeType | null>(null);
   const [tourPackage, setTourPackage] = useState<TourPackageType | null>(null);
-  const [touristDestination, setTouristDestination] = useState<TouristDestinationType | null>(null);
+  const [touristDestination, setTouristDestination] =
+    useState<TouristDestinationType | null>(null);
   const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
   const [attendanceList, setAttendanceList] = useState<Group[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-
-  const saveAttendance = async() => {
+  const saveAttendance = async () => {
     setLoading(true);
     try {
       const attendance = getAttendanceListFromLocalStorage();
-      const bookings = attendance.map((subList:Group) => {
+      const bookings = attendance.map((subList: Group) => {
         const bookingId = subList.bookingId;
-        const attendance = subList.group.map((tourist:TouristWithStatus) => {
+        const attendance = subList.group.map((tourist: TouristWithStatus) => {
           return {
             touristId: tourist.tourist.id,
             status: tourist.status,
-          }
-        })
-        return {bookingId:bookingId,attendance:attendance};
-      })
+          };
+        });
+        return { bookingId: bookingId, attendance: attendance };
+      });
       await updateAttendance(bookings);
       // console.log("Attendance list:", bookings);
       // const response = updateAttendance(bookings);
       // console.log("Response:", response);
-      } catch (error) {
+    } catch (error) {
       console.error("Error fetching attendance list:", error);
     } finally {
       setLoading(false);
     }
-    
-  }
+  };
 
   const loadAttendanceList = (bookings: BookingType[]) => {
     const stored = localStorage.getItem("attendanceList");
@@ -107,23 +109,22 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
       return;
     }
 
-    const attendance = bookings.map((booking) =>{
+    const attendance = bookings.map((booking) => {
       const group = booking.attendance.map((att) => ({
         tourist: getTouristInfoById(att.touristId),
         status: att.status === "present" ? "present" : "absent",
         // bookingId: booking.id,
-      }))
-      return {group,bookingId:booking.id};
-    }
-    );
+      }));
+      return { group, bookingId: booking.id };
+    });
 
     setAttendanceList(attendance as Group[]);
     localStorage.setItem("attendanceList", JSON.stringify(attendance));
   };
 
   const toggleTouristAttendanceStatus = (touristId: string) => {
-    const updated = attendanceList.map(({group,bookingId}) =>{
-      const newGroup = group.map((t:TouristWithStatus) => {
+    const updated = attendanceList.map(({ group, bookingId }) => {
+      const newGroup = group.map((t: TouristWithStatus) => {
         if (t.tourist.id === touristId) {
           return {
             ...t,
@@ -131,8 +132,8 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
           };
         }
         return t;
-      })
-      return {group:newGroup,bookingId};
+      });
+      return { group: newGroup, bookingId };
     });
     setAttendanceList(updated as Group[]);
     localStorage.setItem("attendanceList", JSON.stringify(updated));
@@ -170,7 +171,9 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (pendingDateRange) {
-      const filtered = bookings.filter((b) => b.dateRangeId === pendingDateRange.id);
+      const filtered = bookings.filter(
+        (b) => b.dateRangeId === pendingDateRange.id
+      );
       setDateRangeBookings(filtered);
       setTourPackage(getTourPackageInfoById(pendingDateRange.tourPackageId));
     }
@@ -178,7 +181,9 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (tourPackage) {
-      setTouristDestination(getTouristDestinationInfoById(tourPackage.touristDestination));
+      setTouristDestination(
+        getTouristDestinationInfoById(tourPackage.touristDestination)
+      );
     }
   }, [tourPackage]);
 
@@ -199,6 +204,7 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
         toggleTouristAttendanceStatus,
         resetAttendanceList,
         saveAttendance,
+        pendingDateRange,
       }}
     >
       {children}
