@@ -56,14 +56,21 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
     navigate("/");
   };
 
+  const handlePerfil = () => {
+    navigate("/guia-de-turismo/perfil");
+    handleClose();
+  };
+
   React.useEffect(()=>{
     getImage()
   },[])
   return (
-    <Box sx={{
-      flexGrow: 1,
-      p:"10px 10px 10px 10px",
-    }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        p: "10px 10px 10px 10px",
+      }}
+    >
       {/* <FormGroup>
         <FormControlLabel
           control={
@@ -100,7 +107,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
             </IconButton>
           </Tooltip>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Guia de turismo
+            Guia turistico
           </Typography>
           {auth && (
             <div>
@@ -119,6 +126,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
                 )}
               </IconButton>
               <Menu
+                sx={{ mt: "50px" }}
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -133,7 +141,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Perfil</MenuItem>
+                <MenuItem onClick={handlePerfil}>Perfil</MenuItem>
                 <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </div>
