@@ -37,6 +37,11 @@ import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/userManagement/types/User";
+import { useUserContext } from "../../features/userManagement/context/UserContext";
+import MainAppBar from "./MainAppBar";
+import { AppBarStyle } from "./MainLayout";
+
+const BASE_URL = "http://localhost:3000";
 
 const drawerWidth = 240;
 
@@ -143,7 +148,11 @@ const Drawer = styled(MuiDrawer, {
 
 const settings = ["Cerrar sesion"];
 
-export default function MainDrawer() {
+interface Props {
+  currentStyles: AppBarStyle;
+}
+
+export default function MainDrawer({ currentStyles }: Props) {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -154,6 +163,7 @@ export default function MainDrawer() {
   const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
   const [bookingOpen, setBookingOpen] = useState(true);
+  const { userInfo } = useUserContext();
 
   const handleClickBooking = () => {
     setBookingOpen(!bookingOpen);
@@ -296,6 +306,15 @@ export default function MainDrawer() {
         }}
       >
         <DrawerHeader>
+          {open && (
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
+            >
+              {roleName}
+            </Typography>
+          )}
           {open ? (
             <Tooltip title="Cerrar" placement="left">
               <IconButton onClick={handleDrawerClose}>
@@ -342,6 +361,15 @@ export default function MainDrawer() {
               {userOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </Tooltip>
+              {!open && (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+                >
+                  Usuarios
+                </Typography>
+              )}
           <Collapse in={userOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Tooltip title="Listar usuarios" placement="right">
@@ -378,7 +406,7 @@ export default function MainDrawer() {
           </Collapse>
         </List>
         <Divider />
-        <List sx={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+        <List sx={{ display: "flex", flexDirection: "column", }}>
           <Tooltip title="Gestion de Paquetes turisticos" placement="right">
             <ListItemButton
               onClick={packageHandleClick}
@@ -394,6 +422,15 @@ export default function MainDrawer() {
               {packageOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </Tooltip>
+            {!open && (
+              <Typography
+                variant="caption"
+                component="div"
+                sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+              >
+                Paquetes
+              </Typography>
+            )}
           <Collapse in={packageOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Tooltip title="Ver todos los paquetes" placement="right">
@@ -548,6 +585,15 @@ export default function MainDrawer() {
               {bookingOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Typography
+              variant="caption"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+            >
+              Reservas
+            </Typography>
+          )}
           <Collapse in={bookingOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Tooltip title="Ver todas las reservas" placement="right">
@@ -583,6 +629,7 @@ export default function MainDrawer() {
         </List>
         <Divider />
         <List>
+          
           <Tooltip title="Reportes" placement="right">
             <ListItemButton
               sx={{
@@ -611,6 +658,15 @@ export default function MainDrawer() {
               <ListItemText primary={open ? "Ver todos" : ""} />
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Typography
+              variant="caption"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center",fontWeight:"100" }}
+            >
+              Reportes
+            </Typography>
+          )}
         </List>
       </Drawer>
       <Box
@@ -620,7 +676,7 @@ export default function MainDrawer() {
           flexDirection: "column",
         }}
       >
-        <AppBar
+        {/* <AppBar
           open={open}
           sx={{
             background: "none",
@@ -686,7 +742,7 @@ export default function MainDrawer() {
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0, alignSelf: "flex-end" }}
                   >
-                    <Avatar>SN</Avatar>
+                    <Avatar src={BASE_URL + userInfo?.avatar} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -721,7 +777,8 @@ export default function MainDrawer() {
               </Box>
             </Box>
           </Toolbar>
-        </AppBar>
+        </AppBar> */}
+        <MainAppBar currentStyles={currentStyles} />
         <Box
           sx={{
             // height: "100dvh"

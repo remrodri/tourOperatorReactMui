@@ -67,10 +67,10 @@ export const AppRouter = createBrowserRouter(
       path: "home",
       element: <MainLayout />,
       children: [
-        {
-          path: "",
-          element: <HomePage />,
-        },
+        // {
+        //   path: "",
+        //   element: <HomePage />,
+        // },
         {
           path: "gestion-de-usuarios",
           element: <UserManagementPage />,
