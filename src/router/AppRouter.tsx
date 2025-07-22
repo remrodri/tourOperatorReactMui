@@ -28,6 +28,7 @@ import TouristListContainer from "../features/guide/touristList/TouristListConta
 import TourPackageContainer from "../features/guide/tourPackage/TourPackageContainer";
 import TouristDestinationContainer from "../features/guide/touristDestination/TouristDestinationContainer";
 import ItineraryContainer from "../features/guide/itinerary/ItineraryContainer";
+import GuidePerfilContainer from "../features/guide/perfil/GuidePerfilContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -66,10 +67,10 @@ export const AppRouter = createBrowserRouter(
       path: "home",
       element: <MainLayout />,
       children: [
-        {
-          path: "",
-          element: <HomePage />,
-        },
+        // {
+        //   path: "",
+        //   element: <HomePage />,
+        // },
         {
           path: "gestion-de-usuarios",
           element: <UserManagementPage />,
@@ -155,6 +156,10 @@ export const AppRouter = createBrowserRouter(
             {
               path: "itinerario",
               element: <ItineraryContainer />,
+            },
+            {
+              path: "perfil",
+              element: <GuidePerfilContainer />,
             },
           ],
         },

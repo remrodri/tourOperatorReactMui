@@ -10,6 +10,7 @@ import { TokenService } from "../../../utils/tokenService";
 import { userService } from "../services/userService";
 import { isAxiosError } from "axios";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
+import { jwtDecode } from "jwt-decode";
 
 interface UserContextType {
   fetchGuides: () => void;
@@ -26,6 +27,7 @@ interface UserContextType {
   getUserById: (userId: string) => User | null; // Cambiado a Promise
   userFound: User | null;
   getUsersById: (ids: string[]) => User[];
+  userInfo: any | null;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -40,6 +42,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const { showSnackbar } = useNewSnackbar();
   const [guides, setGuides] = useState<User[]>([]);
   const [userFound, setUserFound] = useState<User | null>(null);
+  const [userInfo, setUserInfo] = useState<any | null>(null);
 
   const getUsersById = (ids: string[]): User[] => {
     if (!ids || ids.length === 0) {
@@ -232,9 +235,19 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const getUserInfo = () => {
+    const token = TokenService.getToken();
+    if (!token) {
+      return;
+    }
+    const user:any = jwtDecode(token);
+    setUserInfo(user);
+  }
+
   useEffect(() => {
     // console.log("::: ");
     fetchUsers();
+    getUserInfo();
   }, [token]);
 
   return (
@@ -251,6 +264,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         getUserById,
         userFound,
         getUsersById,
+        userInfo
       }}
     >
       {children}

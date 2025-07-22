@@ -14,17 +14,20 @@ import Menu from '@mui/material/Menu';
 import { Avatar, Tooltip } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { AppBarStyle } from './MainLayout';
 
 const BASE_URL = "http://localhost:3000";
 
 interface Props {
-    toggleDrawer: (newOpen: boolean) => () => void;
+    currentStyles: AppBarStyle;
+    // toggleDrawer: (newOpen: boolean) => () => void;
 }
 
-const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
+const MainAppBar: React.FC<Props> = ({currentStyles}) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [imageUrl, setImageUrl] = React.useState<string>("");
+  const [userName, setUserName] = React.useState<string>("");
 
   const navigate = useNavigate();
 
@@ -35,6 +38,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
     }
     const user:any = jwtDecode(token)
     setImageUrl(`${BASE_URL}${user.imagePath}`)
+    setUserName(`${user.firstName} ${user.lastName}`)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,28 +90,28 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
       <AppBar
         position="static"
         sx={{
-          background: "rgba(88, 83, 79, 0.4)",
-          borderRadius: "16px",
-          boxShadow: "0 4px 10px rgb(41, 39, 37)",
-          backdropFilter: "blur(10px)",
-          border: "1px solid rgba(191, 182, 174, 1)",
+          background: currentStyles.background,
+          borderRadius: currentStyles.borderRadius,
+          boxShadow: currentStyles.boxShadow,
+          backdropFilter: currentStyles.backdropFilter,
+          border: currentStyles.border,
         }}
       >
         <Toolbar>
-          <Tooltip title="Abrir menu" disableInteractive>
+          {/* <Tooltip title="Abrir menu" disableInteractive>
             <IconButton
               size="large"
               edge="start"
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
-              onClick={toggleDrawer(true)}
+              // onClick={toggleDrawer(true)}
             >
               <MenuIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Guia turistico
+            {userName}
           </Typography>
           {auth && (
             <div>
@@ -151,5 +155,5 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
     </Box>
   );
 }
-export default GuideAppBar
+export default MainAppBar
 

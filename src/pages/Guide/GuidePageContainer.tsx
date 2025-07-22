@@ -1,4 +1,3 @@
-import { useState } from "react";
 import GuidePage from "./GuidePage";
 
 const guideBackground = "/src/assets/images/guide.webp";

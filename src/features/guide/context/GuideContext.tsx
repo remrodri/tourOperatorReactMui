@@ -43,6 +43,8 @@ interface GuideContextType {
   resetAttendanceList: () => void;
   saveAttendance: () => void;
   pendingDateRange: DateRangeType | null;
+  guideInfo: User | null;
+
 }
 
 const GuideContext = createContext<GuideContextType | null>(null);
@@ -76,6 +78,7 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
   const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
   const [attendanceList, setAttendanceList] = useState<Group[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [guideInfo, setGuideInfo] = useState<any | null>(null);
 
   const saveAttendance = async () => {
     setLoading(true);
@@ -163,6 +166,7 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
     }
     const user: User = jwtDecode(token);
     getDateRangesByTourGuideId(user.id);
+    setGuideInfo(user);
   }, [filterDateRangesByTourGuideId]);
 
   useEffect(() => {
@@ -205,6 +209,7 @@ export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
         resetAttendanceList,
         saveAttendance,
         pendingDateRange,
+        guideInfo,
       }}
     >
       {children}

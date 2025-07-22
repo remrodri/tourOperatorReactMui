@@ -14,9 +14,9 @@ const GuidePage: React.FC<Props> = ({ backgroundImg }) => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        height: "100dvh",
+        // height: "100dvh",
         display: "flex",
-        flexDirection: "column",
+        // flexDirection: "column",
       }}
     >
       <GuideProvider>

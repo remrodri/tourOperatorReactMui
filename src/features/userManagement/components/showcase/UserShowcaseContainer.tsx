@@ -7,7 +7,7 @@ const UserShowcaseContainer: React.FC = () => {
   const { users } = useUserContext();
   const [open, setOpen] = useState(false);
   
-  console.log('users::: ', users);
+  // console.log('users::: ', users);
   const handleClick = () => {
     setOpen(!open);
   };
