@@ -18,14 +18,15 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
   return (
     <Card
       sx={{
-        maxWidth: 345,
-        minWidth: 300,
+        // maxWidth: 345,
+        // minWidth: 300,
+        width: 300,
         // rgb(70, 120, 253)
         borderRadius: "10px",
-        background: " rgba(70, 120, 253,0.7)",
-        boxShadow: "0 4px 10px rgba(50, 104, 253,0.6)",
-        backdropFilter: "blur(10px)",
-        border: "1px solid rgb(50, 104, 253)",
+        background: "rgba(10,10,10,0.52)",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        // backdropFilter: "blur(10px)",
+        border: "1px solid rgba(10,10,10,0.6)",
       }}
     >
       <CardHeader

@@ -29,13 +29,14 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   return (
     <Card
       sx={{
-        maxWidth: 345,
-        minWidth: 300,
+        // maxWidth: 345,
+        // minWidth: 300,
+        width: 300,
         borderRadius: "10px",
-        background: " rgba(73, 173, 110, 0.9)",
-        boxShadow: "0 4px 10px rgba(63, 168, 101, 0.6)",
+        background: "rgba(10,10,10,0.52)",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         // backdropFilter: "blur(10px)",
-        border: "1px solid rgb(63, 168, 101)",
+        border: "1px solid rgba(10,10,10,0.6)",
       }}
     >
       <CardHeader
@@ -50,7 +51,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
           // width: 300,
           objectFit: "cover",
           backgroundSize: "cover",
-          backgroundPosition:"center"
+          backgroundPosition: "center",
           // ".MuiCardMedia-img": {
           // }
         }}

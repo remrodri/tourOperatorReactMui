@@ -14,13 +14,15 @@ const BookingPage: React.FC = () => {
         sx={{
           display: "flex",
           flexGrow: 1,
-          background: "rgba(0,0,0,0.6)",
+          background: "rgba(63, 64, 59, 0.4)",
           borderRadius: "16px",
           boxShadow: "0 4px 10px rgba(0,0,0,1)",
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(0,0,0,0.4)",
+          border: "1px solid rgba(63, 64, 59, 0.4)",
         }}
-      ><Outlet/></Box>
+      >
+        <Outlet />
+      </Box>
     </Box>
   );
 };

@@ -10,7 +10,7 @@ import EmailFormContainer from "../features/securitySetup/components/ResetPasswo
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcaseContainer from "../features/tourPackage/showcase/TourPackageShowcaseContainer";
-import TourTypeContainer from "../features/tourType/TourTypeShowcaseContainer";
+import TourTypeContainer from "../features/tourType/showcase/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/showcase/TouristDestinationShowcaseContainer";
 import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";

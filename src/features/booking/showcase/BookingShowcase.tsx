@@ -71,11 +71,11 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             overflowY: "auto",
             gap: "1rem",
             alignContent: "flex-start",
-            background: "rgba(255, 255, 255, 0.2)",
+            background: "rgba(89, 22, 22, 0.4)",
             borderRadius: "10px",
-            boxShadow: "0 4px 10px rgba(255, 255, 255,0.2)",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
             // backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
+            border: "1px solid rgba(89, 22, 22, 0.5)",
           }}
         >
           {!bookings || bookings.length === 0 ? (
