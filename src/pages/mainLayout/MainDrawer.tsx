@@ -297,11 +297,14 @@ export default function MainDrawer({ currentStyles }: Props) {
           "& .MuiDrawer-paper": {
             position: "relative",
             width: "100%",
-            background: "rgba(0, 0, 0, 0.6)",
-            boxShadow: "0 4px 10px rgba(0,0,0,1)",
+            // background: "rgba(0, 0, 0, 0.6)",
+            background: currentStyles.drawerBackground,
+            // boxShadow: "0 4px 10px rgba(0,0,0,1)",
+            boxShadow: currentStyles.drawerBoxShadow,
             borderRadius: "16px",
             backdropFilter: "blur(10px)",
-            border: "1px solid rgba(0,0,0,0.7)",
+            // border: "1px solid rgba(0,0,0,0.7)",
+            border: currentStyles.drawerBorder,
           },
         }}
       >
@@ -361,21 +364,33 @@ export default function MainDrawer({ currentStyles }: Props) {
               {userOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </Tooltip>
-              {!open && (
-                <Typography
-                  variant="caption"
-                  component="div"
-                  sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
-                >
-                  Usuarios
-                </Typography>
-              )}
+          {!open && (
+            <Typography
+              variant="caption"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+            >
+              Usuarios
+            </Typography>
+          )}
           <Collapse in={userOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Tooltip title="Listar usuarios" placement="right">
                 <ListItemButton
+                  // selected={location.pathname.includes("gestion-de-usuarios")}
                   sx={{
                     pl: open ? 4 : 2.5,
+                    // "&.Mui-selected": {
+                    //   backgroundColor: "rgba(78, 140, 179, 0.4)",
+                    //   color: "white",
+                    //   // borderRadius: "10px",
+                    //   // p:"10px",
+                    // },
+                    // "&.Mui-selected:hover": {
+                    //   backgroundColor: "primary.dark",
+                    //   // borderRadius: "10px",
+                    //   // p:"10px",
+                    // },
                     backgroundColor:
                       selectedOption === "Ver todos"
                         ? "rgba(172, 170, 164, 0.27)"
@@ -406,7 +421,7 @@ export default function MainDrawer({ currentStyles }: Props) {
           </Collapse>
         </List>
         <Divider />
-        <List sx={{ display: "flex", flexDirection: "column", }}>
+        <List sx={{ display: "flex", flexDirection: "column" }}>
           <Tooltip title="Gestion de Paquetes turisticos" placement="right">
             <ListItemButton
               onClick={packageHandleClick}
@@ -422,15 +437,15 @@ export default function MainDrawer({ currentStyles }: Props) {
               {packageOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </Tooltip>
-            {!open && (
-              <Typography
-                variant="caption"
-                component="div"
-                sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
-              >
-                Paquetes
-              </Typography>
-            )}
+          {!open && (
+            <Typography
+              variant="caption"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+            >
+              Paquetes
+            </Typography>
+          )}
           <Collapse in={packageOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Tooltip title="Ver todos los paquetes" placement="right">
@@ -629,7 +644,6 @@ export default function MainDrawer({ currentStyles }: Props) {
         </List>
         <Divider />
         <List>
-          
           <Tooltip title="Reportes" placement="right">
             <ListItemButton
               sx={{
@@ -662,7 +676,7 @@ export default function MainDrawer({ currentStyles }: Props) {
             <Typography
               variant="caption"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center",fontWeight:"100" }}
+              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
             >
               Reportes
             </Typography>

@@ -65,12 +65,12 @@ const UserCard: React.FC<UserCardProps> = ({
     <Card
       sx={{
         width: 300,
-        backgroundColor: "rgba(10, 10, 10, 0.7)",
+        backgroundColor: "rgba(10, 10, 10, 0.52)",
         borderRadius: "10px",
         borderTopLeftRadius: "4rem",
         borderBottomLeftRadius: "4rem",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-        border: "1px solid rgb(10,10,10)",
+        border: "1px solid rgba(10,10,10,0.6)",
         ".MuiCardHeader-root": {
           p: "10px",
         },

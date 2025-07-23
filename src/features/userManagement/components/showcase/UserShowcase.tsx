@@ -64,10 +64,14 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
             overflowY: "auto",
             gap: "1rem",
             alignContent: "flex-start",
-            background: "rgba(255,255,255,0.2)",
+            // background: "rgba(255,255,255,0.2)",
+            // background: "rgba(13, 24, 31, 0.4)",
+            // background: "rgba(217, 166, 121, 0.4)",
+            background: "rgba(89, 69, 57, 0.4)",
             borderRadius: "10px",
-            boxShadow: "0 4px 10px rgba(255,255,255,0.2)",
-            border: "1px solid rgba(255,255,255,0.2)",
+            // backdropFilter: "blur(10px)",
+            boxShadow: "0 4px 10px rgba(53, 46, 41, 0.99)",
+            border: "1px solid rgba(89, 69, 57, 0.5)",
           }}
         >
           {users && users.length > 0 ? (
