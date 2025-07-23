@@ -20,37 +20,56 @@ export interface AppBarStyle {
   boxShadow: string;
   backdropFilter: string;
   border: string;
+  drawerBackground: string;
+  drawerBorder: string;
+  drawerBoxShadow: string;
 }
 
-const appBarStyles = [{
-  background: "rgba(88, 83, 79, 0.4)",
-  borderRadius: "16px",
-  boxShadow: "0 4px 10px rgb(41, 39, 37)",
-  backdropFilter: "blur(10px)",
-  border: "1px solid rgba(191, 182, 174, 1)",
-},
-{
-  background: "rgba(88, 83, 79, 0.4)",
-  borderRadius: "16px",
-  boxShadow: "0 4px 10px rgb(41, 39, 37)",
-  backdropFilter: "blur(10px)",
-  border: "1px solid rgba(191, 182, 174, 1)",
-},
-{
-  background: "rgba(88, 83, 79, 0.4)",
-  borderRadius: "16px",
-  boxShadow: "0 4px 10px rgb(41, 39, 37)",
-  backdropFilter: "blur(10px)",
-  border: "1px solid rgba(191, 182, 174, 1)",
-},
-{
+const appBarStyles = [
+  {
+    // background: "rgba(88, 83, 79, 0.4)",
+    background: "rgba(78, 140, 179, 0.4)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(78, 140, 179, 0.5)",
+    // drawerBackground: "rgba(61, 48, 39, 0.53)",
+    drawerBackground: "rgba(89, 69, 57, 0.5)",
+    drawerBorder: "1px solid rgba(89, 69, 57, 0.6)",
+    // drawerBoxShadow: "0 4px 10px rgba(53, 46, 41, 0.99)",
+    drawerBoxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+  },
+  {
+    background: "rgba(4, 96, 217, 0.4)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(4, 96, 217, 0.5)",
+    drawerBackground: "rgba(89, 69, 57, 0.4)",
+    drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
+    drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
+  },
+  {
     background: "rgba(88, 83, 79, 0.4)",
     borderRadius: "16px",
     boxShadow: "0 4px 10px rgb(41, 39, 37)",
     backdropFilter: "blur(10px)",
     border: "1px solid rgba(191, 182, 174, 1)",
+    drawerBackground: "rgba(89, 69, 57, 0.4)",
+    drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
+    drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
   },
-]
+  {
+    background: "rgba(88, 83, 79, 0.4)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 10px rgb(41, 39, 37)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(191, 182, 174, 1)",
+    drawerBackground: "rgba(89, 69, 57, 0.4)",
+    drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
+    drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
+  },
+];
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -74,6 +93,9 @@ const MainLayout: React.FC = () => {
     boxShadow: "",
     backdropFilter: "",
     border: "",
+    drawerBackground: "",
+    drawerBorder: "",
+    drawerBoxShadow: "",
   });
   const handleSelectedOption = (option: string) => {
     setSelectedOption(option);
