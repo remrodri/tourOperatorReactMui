@@ -70,7 +70,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
             background: "rgba(89, 69, 57, 0.4)",
             borderRadius: "10px",
             // backdropFilter: "blur(10px)",
-            boxShadow: "0 4px 10px rgba(53, 46, 41, 0.99)",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             border: "1px solid rgba(89, 69, 57, 0.5)",
           }}
         >

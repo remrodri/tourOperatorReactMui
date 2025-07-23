@@ -9,7 +9,7 @@ const TourPackagePage: React.FC = () => {
       sx={{
         display: "flex",
         // flexGrow: 1,
-        height:"100%",
+        height: "100%",
         // height: {
         //   xs: "calc(100vh - 3.5rem)",
         //   sm: "calc(100vh - 4rem)",
@@ -26,11 +26,11 @@ const TourPackagePage: React.FC = () => {
           // height:"100%",
           // height: "42.3rem",
           flexGrow: 1,
-          background: "rgba(0,0,0,0.6)",
+          background: "rgba(4, 135, 217, 0.4)",
           borderRadius: "16px",
-          boxShadow: "0 4px 10px rgba(0,0,0,1)",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(0,0,0,0.4)",
+          border: "1px solid rgba(4, 135, 217, 0.5)",
         }}
       >
         <Outlet />

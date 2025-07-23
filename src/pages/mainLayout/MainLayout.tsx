@@ -10,7 +10,7 @@ import MainDrawer from "./MainDrawer";
 const userManagementBackground = "/src/assets/images/userManagement.webp";
 const homeBackground = "/src/assets/images/home.webp";
 const tourPackageBackground = "/src/assets/images/tourPackage.webp";
-const bookingBackground = "/src/assets/images/booking.webp";
+const bookingBackground = "/src/assets/images/booking4.webp";
 const reportsBackground = "/src/assets/images/reports.webp";
 // const guideBackground = "/src/assets/images/guide.webp";
 
@@ -40,7 +40,7 @@ const appBarStyles = [
     drawerBoxShadow: "0 4px 10px rgba(0,0,0,0.4)",
   },
   {
-    background: "rgba(4, 96, 217, 0.4)",
+    background: "rgba(4, 135, 217, 0.4)",
     borderRadius: "16px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
     backdropFilter: "blur(10px)",
@@ -50,21 +50,21 @@ const appBarStyles = [
     drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
   },
   {
-    background: "rgba(88, 83, 79, 0.4)",
+    background: "rgba(63, 64, 59, 0.4)",
     borderRadius: "16px",
-    boxShadow: "0 4px 10px rgb(41, 39, 37)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(191, 182, 174, 1)",
+    border: "1px solid rgba(63, 64, 59, 0.5)",
     drawerBackground: "rgba(89, 69, 57, 0.4)",
     drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
     drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
   },
   {
-    background: "rgba(88, 83, 79, 0.4)",
+    background: "rgba(140, 109, 81, 0.4)",
     borderRadius: "16px",
-    boxShadow: "0 4px 10px rgb(41, 39, 37)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(191, 182, 174, 1)",
+    border: "1px solid rgba(140, 109, 81, 0.5)",
     drawerBackground: "rgba(89, 69, 57, 0.4)",
     drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
     drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",

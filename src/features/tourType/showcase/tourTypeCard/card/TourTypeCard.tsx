@@ -2,9 +2,7 @@ import { Card, CardHeader } from "@mui/material";
 import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
 import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
-import { useTourTypeContext } from "../../context/TourTypeContext";
-import CreateTourTypeDialogContainer from "../../createTourTypeDialog/CreateTourTypeDialogContainer";
-import UpdateTourTypeDialogContainer from "../../createTourTypeDialog/UpdateTourTypeDialogContainer";
+import UpdateTourTypeDialogContainer from "../../../createTourTypeDialog/UpdateTourTypeDialogContainer";
 
 interface TourTypeCardProps {
   tourType: any;
@@ -39,10 +37,10 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
       sx={{
         width: 300,
         borderRadius: "10px",
-        background: " rgba(152, 67, 218, 0.9)",
-        boxShadow: "0 4px 10px rgba(142, 44, 218,0.6)",
+        background: "rgba(10,10,10,0.52)",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         // backdropFilter: "blur(10px)",
-        border: "1px solid rgb(142, 44, 218)",
+        border: "1px solid rgba(10,10,10,0.6)",
       }}
     >
       <CardHeader

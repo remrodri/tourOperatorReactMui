@@ -65,7 +65,7 @@ const UserCard: React.FC<UserCardProps> = ({
     <Card
       sx={{
         width: 300,
-        backgroundColor: "rgba(10, 10, 10, 0.52)",
+        background: "rgba(10, 10, 10, 0.52)",
         borderRadius: "10px",
         borderTopLeftRadius: "4rem",
         borderBottomLeftRadius: "4rem",

@@ -1,4 +1,4 @@
-import { useTourTypeContext } from "../../../context/TourTypeContext";
+import { useTourTypeContext } from "../../../../context/TourTypeContext";
 // import { useTourType } from "../hook/useTourType";
 import DeleteDialog from "./DeleteDialog";
 

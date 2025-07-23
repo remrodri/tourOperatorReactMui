@@ -35,20 +35,24 @@ const BookingCard:React.FC<BookingCardProps>=({
     </CardContent>
   </Card>
   }
-    return(
-        <Card
+    return (
+      <Card
         sx={{
-            borderRadius:"10px",
-            background:"rgba(255, 255, 255, 0.2)",
-            boxShadow:"0 4px 30px rgba(0, 0, 0, 0.1)",
-            backdropFilter:"Blur(5px)",
-            border:"1px solid rgba(255,255,255,0.3)",
-            width:300,
+          borderRadius: "10px",
+          background: "rgba(10,10,10,0.52)",
+          boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+          // backdropFilter: "Blur(5px)",
+          border: "1px solid rgba(10,10,10,0.6)",
+          width: 300,
         }}
-        >
-          <CardHeader
+      >
+        <CardHeader
           title={`${index + 1} ${tpInfo?.name}`}
-          subheader={mainTouristInfo? `${mainTouristInfo.firstName} ${mainTouristInfo.lastName}` : ""}
+          subheader={
+            mainTouristInfo
+              ? `${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
+              : ""
+          }
           action={
             <BookingCardMenu
               onOptionSelect={handleMenuOptions}
@@ -66,7 +70,7 @@ const BookingCard:React.FC<BookingCardProps>=({
               : `Saldo: ${balance.toFixed(2)} Bs.`}
           </Typography>
         </CardContent>
-        </Card>
-    )
+      </Card>
+    );
 }
 export default BookingCard;
