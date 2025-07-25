@@ -93,7 +93,7 @@ const LineChartPulse:React.FC<LineChartPulseProps> = ({ cumulativeBookings }) =>
                 top: `${yScale(+value)}%`,
                 left: "0%",
               }}
-              className="absolute text-xs tabular-nums -translate-y-1/2 text-gray-500 w-full text-right pr-2"
+              className="absolute text-xs tabular-nums -translate-y-1/2 text-white w-full text-right pr-2"
             >
               {value}
             </div>
@@ -133,7 +133,8 @@ const LineChartPulse:React.FC<LineChartPulseProps> = ({ cumulativeBookings }) =>
             .map((active, i) => (
               <g
                 transform={`translate(0,${yScale(+active)})`}
-                className="text-zinc-300 dark:text-zinc-700"
+                // className="text-zinc-300 dark:text-zinc-700"
+                className="text-white"
                 key={i}
               >
                 <line
@@ -219,7 +220,7 @@ const LineChartPulse:React.FC<LineChartPulseProps> = ({ cumulativeBookings }) =>
             const isMax = day.value === Math.max(...data.map((d) => d.value));
             if (!isFirst && !isLast && !isMax) return null;
             return (
-              <div key={i} className="overflow-visible text-zinc-500">
+              <div key={i} className="overflow-visible text-white">
                 <div
                   style={{
                     left: `${xScale(day.date)}%`,

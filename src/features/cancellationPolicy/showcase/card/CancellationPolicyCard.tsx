@@ -28,10 +28,11 @@ const CancellationPolicyCard: React.FC<CancellationPolicyCardProps> = ({
         action={
           <CancellationPolicyCardMenu onOptionSelect={handleOptionMenuCard} />
         }
+        subheader={cancellationPolicy.description}
       />
-      <CardContent>
-        <Typography>{cancellationPolicy.description}</Typography>
-      </CardContent>
+      {/* <CardContent>
+        <Typography >{cancellationPolicy.description}</Typography>
+      </CardContent> */}
     </Card>
   );
 };

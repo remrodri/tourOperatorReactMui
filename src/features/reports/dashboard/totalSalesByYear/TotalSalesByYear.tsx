@@ -37,7 +37,7 @@ const TotalSalesByYear: React.FC<TotalSalesByYearProps> = ({
         <Box sx={{position:"relative"}}>
             <div className="absolute inset-0 flex items-center justify-center z-index--10">
                 <div className="text-center">
-                    <p className={`text-lg text-zinc-500`}>Total</p>
+                    <p className={`text-lg text-white`}>Total</p>
                     <p className={`text-4xl transition-colors duration-300 font-bold`}>{totalBookings}</p>
                 </div>
             </div>
