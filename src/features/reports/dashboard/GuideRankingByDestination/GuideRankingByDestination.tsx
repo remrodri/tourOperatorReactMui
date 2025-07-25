@@ -7,7 +7,7 @@ interface GuideRankingByDestinationProps {
     loading:boolean
 }
 const GuideRankingByDestination:React.FC<GuideRankingByDestinationProps> = ({guidesStats,loading}) => {
-  console.log('guidesStats::: ', guidesStats);
+  // console.log('guidesStats::: ', guidesStats);
   if(loading){
     return <div>Loading...</div>
   }

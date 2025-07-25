@@ -14,11 +14,11 @@ const BookingPage: React.FC = () => {
         sx={{
           display: "flex",
           flexGrow: 1,
-          background: "rgba(63, 64, 59, 0.4)",
+          background: "rgba(86, 101, 115, 0.4)",
           borderRadius: "16px",
-          boxShadow: "0 4px 10px rgba(0,0,0,1)",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(63, 64, 59, 0.4)",
+          border: "1px solid rgba(86, 101, 115, 0.5)",
         }}
       >
         <Outlet />

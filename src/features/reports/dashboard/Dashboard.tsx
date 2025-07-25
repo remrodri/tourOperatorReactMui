@@ -57,13 +57,14 @@ const Dashboard: React.FC<DashboardProps> = ({
                 sx={{
                   height: "calc(100% - 5rem)",
                   display: "flex",
-                  p: "20px",
+                  // p: "20px",
                 }}
               >
                 <Box
                 sx={{
                     // pt: "30px",
-                    p:"0px 10px 10px 0px",
+              // p:"0px 10px 10px 0px",
+                  p:"20px",
                     flexGrow: 1,
                     // display: "flex",
                     // justifyContent: "center",
@@ -84,7 +85,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr 1fr 1fr",
                     gridTemplateRows: "1fr 1fr 1fr 1fr",
-                    gap: "10px 10px",
+              gap: "10px 10px",
+                    
                 }}
                 >
                   <Box
@@ -99,11 +101,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                     sx={{
                       gridColumn: "3 / 5",
                       gridRow: "3 / 4",
-                      background: "rgba(0, 0, 0, 0.41)",
+                      background: "rgba(14, 18, 20, 0.6)",
                       borderRadius: "10px",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
                       // backdropFilter: "blur(5px)",
-                      border: "1px solid rgba(0, 0, 0, 0.51)",
+                      border: "1px solid rgba(14, 18, 20, 0.7)",
                       
                     }}
                   >
@@ -155,11 +157,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                     sx={{
                       gridColumn: "1 / 3",
                       gridRow: "3 / 4",
-                      background: "rgba(0, 0, 0, 0.41)",
+                      background: "rgba(14, 18, 20, 0.6)",
                       borderRadius: "10px",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
                       // backdropFilter: "blur(5px)",
-                      border: "1px solid rgba(0, 0, 0, 0.51)",
+                      border: "1px solid rgba(14, 18, 20, 0.7)",
                     }}
                   >
                     {/* <BarChartAnimated /> */}
@@ -169,11 +171,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                     sx={{
                       gridColumn: "1 / 3",
                       gridRow: "4 / 5",
-                      background: "rgba(0, 0, 0, 0.41)",
+                      background: "rgba(14, 18, 20, 0.6)",
                       borderRadius: "10px",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
                       // backdropFilter: "blur(5px)",
-                      border: "1px solid rgba(0, 0, 0, 0.51)",
+                      border: "1px solid rgba(14, 18, 20, 0.7)",
                     }}
                   >
                     {/* <BarChartBenchmark /> */}
@@ -186,11 +188,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                     sx={{
                       gridColumn: "3 / 5",
                       gridRow: "4 / 5",
-                      background: "rgba(0, 0, 0, 0.41)",
+                      background: "rgba(14, 18, 20, 0.6)",
                       borderRadius: "10px",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
                       // backdropFilter: "blur(5px)",
-                      border: "1px solid rgba(0, 0, 0, 0.51)",
+                      border: "1px solid rgba(14, 18, 20, 0.7)",
                     }}
                   >
                     {/* <BarChartThinBreakdown />

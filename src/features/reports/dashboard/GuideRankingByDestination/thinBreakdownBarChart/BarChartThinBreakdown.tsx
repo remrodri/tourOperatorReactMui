@@ -134,7 +134,7 @@ const BarChartThinBreakdown:React.FC<BarChartThinBreakdownProps> = ({data}) => {
                 }}
               />
               <div
-                className="text-xs text-gray-400 text-center"
+                className="text-xs text-white text-center"
                 style={{
                   left: `${xPosition + barWidth / 2}%`,
                   top: `${barHeight + 18}px`,

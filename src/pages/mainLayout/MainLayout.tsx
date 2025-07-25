@@ -10,7 +10,7 @@ import MainDrawer from "./MainDrawer";
 const userManagementBackground = "/src/assets/images/userManagement.webp";
 const homeBackground = "/src/assets/images/home.webp";
 const tourPackageBackground = "/src/assets/images/tourPackage.webp";
-const bookingBackground = "/src/assets/images/booking4.webp";
+const bookingBackground = "/src/assets/images/booking.webp";
 const reportsBackground = "/src/assets/images/reports.webp";
 // const guideBackground = "/src/assets/images/guide.webp";
 
@@ -50,11 +50,12 @@ const appBarStyles = [
     drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
   },
   {
-    background: "rgba(63, 64, 59, 0.4)",
+    // background: "rgba(63, 64, 59, 0.4)",
+    background: "rgba(86, 101, 115, 0.4)",
     borderRadius: "16px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(63, 64, 59, 0.5)",
+    border: "1px solid rgba(86, 101, 115, 0.5)",
     drawerBackground: "rgba(89, 69, 57, 0.4)",
     drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
     drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
