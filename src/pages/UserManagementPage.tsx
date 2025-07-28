@@ -20,9 +20,9 @@ const UserManagementPage: React.FC = () => {
     >
       <Box
         sx={{
-          // height: "42.3rem",
-          display: "flex",
+          // height: "42.4rem",
           flexGrow: 1,
+          display: "flex",
           // height:"100%",
           // background: "rgba(0,0,0,0.6)",
           background: "rgba(78, 140, 179, 0.4)",

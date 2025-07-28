@@ -1,11 +1,8 @@
-import { Box, Typography } from "@mui/material";
-import LoginForm from "../features/auth/LoginForm";
+import { Box } from "@mui/material";
 import loginBackground from "../assets/images/login.webp";
 import LoginFormContainer from "../features/auth/LoginFormContainer";
-import { useRoleContext } from "../features/Role/context/RoleContext";
 
 const LoginPage: React.FC = () => {
-  // const { roles } = useRoleContext();
   return (
     <Box
       sx={{
@@ -18,17 +15,8 @@ const LoginPage: React.FC = () => {
         backgroundPosition: "center",
       }}
     >
-      {/* <Box
-        sx={{
-          background: "rgba(255,255,255,0.2)",
-          backdropFilter: "blur(5px)",
-
-        }}
-      > */}
-      {/* <Typography>Bienvenido al sistema</Typography> */}
       <LoginFormContainer />
     </Box>
-    // </Box>
   );
 };
 

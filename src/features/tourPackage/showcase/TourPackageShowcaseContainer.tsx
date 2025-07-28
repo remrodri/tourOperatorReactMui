@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Fade, Typography } from "@mui/material";
 import TourPackageShowcase from "./TourPackageShowcase";
 import { useState } from "react";
 import TourPackageformContainer from "../tourPackageForm/TourPackageFormContainer";
@@ -11,13 +11,17 @@ const TourPackageShowcaseContainer: React.FC = () => {
     setOpen(!open);
   };
   // console.log('tourPackages::: ', tourPackages);
-  console.log('tourPackages::: ', tourPackages);
+  // console.log('tourPackages::: ', tourPackages);
   return (
     <>
-      <TourPackageShowcase
-        handleClick={handleClickForm}
-        tourPackages={tourPackages}
-      />
+      <Fade in={true} timeout={1000}>
+        <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+          <TourPackageShowcase
+            handleClick={handleClickForm}
+            tourPackages={tourPackages}
+          />
+        </Box>
+      </Fade>
       {open && (
         <TourPackageformContainer open={open} handleClick={handleClickForm} />
       )}
