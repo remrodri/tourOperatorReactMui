@@ -29,6 +29,8 @@ import TourPackageContainer from "../features/guide/tourPackage/TourPackageConta
 import TouristDestinationContainer from "../features/guide/touristDestination/TouristDestinationContainer";
 import ItineraryContainer from "../features/guide/itinerary/ItineraryContainer";
 import GuidePerfilContainer from "../features/guide/perfil/GuidePerfilContainer";
+import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
+import UserManagementSplashScreen from "../pages/UserManagementSplashScreen";
 
 export const AppRouter = createBrowserRouter(
   [

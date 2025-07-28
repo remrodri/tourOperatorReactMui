@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Fade, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { BookingType } from "../types/BookingType";
 import BookingCardContainer from "./card/BookingCardContainer";
@@ -19,6 +19,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   //   return <Box>No hay reservas disponibles</Box>;
   // }
   return (
+    <Fade in={true} timeout={1000}>
     <Box
       sx={{
         flexGrow: 1,
@@ -92,6 +93,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
         </Box>
       </Box>
     </Box>
+    </Fade>
   );
 };
 export default BookingShowcase;

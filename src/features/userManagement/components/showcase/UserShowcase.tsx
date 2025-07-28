@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Fade, Typography } from "@mui/material";
 import { User } from "../../types/User";
 import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import UserCardContainer from "./userCard/UserCardContainer";
@@ -9,6 +9,7 @@ interface UserShowcaseProps {
 }
 const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
   return (
+    <Fade in={true} timeout={1000}>
     <Box
       sx={{
         flexGrow: 1,
@@ -82,6 +83,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
         </Box>
       </Box>
     </Box>
+    </Fade>
   );
 };
 export default UserShowcase;
