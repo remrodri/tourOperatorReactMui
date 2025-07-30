@@ -3,6 +3,7 @@ import { BookingType } from "../../types/BookingType";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../types/TouristType";
 import BookingCardMenu from "./BookingCardMenu";
+import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
 
 
 interface BookingCardProps{
@@ -35,7 +36,19 @@ const BookingCard:React.FC<BookingCardProps>=({
     </CardContent>
   </Card>
   }
-    return (
+  return (
+    <AnimatedContent
+          distance={100}
+          direction="vertical"
+          reverse={true}
+          duration={1.2}
+          ease="power3.out"
+          initialOpacity={0.2}
+          animateOpacity
+          scale={1.1}
+          threshold={0.2}
+          delay={0.3}
+        >
       <Card
         sx={{
           borderRadius: "10px",
@@ -44,6 +57,7 @@ const BookingCard:React.FC<BookingCardProps>=({
           // backdropFilter: "Blur(5px)",
           border: "1px solid rgba(10,10,10,0.6)",
           width: 300,
+          height:"100%",
         }}
       >
         <CardHeader
@@ -71,6 +85,7 @@ const BookingCard:React.FC<BookingCardProps>=({
           </Typography>
         </CardContent>
       </Card>
+      </AnimatedContent>
     );
 }
 export default BookingCard;

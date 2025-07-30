@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { CancellationPolicy } from "../types/CancellationPolicy";
 import CancellationPolicyCardContainer from "./card/CancellationPolicyCardContainer";
+import TextType from "../../../TextAnimations/TextType/TextType";
 
 interface CancellaionPolicyShowcaseProps {
   handleClick: () => void;
@@ -39,7 +40,14 @@ const CancellaionPolicyShowcase: React.FC<CancellaionPolicyShowcaseProps> = ({
             alignItems: "center",
           }}
         >
-          Condiciones de cancelacion
+          <TextType
+            text={"Condiciones de cancelacion"}
+            typingSpeed={50}
+            pauseDuration={1000}
+            showCursor={true}
+            cursorCharacter="_"
+            deletingSpeed={50}
+          />
           <Button
             variant="contained"
             sx={{ height: "2rem", width: "12rem" }}

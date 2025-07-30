@@ -2,6 +2,7 @@ import { Box, Button, Fade, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { BookingType } from "../types/BookingType";
 import BookingCardContainer from "./card/BookingCardContainer";
+import TextType from "../../../TextAnimations/TextType/TextType";
 
 interface BookingShowcaseProps {
   handleClick: () => void;
@@ -45,7 +46,14 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             alignItems: "center",
           }}
         >
-          reservas
+          <TextType
+            text={"Reservas"}
+            typingSpeed={50}
+            pauseDuration={1000}
+            showCursor={true}
+            cursorCharacter="_"
+            deletingSpeed={50}
+          />
           <Button
             variant="contained"
             sx={{ height: "2rem", width: "12rem" }}

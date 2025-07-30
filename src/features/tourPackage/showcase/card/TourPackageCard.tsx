@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { TourPackageType } from "../../types/TourPackageType";
 import TourPackageCardMenu from "./TourPackageCardMenu";
+import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface TourPackageCardProps {
   tourPackage: TourPackageType;
@@ -16,8 +17,20 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
   // handleClickInfo,
 }) => {
   return (
+    <AnimatedContent
+          distance={100}
+          direction="vertical"
+          reverse={true}
+          duration={1.2}
+          ease="power3.out"
+          initialOpacity={0.2}
+          animateOpacity
+          scale={1.1}
+          threshold={0.2}
+          delay={0.3}
+        >
     <Card
-      sx={{
+        sx={{
         // maxWidth: 345,
         // minWidth: 300,
         width: 300,
@@ -26,7 +39,8 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
         background: "rgba(10,10,10,0.52)",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         // backdropFilter: "blur(10px)",
-        border: "1px solid rgba(10,10,10,0.6)",
+          border: "1px solid rgba(10,10,10,0.6)",
+        height: "100%",
       }}
     >
       <CardHeader
@@ -45,6 +59,7 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
         </Typography>
       </CardContent>
     </Card>
+    </AnimatedContent>
   );
 };
 export default TourPackageCard;

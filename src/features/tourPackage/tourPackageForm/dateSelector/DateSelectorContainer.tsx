@@ -22,6 +22,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DateRangeType } from "../../types/DateRangeType";
 import { User } from "../../../userManagement/types/User";
 import { useNewSnackbar } from "../../../../context/SnackbarContext";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface SimpleDateSelectorProps {
   guides: User[];
@@ -117,7 +118,16 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
   return (
     <Box sx={{ mt: 2, width: "100%" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="subtitle1">Fechas Disponibles</Typography>
+        {/* <Typography variant="subtitle1">Fechas Disponibles</Typography> */}
+        <TextType
+          className="text-lg"
+          text="Fechas disponibles"
+          typingSpeed={50}
+          pauseDuration={1000}
+          showCursor={true}
+          cursorCharacter="_"
+          deletingSpeed={50}
+        />
         <Button
           variant="contained"
           color="primary"

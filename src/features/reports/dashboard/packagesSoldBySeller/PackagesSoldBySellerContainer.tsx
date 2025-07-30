@@ -3,7 +3,12 @@ import PackagesSoldBySeller from "./PackagesSoldBySeller";
 
 const PackagesSoldBySellerContainer = () => {
     return (
-        <Box>
+        <Box
+            sx={{
+                flexGrow: 1,
+                display: "flex",
+            }}
+        >
             <PackagesSoldBySeller/>
         </Box>
     );

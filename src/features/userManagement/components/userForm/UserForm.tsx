@@ -17,6 +17,7 @@ import { User } from "../../types/User";
 import { Role } from "../../types/Role";
 import { FormikProps } from "formik";
 import { CloudUpload } from "@mui/icons-material";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface UserFormValues {
   id?: string;
@@ -72,7 +73,16 @@ const UserForm: React.FC<UserFormProps> = ({
       open={open}
       disableEscapeKeyDown={isSubmitting}
     >
-      <DialogTitle>{user ? "Editar usuario" : "Nuevo usuario"}</DialogTitle>
+      {/* <DialogTitle>{user ? "Editar usuario" : "Nuevo usuario"}</DialogTitle> */}
+      <TextType
+        text={user ? "Editar usuario" : "Nuevo usuario"}
+        as={DialogTitle}
+        typingSpeed={50}
+        pauseDuration={1000}
+        showCursor={true}
+        cursorCharacter="_"
+        deletingSpeed={50}
+      />
       <DialogContent>
         <form
           onSubmit={(e) => {
