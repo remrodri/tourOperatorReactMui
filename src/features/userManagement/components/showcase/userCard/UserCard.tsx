@@ -4,6 +4,8 @@ import { Role } from "../../../types/Role";
 import { useEffect, useState } from "react";
 import { ContactPhone } from "@mui/icons-material";
 import UserCardMenu from "./UserCardMenu";
+import FadeContent from "../../../../../Animations/FadeContent/FadeContent";
+import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface UserCardProps {
   user: User;
@@ -62,60 +64,75 @@ const UserCard: React.FC<UserCardProps> = ({
   }, [roles, user.role, userRole]);
 
   return (
-    <Card
-      sx={{
-        width: 300,
-        background: "rgba(10, 10, 10, 0.52)",
-        borderRadius: "10px",
-        borderTopLeftRadius: "4rem",
-        borderBottomLeftRadius: "4rem",
-        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-        border: "1px solid rgba(10,10,10,0.6)",
-        ".MuiCardHeader-root": {
-          p: "10px",
-        },
-        ".MuiCardContent-root": {
-          p: "0 15px 10px 0",
-          display: "flex",
-          justifyContent: "end",
-        },
-      }}
+    <AnimatedContent
+      distance={100}
+      direction="vertical"
+      reverse={true}
+      duration={1.2}
+      ease="power3.out"
+      initialOpacity={0.2}
+      animateOpacity
+      scale={1.1}
+      threshold={0.2}
+      delay={0.3}
     >
-      <CardHeader
-        avatar={
-          <Avatar
-            sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
-            aria-label="user"
-            // Add timestamp parameter to prevent caching
-            src={user.imageUrl ? `${user.imageUrl}?t=${imgKey}` : undefined}
-            // Handle image loading errors
-            imgProps={{
-              onError: () => {
-                console.log("Image failed to load:", user.imageUrl);
-                setImgLoaded(false);
-              },
-              onLoad: () => setImgLoaded(true),
-            }}
-          >
-            {roleChar}
-          </Avatar>
-        }
-        action={<UserCardMenu onOptionSelect={handleMenuOption} />}
-        title={`${userRole.name}`}
-        subheader={
-          <Box>
-            <Typography sx={{ fontSize: "16px" }}>
-              {shortenUserName(`${user.firstName} ${user.lastName}`)}
-            </Typography>
-            <Typography sx={{ pt: "11px", fontSize: "0.9rem", color: "white" }}>
-              <ContactPhone />
-              <br />
-              {user.phone}
-            </Typography>
-          </Box>
-        }
-      />
-    </Card>
+      <Card
+        sx={{
+          width: 300,
+          background: "rgba(10, 10, 10, 0.52)",
+          borderRadius: "10px",
+          borderTopLeftRadius: "4rem",
+          borderBottomLeftRadius: "4rem",
+          boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+          border: "1px solid rgba(10,10,10,0.6)",
+          ".MuiCardHeader-root": {
+            p: "10px",
+          },
+          ".MuiCardContent-root": {
+            p: "0 15px 10px 0",
+            display: "flex",
+            justifyContent: "end",
+          },
+        }}
+      >
+        <CardHeader
+          avatar={
+            <Avatar
+              sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
+              aria-label="user"
+              // Add timestamp parameter to prevent caching
+              src={user.imageUrl ? `${user.imageUrl}?t=${imgKey}` : undefined}
+              // Handle image loading errors
+              imgProps={{
+                onError: () => {
+                  console.log("Image failed to load:", user.imageUrl);
+                  setImgLoaded(false);
+                },
+                onLoad: () => setImgLoaded(true),
+              }}
+            >
+              {roleChar}
+            </Avatar>
+          }
+          action={<UserCardMenu onOptionSelect={handleMenuOption} />}
+          title={`${userRole.name}`}
+          subheader={
+            <Box>
+              <Typography sx={{ fontSize: "16px" }}>
+                {shortenUserName(`${user.firstName} ${user.lastName}`)}
+              </Typography>
+              <Typography
+                sx={{ pt: "11px", fontSize: "0.9rem", color: "white" }}
+              >
+                <ContactPhone />
+                <br />
+                {user.phone}
+              </Typography>
+            </Box>
+          }
+        />
+      </Card>
+    </AnimatedContent>
   );
 };
 

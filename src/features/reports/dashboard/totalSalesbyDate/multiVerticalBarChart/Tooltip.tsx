@@ -39,7 +39,7 @@ const Tooltip: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const TRIGGER_NAME = "TooltipTrigger";
 
-const TooltipTrigger = React.forwardRef<SVGGElement, { children: React.ReactNode }>(
+const TooltipTrigger = React.forwardRef<HTMLElement | SVGGElement, { children: React.ReactNode }>(
   (props, forwardedRef) => {
     const { children } = props;
     const context = useTooltipContext(TRIGGER_NAME);

@@ -90,7 +90,11 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
         "
       >
         <div className="relative w-full h-full">
-          <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <svg
+            className="h-full w-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
             {range(0, roundedMax + 1000, 1000).map((value, i) => (
               <g
                 key={i}
@@ -123,8 +127,10 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
                 >
                   {d.counts.map((count: number, barIndex: number) => {
                     const barHeight = 100 - yScale(count);
-                    const barWidth = (100 - PX_BETWEEN_BARS * (numBars - 1)) / numBars;
-                    const barXPosition = barIndex * (barWidth + PX_BETWEEN_BARS);
+                    const barWidth =
+                      (100 - PX_BETWEEN_BARS * (numBars - 1)) / numBars;
+                    const barXPosition =
+                      barIndex * (barWidth + PX_BETWEEN_BARS);
 
                     return (
                       <div
@@ -148,12 +154,19 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
                 </div>
                 <div className="flex flex-col gap-2">
                   {d.counts.map((count: number, index: number) => (
-                    <div key={index} className="flex gap-1.5 items-center text-sm">
+                    <div
+                      key={index}
+                      className="flex gap-1.5 items-center text-sm"
+                    >
                       <div
                         className="h-3.5 w-1 rounded-full"
-                        style={{ backgroundColor: colors[index % colors.length] }}
+                        style={{
+                          backgroundColor: colors[index % colors.length],
+                        }}
                       ></div>
-                      <span>{`${touristDestinations[index]?.name ?? "Destino"} ${count}`}</span>
+                      <span>{`${
+                        touristDestinations[index]?.name ?? "Destino"
+                      } ${count}`}</span>
                     </div>
                   ))}
                 </div>
@@ -176,7 +189,8 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
                 }}
               >
                 <div className="absolute text-xs -translate-y-1/2 whitespace-nowrap">
-                  {entry.name.slice(0, 10) + (entry.name.length > 10 ? "..." : "")}
+                  {entry.name.slice(0, 10) +
+                    (entry.name.length > 10 ? "..." : "")}
                 </div>
               </div>
             );

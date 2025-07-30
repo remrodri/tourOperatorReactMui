@@ -5,6 +5,7 @@ import { useTourTypeContext } from "../context/TourTypeContext";
 import CreateTourTypeDialog from "../createTourTypeDialog/CreateTourTypeDialog";
 import CreateTourTypeDialogContainer from "../createTourTypeDialog/CreateTourTypeDialogContainer";
 import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
+import TextType from "../../../TextAnimations/TextType/TextType";
 
 interface TourTypeShowcaseProps {
   handleClick: () => void;
@@ -42,7 +43,14 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
               alignItems: "center",
             }}
           >
-            Tipos de tour
+            <TextType
+            text={"Tipos de tour"}
+            typingSpeed={50}
+            pauseDuration={1000}
+            showCursor={true}
+            cursorCharacter="_"
+            deletingSpeed={50}
+          />
             <Button
               variant="contained"
               sx={{ height: "2rem", width: "12rem" }}

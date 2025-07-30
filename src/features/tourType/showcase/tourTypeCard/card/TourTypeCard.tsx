@@ -3,6 +3,7 @@ import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
 import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
 import UpdateTourTypeDialogContainer from "../../../createTourTypeDialog/UpdateTourTypeDialogContainer";
+import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface TourTypeCardProps {
   tourType: any;
@@ -33,6 +34,18 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
   };
 
   return (
+    <AnimatedContent
+          distance={100}
+          direction="vertical"
+          reverse={true}
+          duration={1.2}
+          ease="power3.out"
+          initialOpacity={0.2}
+          animateOpacity
+          scale={1.1}
+          threshold={0.2}
+          delay={0.3}
+        >
     <Card
       sx={{
         width: 300,
@@ -40,7 +53,8 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
         background: "rgba(10,10,10,0.52)",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         // backdropFilter: "blur(10px)",
-        border: "1px solid rgba(10,10,10,0.6)",
+          border: "1px solid rgba(10,10,10,0.6)",
+        height: "100%",
       }}
     >
       <CardHeader
@@ -68,6 +82,7 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
         />
       )}
     </Card>
+    </AnimatedContent>
   );
 };
 export default TourTypeCard;

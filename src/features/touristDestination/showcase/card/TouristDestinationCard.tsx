@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import TouristDestinationCardMenu from "./TouristDestinationCardMenu";
+import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface TouristDestinationCardProps {
   touristDestination: any;
@@ -27,6 +28,18 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
       return `${shortenDescription}...`;
     };
   return (
+    <AnimatedContent
+          distance={100}
+          direction="vertical"
+          reverse={true}
+          duration={1.2}
+          ease="power3.out"
+          initialOpacity={0.2}
+          animateOpacity
+          scale={1.1}
+          threshold={0.2}
+          delay={0.3}
+        >
     <Card
       sx={{
         // maxWidth: 345,
@@ -37,6 +50,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         // backdropFilter: "blur(10px)",
         border: "1px solid rgba(10,10,10,0.6)",
+        height: "100%",
       }}
     >
       <CardHeader
@@ -62,7 +76,8 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
           {shortenDescription(touristDestination.description)}
         </Typography>
       </CardContent>
-    </Card>
+    </Card> 
+    </AnimatedContent>
   );
 };
 export default TouristDestinationCard;

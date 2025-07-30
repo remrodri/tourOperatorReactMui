@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { TourPackageType } from "../types/TourPackageType";
 import TourPackageCardContainer from "./card/TourPackageCardContainer";
+import TextType from "../../../TextAnimations/TextType/TextType";
 
 interface TourPackageShowcaseProps {
   handleClick: () => void;
@@ -37,7 +38,14 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
             alignItems: "center",
           }}
         >
-          Paquetes turisticos
+          <TextType
+            text={"Paquetes turisticos"}
+            typingSpeed={50}
+            pauseDuration={1000}
+            showCursor={true}
+            cursorCharacter="_"
+            deletingSpeed={50}
+          />
           <Button
             variant="contained"
             sx={{ height: "2rem", width: "12rem" }}

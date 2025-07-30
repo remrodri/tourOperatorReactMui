@@ -10,6 +10,7 @@ import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import PaymentForm from "./PaymentForm";
 import GalleryContainer from "../../gallery/GalleryContainer";
+import TextType from "../../../TextAnimations/TextType/TextType";
 
 interface BookingFormProps{
     open:boolean;
@@ -107,7 +108,17 @@ const BookingForm:React.FC<BookingFormProps>=({
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
               border: "1px solid rgba(0, 0, 0, 0.45)",
-            }}>{isEditing ? "Editar reserva" : "Nueva reserva"}</DialogTitle>
+            }}>
+              <TextType
+                className="text-lg"
+                text={isEditing ? "Editar reserva" : "Nueva reserva"}
+                typingSpeed={50}
+                pauseDuration={1000}
+                showCursor={true}
+                cursorCharacter="_"
+                deletingSpeed={50}
+              />
+            </DialogTitle>
             <IconButton
             onClick={handleCloseWithTransition}
             sx={{
@@ -174,7 +185,17 @@ const BookingForm:React.FC<BookingFormProps>=({
                         gap:2,
                       }}
                       >
-                    <Typography variant="h6" gutterBottom>1. Turista</Typography>
+                    <Typography variant="h6" gutterBottom>
+                      <TextType
+                        className="text-lg"
+                        text="1. Turista"
+                        typingSpeed={50}
+                        pauseDuration={1000}
+                        showCursor={true}
+                        cursorCharacter="_"
+                        deletingSpeed={50}
+                      />
+                    </Typography>
                     <TouristForm
                     tourist={formik.values.mainTourist || {}}
                     onChange={handleMainTouristChange}
@@ -190,7 +211,17 @@ const BookingForm:React.FC<BookingFormProps>=({
                           }}
                           />
                         <Box sx={{display:"flex",justifyContent:"space-between"}}>
-                          <Typography variant="subtitle1">Turista #{index+2}</Typography>
+                          <Typography variant="subtitle1">
+                            <TextType
+                              className="text-lg"
+                              text={`Turista ${index+2}`}
+                              typingSpeed={50}
+                              pauseDuration={1000}
+                              showCursor={true}
+                              cursorCharacter="_"
+                              deletingSpeed={50}
+                            />
+                          </Typography>
                           {!tourist.id && (
                             <Button 
                               variant="contained"
@@ -254,7 +285,17 @@ const BookingForm:React.FC<BookingFormProps>=({
                       }}
                       >
                       
-                      <Typography variant="h6">2. Paquete Turístico</Typography>
+                      <Typography variant="h6">
+                        <TextType
+                          className="text-lg"
+                          text="2. Paquete Turístico"
+                          typingSpeed={50}
+                          pauseDuration={1000}
+                          showCursor={true}
+                          cursorCharacter="_"
+                          deletingSpeed={50}
+                        />
+                      </Typography>
                       <Box>
                         <FormControl size="small" fullWidth>
                           <InputLabel>Paquete Turístico</InputLabel>
@@ -422,7 +463,17 @@ const BookingForm:React.FC<BookingFormProps>=({
                         gap:1,
                       }}
                       >
-                      <Typography variant="h6">3. Información de Pago</Typography>
+                      <Typography variant="h6">
+                        <TextType
+                          className="text-lg"
+                          text="3. Información de Pago"
+                          typingSpeed={50}
+                          pauseDuration={1000}
+                          showCursor={true}
+                          cursorCharacter="_"
+                          deletingSpeed={50}
+                        />
+                      </Typography>
                       <PaymentForm
                       payment={formik.values.firstPayment}
                       onChange={handlePaymentChange}

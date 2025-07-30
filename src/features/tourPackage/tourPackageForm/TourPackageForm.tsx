@@ -21,6 +21,7 @@ import { TourItineraryType } from "../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../types/DateRangeType";
 import { User } from "../../userManagement/types/User";
+import TextType from "../../../TextAnimations/TextType/TextType";
 // import { DateRangeType } from "../types/DateRangeType";
 // import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 interface TourPackageFormProps {
@@ -57,7 +58,16 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
   // console.log('formik.values.dateRanges::: ', formik.values.dateRanges);
   return (
     <Dialog open={open} onClose={handleClick} maxWidth={false}>
-      <DialogTitle>Nuevo Paquete turistico</DialogTitle>
+      {/* <DialogTitle>Nuevo Paquete turistico</DialogTitle> */}
+      <TextType
+        text="Nuevo Paquete turistico"
+        as={DialogTitle}
+        typingSpeed={50}
+        pauseDuration={1000}
+        showCursor={true}
+        cursorCharacter="_"
+        deletingSpeed={50}
+      />
       <DialogContent
         sx={{
           width: {

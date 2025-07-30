@@ -6,6 +6,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import TextType from "../../../TextAnimations/TextType/TextType";
 
 interface CreateTourTypeDialogProps {
   open: boolean;
@@ -20,7 +21,18 @@ const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClick}>
-      <DialogTitle>Crear Tour Type</DialogTitle>
+      {/* <DialogTitle>Crear Tour Type</DialogTitle> */}
+      <DialogTitle>
+        <TextType
+          className="text-lg"
+          text="Nuevo tipo de tour"
+          typingSpeed={50}
+          pauseDuration={1000}
+          showCursor={true}
+          cursorCharacter="_"
+          deletingSpeed={50}
+        />
+      </DialogTitle>
       <DialogContent>
         <Box
           sx={{
@@ -50,7 +62,7 @@ const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
               multiline
               rows={4}
               id="description"
-              label="Descripcion"
+              label="Descripción"
               variant="outlined"
               value={formik.values.description}
               onChange={formik.handleChange}

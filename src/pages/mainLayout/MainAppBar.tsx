@@ -1,29 +1,33 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import { Avatar, Tooltip } from '@mui/material';
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
-import { AppBarStyle } from './MainLayout';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import { Avatar, Tooltip } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { AppBarStyle } from "./MainLayout";
+import TextType from "../../TextAnimations/TextType/TextType";
+import AnimatedContent from "../../Animations/AnimatedContent/AnimatedContent";
+import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
+import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 
 const BASE_URL = "http://localhost:3000";
 
 interface Props {
-    currentStyles: AppBarStyle;
-    // toggleDrawer: (newOpen: boolean) => () => void;
+  currentStyles: AppBarStyle;
+  // toggleDrawer: (newOpen: boolean) => () => void;
 }
 
-const MainAppBar: React.FC<Props> = ({currentStyles}) => {
+const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [imageUrl, setImageUrl] = React.useState<string>("");
@@ -31,15 +35,15 @@ const MainAppBar: React.FC<Props> = ({currentStyles}) => {
 
   const navigate = useNavigate();
 
-  const getImage=()=>{
-    const token = localStorage.getItem("token")
-    if(!token){
-      return
+  const getImage = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
     }
-    const user:any = jwtDecode(token)
-    setImageUrl(`${BASE_URL}${user.imagePath}`)
-    setUserName(`${user.firstName} ${user.lastName}`)
-  }
+    const user: any = jwtDecode(token);
+    setImageUrl(`${BASE_URL}${user.imagePath}`);
+    setUserName(`${user.firstName} ${user.lastName}`);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -65,9 +69,10 @@ const MainAppBar: React.FC<Props> = ({currentStyles}) => {
     handleClose();
   };
 
-  React.useEffect(()=>{
-    getImage()
-  },[])
+  React.useEffect(() => {
+    getImage();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -97,7 +102,7 @@ const MainAppBar: React.FC<Props> = ({currentStyles}) => {
           border: currentStyles.border,
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           {/* <Tooltip title="Abrir menu" disableInteractive>
             <IconButton
               size="large"
@@ -110,9 +115,28 @@ const MainAppBar: React.FC<Props> = ({currentStyles}) => {
               <MenuIcon />
             </IconButton>
           </Tooltip> */}
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          {/* <TextType
+          text={userName}
+          typingSpeed={75}
+          pauseDuration={1000}
+          showCursor={true}
+          cursorCharacter="_"
+          deletingSpeed={50}
+        /> */}
+          <DecryptedText
+            text={userName}
+            speed={50}
+            maxIterations={20}
+            sequential={true}
+            characters="ABCD1234!?@"
+            className="revealed"
+            parentClassName="all-letters"
+            encryptedClassName="encrypted"
+            animateOn="view"
+          />
+          {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {userName}
-          </Typography>
+          </Typography> */}
           {auth && (
             <div>
               <IconButton
@@ -154,6 +178,5 @@ const MainAppBar: React.FC<Props> = ({currentStyles}) => {
       </AppBar>
     </Box>
   );
-}
-export default MainAppBar
-
+};
+export default MainAppBar;
