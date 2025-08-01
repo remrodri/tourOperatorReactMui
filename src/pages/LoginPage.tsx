@@ -4,6 +4,7 @@ import LoginFormContainer from "../features/auth/components/login/LoginFormConta
 import LoginShowcase from "../features/auth/components/showcase/LoginShowcase";
 import { useEffect, useState } from "react";
 import FadeContent from "../Animations/FadeContent/FadeContent";
+import { RoleProvider } from "../features/Role/context/RoleContext";
 
 const LoginPage: React.FC = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -51,7 +52,9 @@ const LoginPage: React.FC = () => {
         }}
       >
         {/* <LoginFormContainer /> */}
-        <LoginShowcase />
+        <RoleProvider>
+          <LoginShowcase />
+        </RoleProvider>
       </Box>
     </FadeContent>
   );
