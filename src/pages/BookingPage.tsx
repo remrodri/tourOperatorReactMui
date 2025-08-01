@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
-const BookingPage: React.FC = () => {
+const BookingPage = () => {
   return (
     <Box
       sx={{

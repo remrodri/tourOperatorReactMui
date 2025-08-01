@@ -1,6 +1,7 @@
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import { loginSchema } from "./validations/loginSchema";
+import { loginSchema } from "../../validations/loginSchema";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface LoginFormContainerProps {
   onSubmit: (userData: any) => void;
@@ -13,25 +14,25 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
       password: "",
     },
     validationSchema: loginSchema,
-    // enableReinitialize:true,
     onSubmit,
   });
   return (
     <Box
       sx={{
-        // height: "30rem",
-        width: "20rem",
+        height: "100%",
+        width: "50%",
         background: "rgba(0,0,0,0.5)",
         borderRadius: "10px",
-        boxShadow: "0 4px 30px rgba(0,0,0,0.1)",
-        backdropFilter: "blur(5px)",
-        border: "1px solid rgba(0,0,0,0.6)",
+        border: "1px solid rgba(49, 49, 49, 0.23)",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "0 4px 30px rgba(0,0,0,1)",
       }}
     >
       <Box
         sx={{
           display: "flex",
-          height: "80px",
+          height: "30%",
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -39,20 +40,35 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
         <Typography
           variant="h5"
           component="h1"
-          // gutterBottom
           sx={{
-            // color: "white",
             fontSize: "2rem",
             fontWeight: "500",
           }}
         >
-          Iniciar Sesion
+          <TextType
+            text="Iniciar sesión"
+            typingSpeed={50}
+            pauseDuration={1000}
+            showCursor={true}
+            cursorCharacter="_"
+            deletingSpeed={50}
+          />
         </Typography>
       </Box>
-      <form onSubmit={formik.handleSubmit}>
+      <form
+        onSubmit={formik.handleSubmit}
+        style={{
+          height: "70%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Box
           sx={{
-            // height: "80%",
+            height: "100%",
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -72,12 +88,10 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
               }}
               margin="normal"
               size="small"
-              // fullWidth
               id="email"
               name="email"
-              label="Correo Electronico"
+              label="Correo electrónico"
               variant="outlined"
-              // value={formik.values.email}
               defaultValue=""
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
@@ -102,7 +116,6 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
               name="password"
               label="Contraseña"
               variant="outlined"
-              // value={formik.values.password}
               defaultValue=""
               type="password"
               onChange={formik.handleChange}
@@ -128,6 +141,15 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
           >
             Olvidaste tu contraseña?
           </Link>
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "center",
+          }}
+        >
           <Button
             sx={{ width: "90%", margin: "2rem 0 1rem 0" }}
             variant="contained"
