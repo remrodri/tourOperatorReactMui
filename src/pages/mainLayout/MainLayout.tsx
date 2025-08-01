@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 // import homeBackground from "/src/assets/images/home.webp";
 import MainDrawer from "./MainDrawer";
+import { RoleProvider } from "../../features/Role/context/RoleContext";
 // import userManagementBackground from "../../assets/images/userManagement.webp";
 // import tourPackageBackground from "../../assets/images/tourPackage.webp";
 // import securitySetupBackground from "../../assets/images/securitySetup.webp";
@@ -148,14 +149,16 @@ const MainLayout: React.FC = () => {
     >
       {/* <Typography>HomePage</Typography> */}
       {/* <NavBar /> */}
-      <MainDrawer
-        currentStyles={currentStyles}
-      // open={open}
-      // setOpen={setOpen}
-      // selectedOption={selectedOption}
-      // setSelectedOption={setSelectedOption}
-      // handleSelectedOption={handleSelectedOption}
-      />
+      <RoleProvider>
+        <MainDrawer
+          currentStyles={currentStyles}
+          // open={open}
+          // setOpen={setOpen}
+          // selectedOption={selectedOption}
+          // setSelectedOption={setSelectedOption}
+          // handleSelectedOption={handleSelectedOption}
+        />
+      </RoleProvider>
     </Box>
   );
 };
