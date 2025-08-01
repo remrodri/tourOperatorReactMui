@@ -34,6 +34,7 @@ import TextType from "../../TextAnimations/TextType/TextType";
 import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 import PeopleIcon from "@mui/icons-material/People";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import CategoryIcon from "@mui/icons-material/Category";
 
 const drawerWidth = 240;
 
@@ -491,7 +492,7 @@ export default function MainDrawer({ currentStyles }: Props) {
               onClick={() => handleClick("Tipo de tour")}
             >
               <ListItemIcon>
-                <FormatListBulletedIcon
+                <CategoryIcon
                   sx={{
                     color:
                       selectedOption === "Tipo de tour" ? "#90caf9" : "inherit",
