@@ -1,8 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
-import MainLayout from "../pages/mainLayout/MainLayout";
 import UserManagementPage from "../pages/UserManagementPage";
-import HomePage from "../pages/HomePage";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
 import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
 import SecurityAnswerContainer from "../features/securitySetup/components/securityAnswerForm/SecurityAnswerContainer";
@@ -18,11 +16,7 @@ import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/showcase/BookingShowcaseContainer";
 import ReportsPage from "../pages/ReportsPage";
 import DashboardContainer from "../features/reports/dashboard/DashboardContainer";
-import GuidePage from "../pages/Guide/GuidePage";
 import GuidePageContainer from "../pages/Guide/GuidePageContainer";
-import GuideShowcaseContainer from "../features/guide/touristList/TouristListContainer";
-import GuideDrawer from "../pages/Guide/GuideDrawer";
-import GuideShowcase from "../features/guide/touristList/TouristList";
 import GuideDrawerContainer from "../pages/Guide/GuideDrawerContainer";
 import TouristListContainer from "../features/guide/touristList/TouristListContainer";
 import TourPackageContainer from "../features/guide/tourPackage/TourPackageContainer";
@@ -30,7 +24,6 @@ import TouristDestinationContainer from "../features/guide/touristDestination/To
 import ItineraryContainer from "../features/guide/itinerary/ItineraryContainer";
 import GuidePerfilContainer from "../features/guide/perfil/GuidePerfilContainer";
 import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
-import UserManagementSplashScreen from "../pages/UserManagementSplashScreen";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -67,35 +60,17 @@ export const AppRouter = createBrowserRouter(
     },
     {
       path: "/",
-      // element: <MainLayout />,
       element: <MainLayoutSplashScreen />,
 
       children: [
-        // {
-        //   path: "",
-        //   element: <HomePage />,
-        // },
         {
           path: "gestion-de-usuarios",
           element: <UserManagementPage />,
           children: [
-            // {
-            //   path: "nuevo",
-            //   element: <RegisterContainer />,
-            // },
             {
               path: "usuarios",
               element: <UserShowcaseContainer />,
-              children: [
-                // {
-                //   path: "",
-                //   element: <UserShowcase />,
-                // },
-                // {
-                //   path: "editar/:userId",
-                //   element: <RegisterContainer />,
-                // },
-              ],
+              children: [],
             },
           ],
         },
@@ -107,10 +82,6 @@ export const AppRouter = createBrowserRouter(
               path: "ver-todos",
               element: <TourPackageShowcaseContainer />,
             },
-            // {
-            //   path: "nuevo",
-            //   element: <TourPackageformContainer />,
-            // },
             {
               path: "tipo-de-tour",
               element: <TourTypeContainer />,

@@ -1,5 +1,10 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import { UserProvider } from "../features/userManagement/context/UserContext";
+import { BookingProvider } from "../features/booking/context/BookingContext";
+import { TouristProvider } from "../features/tourist/context/TouristContext";
+import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
+import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
 
 const BookingPage = () => {
   return (
@@ -21,7 +26,17 @@ const BookingPage = () => {
           border: "1px solid rgba(86, 101, 115, 0.5)",
         }}
       >
-        <Outlet />
+        <DateRangeProvider>
+          <TourPackageProvider>
+            <TouristProvider>
+              <BookingProvider>
+                <UserProvider>
+                  <Outlet />
+                </UserProvider>
+              </BookingProvider>
+            </TouristProvider>
+          </TourPackageProvider>
+        </DateRangeProvider>
       </Box>
     </Box>
   );

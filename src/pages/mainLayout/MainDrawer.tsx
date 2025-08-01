@@ -1,8 +1,6 @@
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
@@ -16,17 +14,12 @@ import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
-  Avatar,
   Collapse,
-  Fade,
-  Menu,
-  MenuItem,
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
 import { ExpandLess, ExpandMore, HorizontalSplit } from "@mui/icons-material";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import { useLogout } from "../../features/auth/hook/useLogout";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import ListAltIcon from "@mui/icons-material/ListAlt";
@@ -38,12 +31,10 @@ import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/userManagement/types/User";
-import { useUserContext } from "../../features/userManagement/context/UserContext";
 import MainAppBar from "./MainAppBar";
 import { AppBarStyle } from "./MainLayout";
-import FadeContent from "../../Animations/FadeContent/FadeContent";
-
-const BASE_URL = "http://localhost:3000";
+import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
+import TextType from "../../TextAnimations/TextType/TextType";
 
 const drawerWidth = 240;
 
@@ -78,50 +69,50 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
+// interface AppBarProps extends MuiAppBarProps {
+//   open?: boolean;
+// }
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme }) => ({
-  position: "static",
-  // padding:"5px",
-  // zIndex: theme.zIndex.drawer + 1,
-  // m:"5px 0 0 0",
-  height: "5.5rem",
-  // p:"5px 0 0 0",
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        // marginLeft: drawerWidth,
-        // width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(["width", "margin"], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-    {
-      props: ({ open }) => !open,
-      style: {
-        // marginLeft: drawerWidth,
-        // width: `calc(100% - 5rem)`,
-        // padding:"5px",
-        // height:"4rem",
-        transition: theme.transitions.create(["width", "margin"], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-  ],
-}));
+// const AppBar = styled(MuiAppBar, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })<AppBarProps>(({ theme }) => ({
+//   position: "static",
+//   // padding:"5px",
+//   // zIndex: theme.zIndex.drawer + 1,
+//   // m:"5px 0 0 0",
+//   height: "5.5rem",
+//   // p:"5px 0 0 0",
+//   transition: theme.transitions.create(["width", "margin"], {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   variants: [
+//     {
+//       props: ({ open }) => open,
+//       style: {
+//         // marginLeft: drawerWidth,
+//         // width: `calc(100% - ${drawerWidth}px)`,
+//         transition: theme.transitions.create(["width", "margin"], {
+//           easing: theme.transitions.easing.sharp,
+//           duration: theme.transitions.duration.enteringScreen,
+//         }),
+//       },
+//     },
+//     {
+//       props: ({ open }) => !open,
+//       style: {
+//         // marginLeft: drawerWidth,
+//         // width: `calc(100% - 5rem)`,
+//         // padding:"5px",
+//         // height:"4rem",
+//         transition: theme.transitions.create(["width", "margin"], {
+//           easing: theme.transitions.easing.sharp,
+//           duration: theme.transitions.duration.enteringScreen,
+//         }),
+//       },
+//     },
+//   ],
+// }));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -148,7 +139,7 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-const settings = ["Cerrar sesion"];
+// const settings = ["Cerrar sesion"];
 
 interface Props {
   currentStyles: AppBarStyle;
@@ -160,12 +151,11 @@ export default function MainDrawer({ currentStyles }: Props) {
   const [open, setOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
-  const { error, logout } = useLogout();
+  // const { error, logout } = useLogout();
   const [selectedOption, setSelectedOption] = useState("");
   const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
   const [bookingOpen, setBookingOpen] = useState(true);
-  const { userInfo } = useUserContext();
 
   const handleClickBooking = () => {
     setBookingOpen(!bookingOpen);
@@ -235,19 +225,19 @@ export default function MainDrawer({ currentStyles }: Props) {
   const handleCloseUserMenu = () => {
     setUserMenuOpen(null);
   };
-  const handleOptionUserMenu = (setting: string) => {
-    switch (setting) {
-      case settings[0]:
-        console.log("cerrar sesion::: ");
-        logout();
-        break;
-      default:
-        console.log("no hay opciones::: ");
-        console.log(error);
-        break;
-    }
-    handleCloseUserMenu();
-  };
+  // const handleOptionUserMenu = (setting: string) => {
+  //   switch (setting) {
+  //     case settings[0]:
+  //       console.log("cerrar sesion::: ");
+  //       logout();
+  //       break;
+  //     default:
+  //       console.log("no hay opciones::: ");
+  //       console.log(error);
+  //       break;
+  //   }
+  //   handleCloseUserMenu();
+  // };
 
   // const icons = [<HomeIcon />, <SupervisorAccountIcon />];
 
@@ -313,11 +303,17 @@ export default function MainDrawer({ currentStyles }: Props) {
         <DrawerHeader>
           {open && (
             <Typography
-              variant="h6"
+              variant="subtitle1"
               component="div"
               sx={{ flexGrow: 1, textAlign: "center" }}
             >
-              {roleName}
+              <TextType
+                text={roleName.toUpperCase()}
+                typingSpeed={75}
+                pauseDuration={1000}
+                showCursor={true}
+                cursorCharacter="_"
+              />
             </Typography>
           )}
           {open ? (

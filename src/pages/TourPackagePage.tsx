@@ -1,5 +1,10 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
+import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
+import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
+import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
+import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
 
 const TourPackagePage: React.FC = () => {
   return (
@@ -33,7 +38,17 @@ const TourPackagePage: React.FC = () => {
           border: "1px solid rgba(4, 135, 217, 0.5)",
         }}
       >
-        <Outlet />
+        <TouristDestinationProvider>
+          <CancellationPolicyProvider>
+            <TourTypeProvider>
+              <DateRangeProvider>
+                <TourPackageProvider>
+                  <Outlet />
+                </TourPackageProvider>
+              </DateRangeProvider>
+            </TourTypeProvider>
+          </CancellationPolicyProvider>
+        </TouristDestinationProvider>
       </Box>
       {/* <Typography variant="h4" component="h2"> */}
       {/* </Typography> */}
