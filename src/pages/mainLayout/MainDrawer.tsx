@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import {
   Avatar,
   Collapse,
+  Fade,
   Menu,
   MenuItem,
   Tooltip,
@@ -40,6 +41,7 @@ import { User } from "../../features/userManagement/types/User";
 import { useUserContext } from "../../features/userManagement/context/UserContext";
 import MainAppBar from "./MainAppBar";
 import { AppBarStyle } from "./MainLayout";
+import FadeContent from "../../Animations/FadeContent/FadeContent";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -792,15 +794,16 @@ export default function MainDrawer({ currentStyles }: Props) {
             </Box>
           </Toolbar>
         </AppBar> */}
-        <MainAppBar currentStyles={currentStyles} />
-        <Box
-          sx={{
-            // height: "100dvh"
-            height: "calc(100% - 5.5rem)",
-          }}
-        >
-          <Outlet />
-        </Box>
+        
+            <MainAppBar currentStyles={currentStyles} />
+            <Box
+              sx={{
+                height: "calc(100% - 5.5rem)",
+              }}
+            >
+              <Outlet />
+            </Box>
+          
       </Box>
     </Box>
   );

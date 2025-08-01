@@ -67,7 +67,9 @@ export const AppRouter = createBrowserRouter(
     },
     {
       path: "/",
-      element: <MainLayout />,
+      // element: <MainLayout />,
+      element: <MainLayoutSplashScreen />,
+
       children: [
         // {
         //   path: "",
