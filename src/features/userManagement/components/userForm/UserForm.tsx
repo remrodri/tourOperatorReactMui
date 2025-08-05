@@ -85,9 +85,7 @@ const UserForm: React.FC<UserFormProps> = ({
       />
       <DialogContent>
         <form
-          onSubmit={(e) => {
-            formik.handleSubmit(e);
-          }}
+          onSubmit={formik.handleSubmit}
           style={{
             padding: "0.3rem 0 0 0",
           }}

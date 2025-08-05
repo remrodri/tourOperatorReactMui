@@ -39,10 +39,10 @@ const UserCard: React.FC<UserCardProps> = ({
   }, [user.id, user.imageUrl]);
 
   const shortenUserName = (name: string) => {
-    if (name.length < 15) {
+    if (name.length < 27) {
       return name;
     }
-    const shortenName = name.substring(0, 12);
+    const shortenName = name.substring(0, 24);
     return `${shortenName}...`;
   };
 
@@ -78,13 +78,13 @@ const UserCard: React.FC<UserCardProps> = ({
     >
       <Card
         sx={{
-          width: 300,
+          width: 400,
           background: "rgba(10, 10, 10, 0.52)",
           borderRadius: "10px",
           borderTopLeftRadius: "4rem",
           borderBottomLeftRadius: "4rem",
           boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-          border: "1px solid rgba(10,10,10,0.6)",
+          border: "1px solid rgba(53, 53, 53, 0.6)",
           ".MuiCardHeader-root": {
             p: "10px",
           },
@@ -115,17 +115,17 @@ const UserCard: React.FC<UserCardProps> = ({
             </Avatar>
           }
           action={<UserCardMenu onOptionSelect={handleMenuOption} />}
-          title={`${userRole.name}`}
+          title={`${userRole.name.toUpperCase()}`}
           subheader={
             <Box>
               <Typography sx={{ fontSize: "16px" }}>
                 {shortenUserName(`${user.firstName} ${user.lastName}`)}
               </Typography>
               <Typography
-                sx={{ pt: "11px", fontSize: "0.9rem", color: "white" }}
+                sx={{ pt: "11px", fontSize: "0.9rem",  display: "flex", alignItems: "center", gap: "10px" }}
               >
                 <ContactPhone />
-                <br />
+                {/* <br /> */}
                 {user.phone}
               </Typography>
             </Box>

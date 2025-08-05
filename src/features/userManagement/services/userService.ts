@@ -56,45 +56,21 @@ const registerUser = async (
 };
 
 const updateUser = async (
-  userData: Partial<User> | FormData,
+  userData: FormData,
   userId: string,
   token: string
 ): Promise<ApiResponse> => {
-  let formData: FormData;
-
-  // Check if userData is already a FormData object
-  if (userData instanceof FormData) {
-    formData = userData;
-    // Make sure userId is included in formData
-    formData.append("userId", userId);
-  } else {
-    // Create a new FormData object
-    formData = new FormData();
-
-    // Add userId to the form data
-    formData.append("userId", userId);
-
-    // Add all fields from userData to formData
-    Object.entries(userData).forEach(([key, value]) => {
-      // Skip null or undefined values
-      if (value !== null && value !== undefined) {
-        // Handle the image file specially
-        if (key === "image" && value instanceof File) {
-          formData.append("image", value, value.name);
-        } else {
-          formData.append(key, String(value));
-        }
-      }
-    });
+  for (const [key, value] of userData.entries()) {
+    console.log(`${key}:`, value);
   }
 
-  const response = await axios.patch(API_URL, formData, {
+  const response = await axios.put(`${API_URL}/${userId}`, userData, {
     headers: {
       Authorization: `Bearer ${token}`,
       // Remove Content-Type header - axios will set it automatically
     },
   });
-
+  console.log('response::: ', response.data);
   return response.data;
 };
 

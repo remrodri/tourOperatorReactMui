@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { User } from "../../types/User";
 import { Role } from "../../types/Role";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface MoreInfoModalProps {
   open: boolean;
@@ -24,15 +25,37 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
   user,
   userRole,
 }) => {
-  console.log("user::: ", user);
+  // console.log("user::: ", user);
   return (
-    <Dialog onClose={handleMoreInfoClick} open={open}>
-      <DialogTitle>Informacion</DialogTitle>
+    <Dialog
+      onClose={handleMoreInfoClick}
+      open={open}
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "rgba(46, 46, 46, 0.7)",
+          borderRadius: "16px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(37, 37, 37, 0.5)",
+        },
+      }}
+    >
+      <DialogTitle>
+        <TextType
+          text="Información"
+          typingSpeed={75}
+          pauseDuration={1500}
+          showCursor={true}
+          cursorCharacter="_"
+        />
+      </DialogTitle>
       <DialogContent
         dividers
-        sx={{ display: "flex", flexDirection: "column", width: "300px" }}
+        sx={{ display: "flex", flexDirection: "column", width: "400px" }}
       >
-        <Box sx={{ display: "flex", justifyContent: "center", p: " 0 0 20px 0" }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "center", p: " 0 0 20px 0" }}
+        >
           <Avatar
             variant="rounded"
             sx={{ height: "150px", width: "150px" }}
