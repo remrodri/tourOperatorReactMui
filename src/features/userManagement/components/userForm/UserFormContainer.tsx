@@ -57,6 +57,8 @@ const UserFormContainer: React.FC<UserFormContainerProps> = ({
   }, [preview]);
 
   const onSubmit = async (values: UserFormValues) => {
+    console.log('values::: ', values);
+    console.log('user::: ', user);
     setIsSubmitting(true);
 
     try {
@@ -114,22 +116,23 @@ const UserFormContainer: React.FC<UserFormContainerProps> = ({
     }
   };
 
-  const formik = useFormik<UserFormValues>({
-    initialValues: {
-      id: user?.id ?? "",
-      firstName: user?.firstName ?? "",
-      lastName: user?.lastName ?? "",
-      email: user?.email ?? "",
-      phone: user?.phone ?? "", // Fixed: was using email instead of phone
-      ci: user?.ci ?? "",
-      role: user?.role ?? "",
-      address: user?.address ?? "",
-      imageUrl: user?.imageUrl ?? "",
-      image: null,
-    },
-    validationSchema: userSchema,
-    onSubmit,
-  });
+const formik = useFormik<UserFormValues>({
+  initialValues: {
+    id: user?.id ?? "",
+    firstName: user?.firstName ?? "",
+    lastName: user?.lastName ?? "",
+    email: user?.email ?? "",
+    phone: user?.phone ?? "",
+    ci: user?.ci ?? "",
+    role: user?.role ?? "",
+    address: user?.address ?? "",
+    imageUrl: user?.imageUrl ?? "",
+    image: null,
+  },
+  enableReinitialize: true,
+  validationSchema: userSchema(!!user), //  pasa el booleano directamente
+  onSubmit,
+});
 
   return (
     <UserForm

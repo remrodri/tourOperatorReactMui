@@ -19,10 +19,7 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   registerUser: (userData: Partial<User> | FormData) => Promise<any>;
-  updateUser: (
-    userData: Partial<User> | FormData,
-    userId: string
-  ) => Promise<any>;
+  updateUser: (userData: FormData, userId: string) => Promise<any>;
   deleteUser: (userId: string) => Promise<any>;
   getUserById: (userId: string) => User | null; // Cambiado a Promise
   userFound: User | null;
@@ -166,7 +163,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await userService.registerUser(userData, token);
 
-      if (response ) {
+      if (response) {
         // Make sure we have the complete user object from the response
         const newUser = response.data;
 
@@ -195,18 +192,19 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const updateUser = async (
-    userData: Partial<User> | FormData,
+    userData: FormData,
     userId: string
   ): Promise<any> => {
+    // for (const [key, value] of userData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
     if (!token) {
       setLoading(false);
       return null;
     }
-
     try {
       // Indicate loading
       setLoading(true);
-
       const response = await userService.updateUser(userData, userId, token);
       if (response && response.data) {
         // Get the updated user data from the response
@@ -240,9 +238,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     if (!token) {
       return;
     }
-    const user:any = jwtDecode(token);
+    const user: any = jwtDecode(token);
     setUserInfo(user);
-  }
+  };
 
   useEffect(() => {
     // console.log("::: ");
@@ -264,7 +262,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         getUserById,
         userFound,
         getUsersById,
-        userInfo
+        userInfo,
       }}
     >
       {children}

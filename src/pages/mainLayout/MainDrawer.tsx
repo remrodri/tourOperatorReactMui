@@ -13,11 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  Collapse,
-  Tooltip,
-  useMediaQuery,
-} from "@mui/material";
+import { Collapse, Tooltip, useMediaQuery } from "@mui/material";
 import { ExpandLess, ExpandMore, HorizontalSplit } from "@mui/icons-material";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
@@ -35,6 +31,10 @@ import MainAppBar from "./MainAppBar";
 import { AppBarStyle } from "./MainLayout";
 import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
 import TextType from "../../TextAnimations/TextType/TextType";
+import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
+import PeopleIcon from "@mui/icons-material/People";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import CategoryIcon from "@mui/icons-material/Category";
 
 const drawerWidth = 240;
 
@@ -317,7 +317,7 @@ export default function MainDrawer({ currentStyles }: Props) {
             </Typography>
           )}
           {open ? (
-            <Tooltip title="Cerrar" placement="left">
+            <Tooltip title="Cerrar" placement="right">
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
                   <ChevronRightIcon />
@@ -347,7 +347,8 @@ export default function MainDrawer({ currentStyles }: Props) {
         </DrawerHeader>
         <Divider />
         <List>
-          <Tooltip title="Gestion de usuarios" placement="right">
+          {/* <ListItemText primary="Usuarios" /> */}
+          {/* <Tooltip title="Gestion de usuarios" placement="right">
             <ListItemButton
               onClick={userHandleClick}
               sx={{
@@ -361,287 +362,272 @@ export default function MainDrawer({ currentStyles }: Props) {
               <ListItemText primary="Usuarios" />
               {userOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-          </Tooltip>
-          {!open && (
+          </Tooltip> */}
+          {/* {!open && (
+          )} */}
+          <Box width="100%">
             <Typography
-              variant="caption"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+              // variant="caption"
+              // component="div"
+              sx={{
+                // flexGrow: 1,
+                fontSize: open ? "0.8rem" : "0.7rem",
+                width: open ? "100%" : "3.8rem",
+                fontWeight: "100",
+                display: "flex",
+                justifyContent: open ? "left" : "center",
+                pl: open ? 2 : 0,
+              }}
             >
               Usuarios
             </Typography>
-          )}
-          <Collapse in={userOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Tooltip title="Listar usuarios" placement="right">
-                <ListItemButton
-                  // selected={location.pathname.includes("gestion-de-usuarios")}
+          </Box>
+          {/* <Collapse in={userOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding> */}
+          <Tooltip title="Listar usuarios" placement="right">
+            <ListItemButton
+              // selected={location.pathname.includes("gestion-de-usuarios")}
+              sx={{
+                pl: open ? 4 : 2.5,
+                // "&.Mui-selected": {
+                //   backgroundColor: "rgba(78, 140, 179, 0.4)",
+                //   color: "white",
+                //   // borderRadius: "10px",
+                //   // p:"10px",
+                // },
+                // "&.Mui-selected:hover": {
+                //   backgroundColor: "primary.dark",
+                //   // borderRadius: "10px",
+                //   // p:"10px",
+                // },
+                backgroundColor:
+                  selectedOption === "Ver todos"
+                    ? "rgba(172, 170, 164, 0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Ver todos"
+                      ? "rgba(255, 255, 255, 0.12)"
+                      : "rgba(172, 170, 164, 0.27)",
+                },
+              }}
+              onClick={() => handleClick("Ver todos")}
+            >
+              <ListItemIcon>
+                <PeopleIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    // "&.Mui-selected": {
-                    //   backgroundColor: "rgba(78, 140, 179, 0.4)",
-                    //   color: "white",
-                    //   // borderRadius: "10px",
-                    //   // p:"10px",
-                    // },
-                    // "&.Mui-selected:hover": {
-                    //   backgroundColor: "primary.dark",
-                    //   // borderRadius: "10px",
-                    //   // p:"10px",
-                    // },
-                    backgroundColor:
-                      selectedOption === "Ver todos"
-                        ? "rgba(172, 170, 164, 0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Ver todos"
-                          ? "rgba(255, 255, 255, 0.12)"
-                          : "rgba(172, 170, 164, 0.27)",
-                    },
+                    color:
+                      selectedOption === "Ver todos" ? "#90caf9" : "inherit",
                   }}
-                  onClick={() => handleClick("Ver todos")}
-                >
-                  <ListItemIcon>
-                    <RecentActorsIcon
-                      sx={{
-                        color:
-                          selectedOption === "Ver todos"
-                            ? "#90caf9"
-                            : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Ver todos" : ""} />
-                </ListItemButton>
-              </Tooltip>
-            </List>
-          </Collapse>
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Ver todos" : ""} />
+            </ListItemButton>
+          </Tooltip>
         </List>
         <Divider />
         <List sx={{ display: "flex", flexDirection: "column" }}>
-          <Tooltip title="Gestion de Paquetes turisticos" placement="right">
-            <ListItemButton
-              onClick={packageHandleClick}
-              sx={{
-                minHeight: 48,
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon>
-                <AirplaneTicketIcon />
-              </ListItemIcon>
-              <ListItemText primary="Paquetes" />
-              {packageOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-          </Tooltip>
-          {!open && (
+          <Box width="100%">
             <Typography
-              variant="caption"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+              // variant="caption"
+              // component="div"
+              sx={{
+                // flexGrow: 1,
+                fontSize: open ? "0.8rem" : "0.7rem",
+                width: open ? "100%" : "3.8rem",
+                fontWeight: "100",
+                display: "flex",
+                justifyContent: open ? "left" : "center",
+                pl: open ? 2 : 0,
+              }}
             >
               Paquetes
             </Typography>
-          )}
-          <Collapse in={packageOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Tooltip title="Ver todos los paquetes" placement="right">
-                <ListItemButton
+          </Box>
+          <Tooltip title="Ver todos los paquetes" placement="right">
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Paquetes turisticos"
+                    ? "rgba(172, 170, 164, 0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Paquetes turisticos"
+                      ? "rgba(255, 255, 255, 0.12)"
+                      : "rgba(172, 170, 164, 0.27)",
+                },
+              }}
+              onClick={() => handleClick("Paquetes turisticos")}
+            >
+              <ListItemIcon>
+                <ListAltIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    backgroundColor:
+                    color:
                       selectedOption === "Paquetes turisticos"
-                        ? "rgba(172, 170, 164, 0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Paquetes turisticos"
-                          ? "rgba(255, 255, 255, 0.12)"
-                          : "rgba(172, 170, 164, 0.27)",
-                    },
+                        ? "#90caf9"
+                        : "inherit",
                   }}
-                  onClick={() => handleClick("Paquetes turisticos")}
-                >
-                  <ListItemIcon>
-                    <ListAltIcon
-                      sx={{
-                        color:
-                          selectedOption === "Paquetes turisticos"
-                            ? "#90caf9"
-                            : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Ver todos" : ""} />
-                </ListItemButton>
-              </Tooltip>
-              <Tooltip title="Tipo de tour" placement="right">
-                <ListItemButton
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Ver todos" : ""} />
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip title="Tipo de tour" placement="right">
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Tipo de tour"
+                    ? "rgba(172, 170, 164, 0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Tipo de tour"
+                      ? "rgba(255, 255, 255, 0.12)"
+                      : "rgba(172, 170, 164, 0.27)",
+                },
+              }}
+              onClick={() => handleClick("Tipo de tour")}
+            >
+              <ListItemIcon>
+                <CategoryIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    backgroundColor:
-                      selectedOption === "Tipo de tour"
-                        ? "rgba(172, 170, 164, 0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Tipo de tour"
-                          ? "rgba(255, 255, 255, 0.12)"
-                          : "rgba(172, 170, 164, 0.27)",
-                    },
+                    color:
+                      selectedOption === "Tipo de tour" ? "#90caf9" : "inherit",
                   }}
-                  onClick={() => handleClick("Tipo de tour")}
-                >
-                  <ListItemIcon>
-                    <FormatListBulletedIcon
-                      sx={{
-                        color:
-                          selectedOption === "Tipo de tour"
-                            ? "#90caf9"
-                            : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Tipos de tour" : ""} />
-                </ListItemButton>
-              </Tooltip>
-              <Tooltip title="Politicas de cancelacion" placement="right">
-                <ListItemButton
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Tipos de tour" : ""} />
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip title="Politicas de cancelacion" placement="right">
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Politicas"
+                    ? "rgba(172, 170, 164, 0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Politicas"
+                      ? "rgba(255, 255, 255, 0.12)"
+                      : "rgba(172, 170, 164, 0.27)",
+                },
+              }}
+              onClick={() => handleClick("Politicas")}
+            >
+              <ListItemIcon>
+                <EventBusyIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    backgroundColor:
-                      selectedOption === "Politicas"
-                        ? "rgba(172, 170, 164, 0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Politicas"
-                          ? "rgba(255, 255, 255, 0.12)"
-                          : "rgba(172, 170, 164, 0.27)",
-                    },
-                    // boxShadow:
-                    //   selectedOption === "Politicas"
-                    //     ? "0 4px 10px rgba(255, 255, 255, 0.23)"
-                    //     : "",
-                    // outline:
-                    //   selectedOption === "Politicas"
-                    //     ? "1px solid rgba(255,255,255,0.2)"
-                    //     : "",
+                    color:
+                      selectedOption === "Politicas" ? "#90caf9" : "inherit",
                   }}
-                  onClick={() => handleClick("Politicas")}
-                >
-                  <ListItemIcon>
-                    <EventBusyIcon
-                      sx={{
-                        color:
-                          selectedOption === "Politicas"
-                            ? "#90caf9"
-                            : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Politicas " : ""} />
-                </ListItemButton>
-              </Tooltip>
-              <Tooltip title="Destinos" placement="right">
-                <ListItemButton
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Politicas " : ""} />
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip title="Destinos" placement="right">
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Destinos"
+                    ? "rgba(172, 170, 164, 0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Destinos"
+                      ? "rgba(255, 255, 255, 0.12)"
+                      : "rgba(172, 170, 164, 0.27)",
+                },
+              }}
+              onClick={() => handleClick("Destinos")}
+            >
+              <ListItemIcon>
+                <ExploreIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    backgroundColor:
-                      selectedOption === "Destinos"
-                        ? "rgba(172, 170, 164, 0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Destinos"
-                          ? "rgba(255, 255, 255, 0.12)"
-                          : "rgba(172, 170, 164, 0.27)",
-                    },
-                    // boxShadow:
-                    //   selectedOption === "Destinos"
-                    //     ? "0 4px 10px rgba(255, 255, 255, 0.38)"
-                    //     : "",
-                    // outline:
-                    //   selectedOption === "Destinos"
-                    //     ? "1px solid rgba(255, 255, 255, 0.38)"
-                    //     : "",
-                    // m: selectedOption === "Destinos" ? "0 1px" : "0",
+                    color:
+                      selectedOption === "Destinos" ? "#90caf9" : "inherit",
                   }}
-                  onClick={() => handleClick("Destinos")}
-                >
-                  <ListItemIcon>
-                    <ExploreIcon
-                      sx={{
-                        color:
-                          selectedOption === "Destinos" ? "#90caf9" : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Destinos" : ""} />
-                </ListItemButton>
-              </Tooltip>
-            </List>
-          </Collapse>
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Destinos" : ""} />
+            </ListItemButton>
+          </Tooltip>
         </List>
         <Divider />
         <List>
-          <Tooltip title="Gestion de Reservas" placement="right">
-            <ListItemButton
-              onClick={handleClickBooking}
-              sx={{ minHeight: 48, px: 2.5 }}
-            >
-              <ListItemIcon>
-                <BookOnlineIcon />
-              </ListItemIcon>
-              <ListItemText primary="Reservas" />
-              {bookingOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-          </Tooltip>
-          {!open && (
+          <Box width="100%">
             <Typography
-              variant="caption"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
+              // variant="caption"
+              // component="div"
+              sx={{
+                // flexGrow: 1,
+                fontSize: open ? "0.8rem" : "0.7rem",
+                width: open ? "100%" : "3.8rem",
+                fontWeight: "100",
+                display: "flex",
+                justifyContent: open ? "left" : "center",
+                pl: open ? 2 : 0,
+              }}
             >
               Reservas
             </Typography>
-          )}
-          <Collapse in={bookingOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Tooltip title="Ver todas las reservas" placement="right">
-                <ListItemButton
+          </Box>
+          <Tooltip title="Ver todas las reservas" placement="right">
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Reservas"
+                    ? "rgba(172,170,164,0.27)"
+                    : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    selectedOption === "Reservas"
+                      ? "rgba(255,255,255,0.12)"
+                      : "rgba(172,170,164,0.27)",
+                },
+              }}
+              onClick={() => handleClick("Reservas")}
+            >
+              <ListItemIcon>
+                <BookOnlineIcon
                   sx={{
-                    pl: open ? 4 : 2.5,
-                    backgroundColor:
-                      selectedOption === "Reservas"
-                        ? "rgba(172,170,164,0.27)"
-                        : "transparent",
-                    "&:hover": {
-                      backgroundColor:
-                        selectedOption === "Reservas"
-                          ? "rgba(255,255,255,0.12)"
-                          : "rgba(172,170,164,0.27)",
-                    },
+                    color:
+                      selectedOption === "Reservas" ? "#90caf9" : "inherit",
                   }}
-                  onClick={() => handleClick("Reservas")}
-                >
-                  <ListItemIcon>
-                    <HorizontalSplit
-                      sx={{
-                        color:
-                          selectedOption === "Reservas" ? "#90caf9" : "inherit",
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={open ? "Ver todos" : ""} />
-                </ListItemButton>
-              </Tooltip>
-            </List>
-          </Collapse>
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Ver todos" : ""} />
+            </ListItemButton>
+          </Tooltip>
+          {/* </List>
+          </Collapse> */}
         </List>
         <Divider />
         <List>
+          <Box width="100%">
+            <Typography
+              // variant="caption"
+              // component="div"
+              sx={{
+                // flexGrow: 1,
+                fontSize: open ? "0.8rem" : "0.7rem",
+                width: open ? "100%" : "3.8rem",
+                fontWeight: "100",
+                display: "flex",
+                justifyContent: open ? "left" : "center",
+                pl: open ? 2 : 0,
+              }}
+            >
+              Reportes
+            </Typography>
+          </Box>
           <Tooltip title="Reportes" placement="right">
             <ListItemButton
               sx={{
@@ -660,7 +646,7 @@ export default function MainDrawer({ currentStyles }: Props) {
               onClick={() => handleClick("Reportes")}
             >
               <ListItemIcon>
-                <ListAltIcon
+                <QueryStatsIcon
                   sx={{
                     color:
                       selectedOption === "Reportes" ? "#90caf9" : "inherit",
@@ -670,15 +656,6 @@ export default function MainDrawer({ currentStyles }: Props) {
               <ListItemText primary={open ? "Ver todos" : ""} />
             </ListItemButton>
           </Tooltip>
-          {!open && (
-            <Typography
-              variant="caption"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "center", fontWeight: "100" }}
-            >
-              Reportes
-            </Typography>
-          )}
         </List>
       </Drawer>
       <Box
@@ -688,118 +665,14 @@ export default function MainDrawer({ currentStyles }: Props) {
           flexDirection: "column",
         }}
       >
-        {/* <AppBar
-          open={open}
+        <MainAppBar currentStyles={currentStyles} />
+        <Box
           sx={{
-            background: "none",
-            boxShadow: "none",
-            border: "none",
-            p: "10px",
-            display: "flex",
-            justifyContent: "center",
+            height: "calc(100% - 5.5rem)",
           }}
         >
-          <Toolbar
-            sx={{
-              background: "rgba(0, 0, 0, 0.6)",
-              borderRadius: "16px",
-              boxShadow: "0 4px 10px rgba(0,0,0,1)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(0,0,0,0.7)",
-              height: "100%", // Ajusta el alto aquí
-            }}
-          >
-            {matches && (
-              <Tooltip title="Abrir" placement="right">
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  sx={[
-                    {
-                      // marginRight: 5,
-                    },
-                    open && { display: "none" },
-                  ]}
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-between",
-                height: "100%",
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ alignContent: "center" }}
-              >
-                LOGO
-              </Typography>
-              <Box
-                sx={{
-                  flexGrow: 0,
-                }}
-              >
-                <Tooltip title="Configuracion">
-                  <IconButton
-                    onClick={handleOpenUserMenu}
-                    sx={{ p: 0, alignSelf: "flex-end" }}
-                  >
-                    <Avatar src={BASE_URL + userInfo?.avatar} />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{
-                    mt: "45px",
-                  }}
-                  id="menu-appbar"
-                  anchorEl={userMenuOpen}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(userMenuOpen)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem
-                      key={setting}
-                      onClick={() => handleOptionUserMenu(setting)}
-                    >
-                      <Typography sx={{ textAlign: "center" }}>
-                        {setting}
-                      </Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </Box>
-          </Toolbar>
-        </AppBar> */}
-        
-            <MainAppBar currentStyles={currentStyles} />
-            <Box
-              sx={{
-                height: "calc(100% - 5.5rem)",
-              }}
-            >
-              <Outlet />
-            </Box>
-          
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );
