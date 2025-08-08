@@ -1,8 +1,8 @@
 import { useState } from "react";
 import TouristDestinationCard from "./TouristDestinationCard";
 import TouristDestinationFormContainer from "../../touristDestinationForm/TouristDestinationFormContainer";
-import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
-import GalleryContainer from "../../../gallery/GalleryContainer";
+import { useTouristDestinationContext } from "../../../context/TouristDestinationContext";
+import GalleryContainer from "../../../../gallery/GalleryContainer";
 
 interface TouristDestinationCardContainerProps {
   touristDestination: any;
@@ -23,16 +23,16 @@ const TouristDestinationCardContainer: React.FC<
   };
 
   const handleOption = (option: string) => {
-    if (option === "Eliminar") {
-      console.log("Eliminar::: ");
+    if (option === "Dar de baja") {
+      // console.log("Eliminar::: ");
       deleteTouristDestination(touristDestination.id);
     }
     if (option === "Editar") {
-      console.log("Editar::: ");
+      // console.log("Editar::: ");
       handleClick();
     }
     if (option === "Ver galeria") {
-      console.log("ver galeria");
+      // console.log("ver galeria");
       handleOpenGalleryClick();
     }
   };

@@ -2,7 +2,11 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState, MouseEvent } from "react";
 
-const options = ["Ver galeria", "Editar", "Eliminar"];
+const options = [
+  "Ver galeria",
+  "Editar",
+  // "Dar de baja"
+];
 
 interface TouristDestinationCardMenuProps {
   onOptionSelect: (option: string) => void;

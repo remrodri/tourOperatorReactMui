@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import { Add as AddIcon, Delete as DeleteIcon, ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
-import { ActivityType } from "../types/ActivityType";
-import { DayItineraryType, TourItineraryType } from "../types/DayItineraryType";
-import TextType from "../../../TextAnimations/TextType/TextType";
+import { ActivityType } from "../../types/ActivityType";
+import { DayItineraryType, TourItineraryType } from "../../types/DayItineraryType";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface DayItineraryManagerProps {
   duration: number;

@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
-import { TouristDestinationType } from "../types/TouristDestinationType";
+import { TouristDestinationType } from "../../types/TouristDestinationType";
 import TouristDestinationForm from "./TouristDestinationForm";
 import { useState } from "react";
 import { touristDestinationSchema } from "./validation/touristDestinationSchema";
-import { useTouristDestinationContext } from "../context/TouristDestinationContext";
+import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
 
 interface TouristDestinationFormContainerProps {
   open: boolean;

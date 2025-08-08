@@ -7,10 +7,10 @@ import SecurityAnswerContainer from "../features/securitySetup/components/securi
 import EmailFormContainer from "../features/securitySetup/components/ResetPassword/emailForm/EmailFormContainer";
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 import TourPackagePage from "../pages/TourPackagePage";
-import TourPackageShowcaseContainer from "../features/tourPackage/showcase/TourPackageShowcaseContainer";
+import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
 import TourTypeContainer from "../features/tourType/showcase/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
-import TouristDestinationShowcaseContainer from "../features/touristDestination/showcase/TouristDestinationShowcaseContainer";
+import TouristDestinationShowcaseContainer from "../features/touristDestination/components/showcase/TouristDestinationShowcaseContainer";
 import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
 import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/showcase/BookingShowcaseContainer";
@@ -24,6 +24,7 @@ import TouristDestinationContainer from "../features/guide/touristDestination/To
 import ItineraryContainer from "../features/guide/itinerary/ItineraryContainer";
 import GuidePerfilContainer from "../features/guide/perfil/GuidePerfilContainer";
 import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
+import MainLayout from "../pages/mainLayout/MainLayout";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -60,7 +61,8 @@ export const AppRouter = createBrowserRouter(
     },
     {
       path: "/",
-      element: <MainLayoutSplashScreen />,
+      // element: <MainLayoutSplashScreen />,
+      element: <MainLayout />,
 
       children: [
         {

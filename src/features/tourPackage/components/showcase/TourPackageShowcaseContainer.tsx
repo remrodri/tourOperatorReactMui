@@ -2,7 +2,7 @@ import { Box, Fade, Typography } from "@mui/material";
 import TourPackageShowcase from "./TourPackageShowcase";
 import { useState } from "react";
 import TourPackageformContainer from "../tourPackageForm/TourPackageFormContainer";
-import { useTourPackageContext } from "../context/TourPackageContext";
+import { useTourPackageContext } from "../../context/TourPackageContext";
 
 const TourPackageShowcaseContainer: React.FC = () => {
   const { tourPackages } = useTourPackageContext();
