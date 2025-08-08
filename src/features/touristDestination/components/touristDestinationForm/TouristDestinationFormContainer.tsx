@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { TouristDestinationType } from "../../types/TouristDestinationType";
 import TouristDestinationForm from "./TouristDestinationForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { touristDestinationSchema } from "./validation/touristDestinationSchema";
 import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
 
@@ -21,7 +21,8 @@ interface TouristDestinationFormValues {
 
 const TouristDestinationFormContainer: React.FC<
   TouristDestinationFormContainerProps
-> = ({ open, handleClick, touristDestination }) => {
+  > = ({ open, handleClick, touristDestination }) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [existingImages, setExistingImages] = useState<string[]>(
     touristDestination?.images.filter(
       (img): img is string => typeof img === "string"
@@ -52,11 +53,17 @@ const TouristDestinationFormContainer: React.FC<
     validationSchema: touristDestinationSchema,
     onSubmit,
   });
+    useEffect(() => {
+      if (touristDestination) {
+        setIsEditing(true);
+      }
+    },[touristDestination])
   return (
     <TouristDestinationForm
       open={open}
       handleClick={handleClick}
       formik={formik}
+      isEditing={isEditing}
     />
   );
 };
