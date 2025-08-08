@@ -5,6 +5,7 @@ import { DateRangeProvider } from "../features/dateRange/context/DateRangeContex
 import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
 import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
+import { UserProvider } from "../features/userManagement/context/UserContext";
 
 const TourPackagePage: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const TourPackagePage: React.FC = () => {
           border: "1px solid rgba(4, 135, 217, 0.5)",
         }}
       >
+        <UserProvider>
         <TouristDestinationProvider>
           <CancellationPolicyProvider>
             <TourTypeProvider>
@@ -49,6 +51,7 @@ const TourPackagePage: React.FC = () => {
             </TourTypeProvider>
           </CancellationPolicyProvider>
         </TouristDestinationProvider>
+        </UserProvider>
       </Box>
       {/* <Typography variant="h4" component="h2"> */}
       {/* </Typography> */}

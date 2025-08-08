@@ -209,14 +209,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       if (response && response.data) {
         // Get the updated user data from the response
         const updatedUser = response.data;
-
         // Update the users array with the updated user data
         setUsers((prevUsers: any) =>
           prevUsers.map((user: User) =>
             user.id === userId ? updatedUser : user
           )
         );
-
         return updatedUser;
       }
       return null;

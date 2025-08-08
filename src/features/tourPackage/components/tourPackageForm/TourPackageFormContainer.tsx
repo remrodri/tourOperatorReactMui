@@ -1,17 +1,15 @@
-import { Box, Typography } from "@mui/material";
 import TourPackageForm from "./TourPackageForm";
-import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
 import { useFormik } from "formik";
-import { TourPackageType } from "../types/TourPackageType";
+import { TourPackageType } from "../../types/TourPackageType";
 import { tourPackageSchema } from "./validation/tourPackageSchema";
-import { useTourTypeContext } from "../../tourType/context/TourTypeContext";
-import { useCancellationConditionContext } from "../../cancellationPolicy/context/CancellationPolicyContext";
-import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
-import { DayItineraryType, TourItineraryType } from "../types/DayItineraryType";
-import { useTourPackageContext } from "../context/TourPackageContext";
+import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
+import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
+import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
+import { TourItineraryType } from "../../types/DayItineraryType";
+import { useTourPackageContext } from "../../context/TourPackageContext";
 import { useEffect } from "react";
-import { DateRangeType } from "../types/DateRangeType";
-import { useUserContext } from "../../userManagement/context/UserContext";
+import { DateRangeType } from "../../types/DateRangeType";
+import { useUserContext } from "../../../userManagement/context/UserContext";
 interface TourPackageFormContainerProps {
   open: boolean;
   handleClick: () => void;
@@ -68,7 +66,12 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
       cancellationPolicy: tourPackage?.cancellationPolicy ?? "",
       touristDestination: tourPackage?.touristDestination ?? "",
       duration: tourPackage?.duration ?? 1,
-      dateRanges: tourPackage?.dateRanges ?? [],
+      dateRanges: ((tourPackage?.dateRanges as DateRangeType[]) ?? []).map(
+        (dr) => ({
+          ...dr,
+          guides: dr.guides ?? [],
+        })
+      ),
       // blockedDates: tourPackage?.blockedDates ?? [],
       price: tourPackage?.price ?? 0,
       itinerary: tourPackage?.itinerary ?? {

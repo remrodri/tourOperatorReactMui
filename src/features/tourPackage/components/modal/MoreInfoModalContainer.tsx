@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useCancellationConditionContext } from "../../cancellationPolicy/context/CancellationPolicyContext";
-import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
-import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
-import { useTourTypeContext } from "../../tourType/context/TourTypeContext";
-import { TourPackageType } from "../types/TourPackageType";
+import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
+import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
+import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
+import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
+import { TourPackageType } from "../../types/TourPackageType";
 import TourPackageModal from "./MoreInfoModal";
-import { DateRangeType } from "../types/DateRangeType";
 
 interface MoreInfoModalContainerProps {
   handleClick: () => void;

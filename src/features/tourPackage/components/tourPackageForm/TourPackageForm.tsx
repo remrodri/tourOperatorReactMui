@@ -12,16 +12,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+// import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { FormikProps } from "formik";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // import DateSelectorContainer from "./dateSelector2/DateSelectorContainer";
 import DayItineraryManager from "../itineraryManager/DayItineraryManager";
-import { TourItineraryType } from "../types/DayItineraryType";
+import { TourItineraryType } from "../../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
-import { DateRangeType } from "../types/DateRangeType";
-import { User } from "../../userManagement/types/User";
-import TextType from "../../../TextAnimations/TextType/TextType";
+import { DateRangeType } from "../../types/DateRangeType";
+import { User } from "../../../userManagement/types/User";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 // import { DateRangeType } from "../types/DateRangeType";
 // import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 interface TourPackageFormProps {

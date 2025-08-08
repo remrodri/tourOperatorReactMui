@@ -6,8 +6,8 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-import { TourPackageType } from "../types/TourPackageType";
-import { DateRangeType } from "../types/DateRangeType";
+import { TourPackageType } from "../../types/TourPackageType";
+import { DateRangeType } from "../../types/DateRangeType";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface MoreInfoModalProps {

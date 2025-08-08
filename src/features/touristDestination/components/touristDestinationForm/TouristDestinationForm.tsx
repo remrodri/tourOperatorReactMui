@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { FormikProps } from "formik";
 import { ChangeEvent, useState } from "react";
-import TextType from "../../../TextAnimations/TextType/TextType";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 import { CloudUpload } from "@mui/icons-material";
 
 interface TouristDestinationFormProps {
@@ -87,12 +87,12 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
         />
       </DialogTitle>
       <DialogContent
-      sx={{
-        display: "flex",
-        flexDirection: "column",
+        sx={{
+          display: "flex",
+          flexDirection: "column",
           gap: "1rem",
-        width:"350px"
-      }}
+          width: "350px",
+        }}
       >
         <form
           onSubmit={formik.handleSubmit}
@@ -164,7 +164,15 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
                 <Typography color="error" sx={{fontSize:"12px",pt:"4px"}}>{formik.errors.newImages}</Typography>
               )}
           </Box> */}
-          <Box sx={{ display: "flex", gap: "1rem", flexDirection: "column", width:"100%",mt:"1rem" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "1rem",
+              flexDirection: "column",
+              width: "100%",
+              mt: "1rem",
+            }}
+          >
             <Box sx={{ height: "100%", width: "100%" }}>
               {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 Agregar imágenes:

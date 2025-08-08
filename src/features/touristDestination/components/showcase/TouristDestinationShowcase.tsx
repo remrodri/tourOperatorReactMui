@@ -1,28 +1,36 @@
 import { Box, Button, Typography } from "@mui/material";
-import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
-import { TourPackageType } from "../types/TourPackageType";
-import TourPackageCardContainer from "./card/TourPackageCardContainer";
-import TextType from "../../../TextAnimations/TextType/TextType";
+import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
+import { TouristDestinationType } from "../../types/TouristDestinationType";
+import TouristDestinationCardContainer from "./card/TouristDestinationCardContainer";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
-interface TourPackageShowcaseProps {
+interface TouristDestinationShowcaseProps {
   handleClick: () => void;
-  tourPackages: TourPackageType[];
+  // BASE_URL: string;
+  touristDestinations: any[];
 }
-const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
+
+const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
   handleClick,
-  tourPackages,
+  // BASE_URL,
+  touristDestinations,
 }) => {
+  // console.log('touristDestinations::: ', touristDestinations);
   return (
     <Box
       sx={{
+        // position: "relative",
+        // width:"100%",
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
+        // height:"100dvh"
       }}
     >
       <Typography
         variant="h4"
         sx={{
+          // height: "12%",
           height: "5rem",
           display: "flex",
           flexDirection: "column",
@@ -39,7 +47,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
           }}
         >
           <TextType
-            text={"Paquetes turisticos"}
+            text={"Destinos turisticos"}
             typingSpeed={50}
             pauseDuration={1000}
             showCursor={true}
@@ -57,6 +65,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
       </Typography>
       <Box
         sx={{
+          // height: "90%",
           height: "calc(100% - 5rem)",
           display: "flex",
           p: "20px",
@@ -64,6 +73,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
       >
         <Box
           sx={{
+            // position:"relative",
             pt: "30px",
             flexGrow: 1,
             display: "flex",
@@ -79,16 +89,19 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
             border: "1px solid rgba(75, 44, 27, 0.5)",
           }}
         >
-          {tourPackages && tourPackages.length > 0 ? (
-            tourPackages.map((tp, index) => (
-              <TourPackageCardContainer key={index} tourPackage={tp} />
+          {touristDestinations && touristDestinations.length > 0 ? (
+            touristDestinations.map((touristDestination) => (
+              <TouristDestinationCardContainer
+                key={touristDestination.id}
+                touristDestination={touristDestination}
+              />
             ))
           ) : (
-            <p>No se encuentran paquetes turisticos</p>
+            <p>No se encuentran destinos turisticos</p>
           )}
         </Box>
       </Box>
     </Box>
   );
 };
-export default TourPackageShowcase;
+export default TouristDestinationShowcase;

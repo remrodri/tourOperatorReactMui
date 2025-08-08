@@ -128,17 +128,27 @@ const MainLayoutSplashScreen: React.FC = () => {
     );
   }
 
+  // return (
+  //   !showSplashScreen && (
+  //     <FadeContent
+  //       blur={true}
+  //       duration={1000}
+  //       easing="ease-out"
+  //       initialOpacity={0}
+  //     >
+  //       <MainLayout />
+  //     </FadeContent>
+  //   )
+  // );
   return (
-    !showSplashScreen && (
-      <FadeContent
-        blur={true}
-        duration={1000}
-        easing="ease-out"
-        initialOpacity={0}
+    <FadeContent
+      blur={true}
+      duration={1000}
+      easing="ease-out"
+      initialOpacity={0}
       >
         <MainLayout />
       </FadeContent>
     )
-  );
 };
 export default MainLayoutSplashScreen;

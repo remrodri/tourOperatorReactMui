@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TouristDestinationShowcase from "./TouristDestinationShowcase";
 import TouristDestinationFormContainer from "../touristDestinationForm/TouristDestinationFormContainer";
-import { useTouristDestinationContext } from "../context/TouristDestinationContext";
+import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
 import { Box, Fade } from "@mui/material";
 
 const TouristDestinationShowcaseContainer: React.FC = () => {

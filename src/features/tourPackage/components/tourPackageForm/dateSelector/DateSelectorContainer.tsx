@@ -19,10 +19,10 @@ import dayjs, { Dayjs } from "dayjs";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import { DateRangeType } from "../../types/DateRangeType";
-import { User } from "../../../userManagement/types/User";
-import { useNewSnackbar } from "../../../../context/SnackbarContext";
-import TextType from "../../../../TextAnimations/TextType/TextType";
+import { DateRangeType } from "../../../types/DateRangeType";
+import { User } from "../../../../userManagement/types/User";
+import { useNewSnackbar } from "../../../../../context/SnackbarContext";
+import TextType from "../../../../../TextAnimations/TextType/TextType";
 
 interface SimpleDateSelectorProps {
   guides: User[];
