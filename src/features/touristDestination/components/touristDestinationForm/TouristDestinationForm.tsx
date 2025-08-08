@@ -23,6 +23,7 @@ interface TouristDestinationFormProps {
     newImages: File[];
     existingImages: string[];
   }>;
+  isEditing: boolean;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -41,6 +42,7 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
   open,
   handleClick,
   formik,
+  isEditing,
 }) => {
   const BASE_URL = "http://localhost:3000";
   // const [preview, setPreview] = useState<string | null>(null);
@@ -78,7 +80,7 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
       <DialogTitle>
         <TextType
           className="text-lg"
-          text="Nuevo destino turístico"
+          text={isEditing ? "Editar destino turístico" : "Nuevo destino turístico"}
           typingSpeed={50}
           pauseDuration={1000}
           showCursor={true}
