@@ -36,8 +36,8 @@ const UserCardContainer: React.FC<UserCardContainerProps> = ({ user }) => {
         console.log("Editar::: ");
         handleOpenUserFormClick();
         break;
-      case "Eliminar":
-        console.log("Eliminar::: ");
+      case "Dar de baja":
+        console.log("Dar de baja::: ");
         break;
       default:
         console.log("Opcion invalida");

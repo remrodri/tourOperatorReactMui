@@ -2,7 +2,11 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { MouseEvent, useState } from "react";
 
-const options = ["Ver mas", "Editar", "Eliminar"];
+const options = [
+  "Ver mas",
+  "Editar",
+  // "Dar de baja"
+];
 
 interface UserCardMenuProps {
   onOptionSelect: (option: string) => void;

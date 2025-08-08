@@ -62,48 +62,48 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
             src={user.imageUrl}
           />
         </Box>
-        <Typography>
+        <Box>
           <Box>Nombre(s):</Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {user.firstName}
-          </Box>
-        </Typography>
-        <Typography>
+          </Typography>
+        </Box>
+        <Box>
           <Box>Apellidos:</Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {user.lastName}
-          </Box>
-        </Typography>
-        <Typography>
+          </Typography>
+        </Box>
+        <Box>
           <Box>Rol:</Box>{" "}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {userRole.name}
-          </Box>
-        </Typography>
-        <Typography>
+          </Typography>
+        </Box>
+        <Box>
           <Box>Ci:</Box>{" "}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {user.ci}
-          </Box>
-        </Typography>
-        <Typography sx={{ display: "flex", flexDirection: "column" }}>
+          </Typography>
+        </Box>
+        <Box>
           <Box>Correo Electronico:</Box>{" "}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {user.email}
-          </Box>
-        </Typography>
-        <Typography sx={{ display: "flex", flexDirection: "column" }}>
+          </Typography>
+        </Box>
+        <Box>
           <Box>Telefono</Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {user.phone}
-          </Box>
-        </Typography>
-        <Typography sx={{ display: "flex", flexDirection: "column" }}>
+          </Typography>
+        </Box>
+        <Box>
           <Box>Direccion</Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {user.address}
-          </Box>
-        </Typography>
+          </Typography>
+        </Box>
       </DialogContent>
       <Box sx={{ p: "20px 15px", display: "flex", justifyContent: "center" }}>
         <Button onClick={handleMoreInfoClick} variant="contained" fullWidth>
