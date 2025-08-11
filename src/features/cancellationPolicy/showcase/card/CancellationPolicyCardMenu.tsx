@@ -2,7 +2,10 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const options = ["Editar", "Eliminar"];
+const options = [
+  "Editar",
+  // "Eliminar"
+];
 
 interface CancellationPolicyCardMenuProps {
   onOptionSelect: (option: string) => void;
