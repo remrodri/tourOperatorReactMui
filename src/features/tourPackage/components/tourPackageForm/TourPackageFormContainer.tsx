@@ -7,7 +7,7 @@ import { useCancellationConditionContext } from "../../../cancellationPolicy/con
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { TourItineraryType } from "../../types/DayItineraryType";
 import { useTourPackageContext } from "../../context/TourPackageContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DateRangeType } from "../../types/DateRangeType";
 import { useUserContext } from "../../../userManagement/context/UserContext";
 interface TourPackageFormContainerProps {
@@ -41,6 +41,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
   const { touristDestinations } = useTouristDestinationContext();
   const { createTourPackage, updateTourPackage } = useTourPackageContext();
   const { guides, fetchGuides } = useUserContext();
+  const [isEditing, setIsEditing] = useState(false);
 
   // useEffect(() => {
   //   fetchGuides();
@@ -87,6 +88,11 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
     onSubmit,
   });
   useEffect(() => {
+    if(tourPackage){
+      setIsEditing(true);
+    }
+  }, [tourPackage]);
+  useEffect(() => {
     if (tourPackage?.dateRanges) {
       formik.setFieldValue("dateRanges", tourPackage.dateRanges);
     }
@@ -103,6 +109,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
       tourTypes={tourTypes}
       cancellationPolicy={cancellationPolicy}
       touristDestinations={touristDestinations}
+      isEditing={isEditing}
     />
   );
 };

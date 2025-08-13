@@ -9,21 +9,21 @@ import SecurityAnswerFormContainer from "../features/securitySetup/components/Re
 import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
 import TourTypeContainer from "../features/tourType/showcase/TourTypeShowcaseContainer";
-import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/showcase/CancellationPolicyShowcaseContainer";
+import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/components/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/components/showcase/TouristDestinationShowcaseContainer";
 import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
 import BookingPage from "../pages/BookingPage";
-import BookingShowcaseContainer from "../features/booking/showcase/BookingShowcaseContainer";
+import BookingShowcaseContainer from "../features/booking/components/showcase/BookingShowcaseContainer";
 import ReportsPage from "../pages/ReportsPage";
 import DashboardContainer from "../features/reports/dashboard/DashboardContainer";
 import GuidePageContainer from "../pages/Guide/GuidePageContainer";
 import GuideDrawerContainer from "../pages/Guide/GuideDrawerContainer";
-import TouristListContainer from "../features/guide/touristList/TouristListContainer";
-import TourPackageContainer from "../features/guide/tourPackage/TourPackageContainer";
-import TouristDestinationContainer from "../features/guide/touristDestination/TouristDestinationContainer";
-import ItineraryContainer from "../features/guide/itinerary/ItineraryContainer";
-import GuidePerfilContainer from "../features/guide/perfil/GuidePerfilContainer";
-import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
+import TouristListContainer from "../features/guide/components/touristList/TouristListContainer";
+import TourPackageContainer from "../features/guide/components/tourPackage/TourPackageContainer";
+import TouristDestinationContainer from "../features/guide/components/touristDestination/TouristDestinationContainer";
+import ItineraryContainer from "../features/guide/components/itinerary/ItineraryContainer";
+import GuidePerfilContainer from "../features/guide/components/perfil/GuidePerfilContainer";
+// import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import MainLayout from "../pages/mainLayout/MainLayout";
 
 export const AppRouter = createBrowserRouter(

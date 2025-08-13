@@ -3,19 +3,18 @@ import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const options = [
-  "Ver mas", 
-  "Editar", 
-  "Inhabilitar"
+  "Editar",
+  // "Eliminar"
 ];
 
-interface TourPackageCardMenuProps {
+interface CancellationPolicyCardMenuProps {
   onOptionSelect: (option: string) => void;
-  // handleClickInfo: () => void;
+  // handleOpenDialog: () => void;
 }
 
-const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
+const CancellationPolicyCardMenu: React.FC<CancellationPolicyCardMenuProps> = ({
   onOptionSelect,
-  // handleClickInfo
+  // handleOpenDialog,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -32,7 +31,6 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
     onOptionSelect(option);
     handleClose();
   };
-
   return (
     <>
       <IconButton
@@ -53,7 +51,9 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        slotProps={{ paper: { style: { width: "20ch" } } }}
+        slotProps={{
+          paper: { style: { width: "20ch" } },
+        }}
       >
         {options.map((option) => (
           <MenuItem key={option} onClick={() => handleOptionClick(option)}>
@@ -64,4 +64,4 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
     </>
   );
 };
-export default TourPackageCardMenu;
+export default CancellationPolicyCardMenu;

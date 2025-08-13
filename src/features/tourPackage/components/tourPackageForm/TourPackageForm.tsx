@@ -12,18 +12,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-// import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { FormikProps } from "formik";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import DateSelectorContainer from "./dateSelector2/DateSelectorContainer";
 import DayItineraryManager from "../itineraryManager/DayItineraryManager";
 import { TourItineraryType } from "../../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../../types/DateRangeType";
 import { User } from "../../../userManagement/types/User";
 import TextType from "../../../../TextAnimations/TextType/TextType";
-// import { DateRangeType } from "../types/DateRangeType";
-// import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
+
 interface TourPackageFormProps {
   guides: User[];
   open: boolean;
@@ -36,14 +32,13 @@ interface TourPackageFormProps {
     touristDestination: string;
     duration: number;
     dateRanges: DateRangeType[];
-    // dateRanges: string[];
-    // blockedDates: string[];
     itinerary: TourItineraryType;
     price: number;
   }>;
   tourTypes: any[];
   cancellationPolicy: any[];
   touristDestinations: any[];
+  isEditing: boolean;
 }
 
 const TourPackageForm: React.FC<TourPackageFormProps> = ({
@@ -54,13 +49,15 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
   tourTypes,
   cancellationPolicy,
   touristDestinations,
+  isEditing,
 }) => {
-  // console.log('formik.values.dateRanges::: ', formik.values.dateRanges);
   return (
     <Dialog open={open} onClose={handleClick} maxWidth={false}>
       {/* <DialogTitle>Nuevo Paquete turistico</DialogTitle> */}
       <TextType
-        text="Nuevo Paquete turistico"
+        text={
+          isEditing ? "Editar paquete turístico" : "Nuevo paquete turístico"
+        }
         as={DialogTitle}
         typingSpeed={50}
         pauseDuration={1000}
@@ -80,7 +77,6 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
       >
         <form
           onSubmit={(e) => {
-            // console.log("Form onSubmit event triggered");
             formik.handleSubmit(e);
           }}
           style={{
@@ -106,7 +102,6 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               <Select
                 labelId="tourType"
                 id="tourType"
-                // name="tourType"
                 label="Tipo de tour"
                 {...formik.getFieldProps("tourType")}
                 onChange={formik.handleChange}
@@ -192,7 +187,13 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               </Typography>
             )}
           </Box>
-          <Box sx={{ display: "flex", width:"100%",justifyContent:"space-between"}}>
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
             <TextField
               sx={{ height: "70px", width: "40%" }}
               disabled={formik.values.id ? true : false}
@@ -242,19 +243,20 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               helperText={formik.touched.price && formik.errors.price}
             />
           </Box>
-          {formik.values.id ? (
+          {/* {formik.values.id ? (
             <Box>bloqueado</Box>
-          ) : (
-            <DateSelectorContainer
-              guides={guides}
-              duration={formik.values.duration}
-              dateRanges={formik.values.dateRanges}
-              // blockedDates={formik.values.blockedDates}
-              onDateChange={(dates: any) =>
-                formik.setFieldValue("dateRanges", dates)
-              }
-            />
-          )}
+          ) : ( */}
+          <DateSelectorContainer
+            guides={guides}
+            duration={formik.values.duration}
+            dateRanges={formik.values.dateRanges}
+            // blockedDates={formik.values.blockedDates}
+            onDateChange={(dates: any) =>
+              formik.setFieldValue("dateRanges", dates)
+            }
+            isEditing={isEditing}
+          />
+          {/* )} */}
 
           {/* <DateSelectorContainer
             duration={formik.values.duration}

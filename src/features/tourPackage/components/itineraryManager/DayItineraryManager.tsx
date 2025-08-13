@@ -16,7 +16,7 @@ import { Add as AddIcon, Delete as DeleteIcon, ExpandMore as ExpandMoreIcon } fr
 import Grid from "@mui/material/Grid";
 import { ActivityType } from "../../types/ActivityType";
 import { DayItineraryType, TourItineraryType } from "../../types/DayItineraryType";
-import TextType from "../../../../TextAnimations/TextType/TextType";
+// import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface DayItineraryManagerProps {
   duration: number;
@@ -130,10 +130,10 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      {/* <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2 }}>
         Itinerario de actividades por día
-      </Typography> */}
-      <TextType
+      </Typography>
+      {/* <TextType
         className="text-lg"
         text="Itinerario de actividades por día"
         typingSpeed={50}
@@ -141,7 +141,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
         showCursor={true}
         cursorCharacter="_"
         deletingSpeed={50}
-      />
+      /> */}
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Tabs 
@@ -173,8 +173,8 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
               mb: 2,
             }}
           >
-            {/* <Typography variant="subtitle1">Actividades para el Día {day.dayNumber}</Typography> */}
-            <TextType
+            <Typography variant="subtitle1">Actividades para el Día {day.dayNumber}</Typography>
+            {/* <TextType
               className="text-lg"
               text={`Actividades para el día ${day.dayNumber}`}
               typingSpeed={50}
@@ -182,7 +182,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
               showCursor={true}
               cursorCharacter="_"
               deletingSpeed={50}
-            />
+            /> */}
             <Button
               startIcon={<AddIcon />}
               variant="contained"
