@@ -4,6 +4,7 @@ import TourPackageCard from "./TourPackageCard";
 import TourPackageformContainer from "../../tourPackageForm/TourPackageFormContainer";
 import MoreInfoModalContainer from "../../modal/MoreInfoModalContainer";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
+import ConfirmationModal from "./ConfirmationModal";
 
 interface TourPackageCardContainerProps {
   tourPackage: TourPackageType;
@@ -16,6 +17,11 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   const [open, setOpen] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
   const { deleteTourPackage } = useTourPackageContext();
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+
+  const handleClickConfirmation = () => {
+    setOpenConfirmation(!openConfirmation);
+  };
 
   const handleClickInfo = () => {
     setOpenInfo(!openInfo);
@@ -27,6 +33,7 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
 
   const handleClickDelete = () => {
     deleteTourPackage(tourPackage.id);
+    setOpenConfirmation(false);
   };
 
   const handleOption = (option: string) => {
@@ -41,9 +48,9 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         // console.log("selectedDates:", tourPackage.selectedDates);
         handleClick();
         break;
-      case "Eliminar":
-        // console.log("Eliminar::: ");
-        handleClickDelete();
+      case "Inhabilitar":
+        console.log("Inhabilitar::: ");
+        handleClickConfirmation();
         break;
       default:
         console.log("opcion no valida::: ");
@@ -71,6 +78,13 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
           open={openInfo}
           handleClick={handleClickInfo}
           tourPackage={tourPackage}
+        />
+      )}
+      {openConfirmation && (
+        <ConfirmationModal
+          open={openConfirmation}
+          handleClick={handleClickConfirmation}
+          handleClickDelete={handleClickDelete}
         />
       )}
     </>

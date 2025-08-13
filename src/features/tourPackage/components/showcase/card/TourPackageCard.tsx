@@ -41,6 +41,9 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
           // backdropFilter: "blur(10px)",
           border: "1px solid rgba(10,10,10,0.6)",
           height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         <CardHeader

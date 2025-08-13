@@ -66,7 +66,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
     try {
       const response = await TourPackageService.getAllTourPackagesRequest();
       const tps = response.data.filter(
-        (tp: TourPackageType) => tp.status !== "draft"
+        (tp: TourPackageType) => tp.status !== "inactive"
       );
       // console.log('response::: ', response.data);
       // setTourPackages(response.data);

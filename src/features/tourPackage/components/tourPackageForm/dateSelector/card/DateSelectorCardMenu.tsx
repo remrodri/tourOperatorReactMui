@@ -2,18 +2,14 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const options = [
-  "Ver mas", 
-  "Editar", 
-  "Inhabilitar"
-];
+const options = ["Completado", "Cancelado"];
 
-interface TourPackageCardMenuProps {
+interface DateSelectorCardMenuProps {
   onOptionSelect: (option: string) => void;
   // handleClickInfo: () => void;
 }
 
-const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
+const DateSelectorCardMenu: React.FC<DateSelectorCardMenuProps> = ({
   onOptionSelect,
   // handleClickInfo
 }) => {
@@ -53,7 +49,9 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        slotProps={{ paper: { style: { width: "20ch" } } }}
+        // slotProps={
+        //   { paper: { style: { width: "20ch" } } }
+        // }
       >
         {options.map((option) => (
           <MenuItem key={option} onClick={() => handleOptionClick(option)}>
@@ -64,4 +62,4 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
     </>
   );
 };
-export default TourPackageCardMenu;
+export default DateSelectorCardMenu;

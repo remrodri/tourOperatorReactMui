@@ -1,21 +1,24 @@
 import { Box, Button, Fade, Typography } from "@mui/material";
-import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
-import React, { useState } from "react";
-import { useTourTypeContext } from "../context/TourTypeContext";
-import CreateTourTypeDialog from "../components/createTourTypeDialog/CreateTourTypeDialog";
-import CreateTourTypeDialogContainer from "../components/createTourTypeDialog/CreateTourTypeDialogContainer";
-import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
-import TextType from "../../../TextAnimations/TextType/TextType";
+import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
+import { BookingType } from "../../types/BookingType";
+import BookingCardContainer from "./card/BookingCardContainer";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
-interface TourTypeShowcaseProps {
+interface BookingShowcaseProps {
   handleClick: () => void;
-  // open:boolean;
+  bookings: BookingType[] | null;
+  open: boolean;
 }
 
-const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
-  // const { openDialog, handleClick, tourTypes } = useTourTypeContext();
-  const { openDialog, tourTypes } = useTourTypeContext();
-
+const BookingShowcase: React.FC<BookingShowcaseProps> = ({
+  handleClick,
+  bookings,
+  open,
+}) => {
+  // console.log('bookings::: ', bookings);
+  // if (!bookings || bookings.length === 0) {
+  //   return <Box>No hay reservas disponibles</Box>;
+  // }
   return (
     <Fade in={true} timeout={1000}>
       <Box
@@ -44,7 +47,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
             }}
           >
             <TextType
-              text={"Tipos de tour"}
+              text={"Reservas"}
               typingSpeed={50}
               pauseDuration={1000}
               showCursor={true}
@@ -56,9 +59,8 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
               sx={{ height: "2rem", width: "12rem" }}
               onClick={handleClick}
             >
-              Nuevo
+              nuevo
             </Button>
-            {/* {openDialog && <CreateTourTypeDialogContainer/>} */}
           </Box>
         </Typography>
         <Box
@@ -74,24 +76,27 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
               flexGrow: 1,
               display: "flex",
               justifyContent: "center",
-              alignContent: "flex-start",
               flexWrap: "wrap",
               overflowY: "auto",
               gap: "1rem",
-              // background: "rgba(255, 255, 255, 0.2)",
-              background: "rgba(75, 44, 27, 0.4)",
+              alignContent: "flex-start",
+              background: "rgba(8, 13, 10, 0.4)",
               borderRadius: "10px",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
               // backdropFilter: "blur(10px)",
-              border: "1px solid rgba(75, 44, 27, 0.5)",
+              border: "1px solid rgba(8, 13, 10, 0.5)",
             }}
           >
-            {tourTypes && tourTypes.length > 0 ? (
-              tourTypes.map((tourType) => (
-                <TourTypeCard key={tourType.id} tourType={tourType} />
-              ))
+            {!bookings || bookings.length === 0 ? (
+              <p>No hay reservas</p>
             ) : (
-              <p>No hay tipos de tour registrados</p>
+              bookings.map((booking, index) => (
+                <BookingCardContainer
+                  key={booking.id}
+                  booking={booking}
+                  index={index}
+                />
+              ))
             )}
           </Box>
         </Box>
@@ -99,4 +104,4 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
     </Fade>
   );
 };
-export default TourTypeShowcase;
+export default BookingShowcase;

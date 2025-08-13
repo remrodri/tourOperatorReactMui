@@ -3,7 +3,7 @@ import TourType from "./TourTypeShowcase";
 import { useState } from "react";
 import { useTourTypeContext } from "../context/TourTypeContext";
 import TourTypeShowcase from "./TourTypeShowcase";
-import CreateTourTypeDialogContainer from "../createTourTypeDialog/CreateTourTypeDialogContainer";
+import CreateTourTypeDialogContainer from "../components/createTourTypeDialog/CreateTourTypeDialogContainer";
 
 const TourTypeShowcaseContainer = () => {
   // const { tourTypes } = useTourTypeContext();
