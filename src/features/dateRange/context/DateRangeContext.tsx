@@ -7,7 +7,10 @@ import {
 } from "react";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
-import { getAllDateRangesRequest } from "../service/DateRangeService";
+import {
+  getAllDateRangesRequest,
+  updateDateRangeRequest,
+} from "../service/DateRangeService";
 
 type DateRangeContextType = {
   dateRanges: DateRangeType[];
@@ -18,6 +21,7 @@ type DateRangeContextType = {
   getDateRangeInfoById(id: string): DateRangeType | null;
   addDateRange(dateRange: DateRangeType): void;
   filterDateRangesByTourGuideId(id: string): DateRangeType[];
+  updateDateRangeStatus(id: string, status: string): void;
 };
 
 const DateRangeContext = createContext<DateRangeContextType | null>(null);
@@ -33,6 +37,29 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
   const { showSnackbar } = useNewSnackbar();
   const [dateRangesByTP, setDateRangesByTP] = useState<DateRangeType[]>([]);
 
+  const updateDateRangeStatus = (id: string, status: string): void => {
+    try {
+      const response:any = updateDateRangeRequest(id, { status });
+      if (!response.data) {
+        showSnackbar("Fallo al actualizar", "error");
+        // throw new Error("Failed to update date range status");
+        return;
+      }
+      setDateRanges((prev) =>
+        prev.map((dr) => (dr.id === id ? { ...dr, status } : dr))
+      );
+      // setError(null);
+      showSnackbar("Actualizado exitosamente!", "success");
+    } catch (error) {
+      console.error("Error updating date range status:", error);
+      // setError("Failed to update date range status");
+      showSnackbar("Fallo al actualizar", "error");
+    }
+    // setDateRanges((prev) =>
+    //   prev.map((dr) => (dr.id === id ? { ...dr, status } : dr))
+    // );
+  };
+
   const filterDateRangesByTourGuideId = (id: string): DateRangeType[] => {
     return dateRanges.filter((dr) => dr.guides?.includes(id));
   };
@@ -41,10 +68,10 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
     setDateRanges((prev) => [...prev, dateRange]);
   };
 
-  const getDateRangeInfoById =(id:string): DateRangeType|null => {
+  const getDateRangeInfoById = (id: string): DateRangeType | null => {
     const dateRangeFound = dateRanges.find((dr) => dr.id === id);
     return dateRangeFound || null;
-  }
+  };
 
   const findDateRangesByTourPackage = (
     dateRangesIds: DateRangeType[]
@@ -94,7 +121,8 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
         dateRangesByTP,
         getDateRangeInfoById,
         addDateRange,
-        filterDateRangesByTourGuideId
+        filterDateRangesByTourGuideId,
+        updateDateRangeStatus,
       }}
     >
       {children}

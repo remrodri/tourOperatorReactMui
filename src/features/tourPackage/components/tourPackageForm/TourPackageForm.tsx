@@ -77,8 +77,14 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
       >
         <form
           onSubmit={(e) => {
+            e.preventDefault();
+            console.log("Valores antes de validar:", formik.values);
+            console.log("Errores actuales:", formik.errors);
             formik.handleSubmit(e);
           }}
+          // onSubmit={(e) => {
+          //   formik.handleSubmit(e);
+          // }}
           style={{
             padding: "0.3rem 0 0 0",
           }}
@@ -256,23 +262,6 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             }
             isEditing={isEditing}
           />
-          {/* )} */}
-
-          {/* <DateSelectorContainer
-            duration={formik.values.duration}
-            dateRanges={formik.values.dateRanges}
-            onDateChange={(dates) =>
-              formik.setFieldValue("dateRanges", dates)
-            }
-          /> */}
-
-          {/* <DateSelectorContainer
-            duration={formik.values.duration}
-            dateRanges={formik.values.dateRanges}
-            onDateChange={(dates) =>
-              formik.setFieldValue("dateRanges", dates)
-            }
-          /> */}
           <DayItineraryManager
             duration={formik.values.duration}
             itinerary={formik.values.itinerary || { days: [] }}
@@ -296,6 +285,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               // onClick={() => {
               //   console.log("Submit button clicked", { formData: formik.values });
               // }}
+              // disabled={formik.isSubmitting}
             >
               Enviar
             </Button>
@@ -303,6 +293,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               variant="contained"
               color="error"
               fullWidth
+              disabled={formik.isSubmitting}
               onClick={handleClick}
             >
               Cancelar

@@ -49,10 +49,20 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
   // }, [fetchGuides,guides]);
 
   const onSubmit = async (data: any) => {
-    // console.log("data::: ", data);
+    console.log("data::: ", data);
     // console.log("tourPackage.id::: ", tourPackage?.id);
     if (tourPackage?.id) {
-      await updateTourPackage(tourPackage.id, data);
+      const tourPackageToUpdate = {
+        id: tourPackage.id,
+        name: data.name,
+        tourType: data.tourType,
+        cancellationPolicy: data.cancellationPolicy,
+        touristDestination: data.touristDestination,
+        duration: data.duration,
+        price: data.price,
+        itinerary: data.itinerary,
+      }
+      await updateTourPackage(tourPackage.id, tourPackageToUpdate);
     } else {
       await createTourPackage(data);
     }
@@ -73,6 +83,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
           guides: dr.guides ?? [],
         })
       ),
+
       // blockedDates: tourPackage?.blockedDates ?? [],
       price: tourPackage?.price ?? 0,
       itinerary: tourPackage?.itinerary ?? {
@@ -84,12 +95,14 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
           })),
       },
     },
-    validationSchema: tourPackageSchema,
+    validationSchema: tourPackageSchema(isEditing),
+    enableReinitialize: true,
     onSubmit,
   });
   useEffect(() => {
     if(tourPackage){
       setIsEditing(true);
+      
     }
   }, [tourPackage]);
   useEffect(() => {
