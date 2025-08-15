@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState, MouseEvent } from "react";
 import DateSelectorCardMenu from "./DateSelectorCardMenu";
+import { useDateRangeContext } from "../../../../../dateRange/context/DateRangeContext";
 interface DateSelectorCardProps {
   range: DateRangeType;
   guides: User[];
@@ -30,9 +31,20 @@ const DateSelectorCard: React.FC<DateSelectorCardProps> = ({
   isEditing,
 }) => {
   const [openMenu, setOpenMenu] = useState(false);
+  const { updateDateRangeStatus } = useDateRangeContext();
   const handleClick = (option: string) => {
     // setAnchorEl(anchorEl);
-    console.log(option);
+    // console.log(option);
+    if (range.id) {
+      let status: string = "";
+      if (option === "Completado") {
+        status = "completed";
+      } else if (option === "Cancelado") {
+        status = "cancelled";
+      }
+      // console.log('option::: ', status);
+      updateDateRangeStatus(range.id, status);
+    }
     setOpenMenu(false);
   };
   const handleClose = () => {

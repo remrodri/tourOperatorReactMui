@@ -32,6 +32,7 @@ export const getTourPackageByIdRequest = async (id: string) => {
  * Update an existing tour package
  */
 export const updateTourPackageRequest = async (data: Partial<TourPackageType>) => {
+  console.log('data::: ', data);
   const response = await axiosInstance.put(`/tour-package/${data.id}`, data);
   return response.data;
 };
