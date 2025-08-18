@@ -25,6 +25,7 @@ import ItineraryContainer from "../features/guide/components/itinerary/Itinerary
 import GuidePerfilContainer from "../features/guide/components/perfil/GuidePerfilContainer";
 // import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import MainLayout from "../pages/mainLayout/MainLayout";
+import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 
 export const AppRouter = createBrowserRouter(
   [

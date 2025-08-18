@@ -37,16 +37,26 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
   const { showSnackbar } = useNewSnackbar();
   const [dateRangesByTP, setDateRangesByTP] = useState<DateRangeType[]>([]);
 
-  const updateDateRangeStatus = (id: string, status: string): void => {
+  const updateDateRangeStatus = async (id: string, status: string): Promise<void> => {
+    console.log('status::: ', status);
+    let translatedStatus = "";
+    if (status === "Completado") {
+      translatedStatus = "completed";
+    }
+    if (status === "Cancelado") {
+      translatedStatus = "cancelled";
+    }
     try {
-      const response:any = updateDateRangeRequest(id, { status });
-      if (!response.data) {
+      const response: any = await updateDateRangeRequest(id, {
+        state: translatedStatus,
+      });
+      if (!response) {
         showSnackbar("Fallo al actualizar", "error");
         // throw new Error("Failed to update date range status");
         return;
       }
       setDateRanges((prev) =>
-        prev.map((dr) => (dr.id === id ? { ...dr, status } : dr))
+        prev.map((dr) => (dr.id === id ? { ...dr, state:response.state } : dr))
       );
       // setError(null);
       showSnackbar("Actualizado exitosamente!", "success");

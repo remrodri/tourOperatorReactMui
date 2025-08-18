@@ -14,7 +14,7 @@ import {
 } from "../service/bookingService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useTouristContext } from "../../tourist/context/TouristContext";
-import { BookingFormValues } from "../bookingForm/BookingFormContainer";
+// import { BookingFormValues } from "../../bookingForm/BookingFormContainer";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../userManagement/types/User";
@@ -23,6 +23,7 @@ import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
 import { Group } from "../../guide/context/GuideContext";
+import { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
 
 interface BookingContextType {
   bookings: BookingType[];
@@ -33,7 +34,8 @@ interface BookingContextType {
   updateBooking: (booking: any) => Promise<void>;
   setBookings: (bookings: BookingType[]) => void;
   addPaymentToBooking: (payment: PaymentType) => void;
-  updateAttendance: (data:any) => Promise<void>;
+  updateAttendance: (data: any) => Promise<void>;
+  getTouristCounterByDateRangeId: (dateRangeId: string) => number;
 }
 
 const BookingContext = createContext<BookingContextType | null>(null);
@@ -56,6 +58,19 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
+
+  const getTouristCounterByDateRangeId = (dateRangeId: string): number => {
+    if (!dateRangeId) {
+      return 0;
+    }
+    const touristCounter = bookings.reduce((counter, booking) => {
+      if (booking.dateRangeId === dateRangeId) {
+        return counter + booking.touristIds.length;
+      }
+      return counter;
+    }, 0);
+    return touristCounter;
+  };
 
   const updateAttendance = async (data:any):Promise<any>=>{
     setLoading(true);
@@ -251,6 +266,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
         addPaymentToBooking,
         updateAttendance,
         setBookings,
+        getTouristCounterByDateRangeId
       }}
     >
       {children}

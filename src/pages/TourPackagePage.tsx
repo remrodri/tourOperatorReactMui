@@ -6,6 +6,8 @@ import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
 import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
 import { UserProvider } from "../features/userManagement/context/UserContext";
+import { BookingProvider } from "../features/booking/context/BookingContext";
+import { TouristProvider } from "../features/tourist/context/TouristContext";
 
 const TourPackagePage: React.FC = () => {
   return (
@@ -39,19 +41,23 @@ const TourPackagePage: React.FC = () => {
           border: "1px solid rgba(4, 135, 217, 0.5)",
         }}
       >
-        <UserProvider>
-        <TouristDestinationProvider>
-          <CancellationPolicyProvider>
-            <TourTypeProvider>
-              <DateRangeProvider>
-                <TourPackageProvider>
-                  <Outlet />
-                </TourPackageProvider>
-              </DateRangeProvider>
-            </TourTypeProvider>
-          </CancellationPolicyProvider>
-        </TouristDestinationProvider>
-        </UserProvider>
+        <TouristProvider>
+          <BookingProvider>
+            <UserProvider>
+              <TouristDestinationProvider>
+                <CancellationPolicyProvider>
+                  <TourTypeProvider>
+                    <DateRangeProvider>
+                      <TourPackageProvider>
+                        <Outlet />
+                      </TourPackageProvider>
+                    </DateRangeProvider>
+                  </TourTypeProvider>
+                </CancellationPolicyProvider>
+              </TouristDestinationProvider>
+            </UserProvider>
+          </BookingProvider>
+        </TouristProvider>
       </Box>
       {/* <Typography variant="h4" component="h2"> */}
       {/* </Typography> */}

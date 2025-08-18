@@ -7,6 +7,7 @@ import { useTourPackageContext } from "../../context/TourPackageContext";
 const TourPackageShowcaseContainer: React.FC = () => {
   const { tourPackages } = useTourPackageContext();
   const [open, setOpen] = useState(false);
+  
   const handleClickForm = () => {
     setOpen(!open);
   };
