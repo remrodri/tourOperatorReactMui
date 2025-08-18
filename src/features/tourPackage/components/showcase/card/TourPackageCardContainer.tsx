@@ -5,6 +5,7 @@ import TourPackageformContainer from "../../tourPackageForm/TourPackageFormConta
 import MoreInfoModalContainer from "../../modal/MoreInfoModalContainer";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 import ConfirmationModal from "./ConfirmationModal";
+import DateManagerContainer from "../../DateManager/DateManagerContainer";
 
 interface TourPackageCardContainerProps {
   tourPackage: TourPackageType;
@@ -18,6 +19,11 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   const [openInfo, setOpenInfo] = useState(false);
   const { deleteTourPackage } = useTourPackageContext();
   const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openDateManager, setOpenDateManager] = useState(false);
+
+  const handleClickDateManager = () => {
+    setOpenDateManager(!openDateManager);
+  };
 
   const handleClickConfirmation = () => {
     setOpenConfirmation(!openConfirmation);
@@ -52,6 +58,10 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         console.log("Inhabilitar::: ");
         handleClickConfirmation();
         break;
+      case "Gestionar fechas":
+        console.log("Gestionar fechas::: ");
+        handleClickDateManager();
+        break;
       default:
         console.log("opcion no valida::: ");
         break;
@@ -85,6 +95,13 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
           open={openConfirmation}
           handleClick={handleClickConfirmation}
           handleClickDelete={handleClickDelete}
+        />
+      )}
+      {openDateManager && (
+        <DateManagerContainer
+          open={openDateManager}
+          onClose={handleClickDateManager}
+          dateRangeIds={tourPackage.dateRanges}
         />
       )}
     </>

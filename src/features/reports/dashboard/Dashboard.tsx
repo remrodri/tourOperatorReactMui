@@ -145,7 +145,7 @@ const Dashboard: React.FC<DashboardProps> = (
                   border: "1px solid rgba(14, 18, 20, 0.7)",
                 }}
               >
-                {/* <PackagesSoldBySellerContainer /> */}
+                <PackagesSoldBySellerContainer />
               </Box>
             <Box
               sx={{
@@ -158,7 +158,7 @@ const Dashboard: React.FC<DashboardProps> = (
                 border: "1px solid rgba(14, 18, 20, 0.7)",
               }}
             >
-              {/* <CumulativeBookingTrendContainer /> */}
+              <CumulativeBookingTrendContainer />
             </Box>
             <Box
               sx={{
@@ -171,7 +171,7 @@ const Dashboard: React.FC<DashboardProps> = (
                 border: "1px solid rgba(14, 18, 20, 0.7)",
               }}
             >
-              {/* <GuideRankingByDestinationContainer /> */}
+              <GuideRankingByDestinationContainer />
             </Box>
           </Box>
         </Box>

@@ -12,5 +12,6 @@ export const updateDateRangeRequest = async (
   data: any
 ): Promise<any> => {
   const response = await axiosInstance.put(`/date-range/${id}`, data);
-  return response.data;
+  console.log('response::: ', response);
+  return response.data.data;
 };

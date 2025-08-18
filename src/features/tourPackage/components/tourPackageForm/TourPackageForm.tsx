@@ -77,9 +77,9 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
       >
         <form
           onSubmit={(e) => {
-            e.preventDefault();
-            console.log("Valores antes de validar:", formik.values);
-            console.log("Errores actuales:", formik.errors);
+            // e.preventDefault();
+            // console.log("Valores antes de validar:", formik.values);
+            // console.log("Errores actuales:", formik.errors);
             formik.handleSubmit(e);
           }}
           // onSubmit={(e) => {
@@ -252,16 +252,18 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
           {/* {formik.values.id ? (
             <Box>bloqueado</Box>
           ) : ( */}
-          <DateSelectorContainer
-            guides={guides}
-            duration={formik.values.duration}
-            dateRanges={formik.values.dateRanges}
-            // blockedDates={formik.values.blockedDates}
-            onDateChange={(dates: any) =>
-              formik.setFieldValue("dateRanges", dates)
-            }
-            isEditing={isEditing}
-          />
+          {!isEditing && (
+            <DateSelectorContainer
+              guides={guides}
+              duration={formik.values.duration}
+              dateRanges={formik.values.dateRanges}
+              // blockedDates={formik.values.blockedDates}
+              onDateChange={(dates: any) =>
+                formik.setFieldValue("dateRanges", dates)
+              }
+              isEditing={isEditing}
+            />
+          )}
           <DayItineraryManager
             duration={formik.values.duration}
             itinerary={formik.values.itinerary || { days: [] }}

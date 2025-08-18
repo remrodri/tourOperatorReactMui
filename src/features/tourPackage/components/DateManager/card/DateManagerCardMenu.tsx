@@ -2,21 +2,17 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const options = [
-  "Ver mas", 
-  "Editar", 
-  "Gestionar fechas",
-  "Inhabilitar"
-];
+const options = ["Completado", "Cancelado", "Editar"];
 
-interface TourPackageCardMenuProps {
+interface DateManagerCardMenuProps {
   onOptionSelect: (option: string) => void;
+  state: string;
   // handleClickInfo: () => void;
 }
 
-const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
+const DateManagerCardMenu: React.FC<DateManagerCardMenuProps> = ({
   onOptionSelect,
-  // handleClickInfo
+  state,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -54,15 +50,27 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        slotProps={{ paper: { style: { width: "20ch" } } }}
+        // slotProps={
+        //   { paper: { style: { width: "20ch" } } }
+        // }
       >
         {options.map((option) => (
-          <MenuItem key={option} onClick={() => handleOptionClick(option)}>
+          <MenuItem
+            key={option}
+            onClick={() => handleOptionClick(option)}
+            disabled={state !== "pending"}
+          >
             {option}
           </MenuItem>
         ))}
+        <MenuItem
+          key={"Ver reservas"}
+          onClick={() => handleOptionClick("Ver reservas")}
+        >
+          Ver reservas
+        </MenuItem>
       </Menu>
     </>
   );
 };
-export default TourPackageCardMenu;
+export default DateManagerCardMenu;
