@@ -14,14 +14,14 @@ interface MoreInfoModalProps {
   handleClick: () => void;
   open: boolean;
   tourPackage: TourPackageType;
-  dateRangesFilled: DateRangeType[];
+  // dateRangesFilled: DateRangeType[];
 }
 
 const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
   handleClick,
   open,
   tourPackage,
-  dateRangesFilled,
+  // dateRangesFilled,
 }) => {
   // console.log("dateRangesFilled::: ", dateRangesFilled);
   console.log("tourPackage::: ", tourPackage);
@@ -38,17 +38,17 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
             display: "flex",
             justifyContent: "center",
             width: "calc(100% - 65px)",
-            padding:"0 0 0 4rem"
+            padding: "0 0 0 4rem",
           }}
         >
-          <p style={{padding:"0"}}>Informacion</p>
+          <p style={{ padding: "0" }}>Informacion</p>
         </DialogTitle>
         <IconButton sx={{ p: "0 20px 0 20px" }}>
           <CloseIcon />
         </IconButton>
       </Box>
       <DialogContent>
-        <p style={{marginTop:0}}>Nombre: {tourPackage.name}</p>
+        <p style={{ marginTop: 0 }}>Nombre: {tourPackage.name}</p>
         <p>Destino turistico: {tourPackage.touristDestination}</p>
         <p>Precio: {tourPackage.price}</p>
         <p>Duracion: {tourPackage.duration} dias</p>
@@ -63,8 +63,14 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
             width: "15rem",
           }}
         >
-          {dateRangesFilled.map((dr) =>
+          {/* {dateRangesFilled.map((dr) =>
             dr.dates?.map((date, index) => <Chip key={index} label={date} />)||[]
+          )} */}
+          {tourPackage.dateRanges.map(
+            (dr:DateRangeType) =>
+              dr.dates?.map((date, index) => (
+                <Chip key={index} label={date} />
+              )) || []
           )}
         </Box>
         <Box

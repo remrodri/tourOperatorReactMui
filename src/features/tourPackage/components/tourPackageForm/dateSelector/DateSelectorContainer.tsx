@@ -24,7 +24,7 @@ import { User } from "../../../../userManagement/types/User";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 // import TextType from "../../../../../TextAnimations/TextType/TextType";
 import DateSelector from "./DateSelector";
-import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
+// import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 
 interface SimpleDateSelectorProps {
   guides: User[];
@@ -44,29 +44,29 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
 }) => {
   // console.log("dateRanges::: ", dateRanges);
   const [dateRangesAux, setDateRangesAux] = useState<DateRangeType[]>([]);
-  const { getDateRangeInfoById } = useDateRangeContext();
+  // const { getDateRangeInfoById } = useDateRangeContext();
 
-  const getDateRangesInfo = (dateRanges: DateRangeType[]) => {
-    const dateRangesInfo = dateRanges
-      .map((dateRange) => {
-        if (!dateRange.id) {
-          // Si no tiene id, es nuevo, lo devolvemos tal cual
-          return dateRange;
-        }
-        // Si tiene id, tratamos de buscarlo en el contexto
-        return getDateRangeInfoById(dateRange.id) || dateRange;
-      })
-      .filter((dr): dr is DateRangeType => !!dr);
+  // const getDateRangesInfo = (dateRanges: DateRangeType[]) => {
+  //   const dateRangesInfo = dateRanges
+  //     .map((dateRange) => {
+  //       if (!dateRange.id) {
+  //         // Si no tiene id, es nuevo, lo devolvemos tal cual
+  //         return dateRange;
+  //       }
+  //       // Si tiene id, tratamos de buscarlo en el contexto
+  //       return getDateRangeInfoById(dateRange.id) || dateRange;
+  //     })
+  //     .filter((dr): dr is DateRangeType => !!dr);
 
-    setDateRangesAux(dateRangesInfo);
-  };
+  //   setDateRangesAux(dateRangesInfo);
+  // };
 
   // Cargar fechas cuando entra en modo edición
-  useEffect(() => {
-    if (isEditing && dateRanges?.length) {
-      getDateRangesInfo(dateRanges);
-    }
-  }, [dateRanges, isEditing]);
+  // useEffect(() => {
+  //   if (isEditing && dateRanges?.length) {
+  //     getDateRangesInfo(dateRanges);
+  //   }
+  // }, [dateRanges, isEditing]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);

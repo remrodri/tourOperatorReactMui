@@ -58,7 +58,7 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         console.log("Inhabilitar::: ");
         handleClickConfirmation();
         break;
-      case "Gestionar fechas":
+      case "Gestion de fechas":
         console.log("Gestionar fechas::: ");
         handleClickDateManager();
         break;
@@ -102,6 +102,9 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
           open={openDateManager}
           onClose={handleClickDateManager}
           dateRangeIds={tourPackage.dateRanges}
+          duration={tourPackage.duration}
+          tourPackageId={tourPackage.id}
+          tourPackage={tourPackage}
         />
       )}
     </>

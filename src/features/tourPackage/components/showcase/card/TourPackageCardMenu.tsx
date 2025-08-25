@@ -5,7 +5,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 const options = [
   "Ver mas", 
   "Editar", 
-  "Gestionar fechas",
+  "Gestion de fechas",
   "Inhabilitar"
 ];
 

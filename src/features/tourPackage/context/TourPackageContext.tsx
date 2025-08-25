@@ -8,8 +8,10 @@ import React, {
 import { TourPackageType } from "../types/TourPackageType";
 import * as TourPackageService from "../service/TourPackageService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
-import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
+// import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
 import { DateRangeType } from "../types/DateRangeType";
+import { createDateRangeRequest, updateDateRangeRequest } from "../service/DateRangeService";
+
 type TourPackageContextType = {
   tpFound: TourPackageType | null;
   findTourPackageById: (id: string) => Promise<void>;
@@ -26,6 +28,9 @@ type TourPackageContextType = {
   ) => Promise<void>;
   deleteTourPackage: (id: string) => Promise<void>;
   getTourPackageInfoById: (id: string) => TourPackageType | null;
+  setTourPackages: (tourPackages: TourPackageType[]) => void;
+  updateDateRange: (dateRange: Partial<DateRangeType>) => Promise<void>;
+  createDateRange: (dateRange: DateRangeType) => Promise<void>;
 };
 
 const TourPackageContext = createContext<TourPackageContextType | null>(null);
@@ -42,7 +47,54 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const {addDateRange}=useDateRangeContext();
+  // const {addDateRange}=useDateRangeContext();
+
+  const createDateRange = async (dateRange: DateRangeType) => {
+    // console.log("dateRange::: ", dateRange);
+    const response: DateRangeType = await createDateRangeRequest(dateRange);
+    if (!response) {
+      showSnackbar("Error al crear la fecha", "error");
+    }
+    const tpFound = tourPackages.find((tp) => tp.id === response.tourPackageId);
+    if (tpFound) {
+      const updatedTp = {
+        ...tpFound,
+        dateRanges: [...tpFound.dateRanges, response],
+      };
+      setTourPackages((prev: TourPackageType[]) =>
+        prev.map((tp: TourPackageType) =>
+          tp.id === response.tourPackageId ? updatedTp : tp
+        )
+      );
+    }
+    // console.log("response::: ", response);
+  };
+
+  const updateDateRange = async (dateRange: Partial<DateRangeType>) => {
+    // console.log("dateRange::: ", dateRange);
+    const response: DateRangeType = await updateDateRangeRequest(
+      dateRange.id!,
+      dateRange
+    );
+    if (!response) {
+      showSnackbar("Error al actualizar la fecha", "error");
+    }
+    const tpFound = tourPackages.find((tp) => tp.id === response.tourPackageId);
+    if (tpFound) {
+      const updatedTp = {
+        ...tpFound,
+        dateRanges: tpFound.dateRanges.map((dr) =>
+          dr.id === dateRange.id ? response : dr
+        ),
+      };
+      setTourPackages((prev: TourPackageType[]) =>
+        prev.map((tp: TourPackageType) =>
+          tp.id === response.tourPackageId ? updatedTp : tp
+        )
+      );
+    }
+    console.log("response::: ", response);
+  };
 
   const getTourPackageInfoById = (id: string): TourPackageType | null => {
     if (!id) {
@@ -90,12 +142,13 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
       const newTourPackage = await TourPackageService.createTourPackageRequest(
         tourPackage
       );
-      newTourPackage.data.dateRanges.forEach((dr:DateRangeType)=>addDateRange(dr));
-      const formatedTourPackage = {
-        ...newTourPackage.data,
-        dateRanges:newTourPackage.data.dateRanges.map((dr:any)=>{return {id:dr.id}})
-      }
-      setTourPackages((prev) => [...prev, formatedTourPackage]);
+      // newTourPackage.data.dateRanges.forEach((dr:DateRangeType)=>addDateRange(dr));
+      // const formatedTourPackage = {
+      //   ...newTourPackage.data,
+      //   dateRanges:newTourPackage.data.dateRanges.map((dr:any)=>{return {id:dr.id}})
+      // }
+      // setTourPackages((prev) => [...prev, formatedTourPackage]);
+      setTourPackages((prev) => [...prev, newTourPackage.data]);
       setError(null);
       showSnackbar("Tour package created successfully!", "success");
     } catch (err) {
@@ -167,7 +220,10 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
         createTourPackage,
         updateTourPackage,
         deleteTourPackage,
-        getTourPackageInfoById
+        getTourPackageInfoById,
+        setTourPackages,
+        updateDateRange,
+        createDateRange,
       }}
     >
       {children}

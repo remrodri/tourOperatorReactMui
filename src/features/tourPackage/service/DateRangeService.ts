@@ -9,7 +9,7 @@ export const getAllDateRangesRequest = async () => {
 export const updateDateRangeRequest = async (
   id: string,
   // data: Partial<DateRangeType>
-  data: any
+  data: Partial<DateRangeType>
 ): Promise<any> => {
   const response = await axiosInstance.put(`/date-range/${id}`, data);
   console.log('response::: ', response);

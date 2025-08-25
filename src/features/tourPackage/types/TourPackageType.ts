@@ -9,8 +9,8 @@ export interface TourPackageType {
   cancellationPolicy: string;
   touristDestination: string;
   duration: number;
-  // dateRanges: DateRangeType[];
-  dateRanges: {id:string}[];
+  dateRanges: DateRangeType[];
+  // dateRanges: {id:string}[];
   price: number;
   activities: ActivityType[];
   itinerary: TourItineraryType;
