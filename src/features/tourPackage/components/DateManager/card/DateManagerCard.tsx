@@ -148,7 +148,7 @@ const DateManagerCard: React.FC<DateManagerCardProps> = ({
               <Typography variant="body2">Guía:</Typography>
               <Chip
                 label={`${guides?.[0].firstName} ${guides?.[0].lastName}`}
-                color="primary"
+                // color="primary"
                 sx={{ fontSize: "0.8rem", fontWeight: "normal" }}
               />
             </Box>
@@ -176,7 +176,7 @@ const DateManagerCard: React.FC<DateManagerCardProps> = ({
                     label={`${guide.firstName} ${guide.lastName}`}
                     size="small"
                     variant="filled"
-                    color="primary"
+                    // color="primary"
                     sx={{ fontSize: "0.8rem" }}
                   />
                 ))}
@@ -187,7 +187,7 @@ const DateManagerCard: React.FC<DateManagerCardProps> = ({
             <Typography variant="body2">Turistas:</Typography>
             <Chip
               label={touristCounter.toString()}
-              color="info"
+              // color="info"
               sx={{ fontSize: "0.8rem" }}
             />
           </Box>

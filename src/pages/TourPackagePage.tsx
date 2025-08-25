@@ -47,11 +47,11 @@ const TourPackagePage: React.FC = () => {
               <TouristDestinationProvider>
                 <CancellationPolicyProvider>
                   <TourTypeProvider>
-                    <DateRangeProvider>
+                    {/* <DateRangeProvider> */}
                       <TourPackageProvider>
                         <Outlet />
                       </TourPackageProvider>
-                    </DateRangeProvider>
+                    {/* </DateRangeProvider> */}
                   </TourTypeProvider>
                 </CancellationPolicyProvider>
               </TouristDestinationProvider>

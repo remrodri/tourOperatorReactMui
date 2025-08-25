@@ -25,6 +25,7 @@ interface UserContextType {
   userFound: User | null;
   getUsersById: (ids: string[]) => User[];
   userInfo: any | null;
+  setUsers: (users: User[]) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -261,6 +262,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         userFound,
         getUsersById,
         userInfo,
+        setUsers
       }}
     >
       {children}

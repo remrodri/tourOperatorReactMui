@@ -1,7 +1,17 @@
-import { Backdrop, Box, Dialog, Fade, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  Fade,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { DateRangeType } from "../../types/DateRangeType";
 import DateManagerCardContainer from "./card/DateManagerCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
+import CloseIcon from "@mui/icons-material/Close";
 
 const style = {
   // position: "absolute",
@@ -22,8 +32,24 @@ interface DateManagerProps {
   open: boolean;
   onClose: () => void;
   dateRanges: DateRangeType[];
+  openDateSelectorForm: boolean;
+  handleOpenDateSelectorForm: () => void;
+  handleCloseDateSelectorForm: () => void;
+  duration: number;
+  dateRangesInfo: DateRangeType[];
+  tourPackageId: string;
 }
-const DateManager: React.FC<DateManagerProps> = ({ open, onClose, dateRanges }) => {
+const DateManager: React.FC<DateManagerProps> = ({
+  open,
+  onClose,
+  dateRanges,
+  openDateSelectorForm,
+  handleOpenDateSelectorForm,
+  handleCloseDateSelectorForm,
+  duration,
+  dateRangesInfo,
+  tourPackageId,
+}) => {
   return (
     <Dialog
       open={open}
@@ -39,11 +65,12 @@ const DateManager: React.FC<DateManagerProps> = ({ open, onClose, dateRanges }) 
       PaperProps={{
         sx: {
           borderRadius: "10px",
+          // width: "900px",
         },
       }}
     >
-      <Fade in={open}>
-        <Box sx={style}>
+      <Box sx={style}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <TextType
               text={"Fechas asignadas"}
@@ -54,16 +81,38 @@ const DateManager: React.FC<DateManagerProps> = ({ open, onClose, dateRanges }) 
             />
             {/* Fechas asignadas */}
           </Typography>
-          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          {/* <Button variant="contained" onClick={handleOpenDateSelectorForm}>
+            Agregar fecha
+          </Button> */}
+          <IconButton
+            onClick={onClose}
+            sx={{ position: "absolute", right: 13, top: 13 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
           </Typography> */}
-          <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 1 }}>
-            {dateRanges.map((dr, index) => (
-              <DateManagerCardContainer key={index} dateRange={dr} />
-            ))}
-          </Box>
+        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 1 }}>
+          {dateRanges.map((dr, index) => (
+            <DateManagerCardContainer
+              key={index}
+              dateRange={dr}
+              duration={duration}
+              dateRangesInfo={dateRangesInfo}
+              tourPackageId={tourPackageId}
+            />
+          ))}
         </Box>
-      </Fade>
+        <Button
+          sx={{ mt: 2 }}
+          onClick={handleOpenDateSelectorForm}
+          variant="contained"
+        >
+          Agregar fecha
+        </Button>
+      </Box>
     </Dialog>
   );
 };

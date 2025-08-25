@@ -26,10 +26,10 @@ const darkTheme = createTheme({
 function App() {
   return (
     <SnackbarProvider>
-        {/* <TouristProvider>
+      {/* <TouristProvider>
           <BookingProvider> */}
       {/* <DashboardProvider> */}
-            {/* <PaymentProvider>
+      {/* <PaymentProvider>
               <DateRangeProvider>
                 <TouristDestinationProvider>
                   <TourPackageProvider>
@@ -37,12 +37,14 @@ function App() {
                       <TourTypeProvider>
                         <RoleProvider>
                           <UserProvider> */}
-                            <ThemeProvider theme={darkTheme}>
-                              <CssBaseline />
-                                <RouterProvider router={AppRouter} />
-                              <GlobalSnackbar />
-                            </ThemeProvider>
-                          {/* </UserProvider>
+      {/* <TourPackageProvider> */}
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <RouterProvider router={AppRouter} />
+          <GlobalSnackbar />
+        </ThemeProvider>
+      {/* </TourPackageProvider> */}
+      {/* </UserProvider>
                         </RoleProvider>
                       </TourTypeProvider>
                     </CancellationPolicyProvider>
@@ -51,8 +53,8 @@ function App() {
               </DateRangeProvider>
             </PaymentProvider> */}
       {/* </DashboardProvider> */}
-          {/* </BookingProvider> */}
-        {/* </TouristProvider> */}
+      {/* </BookingProvider> */}
+      {/* </TouristProvider> */}
     </SnackbarProvider>
   );
 }
