@@ -12,18 +12,18 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
   touristCont,
 }) => {
   return (
-    <AnimatedContent
-      distance={100}
-      direction="vertical"
-      reverse={true}
-      duration={1.2}
-      ease="power3.out"
-      initialOpacity={0.2}
-      animateOpacity
-      scale={1.1}
-      threshold={0.2}
-      delay={0.3}
-    >
+    // <AnimatedContent
+    //   distance={100}
+    //   direction="vertical"
+    //   reverse={true}
+    //   duration={1.2}
+    //   ease="power3.out"
+    //   initialOpacity={0.2}
+    //   animateOpacity
+    //   scale={1.1}
+    //   threshold={0.2}
+    //   delay={0.3}
+    // >
       <Box
         sx={{
           display: "flex",
@@ -179,7 +179,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
                 </Box> */}
         </Box>
       </Box>
-    </AnimatedContent>
+    // </AnimatedContent>
   );
 };
 export default GlobalStats;

@@ -6,7 +6,7 @@ import { BookingType } from "../../../types/BookingType";
 import BookingCard from "./BookingCard";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../../types/TouristType";
-import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer2";
+import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer";
 import BookingFormContainer from "../../bookingForm/BookingFormContainer";
 import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
 

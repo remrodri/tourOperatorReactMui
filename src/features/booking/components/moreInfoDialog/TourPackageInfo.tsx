@@ -7,17 +7,17 @@ const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
   return (
     <Box
       sx={{
-        p: 1,
+        p: "0 10px",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         gap: 1,
         flexWrap: "wrap",
         height: "100%",
       }}
     >
       <Typography
-        variant="h5"
-        gutterBottom
+        variant="h6"
+        // gutterBottom
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -27,7 +27,7 @@ const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
       >
         Paquete turistico
       </Typography>
-      <Box sx={{ width: "49%", height: "85%" }}>
+      <Box sx={{ width: "100%" }}>
         <Typography variant="body1" gutterBottom>
           {tourPackage?.name ?? "No disponible"}
         </Typography>
@@ -35,7 +35,7 @@ const TourPackageInfo: React.FC<TourPackageInfoProps> = ({ tourPackage }) => {
           Precio (por persona): {tourPackage?.price} Bs.
         </Typography>
       </Box>
-      <Box sx={{ width: "49%" }}>
+      <Box sx={{ width: "100%", height: "13rem", overflowY: "auto" }}>
         <Typography variant="h6" gutterBottom>
           Itinerario
         </Typography>

@@ -7,6 +7,7 @@ import { TourPackageProvider } from "../features/tourPackage/context/TourPackage
 import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
 import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
 import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
+import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 
 const BookingPage = () => {
   return (
@@ -28,21 +29,23 @@ const BookingPage = () => {
           border: "1px solid rgba(86, 101, 115, 0.5)",
         }}
       >
-        <CancellationPolicyProvider>
-          <TouristDestinationProvider>
-            <DateRangeProvider>
-              <TourPackageProvider>
-                <TouristProvider>
-                  <BookingProvider>
-                    <UserProvider>
-                      <Outlet />
-                    </UserProvider>
-                  </BookingProvider>
-                </TouristProvider>
-              </TourPackageProvider>
-            </DateRangeProvider>
-          </TouristDestinationProvider>
-        </CancellationPolicyProvider>
+        <TourTypeProvider>
+          <CancellationPolicyProvider>
+            <TouristDestinationProvider>
+              <DateRangeProvider>
+                <TourPackageProvider>
+                  <TouristProvider>
+                    <BookingProvider>
+                      <UserProvider>
+                        <Outlet />
+                      </UserProvider>
+                    </BookingProvider>
+                  </TouristProvider>
+                </TourPackageProvider>
+              </DateRangeProvider>
+            </TouristDestinationProvider>
+          </CancellationPolicyProvider>
+        </TourTypeProvider>
       </Box>
     </Box>
   );

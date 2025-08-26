@@ -16,7 +16,7 @@ export const createTourPackageRequest = async (data: Partial<TourPackageType>) =
  */
 export const getAllTourPackagesRequest = async () => {
   const response = await axiosInstance.get("/tour-package");
-  console.log('response::: ', response.data.data);
+  // console.log('response::: ', response.data.data);
   return response.data;
 };
 

@@ -2,8 +2,8 @@ import { Card, CardHeader } from "@mui/material";
 import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
 import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
-import UpdateTourTypeDialogContainer from "../../../components/createTourTypeDialog/UpdateTourTypeDialogContainer";
-import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
+import UpdateTourTypeDialogContainer from "../../../createTourTypeDialog/UpdateTourTypeDialogContainer";
+import AnimatedContent from "../../../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface TourTypeCardProps {
   tourType: any;

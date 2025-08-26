@@ -22,7 +22,7 @@ const GuideRankingByDestination:React.FC<GuideRankingByDestinationProps> = ({gui
         p:"1rem",
       }}
       >
-        <Typography variant="h6">Experiencia de guias por destino</Typography>
+        <Typography variant="h6">Experiencia de guías por destino</Typography>
         <Box>
           {guidesStats.map((guideStat:GuideStatsType,index:number)=>{
             return (

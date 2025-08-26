@@ -9,20 +9,20 @@ const TourTypeInfo: React.FC<TourTypeProps> = ({ tourType }) => {
   return (
     <Box
       sx={{
-        p: 1,
+        p: "0 10px",
         // height: '300px',
       }}
     >
       <Typography
-        variant="h5"
+        variant="h6"
         sx={{ display: "flex", justifyContent: "center" }}
       >
         Tipo de tour
       </Typography>
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" >
         {tourType?.name ?? "No disponible"}
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body2" lineHeight={1.3}>
         {tourType?.description ?? "No disponible"}
       </Typography>
     </Box>

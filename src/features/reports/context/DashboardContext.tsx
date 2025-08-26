@@ -111,9 +111,10 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
       const destinationId = pkg.touristDestination;
   
       for (const { id: drId } of pkg.dateRanges) {
+        if (!drId) continue;
         const dateRange = dateRangeMap.get(drId);
         if (!dateRange) continue;
-  
+        if (!dateRange.guides) continue;
         for (const guideId of dateRange.guides) {
           if (!guideStats[guideId]) guideStats[guideId] = {};
           if (!guideStats[guideId][destinationId]) guideStats[guideId][destinationId] = 0;
@@ -129,18 +130,38 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
       name: dest.name,
     }));
   
-    const result: GuideStatsType[] = Object.entries(guideStats).map(([guideId, destMap]) => {
-      const guide = guides.find(g => g.id === guideId);
-      return {
-        guideId,
-        guideName: guide ? `${guide.firstName} ${guide.lastName}` : "Guía desconocido",
-        guideImage: guide?.imageUrl || "",
-        destinations: orderedDestinations.map(dest => ({
-          destinationName: dest.name,
-          count: destMap[dest.id] || 0,
-        })),
-      };
-    });
+    // const result: GuideStatsType[] = Object.entries(guideStats).map(([guideId, destMap]) => {
+    //   const guide = guides.find(g => g.id === guideId);
+    //   return {
+    //     guideId,
+    //     guideName: guide ? `${guide.firstName} ${guide.lastName}` : "Guía desconocido",
+    //     guideImage: guide?.imageUrl || "",
+    //     destinations: orderedDestinations.map(dest => ({
+    //       destinationName: dest.name,
+    //       count: destMap[dest.id] || 0,
+    //     })),
+    //   };
+    // });
+
+    const result: GuideStatsType[] = Object.entries(guideStats).map(
+      ([guideId, destMap]) => {
+        const guide = guides.find((g) => g.id === guideId);
+        return {
+          guideId,
+          guideName: guide
+            ? `${guide.firstName} ${guide.lastName}`
+            : "Guía desconocido",
+          guideImage: guide?.imageUrl || "",
+          destinations: orderedDestinations
+            .map((dest) => ({
+              destinationName: dest.name,
+              count: destMap[dest.id] || 0,
+            }))
+            .filter((dest) => dest.count > 0), // 👈 aquí filtramos los destinos vacíos
+        };
+      }
+    );
+
   
     setGuidesStats(result);
   };

@@ -1,11 +1,11 @@
 import { Box, Button, Fade, Typography } from "@mui/material";
-import BreadCrumbsContainer from "../../breadCrumbs/BreadCrumbsContainer";
+import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import React, { useState } from "react";
-import { useTourTypeContext } from "../context/TourTypeContext";
-import CreateTourTypeDialog from "../components/createTourTypeDialog/CreateTourTypeDialog";
-import CreateTourTypeDialogContainer from "../components/createTourTypeDialog/CreateTourTypeDialogContainer";
+import { useTourTypeContext } from "../../context/TourTypeContext";
+import CreateTourTypeDialog from "../createTourTypeDialog/CreateTourTypeDialog";
+import CreateTourTypeDialogContainer from "../createTourTypeDialog/CreateTourTypeDialogContainer";
 import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
-import TextType from "../../../TextAnimations/TextType/TextType";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface TourTypeShowcaseProps {
   handleClick: () => void;
@@ -32,7 +32,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            p: "0 0 0 1.5rem",
+            p: "0 1.5rem 0 1.5rem",
           }}
         >
           <BreadCrumbsContainer />
@@ -41,6 +41,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick }) => {
               display: "flex",
               gap: "2rem",
               alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
             <TextType
