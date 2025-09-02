@@ -75,10 +75,10 @@ const appBarStyles = [
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
-  const [backgroundImg, setBackgroundImg] = useState<string>(homeBackground);
+  const [backgroundImg, setBackgroundImg] = useState<string>("");
 
   const backgroundImgs: { [key: string]: string } = {
-    ["/home"]: homeBackground,
+    // ["/home"]: homeBackground,
     ["/gestion-de-usuarios"]: userManagementBackground,
     ["/gestion-de-paquetes-turisticos"]: tourPackageBackground,
     ["/reservas"]: bookingBackground,

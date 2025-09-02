@@ -2,23 +2,23 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+// import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+// import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
+// import Switch from "@mui/material/Switch";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { Avatar, Tooltip } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { AppBarStyle } from "./MainLayout";
-import TextType from "../../TextAnimations/TextType/TextType";
-import AnimatedContent from "../../Animations/AnimatedContent/AnimatedContent";
+// import TextType from "../../TextAnimations/TextType/TextType";
+// import AnimatedContent from "../../Animations/AnimatedContent/AnimatedContent";
 import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
-import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
+// import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -64,10 +64,10 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
     navigate("/");
   };
 
-  const handlePerfil = () => {
-    navigate("/guia-de-turismo/perfil");
-    handleClose();
-  };
+  // const handlePerfil = () => {
+  //   navigate("/guia-de-turismo/perfil");
+  //   handleClose();
+  // };
 
   React.useEffect(() => {
     getImage();
@@ -169,7 +169,7 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handlePerfil}>Perfil</MenuItem>
+                {/* <MenuItem onClick={handlePerfil}>Perfil</MenuItem> */}
                 <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </div>

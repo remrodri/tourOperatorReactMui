@@ -26,6 +26,7 @@ interface UserContextType {
   getUsersById: (ids: string[]) => User[];
   userInfo: any | null;
   setUsers: (users: User[]) => void;
+  operators: User[];
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -41,6 +42,26 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [guides, setGuides] = useState<User[]>([]);
   const [userFound, setUserFound] = useState<User | null>(null);
   const [userInfo, setUserInfo] = useState<any | null>(null);
+  const [operators, setOperators] = useState<User[]>([]);
+
+  const getOperators = () => {
+    try {
+      if (users.length > 0) {
+        const filteredUsers = users.filter(
+          (user: User) => user.role === "6807f17065d3a5a25230b2be"
+        );
+        setOperators(filteredUsers);
+        // console.log("guides::: ", guides);
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar("Error al obtener los guias", "error");
+      }
+    }
+  };
 
   const getUsersById = (ids: string[]): User[] => {
     if (!ids || ids.length === 0) {
@@ -52,10 +73,32 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       .filter((user) => user !== undefined);
     return usersFound;
   };
+
   const getUserById = (userId: string): User | null => {
+    try {
+      // const response = await userService.getUserById(userId, token);
+      if (!users || users.length === 0) {
+        showSnackbar("No hay datos de usuarios disponibles", "error");
+        return null;
+      }
+      const userFound = users.find((user: User) => user.id === userId);
+      if (!userFound) {
+        showSnackbar("Usuario no encontrado", "error");
+        return null;
+      }
+      return userFound;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar("Error al obtener el usuario", "error");
+      }
+      return null;
+    }
     // console.log("Buscando usuario con ID:", userId);
 
-    // Si estamos cargando o no hay usuarios, intentamos cargarlos
+    // // Si estamos cargando o no hay usuarios, intentamos cargarlos
     // if (loading || !users || users.length === 0) {
     //   // console.log("Cargando usuarios antes de buscar el usuario específico...");
     //   try {
@@ -66,25 +109,27 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     //     return null;
     //   }
     // }
+    // setLoading(false);
 
-    // Verificamos nuevamente si hay usuarios después de intentar cargarlos
-    if (!users || users.length === 0) {
-      // console.log("No se pudieron cargar los usuarios");
-      showSnackbar("No hay datos de usuarios disponibles", "error");
-      return null;
-    }
+    // // Verificamos nuevamente si hay usuarios después de intentar cargarlos
+    // if (!users || users.length === 0) {
+    //   // console.log("No se pudieron cargar los usuarios");
+    //   showSnackbar("No hay datos de usuarios disponibles", "error");
+    //   return null;
+    // }
 
-    // console.log(`Buscando entre ${users.length} usuarios disponibles`);
+    // // console.log(`Buscando entre ${users.length} usuarios disponibles`);
 
-    const userFound = users.find((user: User) => user.id === userId);
-    // console.log("Usuario encontrado:", userFound || "No encontrado");
+    // const userFound = users.find((user: User) => user.id === userId);
+    // // console.log("Usuario encontrado:", userFound || "No encontrado");
 
-    if (!userFound) {
-      showSnackbar("Usuario no encontrado", "error");
-      return null;
-    }
-    setUserFound(userFound);
-    return userFound;
+    // if (!userFound) {
+    //   showSnackbar("Usuario no encontrado", "error");
+    //   return null;
+    // }
+    // setUserFound(userFound);
+    // return userFound;
+
   };
 
   const fetchGuides = () => {
@@ -173,7 +218,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
         // Trigger any necessary updates (like fetching guides if this is a guide)
         if (newUser.role === "6807f17065d3a5a25230b2bf") {
-          fetchGuides();
+          // fetchGuides();
+          setGuides((prevGuides: User[]) => [...prevGuides, newUser]);
+        }
+        if (newUser.role === "6807f17065d3a5a25230b2be") {
+          // fetchGuides();
+          console.log('newUser::: ', newUser);
+          setOperators((prevGuides: User[]) => [...prevGuides, newUser]);
         }
 
         return newUser;
@@ -245,7 +296,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     // console.log("::: ");
     fetchUsers();
     getUserInfo();
+    // getOperators();
   }, [token]);
+  
+  useEffect(() => {
+    fetchGuides();
+    getOperators();
+  }, [users]);
 
   return (
     <UserContext.Provider
@@ -262,7 +319,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         userFound,
         getUsersById,
         userInfo,
-        setUsers
+        setUsers,
+        operators,
       }}
     >
       {children}

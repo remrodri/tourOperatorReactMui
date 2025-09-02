@@ -8,9 +8,9 @@ interface TouristsInfoProps {
 const TouristsInfo: React.FC<TouristsInfoProps> = ({ tourists }) => {
   // console.log("tourists::: ", tourists);
   return (
-    <Box sx={{ p: 1 }}>
+    <Box sx={{ p: "0 10px" }}>
       <Typography
-        variant="h5"
+        variant="h6"
         gutterBottom
         sx={{ display: "flex", justifyContent: "center" }}
       >

@@ -30,7 +30,7 @@ import GuidesInfo from "./GuidesInfo";
 import BookingDialogStyledBox from "./template/BookingDialogStyledBox";
 import background from "../../../../assets/images/home.webp";
 
-interface MoreInfoDialog2Props {
+interface MoreInfoDialogProps {
   open: boolean;
   handleClose: () => void;
   booking: BookingType;
@@ -55,7 +55,7 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const MoreInfoDialog2: React.FC<MoreInfoDialog2Props> = ({
+const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   open,
   handleClose,
   booking,
@@ -239,4 +239,4 @@ const MoreInfoDialog2: React.FC<MoreInfoDialog2Props> = ({
     </Dialog>
   );
 };
-export default MoreInfoDialog2;
+export default MoreInfoDialog;

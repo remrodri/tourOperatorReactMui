@@ -7,35 +7,35 @@ import FadeContent from "../Animations/FadeContent/FadeContent";
 import { RoleProvider } from "../features/Role/context/RoleContext";
 
 const LoginPage: React.FC = () => {
-  const [showSplashScreen, setShowSplashScreen] = useState(true);
+  // const [showSplashScreen, setShowSplashScreen] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplashScreen(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-  if (showSplashScreen) {
-    return (
-      <Box
-        sx={{
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          background: "rgb(82, 79, 79)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    )
-  }
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setShowSplashScreen(false);
+  //   }, 1000);
+  //   return () => clearTimeout(timer);
+  // }, []);
+  // if (showSplashScreen) {
+  //   return (
+  //     <Box
+  //       sx={{
+  //         height: "100vh",
+  //         width: "100vw",
+  //         position: "absolute",
+  //         background: "rgb(82, 79, 79)",
+  //         display: "flex",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //       }}
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   )
+  // }
 
   return (
     <FadeContent
-      blur={true}
+      // blur={true}
       duration={200}
       easing="ease-out"
       initialOpacity={0.6}

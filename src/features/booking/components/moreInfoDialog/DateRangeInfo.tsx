@@ -7,9 +7,9 @@ interface DateRangeInfoProps {
 
 const DateRangeInfo: React.FC<DateRangeInfoProps> = ({ dateRange }) => {
   return (
-    <Box sx={{ p: 1 }}>
+    <Box sx={{ p: "0 10px" }}>
       <Typography
-        variant="h5"
+        variant="h6"
         gutterBottom
         sx={{ display: "flex", justifyContent: "center" }}
       >

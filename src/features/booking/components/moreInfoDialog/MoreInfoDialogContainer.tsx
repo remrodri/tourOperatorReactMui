@@ -1,4 +1,4 @@
-import MoreInfoDialog2 from "./MoreInfoDialog2";
+import MoreInfoDialog from "./MoreInfoDialog";
 import { BookingType } from "../../types/BookingType";
 import { useEffect, useState } from "react";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
@@ -18,27 +18,25 @@ import { usePaymentContext } from "../../../payment/context/PaymentContext";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { useUserContext } from "../../../userManagement/context/UserContext";
 
-interface MoreInfoDialogContainer2Props {
+interface MoreInfoDialogContainerProps {
   open: boolean;
   handleClose: () => void;
   booking: BookingType;
-  balance: number;
 }
 
-const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
+const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   open,
   handleClose,
   booking,
-  balance,
 }) => {
   const { getDateRangeInfoById } = useDateRangeContext();
   const { getTourPackageInfoById } = useTourPackageContext();
-  const { getCancellationPolicyInfoById, cancellationPolicy } =
-    useCancellationConditionContext();
+  const { getCancellationPolicyInfoById } = useCancellationConditionContext();
   const { getTourTypeInfoById } = useTourTypeContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
   const { getTouristInfoByIds } = useTouristContext();
   const { getUserById } = useUserContext();
+
   const [tourPackageInfo, setTourPackageInfo] =
     useState<TourPackageType | null>(null);
   const [cancellationPolicyInfo, setCancellationPolicyInfo] =
@@ -52,70 +50,63 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
   const [guides, setGuides] = useState<User[]>([]);
   const [sellerInfo, setSellerInfo] = useState<User | null>(null);
 
-  const getSellerInfo = (id: string) => {
-    const seller = getUserById(id);
-    setSellerInfo(seller);
-  };
-
-  const getTourPackageInfo = (id: string) => {
-    const tourPackage = getTourPackageInfoById(id);
-    setTourPackageInfo(tourPackage);
-  };
-
-  const getCancellationPolicyInfo = (id: string) => {
-    const cp = getCancellationPolicyInfoById(id);
-    setCancellationPolicyInfo(cp);
-  };
-
-  const getTourType = (id: string) => {
-    const tt = getTourTypeInfoById(id);
-    setTourType(tt);
-  };
-
-  const getTouristDestination = (id: string) => {
-    const td = getTouristDestinationInfoById(id);
-    setTouristDestination(td);
-  };
-
-  const getPayments = (payments: PaymentType[]) => {
-    setPayments(payments);
-  };
-
-  const getTourists = (tourists: string[]) => {
-    const touristsInfo = getTouristInfoByIds(tourists);
-    setTourists(touristsInfo);
-  };
-
-  const getDateRange = (id: string) => {
-    const dateRange = getDateRangeInfoById(id);
-    setDateRange(dateRange);
-  };
-
-  const getGuides = () => {
-    const guides = dateRange?.guides
-      ?.map((guideId) => getUserById(guideId))
-      .filter((guide): guide is User => guide !== null);
-    setGuides(guides ?? []);
-  };
-
+  // --- carga inicial en base al booking ---
   useEffect(() => {
-    getTourPackageInfo(booking.tourPackageId ?? "");
-    getTourists(booking.touristIds ?? []);
-    getDateRange(booking.dateRangeId ?? "");
-    getGuides();
-    getSellerInfo(booking.sellerId ?? "");
-    getCancellationPolicyInfo(tourPackageInfo?.cancellationPolicy ?? "");
-    getTourType(tourPackageInfo?.tourType ?? "");
-    getTouristDestination(tourPackageInfo?.touristDestination ?? "");
-    getPayments(booking.payments ?? []);
-  }, [booking, tourPackageInfo]);
+    if (booking.tourPackageId) {
+      const tp = getTourPackageInfoById(booking.tourPackageId);
+      setTourPackageInfo(tp);
+    }
+    if (booking.touristIds?.length) {
+      const ts = getTouristInfoByIds(booking.touristIds);
+      setTourists(ts);
+    }
+    if (booking.dateRangeId) {
+      const dr = getDateRangeInfoById(booking.dateRangeId);
+      setDateRange(dr);
+      if (dr?.guides) {
+        const gds = dr.guides
+          .map((guideId) => getUserById(guideId))
+          .filter((g): g is User => g !== null);
+        setGuides(gds);
+      }
+    }
+    if (booking.sellerId) {
+      const seller = getUserById(booking.sellerId);
+      setSellerInfo(seller);
+    }
+    if (booking.payments?.length) {
+      setPayments(booking.payments);
+    }
+  }, [booking]);
+
+  // --- carga dependiente de tourPackageInfo ---
+  useEffect(() => {
+    if (!tourPackageInfo) return;
+
+    if (tourPackageInfo.cancellationPolicy) {
+      const cp = getCancellationPolicyInfoById(
+        tourPackageInfo.cancellationPolicy
+      );
+      setCancellationPolicyInfo(cp);
+    }
+    if (tourPackageInfo.tourType) {
+      const tt = getTourTypeInfoById(tourPackageInfo.tourType);
+      setTourType(tt);
+    }
+    if (tourPackageInfo.touristDestination) {
+      const td = getTouristDestinationInfoById(
+        tourPackageInfo.touristDestination
+      );
+      setTouristDestination(td);
+    }
+  }, [tourPackageInfo]);
 
   return (
-    <MoreInfoDialog2
+    <MoreInfoDialog
       open={open}
       handleClose={handleClose}
       booking={booking}
-      dateRangeInfo={getDateRangeInfoById(booking.dateRangeId)}
+      dateRangeInfo={dateRange}
       tourPackageInfo={tourPackageInfo}
       cancellationPolicy={cancellationPolicyInfo}
       tourType={tourType}
@@ -129,4 +120,4 @@ const MoreInfoDialogContainer2: React.FC<MoreInfoDialogContainer2Props> = ({
   );
 };
 
-export default MoreInfoDialogContainer2;
+export default MoreInfoDialogContainer;

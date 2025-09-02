@@ -35,7 +35,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          p: "0 0 0 1.5rem",
+          p: "0 1.5rem 0 1.5rem",
         }}
       >
         <BreadCrumbsContainer />
@@ -44,6 +44,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
             display: "flex",
             gap: "2rem",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
           <TextType

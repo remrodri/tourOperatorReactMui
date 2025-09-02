@@ -42,7 +42,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
     id: string
   ): CancellationPolicy | null => {
     if (!id) {
-      console.warn("cancellation policy called without id");
+      console.error("cancellation policy called without id");
       return null;
     }
     const cpFound = cancellationPolicy.find((cp) => cp.id === id);
@@ -52,7 +52,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
     }
     return cpFound;
   };
-  
+
   const getCancellationPolicyById = (id: string) => {
     const cpFound = cancellationPolicy.find((cp) => cp.id === id);
     if (!cpFound) {

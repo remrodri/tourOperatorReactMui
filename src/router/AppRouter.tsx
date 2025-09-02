@@ -8,7 +8,7 @@ import EmailFormContainer from "../features/securitySetup/components/ResetPasswo
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
-import TourTypeContainer from "../features/tourType/showcase/TourTypeShowcaseContainer";
+import TourTypeContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/components/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/components/showcase/TouristDestinationShowcaseContainer";
 import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
@@ -26,6 +26,7 @@ import GuidePerfilContainer from "../features/guide/components/perfil/GuidePerfi
 // import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import MainLayout from "../pages/mainLayout/MainLayout";
 import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
+import GuideDateRangeSelectorContainer from "../features/guide/components/dateRangeSelector/GuideDateRangeSelectorContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -119,6 +120,10 @@ export const AppRouter = createBrowserRouter(
           path: "",
           element: <GuideDrawerContainer />,
           children: [
+            {
+              path: "fechas-asignadas",
+              element: <GuideDateRangeSelectorContainer />,
+            },
             {
               path: "turistas",
               element: <TouristListContainer />,

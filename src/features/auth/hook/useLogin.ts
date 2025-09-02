@@ -6,6 +6,7 @@ import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../userManagement/types/User";
 import { useRoleContext } from "../../Role/context/RoleContext";
+import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface LoginValues {
   email: string;
@@ -16,31 +17,37 @@ export const useLogin = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { getRoleById } = useRoleContext();
+  const { showSnackbar } = useNewSnackbar();
 
   const login = async (values: LoginValues) => {
     try {
       const response = await authService.login(values);
       // console.log('response::: ', response);
+      if (!response) {
+        setError("Login fallido");
+        showSnackbar("Login fallido", "error");
+        return;
+      }
       TokenService.saveToken(response.toString());
       const token = TokenService.getToken();
       if (token) {
-        const user:User = jwtDecode(token);
+        const user: User = jwtDecode(token);
         // console.log('user::: ', user);
         if (user.firstLogin) {
           navigate("configuracion-de-seguridad/actualizar-contraseña");
           return;
-        } 
-        else {
+        } else {
           // navigate("home");
-          if(getRoleById(user.role).name==="guia de turismo"){
-            navigate("guia-de-turismo/turistas");
+          if (getRoleById(user.role).name === "guia de turismo") {
+            localStorage.removeItem("attendanceList");
+            navigate("guia-de-turismo/fechas-asignadas");
             return;
           }
-          if(getRoleById(user.role).name==="administrador"){
+          if (getRoleById(user.role).name === "administrador") {
             navigate("reservas/todos");
             return;
           }
-          if(getRoleById(user.role).name==="operador de ventas"){
+          if (getRoleById(user.role).name === "operador de ventas") {
             navigate("reservas/todos");
             return;
           }
@@ -53,6 +60,7 @@ export const useLogin = () => {
       }
       if (err instanceof Error) {
         setError(err.message || "Login fallido");
+        showSnackbar(err.message || "Login fallido", "error");
       }
     }
   };

@@ -24,23 +24,40 @@ export function BarChartBenchmark() {
 
   const getBookingInfoById = () => {
     const touristDestinationInfos = packagesSoldBySeller.map((d)=>{
-      const tourPackageIds = d.bookings.map((booking:BookingType)=>booking.tourPackageId)
-      const tourPackageInfos = tourPackageIds.map((tourPackageId:string)=>getTourPackageInfoById(tourPackageId))
-      const touristDestinations = tourPackageInfos.map((tourPackage:TourPackageType|null)=>{
-        if(tourPackage){
-          return getTouristDestinationInfoById(tourPackage.touristDestination)?.name||""
-        }
-      }).filter((d)=>d!==null)
+      const tourPackageIds = d.bookings.map(
+        (booking: BookingType) => booking.tourPackageId
+      );
+      const tourPackageInfos = tourPackageIds.map((tourPackageId: string) =>
+        getTourPackageInfoById(tourPackageId)
+      );
+
+      const touristDestinations = tourPackageInfos
+        .map((tourPackage: TourPackageType | null) => {
+          if (tourPackage) {
+            return (
+              getTouristDestinationInfoById(tourPackage.touristDestination)
+                ?.name || null
+            );
+          }
+          return null;
+        })
+        .filter((d) => !!d); // 🔹 elimina null, undefined, "" y falsy
+
       // console.log('touristDestinations::: ', touristDestinations);
 
-      const uniqueDestinationNames = [...new Set(touristDestinations)]
+      const uniqueDestinationNames = [...new Set(touristDestinations)];
       // console.log('uniqueDestinationNames::: ', uniqueDestinationNames);
-      const destinationsCounter = uniqueDestinationNames.map((destinationName:any)=>{
-        const filteredBookings = touristDestinations.filter((d:any)=>d.includes(destinationName))
-        return {name:destinationName,value:filteredBookings.length}
-      })
+      const destinationsCounter = uniqueDestinationNames.map(
+        (destinationName: any) => {
+          const filteredBookings = touristDestinations.filter(
+            (d: any) => typeof d === "string" && d.includes(destinationName)
+          );
+          return { name: destinationName, value: filteredBookings.length };
+        }
+      );
+
       // console.log('destinationsCounter::: ', destinationsCounter);
-      return destinationsCounter
+      return destinationsCounter;
     })
     // console.log('touristDestinationInfos::: ', touristDestinationInfos);
     if(touristDestinationInfos.length===0){

@@ -9,18 +9,18 @@ const TouristDestinationInfo: React.FC<TouristDestinationInfoProps> = ({
   touristDestination,
 }) => {
   return (
-    <Box sx={{ p: 1 }}>
+    <Box sx={{ p: "0 10px" }}>
       <Typography
-        variant="h5"
-        gutterBottom
+        variant="h6"
+        // gutterBottom
         sx={{ display: "flex", justifyContent: "center" }}
       >
         Destino Turistico
       </Typography>
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" >
         {touristDestination?.name}
       </Typography>
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body2" lineHeight={1.3}>
         {touristDestination?.description}
       </Typography>
     </Box>

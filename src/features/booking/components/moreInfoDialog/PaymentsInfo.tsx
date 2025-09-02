@@ -1,16 +1,16 @@
 import { Box, Typography } from "@mui/material";
-import { PaymentInfoType } from "../../types/PaymentType";
+import { PaymentType } from "../../types/PaymentType";
 
 interface PaymentsInfoProps {
-  payments: PaymentInfoType[];
+  payments: PaymentType[];
 }
 
 const PaymentsInfo: React.FC<PaymentsInfoProps> = ({ payments }) => {
   // console.log("payments::: ", payments);
   return (
-    <Box sx={{ p: 1 }}>
+    <Box sx={{ p: "0 10px" }}>
       <Typography
-        variant="h5"
+        variant="h6"
         gutterBottom
         sx={{ display: "flex", justifyContent: "center" }}
       >
@@ -29,11 +29,11 @@ const PaymentsInfo: React.FC<PaymentsInfoProps> = ({ payments }) => {
                   ? " Efectivo"
                   : " Transferencia bancaria"}
               </Typography>
-              {payment.transactionId && (
+              {/* {payment.id && (
                 <Typography variant="body1">
-                  Id de transccion: {payment.transactionId}
+                  Id de transccion: {payment.id}
                 </Typography>
-              )}
+              )} */}
             </Box>
           ))}
       </Box>

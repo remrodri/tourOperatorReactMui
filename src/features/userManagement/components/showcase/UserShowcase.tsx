@@ -8,7 +8,11 @@ interface UserShowcaseProps {
   handleClick: () => void;
   users: User[];
 }
+
 const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
+  if (!users) {
+    return <p>No hay usuarios</p>;
+  }
   return (
     <Fade in={true} timeout={1000}>
       <Box
@@ -16,6 +20,12 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
           flexGrow: 1,
           display: "flex",
           flexDirection: "column",
+          // background: "rgba(78, 140, 179, 0.4)",
+          // borderRadius: "16px",
+          // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+          // backdropFilter: "blur(10px)",
+          // WebkitBackdropFilter: "blur(10px)",
+          // border: "1px solid rgba(78, 140, 179, 0.5)",
         }}
       >
         <Typography
@@ -25,7 +35,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            p: "0 0 0 1.5rem",
+            p: "0 1.5rem 0 1.5rem",
           }}
         >
           <BreadCrumbsContainer />
@@ -34,6 +44,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
               display: "flex",
               gap: "2rem",
               alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
             <TextType

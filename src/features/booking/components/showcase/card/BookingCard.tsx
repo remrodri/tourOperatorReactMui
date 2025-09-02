@@ -59,6 +59,9 @@ const BookingCard: React.FC<BookingCardProps> = ({
           border: "1px solid rgba(10,10,10,0.6)",
           width: 300,
           height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         <CardHeader

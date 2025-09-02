@@ -19,9 +19,9 @@ const GuidePage: React.FC<Props> = ({ backgroundImg }) => {
         // flexDirection: "column",
       }}
     >
-      <GuideProvider>
+      {/* <GuideProvider> */}
         <Outlet />
-      </GuideProvider>
+      {/* </GuideProvider> */}
     </Box>
   );
 };
