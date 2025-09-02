@@ -4,35 +4,8 @@ import {
   useDashboardContext,
 } from "../../../context/DashboardContext";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
-import { Avatar } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 
-// const data = [
-//   {
-//     key: "Tech",
-//     value: 17.1,
-//     color: "from-fuchsia-300/80 to-fuchsia-400/80 dark:from-fuchsia-500 dark:to-fuchsia-700",
-//   },
-//   {
-//     key: "Utilities",
-//     value: 14.3,
-//     color: "from-violet-300 to-violet-400 dark:from-violet-500 dark:to-violet-700",
-//   },
-//   {
-//     key: "Energy",
-//     value: 27.1,
-//     color: "from-blue-300 to-blue-400 dark:from-blue-500 dark:to-blue-700",
-//   },
-//   {
-//     key: "Cyclicals",
-//     value: 42.5,
-//     color: "from-sky-300 to-sky-400 dark:from-sky-500 dark:to-sky-700",
-//   },
-//   {
-//     key: "Fuel",
-//     value: 12.7,
-//     color: "from-orange-200 to-orange-300 dark:from-amber-500 dark:to-amber-700",
-//   },
-// ];
 const colors = [
   {
     destinationName: "Incachaca",
@@ -62,12 +35,15 @@ const colors = [
 interface BarChartThinBreakdownProps {
   // data:{destinationName:string,count:number}[]
   data: GuideStatsType;
+  maxValue: number;
 }
 
 const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
   data,
+  maxValue,
 }) => {
   // console.log("data::: ", data);
+  // console.log('maxValue::: ', maxValue);
   const [newData, setNewData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -101,12 +77,13 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
   const totalValue = newData.reduce((acc: any, d: any) => acc + d.value, 0);
   const barHeight = 12;
   const totalWidth = totalValue + gap * (newData.length - 1);
+  // console.log('totalWidth::: ', totalWidth);
   let cumulativeWidth = 0;
 
   const cornerRadius = 4; // Adjust this value to change the roundness
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Cargando...</div>;
   }
   return (
     <div
@@ -132,19 +109,22 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
         "
       >
         {/* Bars with Gradient Fill */}
-        {newData.map((d: any, index: any) => {
-          const barWidth = (d.value / totalWidth) * 100;
-          const xPosition = cumulativeWidth;
-          cumulativeWidth += barWidth + gap;
+        {newData.map((d: any, index: number) => {
+          const barWidth = (d.value / totalValue) * 100; // proporción real
+          const xPosition = cumulativeWidth; // se acumula en %
+
+          cumulativeWidth += barWidth; // no sumamos el gap aquí
 
           return (
-            <div key={index}>
+            <Box key={index}>
               <ClientTooltip>
                 <TooltipTrigger>
                   <div
                     className="relative"
                     style={{
-                      width: `${barWidth}%`,
+                      width: `calc(${barWidth}% - ${
+                        index < newData.length - 1 ? 1 : 0
+                      }px)`, // se resta un gap en px
                       height: `${barHeight}px`,
                       left: `${xPosition}%`,
                       position: "absolute",
@@ -156,13 +136,16 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
                         width: "100%",
                         height: "100%",
                         borderRadius: `${cornerRadius}px`,
+                        marginRight: "4px", // el gap real entre barras
                       }}
                     />
                     <div
                       className="text-xs text-white text-center"
                       style={{
-                        left: `${xPosition + barWidth / 2}%`,
-                        top: `${barHeight + 18}px`,
+                        left: "50%",
+                        top: `${barHeight + 5}px`,
+                        transform: "translateX(-50%)",
+                        position: "absolute",
                       }}
                     >
                       {d.key}
@@ -179,7 +162,7 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
                   </div>
                 </TooltipContent>
               </ClientTooltip>
-            </div>
+            </Box>
           );
         })}
       </div>

@@ -14,12 +14,12 @@ import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Collapse, Tooltip, useMediaQuery } from "@mui/material";
-import { ExpandLess, ExpandMore, HorizontalSplit } from "@mui/icons-material";
-import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import CoPresentIcon from "@mui/icons-material/CoPresent";
-import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
+// import { ExpandLess, ExpandMore, HorizontalSplit } from "@mui/icons-material";
+// import RecentActorsIcon from "@mui/icons-material/RecentActors";
+// import CoPresentIcon from "@mui/icons-material/CoPresent";
+// import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+// import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExploreIcon from "@mui/icons-material/Explore";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
@@ -29,9 +29,9 @@ import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/userManagement/types/User";
 import MainAppBar from "./MainAppBar";
 import { AppBarStyle } from "./MainLayout";
-import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
+// import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
 import TextType from "../../TextAnimations/TextType/TextType";
-import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
+// import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 import PeopleIcon from "@mui/icons-material/People";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -150,20 +150,20 @@ export default function MainDrawer({ currentStyles }: Props) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(true);
-  const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
+  // const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
   // const { error, logout } = useLogout();
   const [selectedOption, setSelectedOption] = useState("");
   const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
   const [bookingOpen, setBookingOpen] = useState(true);
 
-  const handleClickBooking = () => {
-    setBookingOpen(!bookingOpen);
-  };
+  // const handleClickBooking = () => {
+  //   setBookingOpen(!bookingOpen);
+  // };
 
-  const packageHandleClick = () => {
-    setPackageOpen(!packageOpen);
-  };
+  // const packageHandleClick = () => {
+  //   setPackageOpen(!packageOpen);
+  // };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -214,17 +214,17 @@ export default function MainDrawer({ currentStyles }: Props) {
     // }
   }
 
-  const userHandleClick = () => {
-    setUserOpen(!userOpen);
-  };
+  // const userHandleClick = () => {
+  //   setUserOpen(!userOpen);
+  // };
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setUserMenuOpen(event.currentTarget);
-  };
+  // const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setUserMenuOpen(event.currentTarget);
+  // };
 
-  const handleCloseUserMenu = () => {
-    setUserMenuOpen(null);
-  };
+  // const handleCloseUserMenu = () => {
+  //   setUserMenuOpen(null);
+  // };
   // const handleOptionUserMenu = (setting: string) => {
   //   switch (setting) {
   //     case settings[0]:
@@ -669,6 +669,11 @@ export default function MainDrawer({ currentStyles }: Props) {
         <Box
           sx={{
             height: "calc(100% - 5.5rem)",
+            display: "flex",
+            // flexDirection: "column",
+            width: "calc(100vw - 83px)",
+            // background: "rgba(78, 140, 179, 0.4)",
+            // backdropFilter: "blur(10px)",
           }}
         >
           <Outlet />

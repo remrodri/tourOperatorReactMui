@@ -7,6 +7,13 @@ const GuideRankingByDestinationContainer = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { guidesStats } = useDashboardContext();
 
+  // en GuideRankingByDestination
+  const maxValue = Math.max(
+    ...guidesStats.flatMap((g) => g.destinations.map((d) => d.count))
+  );
+
+  
+
   //     useEffect(()=>{
   //         if(!guidesStats){
   //             setLoading(true)
@@ -25,7 +32,7 @@ const GuideRankingByDestinationContainer = () => {
   // console.log('guidesStats::: ', guidesStats);
   // console.log('data::: ', data);
   return (
-    <GuideRankingByDestination guidesStats={guidesStats} loading={loading} />
+    <GuideRankingByDestination guidesStats={guidesStats} loading={loading} maxValue={maxValue}/>
   );
 };
 export default GuideRankingByDestinationContainer;

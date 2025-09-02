@@ -22,7 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
-import { Group } from "../../guide/context/GuideContext";
+import { Group } from "../../guide/context/GuideContext2";
 import { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
 
 interface BookingContextType {
@@ -36,6 +36,7 @@ interface BookingContextType {
   addPaymentToBooking: (payment: PaymentType) => void;
   updateAttendance: (data: any) => Promise<void>;
   getTouristCounterByDateRangeId: (dateRangeId: string) => number;
+  getBookingsByDateRangeId: (dateRangeId: string,bookings:BookingType[], tourPackageId: string) => BookingType[];
 }
 
 const BookingContext = createContext<BookingContextType | null>(null);
@@ -58,6 +59,11 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
+
+  const getBookingsByDateRangeId = (dateRangeId: string, bookings: BookingType[], tourPackageId: string): BookingType[] => {
+    const bookingsByDateRangeId = bookings.filter((booking) => booking.dateRangeId === dateRangeId && booking.tourPackageId === tourPackageId);
+    return bookingsByDateRangeId;
+  };
 
   const getTouristCounterByDateRangeId = (dateRangeId: string): number => {
     if (!dateRangeId) {
@@ -266,7 +272,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
         addPaymentToBooking,
         updateAttendance,
         setBookings,
-        getTouristCounterByDateRangeId
+        getTouristCounterByDateRangeId,
+        getBookingsByDateRangeId
       }}
     >
       {children}

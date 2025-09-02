@@ -5,8 +5,9 @@ import { GuideStatsType } from "../../context/DashboardContext"
 interface GuideRankingByDestinationProps {
     guidesStats:GuideStatsType[]
     loading:boolean
+    maxValue:number
 }
-const GuideRankingByDestination:React.FC<GuideRankingByDestinationProps> = ({guidesStats,loading}) => {
+const GuideRankingByDestination:React.FC<GuideRankingByDestinationProps> = ({guidesStats,loading,maxValue}) => {
   // console.log('guidesStats::: ', guidesStats);
   if(loading){
     return <div>Loading...</div>
@@ -23,7 +24,7 @@ const GuideRankingByDestination:React.FC<GuideRankingByDestinationProps> = ({gui
       }}
       >
         <Typography variant="h6">Experiencia de guías por destino</Typography>
-        <Box>
+        <Box sx={{gap:"1rem",display:"flex",flexDirection:"column"}}>
           {guidesStats.map((guideStat:GuideStatsType,index:number)=>{
             return (
               <Box
@@ -35,7 +36,7 @@ const GuideRankingByDestination:React.FC<GuideRankingByDestinationProps> = ({gui
               }}
               >
                 <Typography variant="body2">{index+1}. {guideStat.guideName}</Typography>
-                <BarChartThinBreakdown data={guideStat}/>
+                <BarChartThinBreakdown data={guideStat} maxValue={maxValue}/>
               </Box>
             )
           })}

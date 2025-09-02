@@ -7,44 +7,54 @@ import { TouristDestinationProvider } from "../features/touristDestination/conte
 import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
 import { UserProvider } from "../features/userManagement/context/UserContext";
+import FadeContent from "../Animations/FadeContent/FadeContent";
 
 const ReportsPage: React.FC = () => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100%",
-        p: "10px",
-      }}
+    <FadeContent
+      // blur={true}
+      duration={200}
+      easing="ease-out"
+      initialOpacity={0.6}
     >
       <Box
         sx={{
           display: "flex",
-          flexGrow: 1,
-          background: "rgba(140, 109, 81, 0.4)",
-          borderRadius: "16px",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
-          backdropFilter: "blur(10px)",
-          border: "1px solid rgba(140, 109, 81, 0.5)",
+          height: "calc(100vh - 5.5rem)",
+          width: "calc(100vw - 83px)",
+          p: "10px",
         }}
       >
-        <UserProvider>
-          <DateRangeProvider>
-            <TourPackageProvider>
-              <TouristDestinationProvider>
-                <TouristProvider>
-                  <BookingProvider>
-                    <DashboardProvider>
-                      <Outlet />
-                    </DashboardProvider>
-                  </BookingProvider>
-                </TouristProvider>
-              </TouristDestinationProvider>
-            </TourPackageProvider>
-          </DateRangeProvider>
-        </UserProvider>
+        <Box
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+            background: "rgba(140, 109, 81, 0.4)",
+            borderRadius: "16px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(140, 109, 81, 0.5)",
+          }}
+        >
+          <UserProvider>
+            <DateRangeProvider>
+              <TourPackageProvider>
+                <TouristDestinationProvider>
+                  <TouristProvider>
+                    <BookingProvider>
+                      <DashboardProvider>
+          
+            <Outlet />
+          </DashboardProvider>
+                    </BookingProvider>
+                  </TouristProvider>
+                </TouristDestinationProvider>
+              </TourPackageProvider>
+            </DateRangeProvider>
+          </UserProvider>
+        </Box>
       </Box>
-    </Box>
+    </FadeContent>
   );
 };
 export default ReportsPage;

@@ -5,11 +5,15 @@ interface GlobalStatsProps {
   bookingsCont: number;
   revenue: number;
   touristCont: number;
+  guidesCont: number;
+  operatorsCont: number;
 }
 const GlobalStats: React.FC<GlobalStatsProps> = ({
   bookingsCont,
   revenue,
   touristCont,
+  guidesCont,
+  operatorsCont,
 }) => {
   return (
     // <AnimatedContent
@@ -24,136 +28,136 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
     //   threshold={0.2}
     //   delay={0.3}
     // >
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        p: "1rem",
+        width: "100%",
+        background: "rgba(14, 18, 20, 0.6)",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+        // backdropFilter: "blur(5px)",
+        border: "1px solid rgba(14, 18, 20, 0.7)",
+      }}
+    >
+      <Typography variant="h6">Estadisticas Generales</Typography>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           gap: "1rem",
-          p: "1rem",
-          width: "100%",
-          background: "rgba(14, 18, 20, 0.6)",
-          borderRadius: "10px",
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
-          // backdropFilter: "blur(5px)",
-          border: "1px solid rgba(14, 18, 20, 0.7)",
         }}
       >
-        <Typography variant="h6">Estadisticas Generales</Typography>
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
-            gap: "1rem",
+            flexDirection: "column",
+            gap: "0.5rem",
+            width: "25%",
+            background: "rgba(0, 0, 0, 0.41)",
+            borderRadius: "5px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+            // backdropFilter: "blur(5px)",
+            border: "1px solid rgba(0, 0, 0, 0.51)",
+            p: "0.5rem",
           }}
         >
-          <Box
+          <Typography variant="body2">Reservas</Typography>
+          <Typography
+            variant="h6"
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              width: "25%",
-              background: "rgba(0, 0, 0, 0.41)",
-              borderRadius: "5px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
-              // backdropFilter: "blur(5px)",
-              border: "1px solid rgba(0, 0, 0, 0.51)",
-              p: "0.5rem",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              textAlign: "center",
             }}
           >
-            <Typography variant="body2">Reservas</Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: "1.5rem",
-                textAlign: "center",
-              }}
-            >
-              {/* {bookingsCont} */}
-              <CountUp
-                from={0}
-                to={bookingsCont || 0}
-                separator=","
-                direction="up"
-                duration={1}
-                className="count-up-text"
-              />
-            </Typography>
-          </Box>
-          <Box
+            {/* {bookingsCont} */}
+            <CountUp
+              from={0}
+              to={bookingsCont || 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text"
+            />
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            width: "25%",
+            background: "rgba(0, 0, 0, 0.41)",
+            borderRadius: "5px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+            // backdropFilter: "blur(5px)",
+            border: "1px solid rgba(0, 0, 0, 0.51)",
+            p: "0.5rem",
+          }}
+        >
+          <Typography variant="body2">Recaudación</Typography>
+          <Typography
+            variant="h6"
             sx={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              textAlign: "center",
               display: "flex",
-              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
               gap: "0.5rem",
-              width: "25%",
-              background: "rgba(0, 0, 0, 0.41)",
-              borderRadius: "5px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
-              // backdropFilter: "blur(5px)",
-              border: "1px solid rgba(0, 0, 0, 0.51)",
-              p: "0.5rem",
             }}
           >
-            <Typography variant="body2">Recaudación</Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: "1.5rem",
-                textAlign: "center",
-                display:"flex",
-                alignItems:"center",
-                justifyContent: "center",
-                gap:"0.5rem",
-              }}
-            >
-              {/* {revenue} Bs. */}
-              <CountUp
-                from={0}
-                to={revenue || 0}
-                separator=","
-                direction="up"
-                duration={1}
-                className="count-up-text"
-              />
-              {` Bs.`}
-            </Typography>
-          </Box>
-          <Box
+            {/* {revenue} Bs. */}
+            <CountUp
+              from={0}
+              to={revenue || 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text"
+            />
+            {` Bs.`}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            width: "25%",
+            background: "rgba(0, 0, 0, 0.41)",
+            borderRadius: "5px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+            // backdropFilter: "blur(5px)",
+            border: "1px solid rgba(0, 0, 0, 0.51)",
+            p: "0.5rem",
+          }}
+        >
+          <Typography variant="body2">Turistas registrados</Typography>
+          <Typography
+            variant="h6"
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              width: "25%",
-              background: "rgba(0, 0, 0, 0.41)",
-              borderRadius: "5px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
-              // backdropFilter: "blur(5px)",
-              border: "1px solid rgba(0, 0, 0, 0.51)",
-              p: "0.5rem",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              textAlign: "center",
             }}
           >
-            <Typography variant="body2">Turistas registrados</Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: "1.5rem",
-                textAlign: "center",
-              }}
-            >
-              {/* {touristCont} */}
-              <CountUp
-                from={0}
-                to={touristCont || 0}
-                separator=","
-                direction="up"
-                duration={1}
-                className="count-up-text"
-              />
-            </Typography>
-          </Box>
-          {/* <Box
+            {/* {touristCont} */}
+            <CountUp
+              from={0}
+              to={touristCont || 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text"
+            />
+          </Typography>
+        </Box>
+        {/* <Box
                 sx={{
                     display:"flex",
                     flexDirection:"column",
@@ -177,8 +181,76 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
                     }}
                     >100</Typography>
                 </Box> */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            width: "25%",
+            background: "rgba(0, 0, 0, 0.41)",
+            borderRadius: "5px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+            // backdropFilter: "blur(5px)",
+            border: "1px solid rgba(0, 0, 0, 0.51)",
+            p: "0.5rem",
+          }}
+        >
+          <Typography variant="body2">Operadores</Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              textAlign: "center",
+            }}
+          >
+            {/* {bookingsCont} */}
+            <CountUp
+              from={0}
+              to={operatorsCont || 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text"
+            />
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            width: "25%",
+            background: "rgba(0, 0, 0, 0.41)",
+            borderRadius: "5px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
+            // backdropFilter: "blur(5px)",
+            border: "1px solid rgba(0, 0, 0, 0.51)",
+            p: "0.5rem",
+          }}
+        >
+          <Typography variant="body2">Guías</Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              textAlign: "center",
+            }}
+          >
+            {/* {bookingsCont} */}
+            <CountUp
+              from={0}
+              to={guidesCont || 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text"
+            />
+          </Typography>
         </Box>
       </Box>
+    </Box>
     // </AnimatedContent>
   );
 };

@@ -26,6 +26,7 @@ import GuidePerfilContainer from "../features/guide/components/perfil/GuidePerfi
 // import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import MainLayout from "../pages/mainLayout/MainLayout";
 import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
+import GuideDateRangeSelectorContainer from "../features/guide/components/dateRangeSelector/GuideDateRangeSelectorContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -119,6 +120,10 @@ export const AppRouter = createBrowserRouter(
           path: "",
           element: <GuideDrawerContainer />,
           children: [
+            {
+              path: "fechas-asignadas",
+              element: <GuideDateRangeSelectorContainer />,
+            },
             {
               path: "turistas",
               element: <TouristListContainer />,
