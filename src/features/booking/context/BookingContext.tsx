@@ -7,6 +7,7 @@ import {
 } from "react";
 import { BookingType } from "../types/BookingType";
 import {
+  cancelBookingRequest,
   createBookingRequest,
   getAllBookingsRequest,
   updateAttendanceRequest,
@@ -36,7 +37,17 @@ interface BookingContextType {
   addPaymentToBooking: (payment: PaymentType) => void;
   updateAttendance: (data: any) => Promise<void>;
   getTouristCounterByDateRangeId: (dateRangeId: string) => number;
-  getBookingsByDateRangeId: (dateRangeId: string,bookings:BookingType[], tourPackageId: string) => BookingType[];
+  getBookingsByDateRangeId: (
+    dateRangeId: string,
+    bookings: BookingType[],
+    tourPackageId: string
+  ) => BookingType[];
+  cancelBooking: (
+    bookingId: string,
+    cancellationFee: number,
+    refundAmount: number,
+    refundedAt: Date
+  ) => Promise<void>;
 }
 
 const BookingContext = createContext<BookingContextType | null>(null);
@@ -53,15 +64,65 @@ interface BookingProviderProps {
   children: ReactNode;
 }
 
-export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) => {
+export const BookingProvider: React.FC<BookingProviderProps> = ({
+  children,
+}) => {
   const [bookings, setBookings] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
+// console.log('::: ', );
+  const cancelBooking = async (
+    bookingId: string,
+    cancellationFee: number,
+    refundAmount: number,
+    refundedAt: Date
+  ): Promise<void> => {
+    setLoading(true);
+    try {
+      const response = await cancelBookingRequest(
+        bookingId,
+        cancellationFee,
+        refundAmount,
+        refundedAt
+      );
+      if (!response || response.error) {
+        setError(response?.error || "Error canceling booking");
+        return;
+      }
+      const updatedBookings = bookings.map((booking) =>
+        booking.id === response.id
+          ? {
+              ...booking,
+              cancellationFee: response.cancellationFee,
+              refundAmount: response.refundAmount,
+            refundedAt: response.refundedAt,
+              status: response.status
+            }
+          : booking
+      );
+      setBookings(updatedBookings);
+      showSnackbar("Reserva cancelada exitosamente", "success");
+    } catch (error) {
+      console.error("Error canceling booking", error);
+      setError("Failed to cancel booking");
+      showSnackbar("Error al cancelar la reserva", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const getBookingsByDateRangeId = (dateRangeId: string, bookings: BookingType[], tourPackageId: string): BookingType[] => {
-    const bookingsByDateRangeId = bookings.filter((booking) => booking.dateRangeId === dateRangeId && booking.tourPackageId === tourPackageId);
+  const getBookingsByDateRangeId = (
+    dateRangeId: string,
+    bookings: BookingType[],
+    tourPackageId: string
+  ): BookingType[] => {
+    const bookingsByDateRangeId = bookings.filter(
+      (booking) =>
+        booking.dateRangeId === dateRangeId &&
+        booking.tourPackageId === tourPackageId
+    );
     return bookingsByDateRangeId;
   };
 
@@ -78,12 +139,14 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     return touristCounter;
   };
 
-  const updateAttendance = async (data:any):Promise<any>=>{
+  const updateAttendance = async (data: any): Promise<any> => {
     setLoading(true);
     try {
       const attendanceList = await updateAttendanceRequest(data);
       const updatedBookings = attendanceList.map((attendance: Group) => {
-        const booking = bookings.find((b: BookingType) => b.id === attendance.bookingId);
+        const booking = bookings.find(
+          (b: BookingType) => b.id === attendance.bookingId
+        );
         if (booking) {
           return {
             ...booking,
@@ -101,14 +164,16 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const addPaymentToBooking = (payment: PaymentType) => {
     setBookings((prevBookings) =>
       prevBookings.map((booking) => {
         if (booking.id === payment.bookingId) {
           // Verificamos si ya existe ese pago para evitar duplicados
-          const alreadyExists = booking.payments.some((p) => p.id === payment.id);
+          const alreadyExists = booking.payments.some(
+            (p) => p.id === payment.id
+          );
           if (!alreadyExists) {
             return {
               ...booking,
@@ -139,15 +204,21 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     formData.append("status", "pending");
     formData.append("totalPrice", booking.totalPrice.toString());
     formData.append("notes", booking.notes || "");
-    formData.append("paymentProofImage", booking.firstPayment.paymentProofImage);
+    formData.append(
+      "paymentProofImage",
+      booking.firstPayment.paymentProofImage
+    );
     formData.append("tourists", JSON.stringify(tourists));
     formData.append("paymentProofFolder", paymentProofFolder);
-    formData.append("firstPayment", JSON.stringify({
-      amount: booking.firstPayment.amount,
-      paymentDate: booking.firstPayment.paymentDate,
-      paymentMethod: booking.firstPayment.paymentMethod,
-      sellerId: seller.id,
-    }));
+    formData.append(
+      "firstPayment",
+      JSON.stringify({
+        amount: booking.firstPayment.amount,
+        paymentDate: booking.firstPayment.paymentDate,
+        paymentMethod: booking.firstPayment.paymentMethod,
+        sellerId: seller.id,
+      })
+    );
 
     setLoading(true);
     try {
@@ -157,7 +228,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
         return;
       }
 
-      const newTourists = response.tourists.map((t: any) => addTouristFromBooking(t));
+      const newTourists = response.tourists.map((t: any) =>
+        addTouristFromBooking(t)
+      );
       const touristIds = newTourists.map((t: TouristType) => t.id);
 
       const newBooking: BookingType = transformApiBooking({
@@ -193,7 +266,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
         return;
       }
 
-      const updatedTouristIds = response.tourists.map((t: any) => addTouristFromBooking(t).id);
+      const updatedTouristIds = response.tourists.map(
+        (t: any) => addTouristFromBooking(t).id
+      );
       setBookings((prev) =>
         prev.map((b) =>
           b.id === response.id
@@ -221,7 +296,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     setLoading(true);
     try {
       const response = await getAllBookingsRequest();
-      const transformedBookings = response.map((b: any) => transformApiBooking(b));
+      const transformedBookings = response.map((b: any) =>
+        transformApiBooking(b)
+      );
       setBookings(transformedBookings);
       setError(null);
     } catch (error) {
@@ -254,10 +331,14 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     paymentProofFolder: apiBooking.paymentProofFolder,
     createdAt: apiBooking.createdAt,
     attendance: apiBooking.attendance,
+    cancellationFee: apiBooking.cancellationFee,
+    refundAmount: apiBooking.refundAmount,
+    refundedAt: apiBooking.refundedAt,
   });
 
   useEffect(() => {
     fetchBookings();
+    console.log('::: ', );
   }, []);
 
   return (
@@ -273,7 +354,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
         updateAttendance,
         setBookings,
         getTouristCounterByDateRangeId,
-        getBookingsByDateRangeId
+        getBookingsByDateRangeId,
+        cancelBooking,
       }}
     >
       {children}

@@ -78,7 +78,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       // const response = await userService.getUserById(userId, token);
       if (!users || users.length === 0) {
-        showSnackbar("No hay datos de usuarios disponibles", "error");
+        // showSnackbar("No hay datos de usuarios disponibles", "error");
         return null;
       }
       const userFound = users.find((user: User) => user.id === userId);
@@ -300,6 +300,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   }, [token]);
   
   useEffect(() => {
+    // console.log('::: ', );
     fetchGuides();
     getOperators();
   }, [users]);

@@ -8,7 +8,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 const GuideDrawerContainer: React.FC = () => {
 
     const drawerItems = [
-        { text: "Fechas", icon: CalendarMonthIcon, path: "fechas-asignadas" },
+        { text: "Salidas", icon: CalendarMonthIcon, path: "fechas-asignadas" },
         { text: "Destino", icon: PlaceIcon, path: "destino-turistico" },
         { text: "Paquete", icon: ExploreIcon, path: "paquete-turistico" },
         { text: "Lista de turistas", icon: PeopleIcon, path: "turistas" },

@@ -20,13 +20,14 @@ const ItineraryContainer: React.FC = () => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const [tourPackage, setTourPackage] = useState<TourPackageType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { currentTourPackage } = useGuideContext2();
   
   useEffect(() => { 
     setLoading(true);
-    const currentTourPackageId = localStorage.getItem("currentTourPackage");
-    console.log('currentTourPackageId::: ', currentTourPackageId);
-    if (currentTourPackageId) {
-      const tourPackage = getTourPackageInfoById(currentTourPackageId);
+    // const currentTourPackageId = localStorage.getItem("currentTourPackage");
+    console.log('currentTourPackageId::: ', currentTourPackage);
+    if (currentTourPackage) {
+      const tourPackage = getTourPackageInfoById(currentTourPackage);
       console.log('tourPackage::: ', tourPackage);
       setTourPackage(tourPackage);
       setLoading(false);

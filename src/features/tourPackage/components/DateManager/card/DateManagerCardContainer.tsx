@@ -8,6 +8,7 @@ import { useBookingContext } from "../../../../booking/context/BookingContext";
 import ConfirmationModal from "./ConfirmationModal";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 import DateSelectorFormContainer from "../DateSelectorForm/DateSelectorFormContainer";
+import DateRangeBookingsDialogContainer from '../dateRangeBookingsDialog/DateRangeBookingsDialogContainer';
 interface DateManagerCardContainerProps {
   dateRange: DateRangeType;
   duration: number;
@@ -33,6 +34,16 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
   const [openDateSelectorForm, setOpenDateSelectorForm] =
     useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [openDateRangeBookingsDialog, setOpenDateRangeBookingsDialog] =
+    useState<boolean>(false);
+  
+  const handleOpenDateRangeBookingsDialog = () => {
+    setOpenDateRangeBookingsDialog(true);
+  };
+
+  const handleCloseDateRangeBookingsDialog = () => {
+    setOpenDateRangeBookingsDialog(false);
+  };
 
   const handleOpenDateSelectorForm = () => {
     setOpenDateSelectorForm(true);
@@ -58,6 +69,9 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
     if (option === "Editar") {
       setIsEditing(true);
       handleOpenDateSelectorForm();
+    }
+    if (option === "Ver reservas") {
+      handleOpenDateRangeBookingsDialog();
     }
     // } else {
     // otras opciones que no requieren modal
@@ -110,6 +124,13 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
           dateRanges={dateRangesInfo}
           tourPackageId={tourPackageId}
           currentDateRange={dateRange}
+        />
+      )}
+      {openDateRangeBookingsDialog && (
+        <DateRangeBookingsDialogContainer
+          open={openDateRangeBookingsDialog}
+          handleClose={handleCloseDateRangeBookingsDialog}
+          dateRange={dateRange}
         />
       )}
     </>

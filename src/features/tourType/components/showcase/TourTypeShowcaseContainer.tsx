@@ -17,6 +17,7 @@ const TourTypeShowcaseContainer = () => {
   const handleClick = () => {
     setOpen(!open);
   };
+  // console.log('::: ', );
   return (
     <>
       <TourTypeShowcase handleClick={handleClick} />

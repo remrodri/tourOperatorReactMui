@@ -4,6 +4,7 @@ import { useTouristDestinationContext } from "../../../touristDestination/contex
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { useEffect, useState } from "react";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
+import { useGuideContext2 } from "../../context/GuideContext2";
 
 // const TouristDestinationContainer: React.FC = () => {
 //   const { loading, touristDestination } = useGuideContext();
@@ -25,15 +26,17 @@ const TouristDestinationContainer: React.FC = () => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const [touristDestination, setTouristDestination] =
     useState<TouristDestinationType | null>(null);
+  const { currentTourPackage } = useGuideContext2();
 
   const getTouristDestination = () => {
+    console.log('currentTourPackage::: ', currentTourPackage);
     setLoading(true);
-    const currentTourPackageId = localStorage.getItem("currentTourPackage");
+    // const currentTourPackageId = localStorage.getItem("currentTourPackage");
     // console.log("currentTourPackageId::: ", currentTourPackageId);
-    if (!currentTourPackageId) {
+    if (!currentTourPackage) {
       return;
     }
-    const tourPackage = getTourPackageInfoById(currentTourPackageId);
+    const tourPackage = getTourPackageInfoById(currentTourPackage);
     // console.log("touristDestination::: ", tourPackage);
     if (tourPackage) {
       const touristDestination = getTouristDestinationInfoById(

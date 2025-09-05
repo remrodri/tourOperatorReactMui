@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { UserProvider } from "../features/userManagement/context/UserContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
+import { RoleProvider } from "../features/Role/context/RoleContext";
 
 const UserManagementPage: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const UserManagementPage: React.FC = () => {
       duration={200}
       easing="ease-out"
       initialOpacity={0.6}
+      className="w-full"
     >
       <Box
         sx={{
@@ -23,7 +25,7 @@ const UserManagementPage: React.FC = () => {
           //   sm: "calc(100vh - 4rem)",
           // },
           height: "calc(100vh - 5.5rem)",
-          width: "calc(100vw - 83px)",
+          // width: "calc(100vw - 83px)",
           p: "10px",
           // background: "rgba(78, 140, 179, 0.4)",
         }}
@@ -57,7 +59,7 @@ const UserManagementPage: React.FC = () => {
           }}
         >
           <UserProvider>
-            <Outlet />
+              <Outlet />
           </UserProvider>
         </Box>
         {/* <Typography variant="h4" component="h2"> */}

@@ -186,6 +186,7 @@ export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
   };
 
   useEffect(() => {
+    // console.log('::: ', );
     getDateRanges();
   }, []);
 

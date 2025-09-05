@@ -19,13 +19,14 @@ const TourPackagePage: React.FC = () => {
       duration={200}
       easing="ease-out"
       initialOpacity={0.6}
+      className="w-full"
     >
       <Box
         sx={{
           display: "flex",
-          flexGrow: 1,
+          // flexGrow: 1,
           // height: "100%",
-          // width: "calc(100vw - 83px)",
+          // width: "calc(100dvw - 83px)",
           // height: {
           //   xs: "calc(100vh - 3.5rem)",
           //   sm: "calc(100vh - 4rem)",
@@ -34,16 +35,17 @@ const TourPackagePage: React.FC = () => {
           // position: "relative",
           // height: "42.3rem",
           height: "calc(100vh - 5.5rem)",
-          width: "calc(100vw - 83px)",
+          // width: "calc(100vw - 83px)",
         }}
       >
         <Box
           sx={{
+            flexGrow: 1,
             display: "flex",
             // flexDirection:"column",
             // height:"100%",
             // height: "42.3rem",
-            flexGrow: 1,
+            // flexGrow: 1,
             background: "rgba(4, 135, 217, 0.4)",
             borderRadius: "16px",
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
@@ -51,21 +53,23 @@ const TourPackagePage: React.FC = () => {
             border: "1px solid rgba(4, 135, 217, 0.5)",
           }}
         >
-          <TouristProvider>
-            <BookingProvider>
-              <UserProvider>
-                <TouristDestinationProvider>
-                  <CancellationPolicyProvider>
-                    <TourTypeProvider>
-                      <TourPackageProvider>
-                        <Outlet />
-                      </TourPackageProvider>
-                    </TourTypeProvider>
-                  </CancellationPolicyProvider>
-                </TouristDestinationProvider>
-              </UserProvider>
-            </BookingProvider>
-          </TouristProvider>
+          <DateRangeProvider>
+            <TouristProvider>
+              <BookingProvider>
+                <UserProvider>
+                  <TouristDestinationProvider>
+                    <CancellationPolicyProvider>
+                      <TourTypeProvider>
+                        <TourPackageProvider>
+                          <Outlet />
+                        </TourPackageProvider>
+                      </TourTypeProvider>
+                    </CancellationPolicyProvider>
+                  </TouristDestinationProvider>
+                </UserProvider>
+              </BookingProvider>
+            </TouristProvider>
+          </DateRangeProvider>
         </Box>
         {/* <Typography variant="h4" component="h2"> */}
         {/* </Typography> */}

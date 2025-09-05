@@ -38,43 +38,43 @@ const Dashboard: React.FC<DashboardProps> = (
           // overflowY: "auto",
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{
-            height: "5rem",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            p: "0 0 0 1.5rem",
-          }}
-        >
-          <BreadCrumbsContainer />
-          <Box
+        <Box>
+          <Typography
+            variant="h4"
             sx={{
+              height: "5rem",
               display: "flex",
-              gap: "2rem",
-              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "center",
+              p: "0 1.5rem 0 1.5rem",
             }}
           >
-            <TextType
-              text={"Reportes"}
-              typingSpeed={50}
-              pauseDuration={1000}
-              showCursor={true}
-              cursorCharacter="_"
-              deletingSpeed={50}
-            />
-          </Box>
-        </Typography>
+            <BreadCrumbsContainer />
+            <Box
+              sx={{
+                display: "flex",
+                gap: "2rem",
+                alignItems: "center",
+              }}
+            >
+              <TextType
+                text={"Reportes"}
+                typingSpeed={50}
+                pauseDuration={1000}
+                showCursor={true}
+                cursorCharacter="_"
+                deletingSpeed={50}
+              />
+            </Box>
+          </Typography>
+        </Box>
         <Box
-          sx={
-            {
-              // height: "calc(100% - 5rem)",
-              // display: "flex",
-              overflowY: "auto",
-              // p: "20px",
-            }
-          }
+          sx={{
+            // height: "calc(100% - 5rem)",
+            // display: "flex",
+            overflowY: "auto",
+            // p: "20px",
+          }}
         >
           <AnimatedContent
             distance={100}

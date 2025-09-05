@@ -17,6 +17,7 @@ import { TokenService } from "../../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../userManagement/types/User";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
+import { useGuideContext2 } from "../../context/GuideContext2";
 
 // const TourPackageContainer: React.FC = () => {
 //   const { users } = useUserContext();
@@ -68,14 +69,15 @@ const TourPackageContainer: React.FC = () => {
   const { guides, getUserById } = useUserContext();
   const { getDateRangeById } = useDateRangeContext();
   const [asignedGuides, setAsignedGuides] = useState<User[]>([]);
+  const { currentDateRange, currentTourPackage } = useGuideContext2();
 
   const getTourPackage = () => {
     setLoading(true);
-    const currentTourPackageId = localStorage.getItem("currentTourPackage");
-    if (!currentTourPackageId) {
+    // const currentTourPackageId = localStorage.getItem("currentTourPackage");
+    if (!currentTourPackage) {
       return;
     }
-    const tourPackage = getTourPackageInfoById(currentTourPackageId);
+    const tourPackage = getTourPackageInfoById(currentTourPackage);
     console.log("tourPackage::: ", tourPackage);
     setTourPackage(tourPackage);
     setLoading(false);
