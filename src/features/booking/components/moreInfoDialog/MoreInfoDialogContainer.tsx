@@ -22,13 +22,16 @@ interface MoreInfoDialogContainerProps {
   open: boolean;
   handleClose: () => void;
   booking: BookingType;
+  balance: number;
 }
 
 const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   open,
   handleClose,
   booking,
+  balance,
 }) => {
+  console.log('booking::: ', booking);
   const { getDateRangeInfoById } = useDateRangeContext();
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getCancellationPolicyInfoById } = useCancellationConditionContext();

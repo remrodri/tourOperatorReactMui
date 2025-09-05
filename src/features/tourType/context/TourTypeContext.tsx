@@ -146,6 +146,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
+    // console.log("::: ");
     fetchTourTypes();
   }, []);
 

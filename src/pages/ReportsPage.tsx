@@ -16,12 +16,13 @@ const ReportsPage: React.FC = () => {
       duration={200}
       easing="ease-out"
       initialOpacity={0.6}
+      className="w-full"
     >
       <Box
         sx={{
           display: "flex",
           height: "calc(100vh - 5.5rem)",
-          width: "calc(100vw - 83px)",
+          // width: "calc(100vw - 83px)",
           p: "10px",
         }}
       >

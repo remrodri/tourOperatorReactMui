@@ -2,7 +2,7 @@ import { RouterProvider } from "react-router-dom";
 import { AppRouter } from "./router/AppRouter";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { SnackbarProvider } from "./context/SnackbarContext";
-import { AppProviders } from "./context/AppProviders";
+// import { AppProviders } from "./context/AppProviders";
 import GlobalSnackbar from "./utils/snackbar/GlobalSnackbar";
 
 const darkTheme = createTheme({

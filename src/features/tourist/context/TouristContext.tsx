@@ -171,6 +171,7 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   };
   useEffect(() => {
     fetchTourists();
+    // console.log('::: ', );
   }, []);
 
   return (

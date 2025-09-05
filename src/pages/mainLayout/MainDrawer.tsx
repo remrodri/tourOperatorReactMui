@@ -402,14 +402,22 @@ export default function MainDrawer({ currentStyles }: Props) {
                 // },
                 backgroundColor:
                   selectedOption === "Ver todos"
-                    ? "rgba(172, 170, 164, 0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Ver todos"
-                      ? "rgba(255, 255, 255, 0.12)"
-                      : "rgba(172, 170, 164, 0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Ver todos"
+                  //     ? "rgba(255, 255, 255, 0.5)"
+                  //     : "rgba(172, 170, 164, 0.5)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                // selectedOption==="Ver todos" && {
+                //   backgroundColor: "rgba(255, 255, 255, 0.4)",
+                // }
+                color:
+                  selectedOption === "Ver todos"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Ver todos")}
             >
@@ -417,7 +425,9 @@ export default function MainDrawer({ currentStyles }: Props) {
                 <PeopleIcon
                   sx={{
                     color:
-                      selectedOption === "Ver todos" ? "#90caf9" : "inherit",
+                      selectedOption === "Ver todos"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
                   }}
                 />
               </ListItemIcon>
@@ -450,14 +460,19 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 4 : 2.5,
                 backgroundColor:
                   selectedOption === "Paquetes turisticos"
-                    ? "rgba(172, 170, 164, 0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Paquetes turisticos"
-                      ? "rgba(255, 255, 255, 0.12)"
-                      : "rgba(172, 170, 164, 0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Paquetes turisticos"
+                  //     ? "rgba(255, 255, 255, 0.5)"
+                  //     : "rgba(172, 170, 164, 0.5)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                color:
+                  selectedOption === "Paquetes turisticos"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Paquetes turisticos")}
             >
@@ -466,7 +481,7 @@ export default function MainDrawer({ currentStyles }: Props) {
                   sx={{
                     color:
                       selectedOption === "Paquetes turisticos"
-                        ? "#90caf9"
+                        ? "rgba(43, 43, 43, 0.88)"
                         : "inherit",
                   }}
                 />
@@ -480,14 +495,19 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 4 : 2.5,
                 backgroundColor:
                   selectedOption === "Tipo de tour"
-                    ? "rgba(172, 170, 164, 0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Tipo de tour"
-                      ? "rgba(255, 255, 255, 0.12)"
-                      : "rgba(172, 170, 164, 0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Tipo de tour"
+                  //     ? "rgba(255, 255, 255, 0.5)"
+                  //     : "rgba(172, 170, 164, 0.5)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                color:
+                  selectedOption === "Tipo de tour"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Tipo de tour")}
             >
@@ -495,7 +515,9 @@ export default function MainDrawer({ currentStyles }: Props) {
                 <CategoryIcon
                   sx={{
                     color:
-                      selectedOption === "Tipo de tour" ? "#90caf9" : "inherit",
+                      selectedOption === "Tipo de tour"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
                   }}
                 />
               </ListItemIcon>
@@ -508,14 +530,19 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 4 : 2.5,
                 backgroundColor:
                   selectedOption === "Politicas"
-                    ? "rgba(172, 170, 164, 0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Politicas"
-                      ? "rgba(255, 255, 255, 0.12)"
-                      : "rgba(172, 170, 164, 0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Politicas"
+                  //     ? "rgba(255, 255, 255, 0.5)"
+                  //     : "rgba(172, 170, 164, 0.5)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                color:
+                  selectedOption === "Politicas"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Politicas")}
             >
@@ -523,7 +550,9 @@ export default function MainDrawer({ currentStyles }: Props) {
                 <EventBusyIcon
                   sx={{
                     color:
-                      selectedOption === "Politicas" ? "#90caf9" : "inherit",
+                      selectedOption === "Politicas"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
                   }}
                 />
               </ListItemIcon>
@@ -536,14 +565,19 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 4 : 2.5,
                 backgroundColor:
                   selectedOption === "Destinos"
-                    ? "rgba(172, 170, 164, 0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Destinos"
-                      ? "rgba(255, 255, 255, 0.12)"
-                      : "rgba(172, 170, 164, 0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Destinos"
+                  //     ? "rgba(255, 255, 255, 0.5)"
+                  //     : "rgba(172, 170, 164, 0.5)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                color:
+                  selectedOption === "Destinos"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Destinos")}
             >
@@ -551,7 +585,9 @@ export default function MainDrawer({ currentStyles }: Props) {
                 <ExploreIcon
                   sx={{
                     color:
-                      selectedOption === "Destinos" ? "#90caf9" : "inherit",
+                      selectedOption === "Destinos"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
                   }}
                 />
               </ListItemIcon>
@@ -584,14 +620,19 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 4 : 2.5,
                 backgroundColor:
                   selectedOption === "Reservas"
-                    ? "rgba(172,170,164,0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Reservas"
-                      ? "rgba(255,255,255,0.12)"
-                      : "rgba(172,170,164,0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Reservas"
+                  //     ? "rgba(255,255,255,0.5)"
+                  //     : "rgba(172,170,164,0.5)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                color:
+                  selectedOption === "Reservas"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Reservas")}
             >
@@ -599,7 +640,9 @@ export default function MainDrawer({ currentStyles }: Props) {
                 <BookOnlineIcon
                   sx={{
                     color:
-                      selectedOption === "Reservas" ? "#90caf9" : "inherit",
+                      selectedOption === "Reservas"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
                   }}
                 />
               </ListItemIcon>
@@ -634,14 +677,19 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 4 : 2.5,
                 backgroundColor:
                   selectedOption === "Reportes"
-                    ? "rgba(172, 170, 164, 0.27)"
+                    ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    selectedOption === "Reportes"
-                      ? "rgba(255, 255, 255, 0.12)"
-                      : "rgba(172, 170, 164, 0.27)",
+                  // backgroundColor:
+                  //   selectedOption === "Reportes"
+                  //     ? "rgba(255, 255, 255, 0.4)"
+                  //     : "rgba(255, 255, 255, 0.4)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
                 },
+                color:
+                  selectedOption === "Reportes"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
               }}
               onClick={() => handleClick("Reportes")}
             >
@@ -649,7 +697,9 @@ export default function MainDrawer({ currentStyles }: Props) {
                 <QueryStatsIcon
                   sx={{
                     color:
-                      selectedOption === "Reportes" ? "#90caf9" : "inherit",
+                      selectedOption === "Reportes"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
                   }}
                 />
               </ListItemIcon>
@@ -671,7 +721,7 @@ export default function MainDrawer({ currentStyles }: Props) {
             height: "calc(100% - 5.5rem)",
             display: "flex",
             // flexDirection: "column",
-            width: "calc(100vw - 83px)",
+            // width: "calc(100vw - 83px)",
             // background: "rgba(78, 140, 179, 0.4)",
             // backdropFilter: "blur(10px)",
           }}

@@ -1,3 +1,4 @@
+import { SnackbarProvider } from "../../context/SnackbarContext";
 import { BookingProvider } from "../../features/booking/context/BookingContext";
 import { GuideProvider2 } from "../../features/guide/context/GuideContext2";
 import { TouristProvider } from "../../features/tourist/context/TouristContext";
@@ -5,24 +6,30 @@ import { TouristDestinationProvider } from "../../features/touristDestination/co
 import { TourPackageProvider } from "../../features/tourPackage/context/TourPackageContext";
 import { UserProvider } from "../../features/userManagement/context/UserContext";
 import GuidePage from "./GuidePage";
+import { DateRangeProvider } from "../../features/dateRange/context/DateRangeContext";
+
 
 const guideBackground = "/src/assets/images/guide.webp";
 
 const GuidePageContainer = () => {
   return (
-    <TourPackageProvider>
-      <TouristDestinationProvider>
-        <TouristProvider>
-          <BookingProvider>
-            <UserProvider>
-              <GuideProvider2>
-                <GuidePage backgroundImg={guideBackground} />
-              </GuideProvider2>
-            </UserProvider>
-          </BookingProvider>
-        </TouristProvider>
-      </TouristDestinationProvider>
-    </TourPackageProvider>
+    // <SnackbarProvider>
+    <DateRangeProvider>
+      <TourPackageProvider>
+        <TouristDestinationProvider>
+          <TouristProvider>
+            <BookingProvider>
+              <UserProvider>
+                <GuideProvider2>
+                  <GuidePage backgroundImg={guideBackground} />
+                </GuideProvider2>
+              </UserProvider>
+            </BookingProvider>
+          </TouristProvider>
+        </TouristDestinationProvider>
+      </TourPackageProvider>
+    </DateRangeProvider>
+    //  </SnackbarProvider>
   );
 };
 

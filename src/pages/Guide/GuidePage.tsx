@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { GuideProvider } from "../../features/guide/context/GuideContext";
+// import { GuideProvider2 } from "../../features/guide/context/GuideContext2";
 
 interface Props {
   backgroundImg: string;

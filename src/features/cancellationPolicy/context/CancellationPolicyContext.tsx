@@ -125,6 +125,7 @@ export const CancellationPolicyProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     fetchCancellationPolicy();
+    // console.log('::: ', );
   }, []);
 
   return (

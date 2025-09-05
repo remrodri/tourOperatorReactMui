@@ -53,10 +53,22 @@ const BookingCard: React.FC<BookingCardProps> = ({
       <Card
         sx={{
           borderRadius: "10px",
-          background: "rgba(10,10,10,0.52)",
-          boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+          // background: "rgba(10,10,10,0.52)",
+          background:
+            booking.status === "pending"
+              ? "rgba(10,10,10,0.52)"
+              : "rgba(73, 17, 17, 0.52)",
+          // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+          boxShadow:
+            booking.status === "pending"
+              ? "0 4px 10px rgba(10,10,10,0.6)"
+              : "0 4px 10px rgba(73,17,17,0.6)",
           // backdropFilter: "Blur(5px)",
-          border: "1px solid rgba(10,10,10,0.6)",
+          // border: "1px solid rgba(10,10,10,0.6)",
+          border:
+            booking.status === "pending"
+              ? "1px solid rgba(10,10,10,0.6)"
+              : "1px solid rgba(73, 17, 17, 0.6)",
           width: 300,
           height: "100%",
           display: "flex",
@@ -75,18 +87,39 @@ const BookingCard: React.FC<BookingCardProps> = ({
             <BookingCardMenu
               onOptionSelect={handleMenuOptions}
               balance={balance}
+              status={booking.status}
             />
           }
         />
         <CardContent>
-          <Typography variant="h6" component="div">
+          {/* <Typography variant="body1" component="div">
             {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
-          </Typography>
-          <Typography variant="h6" component="div">
-            {balance === 0
-              ? "Saldo: No tiene"
-              : `Saldo: ${balance.toFixed(2)} Bs.`}
-          </Typography>
+          </Typography> */}
+          {booking.status === "cancelled" ? (
+            <Typography
+              variant="body1"
+              component="div"
+            >{`Cancelado`}</Typography>
+          ) : (
+            // <Typography variant="body1" component="div">
+            //   {balance === 0
+            //     ? "Saldo: No tiene"
+            //     : `Saldo: ${balance.toFixed(2)} Bs.`}
+            // </Typography>
+            <Typography variant="body1" component="div">
+              {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+            </Typography>
+          )}
+          {booking.status === "cancelled" ? (
+            <Typography
+              variant="body1"
+              component="div"
+            >Monto retenido: {booking.cancellationFee?.toFixed(2)} Bs.</Typography>
+          ) : (
+            <Typography variant="body1" component="div">
+              {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+            </Typography>
+          )}
         </CardContent>
       </Card>
     </AnimatedContent>

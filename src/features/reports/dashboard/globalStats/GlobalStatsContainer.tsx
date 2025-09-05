@@ -12,12 +12,17 @@ const GlobalStatsContainer: React.FC<{}> = () => {
   const { bookings } = useBookingContext();
   const { tourists } = useTouristContext();
   const { guides, operators } = useUserContext();
-  console.log('operators::: ', operators);
 
+  // console.log('operators::: ', operators);
+  // console.log('guides::: ', guides);
   const getRevenue = () => {
     const totalRevenue = bookings.reduce((acc, booking) => {
-      return acc + booking.totalPrice;
+      if (booking.status === "cancelled") {
+        return acc + (booking.cancellationFee ?? 0); // retenido
+      }
+      return acc + (booking.totalPrice ?? 0); // ingreso completo
     }, 0);
+
     setRevenue(totalRevenue);
   };
   // console.log('bookings::: ', bookings);
@@ -25,14 +30,14 @@ const GlobalStatsContainer: React.FC<{}> = () => {
     setBookingsCont(bookings.length);
     getRevenue();
     setTouristCont(tourists.length);
-    setGuidesCont(guides.length);
+    // setGuidesCont(guides.length);
   }, [bookings]);
   return (
     <GlobalStats
       bookingsCont={bookingsCont}
       revenue={revenue}
       touristCont={touristCont}
-      guidesCont={guidesCont}
+      guidesCont={guides.length}
       operatorsCont={operators.length}
     />
   );

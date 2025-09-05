@@ -40,6 +40,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
         // backdropFilter: "blur(5px)",
         border: "1px solid rgba(14, 18, 20, 0.7)",
+        height: "100%",
       }}
     >
       <Typography variant="h6">Estadisticas Generales</Typography>
@@ -117,7 +118,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               to={revenue || 0}
               separator=","
               direction="up"
-              duration={1}
+              duration={0.1}
               className="count-up-text"
             />
             {` Bs.`}
@@ -137,7 +138,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
             p: "0.5rem",
           }}
         >
-          <Typography variant="body2">Turistas registrados</Typography>
+          <Typography variant="body2">Turistas</Typography>
           <Typography
             variant="h6"
             sx={{

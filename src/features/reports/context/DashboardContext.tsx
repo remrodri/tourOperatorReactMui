@@ -281,23 +281,28 @@ useEffect(() => {
     getTouristDestinationWithBookings();
     getBokingsByYear(yearSelected);
     getCumulativeBookings();
+    // console.log('::: ', );
 }, [bookings,yearSelected]);
 
 useEffect(() => {
     getBookingsByMonth();
+    // console.log('::: ', );
 }, [yearSelected]);
 useEffect(() => {
+  // console.log('::: ', );
     getBookingsByTouristDestination();
 }, [touristDestinationWithBookings]);
 useEffect(() => {
+  // console.log('::: ', );
     getPackagesSoldBySeller();
 }, [bookings,users]);
 useEffect(() => {
+  // console.log('::: ', );
   fetchGuides();
   // getGuidesRankingByDestination();
   getGuidesStats();
 }, [dateRanges,users,touristDestinations,tourPackages]);
-
+// console.log('::: ', );
 // console.log('touristDestinations::: ', touristDestinations);
 // const touristDestinationsCounted = touristDestinations.length;
 // console.log('touristDestinationsCounted::: ', touristDestinationsCounted);

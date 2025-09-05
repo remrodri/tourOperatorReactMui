@@ -125,6 +125,7 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
+    // console.log('::: ', );
     fetchTouristDestination();
   }, []);
 

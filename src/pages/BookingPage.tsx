@@ -18,13 +18,14 @@ const BookingPage = () => {
       duration={200}
       easing="ease-out"
       initialOpacity={0.6}
+      className="w-full"
     >
       <Box
         sx={{
           display: "flex",
           // flexGrow: 1,
           height: "100%",
-          width: "calc(100vw - 83px)",
+          // width: "calc(100vw - 83px)",
           p: "10px",
           // background: "rgba(86, 101, 115, 0.4)",
           // flexGrow: 1,

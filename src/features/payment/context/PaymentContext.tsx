@@ -181,6 +181,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   };
   useEffect(() => {
     // fetchPayments();
+    // console.log('::: ', );
   }, []);
 
   return (

@@ -17,5 +17,8 @@ export interface BookingType {
   attendance:{
     touristId:string,
     status:"present" | "absent"
-  }[]
+  }[],
+  cancellationFee?:number,
+  refundAmount?:number,
+  refundedAt?:Date
 }
