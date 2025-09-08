@@ -188,7 +188,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                       gap: 2,
                     }}
                   >
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" sx={{pl:1}}>
                       {/* 1. Turista */}
                       <TextType
                         className="text-lg"
@@ -301,10 +301,10 @@ const BookingForm:React.FC<BookingFormProps>=({
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: 1,
+                      gap: 2,
                     }}
                   >
-                    <Typography variant="h6">
+                    <Typography variant="h6" sx={{pl:1}}>
                       <TextType
                         className="text-lg"
                         text="2. Paquete Turístico"
@@ -438,6 +438,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                   <Box
                     sx={{
                       display: "flex",
+                      justifyContent: "center",
                       flexWrap: "wrap",
                       gap: 1,
                       ...(isEditing ? { justifyContent: "center" } : {}),
@@ -491,7 +492,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                       sx={{
                         display: "flex",
                         flexDirection: "column",
-                        gap: 1,
+                        gap: 2,
                       }}
                     >
                       <Typography variant="h6">
@@ -566,7 +567,7 @@ const BookingForm:React.FC<BookingFormProps>=({
                     fullWidth
                     variant="contained"
                     color="error"
-                    onClick={handleClose}
+                    onClick={handleCloseWithTransition}
                     sx={{
                       height: "2rem",
                       width: !isEditing ? "100%" : "20rem",
