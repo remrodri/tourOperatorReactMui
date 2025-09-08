@@ -44,3 +44,9 @@ export const deleteTourPackageRequest = async (id: string) => {
   const response = await axiosInstance.delete(`/tour-package/${id}`);
   return response.data;
 };
+
+export const updateTourPackageStatusRequest = async (id: string, status: string) => {
+  const response = await axiosInstance.put(`/tour-package-status/${id}`, { status });
+  return response.data;
+};
+

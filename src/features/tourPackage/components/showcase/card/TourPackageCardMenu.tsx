@@ -1,21 +1,24 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { TourPackageType } from "../../../types/TourPackageType";
 
 const options = [
-  "Ver mas", 
-  "Editar", 
+  "Ver mas",
+  "Editar",
   "Gestion de fechas",
-  "Inhabilitar"
+  // "Inhabilitar"
 ];
 
 interface TourPackageCardMenuProps {
   onOptionSelect: (option: string) => void;
+  tourPackage: TourPackageType;
   // handleClickInfo: () => void;
 }
 
 const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
   onOptionSelect,
+  tourPackage,
   // handleClickInfo
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -61,6 +64,15 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
             {option}
           </MenuItem>
         ))}
+        <MenuItem
+          onClick={() =>
+            handleOptionClick(
+              tourPackage.status === "active" ? "Inhabilitar" : "Habilitar"
+            )
+          }
+        >
+          {tourPackage.status === "active" ? "Inhabilitar" : "Habilitar"}
+        </MenuItem>
       </Menu>
     </>
   );

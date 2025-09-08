@@ -10,7 +10,10 @@ import * as TourPackageService from "../service/TourPackageService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 // import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
 import { DateRangeType } from "../types/DateRangeType";
-import { createDateRangeRequest, updateDateRangeRequest } from "../service/DateRangeService";
+import {
+  createDateRangeRequest,
+  updateDateRangeRequest,
+} from "../service/DateRangeService";
 
 type TourPackageContextType = {
   tpFound: TourPackageType | null;
@@ -26,7 +29,7 @@ type TourPackageContextType = {
     id: string,
     tourPackage: Partial<TourPackageType>
   ) => Promise<void>;
-  deleteTourPackage: (id: string) => Promise<void>;
+  updateTourPackageStatus: (id: string, status: string) => Promise<void>;
   getTourPackageInfoById: (id: string) => TourPackageType | null;
   setTourPackages: (tourPackages: TourPackageType[]) => void;
   updateDateRange: (dateRange: Partial<DateRangeType>) => Promise<void>;
@@ -117,12 +120,13 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
     setLoading(true);
     try {
       const response = await TourPackageService.getAllTourPackagesRequest();
-      const tps = response.data.filter(
-        (tp: TourPackageType) => tp.status !== "inactive"
-      );
-      // console.log('response::: ', response.data);
-      // setTourPackages(response.data);
-      setTourPackages(tps);
+      // const tps = response.data.filter(
+      //   (tp: TourPackageType) => tp.status !== "inactive"
+      // );
+      // // console.log('response::: ', response.data);
+      // // setTourPackages(response.data);
+      // setTourPackages(tps);
+      setTourPackages(response.data);
       setError(null);
     } catch (err) {
       console.error("Error fetching tour packages:", err);
@@ -187,17 +191,23 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
     }
   };
 
-  const deleteTourPackage = async (id: string): Promise<void> => {
+  const updateTourPackageStatus = async (
+    id: string,
+    status: string
+  ): Promise<void> => {
     setLoading(true);
     try {
-      await TourPackageService.deleteTourPackageRequest(id);
-      setTourPackages((prev) => prev.filter((pkg) => pkg.id !== id));
+      await TourPackageService.updateTourPackageStatusRequest(id, status);
+      // setTourPackages((prev) => prev.filter((pkg) => pkg.id !== id));
+      setTourPackages((prev) =>
+        prev.map((pkg) => (pkg.id === id ? { ...pkg, status } : pkg))
+      );
       setError(null);
-      showSnackbar("Tour package deleted successfully!", "success");
+      showSnackbar("Tour package status updated successfully!", "success");
     } catch (err) {
-      console.error("Error deleting tour package:", err);
-      setError("Failed to delete tour package");
-      showSnackbar("Failed to delete tour package", "error");
+      console.error("Error updating tour package status:", err);
+      setError("Failed to update tour package status");
+      showSnackbar("Failed to update tour package status", "error");
     } finally {
       setLoading(false);
     }
@@ -219,7 +229,7 @@ export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
         getTourPackages,
         createTourPackage,
         updateTourPackage,
-        deleteTourPackage,
+        updateTourPackageStatus,
         getTourPackageInfoById,
         setTourPackages,
         updateDateRange,

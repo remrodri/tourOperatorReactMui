@@ -9,6 +9,7 @@ import {
 import { TourPackageType } from "../../types/TourPackageType";
 import { DateRangeType } from "../../types/DateRangeType";
 import CloseIcon from "@mui/icons-material/Close";
+import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface MoreInfoModalProps {
   handleClick: () => void;
@@ -31,19 +32,46 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
   // };
 
   return (
-    <Dialog onClose={handleClick} open={open}>
-      <Box sx={{ display: "flex" }}>
+    <Dialog
+      onClose={handleClick}
+      open={open}
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "rgba(46, 46, 46, 0.7)",
+          borderRadius: "16px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(37, 37, 37, 0.5)",
+        },
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <DialogTitle
           sx={{
             display: "flex",
-            justifyContent: "center",
-            width: "calc(100% - 65px)",
-            padding: "0 0 0 4rem",
+            // justifyContent: "space-between",
+            // width: "calc(100% - 65px)",
+            // padding: "0 0 0 4rem",
           }}
         >
-          <p style={{ padding: "0" }}>Informacion</p>
+          <TextType
+            text="Información"
+            typingSpeed={75}
+            pauseDuration={1500}
+            showCursor={true}
+            cursorCharacter="_"
+          />
         </DialogTitle>
-        <IconButton sx={{ p: "0 20px 0 20px" }}>
+        <IconButton
+          autoFocus
+          aria-label="close"
+          onClick={handleClick}
+          sx={{
+            position: "absolute",
+            right: 12,
+            top: 12,
+          }}
+        >
           <CloseIcon />
         </IconButton>
       </Box>
@@ -67,7 +95,7 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
             dr.dates?.map((date, index) => <Chip key={index} label={date} />)||[]
           )} */}
           {tourPackage.dateRanges.map(
-            (dr:DateRangeType) =>
+            (dr: DateRangeType) =>
               dr.dates?.map((date, index) => (
                 <Chip key={index} label={date} />
               )) || []
