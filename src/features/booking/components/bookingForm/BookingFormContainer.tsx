@@ -91,12 +91,15 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
       (tourPackage) => tourPackage.status === "active"
     );
     return filteredTourPackages;
-  }
+  };
 
   const getFilteredDateRanges = (tourPackageId: string) => {
     const filteredDateRanges = dateRanges.filter(
-      (dateRange) => dateRange.tourPackageId === tourPackageId
+      (dateRange) =>
+        dateRange.tourPackageId === tourPackageId &&
+        dateRange.state === "pending"
     );
+
     setFilteredDateRanges(filteredDateRanges);
   };
 
