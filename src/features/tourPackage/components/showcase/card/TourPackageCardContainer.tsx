@@ -17,9 +17,10 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   const BASE_URL = "http://localhost:3000";
   const [open, setOpen] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
-  const { deleteTourPackage } = useTourPackageContext();
+  const { updateTourPackageStatus } = useTourPackageContext();
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openDateManager, setOpenDateManager] = useState(false);
+  const [task, setTask] = useState<string>("");
 
   const handleClickDateManager = () => {
     setOpenDateManager(!openDateManager);
@@ -37,8 +38,8 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
     setOpen(!open);
   };
 
-  const handleClickDelete = () => {
-    deleteTourPackage(tourPackage.id);
+  const handleClickAction = () => {
+    updateTourPackageStatus(tourPackage.id,task);
     setOpenConfirmation(false);
   };
 
@@ -56,11 +57,17 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         break;
       case "Inhabilitar":
         console.log("Inhabilitar::: ");
+        setTask("inactive");
         handleClickConfirmation();
         break;
       case "Gestion de fechas":
         console.log("Gestionar fechas::: ");
         handleClickDateManager();
+        break;
+      case "Habilitar":
+        console.log("Habilitar::: ");
+        setTask("active");
+        handleClickConfirmation();
         break;
       default:
         console.log("opcion no valida::: ");
@@ -94,7 +101,8 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         <ConfirmationModal
           open={openConfirmation}
           handleClick={handleClickConfirmation}
-          handleClickDelete={handleClickDelete}
+          handleClickAction={handleClickAction}
+          task={task}
         />
       )}
       {openDateManager && (

@@ -37,10 +37,22 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
           // height: "100%",
           // rgb(70, 120, 253)
           borderRadius: "10px",
-          background: "rgba(10,10,10,0.52)",
-          boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+          // background: "rgba(10,10,10,0.52)",
+          background:
+            tourPackage.status === "active"
+              ? "rgba(10,10,10,0.52)"
+              : "rgba(73, 17, 17, 0.52)",
+          // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+          boxShadow:
+            tourPackage.status === "active"
+              ? "0 4px 10px rgba(10,10,10,0.6)"
+              : "0 4px 10px rgba(73,17,17,0.6)",
           // backdropFilter: "blur(10px)",
-          border: "1px solid rgba(10,10,10,0.6)",
+          // border: "1px solid rgba(10,10,10,0.6)",
+          border:
+            tourPackage.status === "active"
+              ? "1px solid rgba(10,10,10,0.6)"
+              : "1px solid rgba(73, 17, 17, 0.6)",
           height: "12rem",
           display: "flex",
           flexDirection: "column",
@@ -52,6 +64,7 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
           action={
             <TourPackageCardMenu
               onOptionSelect={handleOption}
+              tourPackage={tourPackage}
               // handleClickInfo={handleClickInfo}
             />
           }

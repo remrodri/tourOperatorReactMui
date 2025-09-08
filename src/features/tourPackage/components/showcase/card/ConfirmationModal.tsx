@@ -20,13 +20,15 @@ const style = {
 interface ConfirmationModalProps {
   open: boolean;
   handleClick: () => void;
-  handleClickDelete: () => void;
+  handleClickAction: () => void;
+  task: string;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   open,
   handleClick,
-  handleClickDelete,
+  handleClickAction,
+  task,
 }) => {
 
   return (
@@ -41,13 +43,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             Confirmar
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            ¿Estas seguro de inhabilitar este paquete?
+            ¿Estas seguro de {task} este paquete?
           </Typography>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end", gap: 1 }}>
             <Button variant="contained" color="primary" onClick={handleClick}>
               Cancelar
             </Button>
-            <Button variant="contained" color="error" onClick={handleClickDelete}>
+            <Button variant="contained" color="error" onClick={handleClickAction}>
               Confirmar
             </Button>
           </Box>
