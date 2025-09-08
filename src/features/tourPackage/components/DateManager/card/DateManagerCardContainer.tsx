@@ -59,11 +59,11 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
   const handleOptionSelect = (option: string) => {
     // if (option === "Completado" || option === "Cancelado") {
     if (option === "Completado") {
-      setSelectedOption("completed");
+      setSelectedOption("completado");
       setOpenConfirmModal(true);
     }
     if (option === "Cancelado") {
-      setSelectedOption("cancelled");
+      setSelectedOption("cancelado");
       setOpenConfirmModal(true);
     }
     if (option === "Editar") {
@@ -84,7 +84,7 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
     // updateDateRangeStatus(dateRange.id, selectedOption); // ⬅ llamada al contexto
     updateDateRange({
       id: dateRange.id,
-      state: selectedOption,
+      state: selectedOption==="completado"?"completed":"cancelled",
     });
     setOpenConfirmModal(false);
   };
