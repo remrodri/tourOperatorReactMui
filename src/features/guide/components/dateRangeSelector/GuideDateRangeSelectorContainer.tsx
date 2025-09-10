@@ -1,8 +1,8 @@
 import GuideDateRangeSelector from "./GuideDateRangeSelector";
 import {
   CustomDateRangeType,
-  useGuideContext2,
-} from "../../context/GuideContext2";
+  useGuideContext,
+} from "../../context/GuideContext";
 import { useNavigate } from "react-router-dom";
 
 const GuideDateRangeSelectorContainer: React.FC = () => {
@@ -12,11 +12,11 @@ const GuideDateRangeSelectorContainer: React.FC = () => {
     loading,
     setCurrentDateRange,
     setCurrentTourPackage,
-  } = useGuideContext2();
+  } = useGuideContext();
   // console.log('guideDateRanges::: ', guideDateRanges);
   // localStorage.setItem("currentDateRange", JSON.stringify(guideDateRanges));
   const modifyCurrentDateRange = (dateRange: CustomDateRangeType) => {
-    console.log("dateRange::: ", dateRange);
+    // console.log("dateRange::: ", dateRange);
     localStorage.setItem("currentDateRange", dateRange.id ?? "");
     localStorage.setItem("currentTourPackage", dateRange.tourPackageId ?? "");
     // localStorage.removeItem("attendanceList");

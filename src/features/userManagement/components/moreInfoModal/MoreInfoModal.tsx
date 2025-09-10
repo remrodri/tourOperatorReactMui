@@ -6,11 +6,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
   Typography,
 } from "@mui/material";
 import { User } from "../../types/User";
 import { Role } from "../../types/Role";
 import TextType from "../../../../TextAnimations/TextType/TextType";
+import { Close } from "@mui/icons-material";
 
 interface MoreInfoModalProps {
   open: boolean;
@@ -49,6 +51,18 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
           cursorCharacter="_"
         />
       </DialogTitle>
+      <IconButton
+              autoFocus
+              aria-label="close"
+              onClick={handleMoreInfoClick}
+              sx={{
+                position: "absolute",
+                right: 12,
+                top: 12,
+              }}
+            >
+              <Close />
+            </IconButton>
       <DialogContent
         dividers
         sx={{ display: "flex", flexDirection: "column", width: "400px" }}

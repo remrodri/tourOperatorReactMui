@@ -4,8 +4,8 @@ import {
   CustomDateRangeType,
   Group,
   TouristWithStatus,
-  useGuideContext2,
-} from "../../context/GuideContext2";
+  useGuideContext,
+} from "../../context/GuideContext";
 import { useEffect, useState } from "react";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { useBookingContext } from "../../../booking/context/BookingContext";
@@ -25,7 +25,7 @@ const TouristListContainer: React.FC = () => {
     // dateRangeBookings,
     currentDateRange,
     currentTourPackage,
-  } = useGuideContext2();
+  } = useGuideContext();
   const { getTouristInfoById } = useTouristContext();
 
   const [attendanceList, setAttendanceList] = useState<Group[]>([]);
@@ -106,7 +106,7 @@ const TouristListContainer: React.FC = () => {
 
       return { group, bookingId: booking.id };
     });
-    console.log("attendance::: ", attendance);
+    // console.log("attendance::: ", attendance);
     setAttendanceList(attendance as Group[]);
     return [];
   };
@@ -138,7 +138,7 @@ const TouristListContainer: React.FC = () => {
           tourPackages.find((tp) => tp.id === dr.tourPackageId)?.name || "",
       }));
 
-    console.log("✅ DateRanges del guía:", filteredDateRanges);
+    // console.log("✅ DateRanges del guía:", filteredDateRanges);
     setGuideDateRanges(filteredDateRanges);
     setLoading(false);
   };
@@ -164,7 +164,7 @@ const TouristListContainer: React.FC = () => {
   useEffect(() => {
     getDateRangeBookings(currentDateRange!, bookings, currentTourPackage!);
   }, [currentDateRange, currentTourPackage]);
-  
+
   useEffect(() => {
     getGuideDateRanges();
   }, [tourPackages]);

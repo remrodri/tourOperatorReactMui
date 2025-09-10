@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -19,6 +20,7 @@ import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../../types/DateRangeType";
 import { User } from "../../../userManagement/types/User";
 import TextType from "../../../../TextAnimations/TextType/TextType";
+import { Close } from '@mui/icons-material';
 
 interface TourPackageFormProps {
   guides: User[];
@@ -65,6 +67,18 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
         cursorCharacter="_"
         deletingSpeed={50}
       />
+      <IconButton
+        autoFocus
+        aria-label="close"
+        onClick={handleClick}
+        sx={{
+          position: "absolute",
+          right: 12,
+          top: 12,
+        }}
+      >
+        <Close />
+      </IconButton>
       <DialogContent
         sx={{
           width: {
