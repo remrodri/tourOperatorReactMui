@@ -12,11 +12,12 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { User } from "../../types/User";
 import { Role } from "../../types/Role";
 import { FormikProps } from "formik";
-import { CloudUpload } from "@mui/icons-material";
+import { CloudUpload, Close } from '@mui/icons-material';
 import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface UserFormValues {
@@ -83,7 +84,19 @@ const UserForm: React.FC<UserFormProps> = ({
         cursorCharacter="_"
         deletingSpeed={50}
       />
-      <DialogContent>
+      <IconButton
+        autoFocus
+        aria-label="close"
+        onClick={handleClick}
+        sx={{
+          position: "absolute",
+          right: 12,
+          top: 12,
+        }}
+      >
+        <Close />
+      </IconButton>
+      <DialogContent dividers>
         <form
           onSubmit={formik.handleSubmit}
           style={{

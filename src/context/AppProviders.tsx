@@ -11,7 +11,7 @@ import { TouristProvider } from "../features/tourist/context/TouristContext";
 import { PaymentProvider } from "../features/payment/context/PaymentContext";
 import { BookingProvider } from "../features/booking/context/BookingContext";
 import { DashboardProvider } from "../features/reports/context/DashboardContext";
-import { GuideProvider2 } from "../features/guide/context/GuideContext2";
+import { GuideProvider2 } from "../features/guide/context/GuideContext";
 
 interface Props {
   children: ReactNode;
@@ -37,7 +37,7 @@ export const AppProviders = ({ children }: Props) => {
     //                   <DashboardProvider>
     //                     <PaymentProvider>
     //                     <GuideProvider2>
-                          {children}
+    { children }
     //                     </GuideProvider2>
     //                     </PaymentProvider>
     //                   </DashboardProvider>

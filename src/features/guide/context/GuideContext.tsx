@@ -1,217 +1,239 @@
-// import {
-//   createContext,
-//   ReactNode,
-//   useContext,
-//   useEffect,
-//   useState,
-// } from "react";
-// import { DateRangeType } from "../../tourPackage/types/DateRangeType";
-// import { TourPackageType } from "../../tourPackage/types/TourPackageType";
-// import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
-// import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
-// import { TokenService } from "../../../utils/tokenService";
-// import { jwtDecode } from "jwt-decode";
-// import { useNavigate } from "react-router-dom";
-// import { User } from "../../userManagement/types/User";
-// import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
-// import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
-// import { BookingType } from "../../booking/types/BookingType";
-// import { useBookingContext } from "../../booking/context/BookingContext";
-// import { useTouristContext } from "../../tourist/context/TouristContext";
-// import { TouristType } from "../../booking/types/TouristType";
-// import { getAttendanceListFromLocalStorage } from "../localStorageService/localStorageService";
-// import { useUserContext } from "../../userManagement/context/UserContext";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { DateRangeType } from "../../tourPackage/types/DateRangeType";
+import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
+import { User } from "../../userManagement/types/User";
+import { useUserContext } from "../../userManagement/context/UserContext";
+import { jwtDecode } from "jwt-decode";
+import { TouristType } from "../../booking/types/TouristType";
+import { BookingType } from "../../booking/types/BookingType";
+import { useTouristContext } from "../../tourist/context/TouristContext";
+import { useBookingContext } from "../../booking/context/BookingContext";
+import { getAttendanceListFromLocalStorage } from "../localStorageService/localStorageService";
+import { useNewSnackbar } from "../../../context/SnackbarContext";
 
-// export interface TouristWithStatus {
-//   tourist: TouristType;
-//   status: "present" | "absent";
-//   // bookingId:string;
-// }
+export interface CustomDateRangeType extends DateRangeType {
+  tpName: string;
+}
 
-// export interface Group {
-//   group: TouristWithStatus[];
-//   bookingId: string;
-// }
+interface GuideContextType {
+  guideDateRanges: CustomDateRangeType[];
+  loading: boolean;
+  guideInfo: User | null;
+  attendanceList: Group[];
+  toggleTouristAttendanceStatus: (touristId: string) => void;
+  saveAttendance: () => void;
+  // loadAttendanceList: () => void;
+  currentDateRange: string;
+  currentTourPackage: string;
+  dateRangeBookings: BookingType[];
+  setCurrentDateRange: (dateRangeId: string) => void;
+  setCurrentTourPackage: (tourPackageId: string) => void;
+}
 
-// interface GuideContextType {
-//   guideDateRanges: DateRangeType[];
-//   tourPackage: TourPackageType | null;
-//   touristDestination: TouristDestinationType | null;
-//   attendanceList: Group[];
-//   loading: boolean;
-//   toggleTouristAttendanceStatus: (touristId: string) => void;
-//   resetAttendanceList: () => void;
-//   saveAttendance: () => void;
-//   pendingDateRange: DateRangeType | null;
-//   guideInfo: User | null;
-// }
+interface GuideProviderProps {
+  children: ReactNode;
+}
 
-// const GuideContext = createContext<GuideContextType | null>(null);
+export interface TouristWithStatus {
+  tourist: TouristType;
+  status: "present" | "absent";
+}
 
-// export const useGuideContext = () => {
-//   const context = useContext(GuideContext);
-//   if (!context) {
-//     throw new Error("useGuideContext must be used within a GuideProvider");
-//   }
-//   return context;
-// };
+export interface Group {
+  group: TouristWithStatus[];
+  bookingId: string;
+}
 
-// interface GuideProviderProps {
-//   children: ReactNode;
-// }
+const GuideContext = createContext<GuideContextType | null>(null);
 
-// export const GuideProvider: React.FC<GuideProviderProps> = ({ children }) => {
-//   const navigate = useNavigate();
-//   const { filterDateRangesByTourGuideId } = useDateRangeContext();
-//   const { getTourPackageInfoById } = useTourPackageContext();
-//   const { getTouristDestinationInfoById } = useTouristDestinationContext();
-//   const { getTouristInfoById } = useTouristContext();
-//   const { bookings, updateAttendance } = useBookingContext();
+export const useGuideContext = () => {
+  const context = useContext(GuideContext);
+  if (!context) {
+    throw new Error("useGuideContext must be used within a GuideProvider");
+  }
+  return context;
+};
 
-//   const [guideDateRanges, setGuideDateRanges] = useState<DateRangeType[]>([]);
-//   const [pendingDateRange, setPendingDateRange] =
-//     useState<DateRangeType | null>(null);
-//   const [tourPackage, setTourPackage] = useState<TourPackageType | null>(null);
-//   const [touristDestination, setTouristDestination] =
-//     useState<TouristDestinationType | null>(null);
-//   const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
-//   const [attendanceList, setAttendanceList] = useState<Group[]>([]);
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const [guideInfo, setGuideInfo] = useState<any | null>(null);
+export const GuideProvider = ({ children }: GuideProviderProps) => {
+  const { tourPackages } = useTourPackageContext();
+  const [guideDateRanges, setGuideDateRanges] = useState<CustomDateRangeType[]>(
+    []
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [guideInfo, setGuideInfo] = useState<User | null>(null);
+  const { getUserById } = useUserContext();
+  const [attendanceList, setAttendanceList] = useState<Group[]>([]);
+  const { getTouristInfoById } = useTouristContext();
+  const { bookings, getBookingsByDateRangeId, updateAttendance } =
+    useBookingContext();
+  const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
+  const [currentDateRange, setCurrentDateRange] = useState<string>("");
+  const [currentTourPackage, setCurrentTourPackage] = useState<string>("");
 
-//   const saveAttendance = async () => {
-//     setLoading(true);
-//     try {
-//       const attendance = getAttendanceListFromLocalStorage();
-//       const bookings = attendance.map((subList: Group) => {
-//         const bookingId = subList.bookingId;
-//         const attendance = subList.group.map((tourist: TouristWithStatus) => {
-//           return {
-//             touristId: tourist.tourist.id,
-//             status: tourist.status,
-//           };
-//         });
-//         return { bookingId: bookingId, attendance: attendance };
-//       });
-//       await updateAttendance(bookings);
-//       // console.log("Attendance list:", bookings);
-//       // const response = updateAttendance(bookings);
-//       // console.log("Response:", response);
-//     } catch (error) {
-//       console.error("Error fetching attendance list:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+  const { showSnackbar } = useNewSnackbar();
 
-//   const loadAttendanceList = (bookings: BookingType[]) => {
-//     const stored = localStorage.getItem("attendanceList");
-//     if (stored) {
-//       setAttendanceList(JSON.parse(stored));
-//       return;
-//     }
+  const saveAttendance = async () => {
+    setLoading(true);
+    try {
+      // const attendance = getAttendanceListFromLocalStorage();
+      const bookingsPayload = attendanceList.map((subList: Group) => {
+        const bookingId = subList.bookingId;
+        const attendance = subList.group.map((tourist: TouristWithStatus) => ({
+          touristId: tourist.tourist.id,
+          status: tourist.status,
+        }));
+        return { bookingId, attendance };
+      });
+      await updateAttendance(bookingsPayload);
+      showSnackbar("Asistencia guardada exitosamente", "success");
+    } catch (error) {
+      showSnackbar("Error al guardar la asistencia", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//     const attendance = bookings.map((booking) => {
-//       const group = booking.attendance.map((att) => ({
-//         tourist: getTouristInfoById(att.touristId),
-//         status: att.status === "present" ? "present" : "absent",
-//         // bookingId: booking.id,
-//       }));
-//       return { group, bookingId: booking.id };
-//     });
+  const toggleTouristAttendanceStatus = (touristId: string) => {
+    const updated = attendanceList.map(({ group, bookingId }) => {
+      const newGroup = group.map((t: TouristWithStatus) => {
+        if (t.tourist.id === touristId) {
+          return {
+            ...t,
+            status: t.status === "present" ? "absent" : "present",
+          };
+        }
+        return t;
+      });
+      return { group: newGroup, bookingId };
+    });
+    setAttendanceList(updated as Group[]);
+  };
 
-//     setAttendanceList(attendance as Group[]);
-//     localStorage.setItem("attendanceList", JSON.stringify(attendance));
-//   };
 
-//   const toggleTouristAttendanceStatus = (touristId: string) => {
-//     const updated = attendanceList.map(({ group, bookingId }) => {
-//       const newGroup = group.map((t: TouristWithStatus) => {
-//         if (t.tourist.id === touristId) {
-//           return {
-//             ...t,
-//             status: t.status === "present" ? "absent" : "present",
-//           };
-//         }
-//         return t;
-//       });
-//       return { group: newGroup, bookingId };
-//     });
-//     setAttendanceList(updated as Group[]);
-//     localStorage.setItem("attendanceList", JSON.stringify(updated));
-//   };
+  const getDateRangeBookings = (
+    dateRangeId: string,
+    bookings: BookingType[],
+    currentTourPackage: string
+  ) => {
+    // console.log("📅 Obteniendo bookings para dateRange:", dateRangeId);
+    // console.log("📊 Total bookings disponibles:", bookings.length);
 
-//   const resetAttendanceList = () => {
-//     localStorage.removeItem("attendanceList");
-//     setAttendanceList([]);
-//   };
+    const result = getBookingsByDateRangeId(
+      dateRangeId,
+      bookings,
+      currentTourPackage
+    );
 
-//   const getDateRangesByTourGuideId = (id: string) => {
-//     setGuideDateRanges(filterDateRangesByTourGuideId(id));
-//   };
+    // console.log("✅ DateRange bookings encontrados:", result.length);
+    setDateRangeBookings(result);
+  };
 
-//   const getPendingDateRangeById = () => {
-//     const dateRange = guideDateRanges.find((dr) => dr.state === "pending");
-//     if (dateRange) {
-//       setPendingDateRange(dateRange);
-//     }
-//   };
+  const getGuideDateRanges = () => {
+    if (!guideInfo?.id) {
+      // console.log("⏳ Esperando información del guía...");
+      return;
+    }
 
-//   useEffect(() => {
-//     const token = TokenService.getToken();
-//     if (!token) {
-//       navigate("/login");
-//       return;
-//     }
-//     const user: User = jwtDecode(token);
-//     getDateRangesByTourGuideId(user.id);
-//     setGuideInfo(user);
-//   }, [filterDateRangesByTourGuideId]);
+    setLoading(true);
+    // console.log("🗓️ Obteniendo dateRanges para guía:", guideInfo.id);
 
-//   useEffect(() => {
-//     getPendingDateRangeById();
-//   }, [guideDateRanges]);
+    const dateRanges = tourPackages.flatMap((tourPackage) => {
+      return tourPackage.dateRanges.filter((dr) => dr.state === "pending");
+    });
 
-//   useEffect(() => {
-//     if (pendingDateRange) {
-//       const filtered = bookings.filter(
-//         (b) => b.dateRangeId === pendingDateRange.id
-//       );
-//       setDateRangeBookings(filtered);
-//       setTourPackage(getTourPackageInfoById(pendingDateRange.tourPackageId));
-//     }
-//   }, [pendingDateRange]);
+    const filteredDateRanges = dateRanges
+      .filter((dr) => dr.guides?.includes(guideInfo.id))
+      .map((dr) => ({
+        ...dr,
+        tpName:
+          tourPackages.find((tp) => tp.id === dr.tourPackageId)?.name || "",
+      }));
 
-//   useEffect(() => {
-//     if (tourPackage) {
-//       setTouristDestination(
-//         getTouristDestinationInfoById(tourPackage.touristDestination)
-//       );
-//     }
-//   }, [tourPackage]);
+    // console.log("✅ DateRanges del guía:", filteredDateRanges.length);
+    setGuideDateRanges(filteredDateRanges);
+    setLoading(false);
+  };
 
-//   useEffect(() => {
-//     if (dateRangeBookings.length > 0) {
-//       loadAttendanceList(dateRangeBookings);
-//     }
-//   }, [dateRangeBookings]);
+  const getGuideInfo = () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // console.log("🔑 No hay token disponible");
+      setLoading(false);
+      return;
+    }
 
-//   return (
-//     <GuideContext.Provider
-//       value={{
-//         guideDateRanges,
-//         tourPackage,
-//         touristDestination,
-//         attendanceList,
-//         loading,
-//         toggleTouristAttendanceStatus,
-//         resetAttendanceList,
-//         saveAttendance,
-//         pendingDateRange,
-//         guideInfo,
-//       }}
-//     >
-//       {children}
-//     </GuideContext.Provider>
-//   );
-// };
+    try {
+      const user: User = jwtDecode(token);
+      const guideInfo = getUserById(user.id);
+
+      if (!guideInfo) {
+        // console.log("❌ Información del guía no encontrada");
+        setLoading(false);
+        return;
+      }
+
+      // console.log("✅ Información del guía obtenida:", guideInfo.name);
+      setGuideInfo(guideInfo);
+      setLoading(false);
+    } catch (error) {
+      // console.error("❌ Error obteniendo info del guía:", error);
+      setLoading(false);
+    }
+  };
+
+  // 🔹 Inicialización: Obtener info del guía
+  useEffect(() => {
+    // console.log("🚀 Inicializando GuideProvider...")
+    getGuideInfo();
+  }, [getUserById]);
+
+  // 🔹 Cuando tenemos guía y tourPackages, obtener dateRanges
+  useEffect(() => {
+    // console.log('::: ', );
+    if (guideInfo && tourPackages.length > 0) {
+      getGuideDateRanges();
+    }
+  }, [guideInfo, tourPackages]);
+
+  // 🔹 Cuando cambian los bookings, obtener los del dateRange actual
+  useEffect(() => {
+    // console.log('::: ', );
+    if (currentDateRange === "" || currentTourPackage === "") {
+      setCurrentDateRange(localStorage.getItem("currentDateRange") ?? "");
+      setCurrentTourPackage(localStorage.getItem("currentTourPackage") ?? "");
+    }
+
+
+    getDateRangeBookings(currentDateRange!, bookings, currentTourPackage!);
+  }, [bookings, currentDateRange, currentTourPackage]);
+
+
+
+  return (
+    <GuideContext.Provider
+      value={{
+        guideDateRanges,
+        loading,
+        guideInfo,
+        attendanceList,
+        toggleTouristAttendanceStatus,
+        saveAttendance,
+        // loadAttendanceList,
+        currentDateRange,
+        currentTourPackage,
+        dateRangeBookings,
+        setCurrentDateRange,
+        setCurrentTourPackage,
+      }}
+    >
+      {children}
+    </GuideContext.Provider>
+  );
+};

@@ -13,54 +13,11 @@ import { useTourPackageContext } from "../../../tourPackage/context/TourPackageC
 import { useEffect, useState } from "react";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { useUserContext } from "../../../userManagement/context/UserContext";
-import { TokenService } from "../../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../userManagement/types/User";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
-import { useGuideContext2 } from "../../context/GuideContext2";
+import { useGuideContext } from "../../context/GuideContext";
 
-// const TourPackageContainer: React.FC = () => {
-//   const { users } = useUserContext();
-//   const { tourPackage, loading, pendingDateRange } = useGuideContext();
-
-//   const [AsignedGuides, setAsignedGuides] = useState<User[]>([]);
-
-//   // console.log('users::: ', users);
-
-//   const getAsignedGuides = (dt: DateRangeType) => {
-//     const token = TokenService.getToken();
-//     if (!token) {
-//       return;
-//     }
-//     const user: User = jwtDecode(token as string);
-
-//     const asignedGuides = pendingDateRange?.guides.map((guideId) => {
-//       const foundGuide = users.find((guide) => guide.id === guideId);
-//       return foundGuide;
-//     });
-
-//     const otherGuides = asignedGuides
-//       ?.filter((guide) => guide?.id !== user.id)
-//       .filter((guide) => guide !== undefined);
-//     setAsignedGuides(otherGuides ?? []);
-//   };
-
-//   useEffect(() => {
-//     if (pendingDateRange) {
-//       getAsignedGuides(pendingDateRange);
-//     }
-//   }, [pendingDateRange]);
-
-//   return (
-//     <TourPackage
-//       loading={loading}
-//       tourPackage={tourPackage}
-//       pendingDateRange={pendingDateRange}
-//       asignedGuides={AsignedGuides}
-//     />
-//   );
-// };
-// export default TourPackageContainer;
 
 const TourPackageContainer: React.FC = () => {
   const { getTourPackageInfoById } = useTourPackageContext();
@@ -69,7 +26,7 @@ const TourPackageContainer: React.FC = () => {
   const { guides, getUserById } = useUserContext();
   const { getDateRangeById } = useDateRangeContext();
   const [asignedGuides, setAsignedGuides] = useState<User[]>([]);
-  const { currentDateRange, currentTourPackage } = useGuideContext2();
+  const { currentDateRange, currentTourPackage } = useGuideContext();
 
   const getTourPackage = () => {
     setLoading(true);
@@ -78,7 +35,7 @@ const TourPackageContainer: React.FC = () => {
       return;
     }
     const tourPackage = getTourPackageInfoById(currentTourPackage);
-    console.log("tourPackage::: ", tourPackage);
+    // console.log("tourPackage::: ", tourPackage);
     setTourPackage(tourPackage);
     setLoading(false);
   };
@@ -92,12 +49,12 @@ const TourPackageContainer: React.FC = () => {
     // console.log('user::: ', user);
 
     const token = localStorage.getItem("currentDateRange");
-    console.log("token::: ", token);
+    // console.log("token::: ", token);
     if (!token) {
       return;
     }
     const currentDateRange = getDateRangeById(token);
-    console.log("currentDateRange::: ", currentDateRange);
+    // console.log("currentDateRange::: ", currentDateRange);
     if (!currentDateRange) {
       return;
     }

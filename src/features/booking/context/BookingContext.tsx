@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from "uuid";
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
-import { Group } from "../../guide/context/GuideContext2";
+import { Group } from "../../guide/context/GuideContext";
 import { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
 
 interface BookingContextType {
@@ -72,7 +72,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
-// console.log('::: ', );
+  // console.log('::: ', );
   const cancelBooking = async (
     bookingId: string,
     cancellationFee: number,
@@ -97,8 +97,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
               ...booking,
               cancellationFee: response.cancellationFee,
               refundAmount: response.refundAmount,
-            refundedAt: response.refundedAt,
-              status: response.status
+              refundedAt: response.refundedAt,
+              status: response.status,
             }
           : booking
       );
@@ -338,7 +338,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
   useEffect(() => {
     fetchBookings();
-    console.log('::: ', );
+    console.log("::: ");
   }, []);
 
   return (
