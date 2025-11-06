@@ -20,10 +20,10 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
     <Box
       sx={{
         height: "100%",
-        width: "50%",
-        background: "rgba(0,0,0,0.5)",
+        width: "24rem",
+        background: "rgba(0,0,0,0.7)",
         borderRadius: "10px",
-        border: "1px solid rgba(49, 49, 49, 0.23)",
+        border: "1px solid rgba(0,0,0,0.7)",
         display: "flex",
         flexDirection: "column",
         boxShadow: "0 4px 30px rgba(0,0,0,1)",
@@ -127,7 +127,7 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
           </Box>
           <Link
             href="/configuracion-de-seguridad/restablecer-contraseña"
-            variant="caption"
+            variant="body2"
             underline="none"
             width="100%"
             sx={{

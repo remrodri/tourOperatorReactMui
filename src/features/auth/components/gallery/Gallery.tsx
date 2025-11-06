@@ -12,7 +12,7 @@ const Gallery: React.FC = () => {
   return (
     <Box
       sx={{
-        width: "50%",
+        width: "60%",
         height: "100%",
         // p: "1rem 0 1rem 1rem",
         pr: "1rem",
@@ -20,6 +20,7 @@ const Gallery: React.FC = () => {
         // background: "rgba(0,0,0,0.5)",
         // backdropFilter: "blur(5px)",
         // border: "1px solid rgba(49, 49, 49, 0.23)",
+        
       }}
     >
       <Swiper
@@ -28,7 +29,7 @@ const Gallery: React.FC = () => {
           borderRadius: "10px",
           // border: "1px solid rgba(0,0,0,0.6)",
           boxShadow: "0 4px 30px rgba(0,0,0,1)",
-          height: "28rem",
+          // height: "28rem",
         }}
         spaceBetween={30}
         effect="fade"
@@ -49,7 +50,8 @@ const Gallery: React.FC = () => {
               backgroundPosition: "center",
               // width: "20rem",
               // height: "22.5rem",
-              height: "28rem",
+              height: "38rem",
+              // height: "100%",
             }}
           >
             <CardContent
@@ -66,18 +68,19 @@ const Gallery: React.FC = () => {
                 sx={{
                   background: "rgba(0, 0, 0, 0.38)",
                   backdropFilter: "blur(4px)",
-                  height: "30%",
+                  height: "20%",
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-around",
-                  pl: "0.5rem",
+                  // justifyContent: "space-around",
+                  p: "1rem 1rem 0 1rem",
+                  gap: "1rem",
                 }}
               >
                 <Typography variant="body1" color="white">
                   Gestión Total del Turismo de Aventura
                 </Typography>
-                <Typography variant="caption" color="white">
+                <Typography variant="body2" color="white">
                   Organiza destinos, personal y paquetes en una sola plataforma
                   pensada para operadores turísticos.
                 </Typography>
@@ -93,7 +96,7 @@ const Gallery: React.FC = () => {
               backgroundPosition: "center",
               // width: "20rem",
               // height: "22.5rem",
-              height: "28rem",
+              height: "38rem",
             }}
           >
             <CardContent
@@ -110,18 +113,19 @@ const Gallery: React.FC = () => {
                 sx={{
                   background: "rgba(0, 0, 0, 0.38)",
                   backdropFilter: "blur(4px)",
-                  height: "30%",
+                  height: "20%",
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-around",
-                  pl: "0.5rem",
+                  // justifyContent: "space-around",
+                  p: "1rem 1rem 0 1rem",
+                  gap: "1rem",
                 }}
               >
                 <Typography variant="body1" color="white">
                   Explora, Administra, Conquista
                 </Typography>
-                <Typography variant="caption" color="white">
+                <Typography variant="body2" color="white">
                   Desde la planificación hasta el reporte final: simplificamos
                   tu operación turística.
                 </Typography>
@@ -137,7 +141,7 @@ const Gallery: React.FC = () => {
               backgroundPosition: "center",
               // width: "20rem",
               // height: "22.5rem",
-              height: "28rem",
+              height: "38rem",
             }}
           >
             <CardContent
@@ -154,18 +158,19 @@ const Gallery: React.FC = () => {
                 sx={{
                   background: "rgba(0, 0, 0, 0.38)",
                   backdropFilter: "blur(4px)",
-                  height: "30%",
+                  height: "20%",
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-around",
-                  pl: "0.5rem",
+                  // justifyContent: "space-around",
+                  p: "1rem 1rem 0 1rem",
+                  gap: "1rem",
                 }}
               >
                 <Typography variant="body1" color="white">
                   Reservas Inteligentes, Experiencias Memorables
                 </Typography>
-                <Typography variant="caption" color="white">
+                <Typography variant="body2" color="white">
                   Control total de reservas para asegurar cada aventura sea
                   única y bien organizada.
                 </Typography>
@@ -179,9 +184,10 @@ const Gallery: React.FC = () => {
               backgroundImage: "url(/login5.jpg)",
               backgroundSize: "cover",
               backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
               // width: "20rem",
               // height: "22.5rem",
-              height: "28rem",
+              height: "38rem",
             }}
           >
             <CardContent
@@ -198,18 +204,19 @@ const Gallery: React.FC = () => {
                 sx={{
                   background: "rgba(0, 0, 0, 0.38)",
                   backdropFilter: "blur(4px)",
-                  height: "30%",
+                  height: "20%",
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-around",
-                  pl: "0.5rem",
+                  // justifyContent: "space-around",
+                  p: "1rem 1rem 0 1rem",
+                  gap: "1rem",
                 }}
               >
                 <Typography variant="body1" color="white">
                   Decisiones que Transforman, Datos que Respaldan
                 </Typography>
-                <Typography variant="caption" color="white">
+                <Typography variant="body2" color="white">
                   Visualiza informes dinámicos que impulsan el crecimiento de tu
                   operadora.
                 </Typography>
