@@ -44,9 +44,8 @@ const ReportsPage: React.FC = () => {
                   <TouristProvider>
                     <BookingProvider>
                       <DashboardProvider>
-          
-            <Outlet />
-          </DashboardProvider>
+                        <Outlet />
+                      </DashboardProvider>
                     </BookingProvider>
                   </TouristProvider>
                 </TouristDestinationProvider>
