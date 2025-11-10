@@ -46,7 +46,9 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
   // useEffect(() => {
   //   fetchGuides();
   //   console.log("::: ");
-  // }, [fetchGuides,guides]);
+  // }, []);
+
+// console.log('guides::: ', guides);
 
   const onSubmit = async (data: any) => {
     console.log("data::: ", data);

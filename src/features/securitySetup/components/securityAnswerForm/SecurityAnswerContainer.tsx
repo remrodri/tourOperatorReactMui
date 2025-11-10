@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SecurityAnswerForm from "./SecurityAnswerForm";
-import { useSecurityQuestions } from "../passwordForm/hook/useSecurityQuestions";
+import { useSecurityQuestions } from "./hook/useSecurityQuestions";
 
 const SecurityAnswerContainer: React.FC = () => {
   const { questionsAnswers, sendSecurityAnswers } = useSecurityQuestions();

@@ -23,7 +23,8 @@ const TourPackagePage: React.FC = () => {
     >
       <Box
         sx={{
-          display: "flex",
+          height: "calc(100dvh - 5.4rem)",
+          // display: "flex",
           // flexGrow: 1,
           // height: "100%",
           // width: "calc(100dvw - 83px)",
@@ -34,14 +35,17 @@ const TourPackagePage: React.FC = () => {
           p: "10px",
           // position: "relative",
           // height: "42.3rem",
-          height: "calc(100vh - 5.5rem)",
+          // height: "calc(100vh - 70rem)",
           // width: "calc(100vw - 83px)",
+          // height: "89.1dvh",
+          display: "flex",
+          // width:"100%",
         }}
       >
         <Box
           sx={{
             flexGrow: 1,
-            display: "flex",
+            // display: "flex",
             // flexDirection:"column",
             // height:"100%",
             // height: "42.3rem",
@@ -51,6 +55,9 @@ const TourPackagePage: React.FC = () => {
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(4, 135, 217, 0.5)",
+            height: "calc(100dvh - 6.65rem)",
+            display:"flex",
+            // width:"100%",
           }}
         >
           <DateRangeProvider>
