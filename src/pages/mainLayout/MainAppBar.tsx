@@ -76,7 +76,7 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
   return (
     <Box
       sx={{
-        flexGrow: 1,
+        // flexGrow: 1,
         p: "10px 10px 10px 10px",
       }}
     >

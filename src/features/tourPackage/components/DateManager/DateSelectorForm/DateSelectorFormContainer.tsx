@@ -95,6 +95,7 @@ const getBlockedDates = (dateRanges: DateRangeType[]) => {
     fetchGuides();
     getBlockedDates(dateRanges);
     // console.log("blockedDates", blockedDates);
+    console.log("guides", guides);
   }, []);
     return (
         <DateSelectorForm 

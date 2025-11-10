@@ -19,26 +19,33 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
   return (
     <Box
       sx={{
+        // background: "rgba(181, 75, 18, 0.81)",
+        // height: "calc(100dvh - 6.65rem)",
         // position: "relative",
         // width:"100%",
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-        // height:"100dvh"
+        // flexGrow: 1,
+        // display: "flex",
+        // flexDirection: "column",
+        // height:"86.3vh"
+        // height:"calc(100% - 1rem)"
       }}
     >
       <Typography
         variant="h4"
         sx={{
           // height: "12%",
-          height: "5rem",
+          // height: "5rem",
+
+          // height: "10.7vh",
+          // height: "14vh",
+
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          p: "0 1.5rem 0 1.5rem",
+          p: "1rem 1.5rem 0 1.5rem",
         }}
       >
-        <BreadCrumbsContainer />
+        {/* <BreadCrumbsContainer /> */}
         <Box
           sx={{
             display: "flex",
@@ -66,21 +73,29 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
       </Typography>
       <Box
         sx={{
+          // flexGrow: 1,
           // height: "90%",
-          height: "calc(100% - 5rem)",
+
+          // height: "calc(100% - 5rem)",
+          md: {
+            // height: "calc(100vh - 8rem)",
+          },
+          // height: "79vh",
           display: "flex",
           p: "20px",
+          // width:"100%",
+          // overflowY: "auto",
         }}
       >
         <Box
           sx={{
             // position:"relative",
-            pt: "30px",
-            flexGrow: 1,
+            // flexGrow: 1,
+            p: "20px",
             display: "flex",
             justifyContent: "center",
             flexWrap: "wrap",
-            overflowY: "auto",
+            // overflowY: "auto",
             gap: "1rem",
             alignContent: "flex-start",
             background: "rgba(75, 44, 27, 0.4)",
@@ -88,6 +103,15 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             // backdropFilter: "blur(10px)",
             border: "1px solid rgba(75, 44, 27, 0.5)",
+            overflowY: "auto",
+            width: "100%",
+            // height: "calc(100% - 7rem)",
+            // height: "78dvh",
+            // height: "78dvh",
+            // md: {
+            //   height: "50dvh",
+            // },
+            height: "calc(100dvh - 12.8rem)",
           }}
         >
           {touristDestinations && touristDestinations.length > 0 ? (

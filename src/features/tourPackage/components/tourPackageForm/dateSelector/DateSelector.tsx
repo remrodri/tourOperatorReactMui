@@ -58,6 +58,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   handleOpenDialog,
   isEditing,
 }) => {
+  // console.log("guides", guides);
   return (
     <Box sx={{ mt: 2, width: "100%" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>

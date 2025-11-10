@@ -5,7 +5,7 @@ import { securitySetupService } from "../../../service/securitySetupService";
 // import { showToast } from "../../../../../utils/modal/toast";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../../userManagement/types/User";
-import { response } from "express";
+// import { response } from "express";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import { useRoleContext } from "../../../../Role/context/RoleContext";
 
@@ -42,8 +42,7 @@ export const useSecurityQuestions = () => {
 
       if (!response && response.statusCode !== 200) {
         // showToast("error", "Error al obtener la preguntas de seguridad");
-        showSnackbar("Error al obtener las preguntas","error")
-
+        showSnackbar("Error al obtener las preguntas", "error");
       }
       // const questionsAnswers = response.data;
       // console.log("questionsAnswers::: ", questionsAnswers);
@@ -99,15 +98,15 @@ export const useSecurityQuestions = () => {
       // console.log('response::: ', response);
       if (response.statusCode !== 200) {
         // showToast("error", "Registro fallido");
-        showSnackbar("Error al enviar las respuestas","error")
+        showSnackbar("Error al enviar las respuestas", "error");
       }
       // showToast("success", "Registro exitoso");
-      showSnackbar("Respuestas enviadas","success")
-      if(getRoleById(user.role).name==="guia de turismo"){
+      showSnackbar("Respuestas enviadas", "success");
+      if (getRoleById(user.role).name === "guia de turismo") {
         navigate("../../guia-de-turismo");
         return;
       }
-      navigate("/home");
+      navigate("/gestion-de-usuarios/usuarios");
     } catch (error) {
       setError("Error al enviar las respuestas de seguridad");
     }

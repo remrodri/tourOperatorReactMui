@@ -710,7 +710,13 @@ export default function MainDrawer({ currentStyles }: Props) {
       </Drawer>
       <Box
         sx={{
-          flexGrow: 1,
+          // flexGrow: 1,
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100dvh",
+          // width: "calc(100vw - 83px)",
+          width: "100%",
+          height: "100dvh",
           display: "flex",
           flexDirection: "column",
         }}
@@ -718,14 +724,17 @@ export default function MainDrawer({ currentStyles }: Props) {
         <MainAppBar currentStyles={currentStyles} />
         <Box
           sx={{
-            height: "calc(100% - 5.5rem)",
+            // flexGrow: 1,
+            // height: "calc(100% - 5.5rem)",
+            height: "calc(100dvh - 5.4rem)",
             display: "flex",
             // flexDirection: "column",
             // width: "calc(100vw - 83px)",
-            // background: "rgba(78, 140, 179, 0.4)",
+            // background: "rgba(193, 45, 45, 0.4)",
             // backdropFilter: "blur(10px)",
           }}
         >
+            
           <Outlet />
         </Box>
       </Box>

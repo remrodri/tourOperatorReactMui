@@ -38,7 +38,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             p: "0 1.5rem 0 1.5rem",
           }}
         >
-          <BreadCrumbsContainer />
+          {/* <BreadCrumbsContainer /> */}
           <Box
             sx={{
               display: "flex",
@@ -73,7 +73,8 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
         >
           <Box
             sx={{
-              pt: "30px",
+              // pt: "30px",
+              p:"20px",
               flexGrow: 1,
               display: "flex",
               justifyContent: "center",

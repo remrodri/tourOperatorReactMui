@@ -141,9 +141,9 @@ const MainLayout: React.FC = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        height: "100dvh",
+        // height: "100dvh",
         // width:"100wvh",
-        display: "flex",
+        // display: "flex",
         // p: "10px",
       }}
     >
