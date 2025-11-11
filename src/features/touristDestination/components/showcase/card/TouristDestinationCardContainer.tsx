@@ -3,6 +3,7 @@ import TouristDestinationCard from "./TouristDestinationCard";
 import TouristDestinationFormContainer from "../../touristDestinationForm/TouristDestinationFormContainer";
 import { useTouristDestinationContext } from "../../../context/TouristDestinationContext";
 import GalleryContainer from "../../../../gallery/GalleryContainer";
+import MoreInfoModalContainer from "./modal/MoreInfoModalContainer";
 
 interface TouristDestinationCardContainerProps {
   touristDestination: any;
@@ -13,7 +14,13 @@ const TouristDestinationCardContainer: React.FC<
 > = ({ touristDestination }) => {
   const [open, setOpen] = useState(false);
   const [openGallery, setOpenGallery] = useState(false);
+  const [openMoreInfo, setOpenMoreInfo] = useState(false);
+
   const { deleteTouristDestination } = useTouristDestinationContext();
+
+  const handleClickMoreInfo = () => {
+    setOpenMoreInfo(!openMoreInfo);
+  };
 
   const handleClick = () => {
     setOpen(!open);
@@ -35,6 +42,9 @@ const TouristDestinationCardContainer: React.FC<
       // console.log("ver galeria");
       handleOpenGalleryClick();
     }
+    if (option === "Ver mas") {
+      handleClickMoreInfo();
+    }
   };
 
   return (
@@ -55,6 +65,13 @@ const TouristDestinationCardContainer: React.FC<
           open={openGallery}
           handleClick={handleOpenGalleryClick}
           images={touristDestination.images}
+        />
+      )}
+      {openMoreInfo && (
+        <MoreInfoModalContainer
+          open={openMoreInfo}
+          handleClick={handleClickMoreInfo}
+          touristDestination={touristDestination}
         />
       )}
     </>

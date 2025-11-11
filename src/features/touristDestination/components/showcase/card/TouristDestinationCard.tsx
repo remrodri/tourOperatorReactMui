@@ -28,18 +28,18 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
     return `${shortenDescription}...`;
   };
   return (
-    <AnimatedContent
-      distance={100}
-      direction="vertical"
-      reverse={true}
-      duration={1.2}
-      ease="power3.out"
-      initialOpacity={0.2}
-      animateOpacity
-      scale={1.1}
-      threshold={0.2}
-      delay={0.3}
-    >
+    // <AnimatedContent
+    //   distance={100}
+    //   direction="vertical"
+    //   reverse={true}
+    //   duration={1.2}
+    //   ease="power3.out"
+    //   initialOpacity={0.2}
+    //   animateOpacity
+    //   scale={1.1}
+    //   threshold={0.2}
+    //   delay={0.3}
+    // >
       <Card
         sx={{
           // maxWidth: 345,
@@ -97,7 +97,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
           </Typography>
         </CardContent>
       </Card>
-    </AnimatedContent>
+    // </AnimatedContent>
   );
 };
 export default TouristDestinationCard;

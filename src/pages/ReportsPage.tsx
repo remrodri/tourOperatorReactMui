@@ -11,18 +11,18 @@ import FadeContent from "../Animations/FadeContent/FadeContent";
 
 const ReportsPage: React.FC = () => {
   return (
-    <FadeContent
-      // blur={true}
-      duration={200}
-      easing="ease-out"
-      initialOpacity={0.6}
-      className="w-full"
-    >
+    // <FadeContent
+    //   // blur={true}
+    //   duration={200}
+    //   easing="ease-out"
+    //   initialOpacity={0.6}
+    //   className="w-full"
+    // >
       <Box
         sx={{
           display: "flex",
-          height: "calc(100vh - 5.5rem)",
-          // width: "calc(100vw - 83px)",
+          height: "calc(100vh - 5.4rem)",
+          width: "calc(100vw - 83px)",
           p: "10px",
         }}
       >
@@ -54,7 +54,7 @@ const ReportsPage: React.FC = () => {
           </UserProvider>
         </Box>
       </Box>
-    </FadeContent>
+    // </FadeContent>
   );
 };
 export default ReportsPage;

@@ -35,6 +35,7 @@ const Dashboard: React.FC<DashboardProps> = (
           flexGrow: 1,
           display: "flex",
           flexDirection: "column",
+          // width: "100%",
           // overflowY: "auto",
         }}
       >
@@ -42,14 +43,14 @@ const Dashboard: React.FC<DashboardProps> = (
           <Typography
             variant="h4"
             sx={{
-              height: "5rem",
+              // height: "5rem",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              p: "0 1.5rem 0 1.5rem",
+              p: "1rem 1.5rem 0 1.5rem",
             }}
           >
-            <BreadCrumbsContainer />
+            {/* <BreadCrumbsContainer /> */}
             <Box
               sx={{
                 display: "flex",
@@ -76,7 +77,7 @@ const Dashboard: React.FC<DashboardProps> = (
             // p: "20px",
           }}
         >
-          <AnimatedContent
+          {/* <AnimatedContent
             distance={100}
             direction="vertical"
             reverse={true}
@@ -88,7 +89,7 @@ const Dashboard: React.FC<DashboardProps> = (
             threshold={0.2}
             delay={0.3}
             // overflowY="auto"
-          >
+          > */}
             <Box
               sx={{
                 p: "20px",
@@ -192,7 +193,7 @@ const Dashboard: React.FC<DashboardProps> = (
                 <GuideRankingByDestinationContainer />
               </Box>
             </Box>
-          </AnimatedContent>
+          {/* </AnimatedContent> */}
         </Box>
       </Box>
     </Fade>

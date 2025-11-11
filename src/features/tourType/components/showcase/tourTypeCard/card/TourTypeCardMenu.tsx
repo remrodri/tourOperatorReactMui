@@ -4,14 +4,19 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 // import { useTourType } from "./hook/useTourType";
 import DeleteDialog from "./deleteDialog/DeleteDialog";
 
-const options = ["Editar", "Eliminar"];
+const options = ["Ver mas", "Editar", "Eliminar"];
 
 interface CardMenuProps {
   onOptionSelect: (option: string) => void;
   handleOpenDialog: () => void;
+  handleClickMoreInfo: () => void;
 }
 
-const CardMenu: React.FC<CardMenuProps> = ({ onOptionSelect, handleOpenDialog }) => {
+const CardMenu: React.FC<CardMenuProps> = ({
+  onOptionSelect,
+  handleOpenDialog,
+  handleClickMoreInfo,
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   // const [openDialog, setOpenDialog] = useState<boolean>(false);

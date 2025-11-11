@@ -9,11 +9,13 @@ import { TouristType } from "../../../types/TouristType";
 import MoreInfoDialogContainer2 from "../../moreInfoDialog/MoreInfoDialogContainer";
 import BookingFormContainer from "../../bookingForm/BookingFormContainer";
 import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
-import MoreInfoDialogContainer from "../../moreInfoDialog/MoreInfoDialogContainer";
+import MoreInfoDialogContainer from "../../moreInfoDialogV2/MoreInfoDialogContainerV2";
 import ConfirmationModal from "./ConfirmationModal";
 import { useCancellationConditionContext } from "../../../../cancellationPolicy/context/CancellationPolicyContext";
 import { CancellationPolicy } from "../../../../cancellationPolicy/types/CancellationPolicy";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
+import BookingCardV2 from "./BookingCardV2";
+import BookingCardMenu from "./BookingCardMenu";
 
 interface BookingCardContainerProps {
   booking: BookingType;
@@ -31,6 +33,7 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [openPaymentForm, setOpenPaymentForm] = useState(false);
+  // const [openMenu, setOpenMenu] = useState(false);
 
   const [tpInfo, setTpInfo] = useState<TourPackageType | null>(null);
   const [mainTouristInfo, setMainTouristInfo] = useState<TouristType | null>(
@@ -44,6 +47,16 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
 
   const [loading, setLoading] = useState(false);
   const { showSnackbar } = useNewSnackbar();
+
+  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchor);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchor(null);
+  };
 
   const handleClickConfirmation = () => {
     try {
@@ -134,13 +147,15 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   return (
     <>
       {localBooking && (
-        <BookingCard
+        <BookingCardV2
           booking={localBooking}
           index={index}
           tpInfo={tpInfo}
           mainTouristInfo={mainTouristInfo}
           balance={balance}
           handleMenuOptions={handleMenuOptions}
+          // handleOpenMenu={handleOpenMenu}
+          // handleCloseMenu={handleCloseMenu}
         />
       )}
       {openMoreInfo && localBooking && (
@@ -173,6 +188,7 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
           handleClickCancel={handleClickConfirmation}
         />
       )}
+      
     </>
   );
 };

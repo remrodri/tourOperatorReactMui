@@ -24,18 +24,18 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
       <Box
         sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
         }}
       >
         <Typography
           variant="h4"
           sx={{
-            height: "5rem",
+            // height: "5rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            p: "0 1.5rem 0 1.5rem",
+            p: "1rem 1.5rem 0 1.5rem",
           }}
         >
           {/* <BreadCrumbsContainer /> */}
@@ -66,7 +66,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
         </Typography>
         <Box
           sx={{
-            height: "calc(100% - 5rem)",
+            // height: "calc(100% - 5rem)",
             display: "flex",
             p: "20px",
           }}
@@ -75,18 +75,20 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             sx={{
               // pt: "30px",
               p:"20px",
-              flexGrow: 1,
+              // flexGrow: 1,
               display: "flex",
               justifyContent: "center",
               flexWrap: "wrap",
               overflowY: "auto",
-              gap: "1rem",
+              gap: "0.5rem",
               alignContent: "flex-start",
               background: "rgba(8, 13, 10, 0.4)",
               borderRadius: "10px",
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
               // backdropFilter: "blur(10px)",
               border: "1px solid rgba(8, 13, 10, 0.5)",
+              height: "calc(100dvh - 12.8rem)",
+              width:"100%",
             }}
           >
             {!bookings || bookings.length === 0 ? (

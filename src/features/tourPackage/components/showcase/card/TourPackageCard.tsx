@@ -2,12 +2,14 @@ import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { TourPackageType } from "../../../types/TourPackageType";
 import TourPackageCardMenu from "./TourPackageCardMenu";
 import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
+import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 
 interface TourPackageCardProps {
   tourPackage: TourPackageType;
   BASE_URL: string;
   handleOption: (option: string) => void;
   // handleClickInfo: () => void;
+  touristDestination: TouristDestinationType | null;
 }
 
 const TourPackageCard: React.FC<TourPackageCardProps> = ({
@@ -15,22 +17,33 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
   BASE_URL,
   handleOption,
   // handleClickInfo,
+  touristDestination,
 }) => {
+  
+  // console.log('touristDestination::: ', touristDestination);
+  const destinationImage = `${BASE_URL}${touristDestination?.images[0]}`;
+  console.log('destinationImage::: ', destinationImage);
+  
   return (
-    <AnimatedContent
-      distance={100}
-      direction="vertical"
-      reverse={true}
-      duration={1.2}
-      ease="power3.out"
-      initialOpacity={0.2}
-      animateOpacity
-      scale={1.1}
-      threshold={0.2}
-      delay={0.3}
-    >
+    // <AnimatedContent
+    //   distance={100}
+    //   direction="vertical"
+    //   reverse={true}
+    //   duration={1.2}
+    //   ease="power3.out"
+    //   initialOpacity={0.2}
+    //   animateOpacity
+    //   scale={1.1}
+    //   threshold={0.2}
+    //   delay={0.3}
+    // >
       <Card
         sx={{
+          // backgroundImage: `url(${destinationImage})`,
+          backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           // maxWidth: 345,
           // minWidth: 300,
           width: 300,
@@ -38,10 +51,11 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
           // rgb(70, 120, 253)
           borderRadius: "10px",
           // background: "rgba(10,10,10,0.52)",
-          background:
-            tourPackage.status === "active"
-              ? "rgba(10,10,10,0.52)"
-              : "rgba(73, 17, 17, 0.52)",
+
+          // background:
+          //   tourPackage.status === "active"
+          //     ? "rgba(10,10,10,0.52)"
+          //     : "rgba(73, 17, 17, 0.52)",
           // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
           boxShadow:
             tourPackage.status === "active"
@@ -76,7 +90,7 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
           </Typography>
         </CardContent>
       </Card>
-    </AnimatedContent>
+    // </AnimatedContent>
   );
 };
 export default TourPackageCard;

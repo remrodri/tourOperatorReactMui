@@ -17,9 +17,9 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
     <Fade in={true} timeout={1000}>
       <Box
         sx={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
+          // flexGrow: 1,
+          // display: "flex",
+          // flexDirection: "column",
           // background: "rgba(78, 140, 179, 0.4)",
           // borderRadius: "16px",
           // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
@@ -31,11 +31,11 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
         <Typography
           variant="h4"
           sx={{
-            height: "5rem",
+            // height: "5rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            p: "0 1.5rem 0 1.5rem",
+            p: "1rem 1.5rem 0 1.5rem",
           }}
         >
           {/* <BreadCrumbsContainer /> */}
@@ -69,7 +69,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
         </Typography>
         <Box
           sx={{
-            height: "calc(100% - 5rem)",
+            // height: "calc(100% - 5rem)",
             display: "flex",
             p: "20px",
           }}
@@ -78,7 +78,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
             sx={{
               // pt: "30px",
               p:"20px",
-              flexGrow: 1,
+              // flexGrow: 1,
               display: "flex",
               justifyContent: "center",
               flexWrap: "wrap",
@@ -93,6 +93,8 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
               // backdropFilter: "blur(10px)",
               boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
               border: "1px solid rgba(89, 69, 57, 0.5)",
+              height: "calc(100dvh - 12.8rem)",
+              width:"100%",
             }}
           >
             {users && users.length > 0 ? (
