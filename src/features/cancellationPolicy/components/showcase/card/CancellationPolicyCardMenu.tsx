@@ -3,6 +3,7 @@ import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const options = [
+  "Ver mas",
   "Editar",
   // "Eliminar"
 ];

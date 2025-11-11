@@ -13,23 +13,21 @@ import BookingCardMenu from "./BookingCardMenu";
 import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 import { MoreVert } from "@mui/icons-material";
 
-interface BookingCardProps {
+interface BookingCardV2Props {
   booking: BookingType | null;
   index: number;
   tpInfo: TourPackageType | null;
   mainTouristInfo: TouristType | null;
   balance: number;
   handleMenuOptions: (option: string) => void;
-  // getBalance:(booking:BookingType)=>number;
 }
-const BookingCard: React.FC<BookingCardProps> = ({
+const BookingCardV2: React.FC<BookingCardV2Props> = ({
   booking,
   index,
   tpInfo,
   mainTouristInfo,
   balance,
   handleMenuOptions,
-  // getBalance
 }) => {
   //   console.log('booking::: ', booking);
   // console.log('tpInfo::: ', tpInfo);
@@ -105,94 +103,131 @@ const BookingCard: React.FC<BookingCardProps> = ({
           display: "flex",
           p: "0.5rem",
           // flexDirection: "column",
-          gap: "0.5rem",
+          gap: "3rem",
+          width: "100%",
+          // justifyContent: "space-between",
         }}
       >
-        <Typography
-          variant="body2"
+        <Box
           sx={{
-            fontWeight: "normal",
+            pl: "1rem",
+            // pr: "0.5rem",
             display: "flex",
-            alignItems: "center",
+            // flexDirection: "column",
+            justifyContent: "space-between",
             gap: "0.5rem",
+            width: "100%",
           }}
         >
-          <span>{`${index + 1}.`}</span>
-          <span>{`Paquete: ${tpInfo?.name}`}</span>
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: "normal",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
+          <Box
+            // variant="body2"
+            sx={{
+              fontWeight: "normal",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "30%",
+            }}
+          >
+            {`${index + 1}. Paquete: ${tpInfo?.name}`}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "30%",
+            }}
+            >
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: "normal",
+            }}
+          >
+            {mainTouristInfo
+              ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
+              : ""}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "25%",
+            }}
+          >
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: "normal",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            {booking.status === "pending"
+              ? `Estado: Pendiente`
+              : booking.status === "cancelled"
+              ? `Estado: Cancelado`
+              : `Estado: Pagado`}
+          </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "15%",
+            }}
+          >
+
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: "normal",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            {booking.status === "cancelled" ? (
+              <Typography
+                variant="body1"
+                component="div"
+              >{`Cancelado`}</Typography>
+            ) : (
+              <Typography variant="body2" component="div">
+                {balance === 0
+                  ? "Saldo: No tiene"
+                  : `Saldo: ${balance.toFixed(2)} Bs.`}
+              </Typography>
+              // <Typography variant="body1" component="div">
+              //   {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+              // </Typography>
+            )}
+          </Typography>
+          </Box>
+          {/* <IconButton
+          onClick={handleOpenMenu}
+          aria-label="more options"
+          aria-controls="booking-menu"
+          aria-haspopup="true"
+          // aria-expanded={openMenu? "true": "false"}
         >
-          {mainTouristInfo
-            ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
-            : ""}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: "normal",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          {booking.status === "pending"
-            ? `Estado: Pendiente`
-            : booking.status === "cancelled"
-            ? `Estado: Cancelado`
-            : `Estado: Pagado`}
-        </Typography>
-        
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: "normal",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
-        </Typography>
-        
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: "normal",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          {`Telefono: ${mainTouristInfo?.phone}`}
-        </Typography>
-        <IconButton>
           <MoreVert />
-        </IconButton>
+        </IconButton> */}
+        </Box>
+        <BookingCardMenu
+          onOptionSelect={handleMenuOptions}
+          balance={balance}
+          status={booking.status}
+        />
         {/* <Typography variant="body1" component="div">
             {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
           </Typography> */}
-        {/* {booking.status === "cancelled" ? (
-            <Typography
-              variant="body1"
-              component="div"
-            >{`Cancelado`}</Typography>
-          ) : (
-            // <Typography variant="body1" component="div">
-            //   {balance === 0
-            //     ? "Saldo: No tiene"
-            //     : `Saldo: ${balance.toFixed(2)} Bs.`}
-            // </Typography>
-            <Typography variant="body1" component="div">
-              {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
-            </Typography>
-          )} */}
+
         {/* {booking.status === "cancelled" ? (
             <Typography
               variant="body1"
@@ -208,4 +243,4 @@ const BookingCard: React.FC<BookingCardProps> = ({
     // </AnimatedContent>
   );
 };
-export default BookingCard;
+export default BookingCardV2;

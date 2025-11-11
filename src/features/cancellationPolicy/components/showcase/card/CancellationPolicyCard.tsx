@@ -6,25 +6,27 @@ import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedC
 interface CancellationPolicyCardProps {
   cancellationPolicy: CancellationPolicy;
   handleOptionMenuCard: (option: string) => void;
+  truncateText: (text: string, limit: number) => string;
 }
 
 const CancellationPolicyCard: React.FC<CancellationPolicyCardProps> = ({
   cancellationPolicy,
   handleOptionMenuCard,
+  truncateText,
 }) => {
   return (
-    <AnimatedContent
-      distance={100}
-      direction="vertical"
-      reverse={true}
-      duration={1.2}
-      ease="power3.out"
-      initialOpacity={0.2}
-      animateOpacity
-      scale={1.1}
-      threshold={0.2}
-      delay={0.3}
-    >
+    // <AnimatedContent
+    //   distance={100}
+    //   direction="vertical"
+    //   reverse={true}
+    //   duration={1.2}
+    //   ease="power3.out"
+    //   initialOpacity={0.2}
+    //   animateOpacity
+    //   scale={1.1}
+    //   threshold={0.2}
+    //   delay={0.3}
+    // >
       <Card
         sx={{
           width: 300,
@@ -33,7 +35,7 @@ const CancellationPolicyCard: React.FC<CancellationPolicyCardProps> = ({
           boxShadow: "0 4px 10px rgba(10, 10, 10, 0.6)",
           // backdropFilter: "blur(10px)",
           border: "1px solid rgba(10, 10, 10, 0.6)",
-          height: "100%",
+          height: "13rem",
         }}
       >
         <CardHeader
@@ -42,13 +44,13 @@ const CancellationPolicyCard: React.FC<CancellationPolicyCardProps> = ({
           action={
             <CancellationPolicyCardMenu onOptionSelect={handleOptionMenuCard} />
           }
-          subheader={cancellationPolicy.description}
+          subheader={truncateText(cancellationPolicy.description, 175)}
         />
         {/* <CardContent>
         <Typography >{cancellationPolicy.description}</Typography>
       </CardContent> */}
       </Card>
-    </AnimatedContent>
+    // </AnimatedContent>
   );
 };
 export default CancellationPolicyCard;

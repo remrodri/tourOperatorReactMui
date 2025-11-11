@@ -15,19 +15,19 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
   return (
     <Box
       sx={{
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
+        // flexGrow: 1,
+        // display: "flex",
+        // flexDirection: "column",
       }}
     >
       <Typography
         variant="h4"
         sx={{
-          height: "5rem",
+          // height: "5rem",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          p: "0 1.5rem 0 1.5rem",
+          p: "1rem 1.5rem 0 1.5rem",
         }}
       >
         {/* <BreadCrumbsContainer /> */}
@@ -58,14 +58,14 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
       </Typography>
       <Box
         sx={{
-          height: "calc(100% - 5rem)",
+          // height: "calc(100% - 5rem)",
           display: "flex",
           p: "20px",
         }}
       >
         <Box
           sx={{
-            pt: "30px",
+            p: "20px",
             flexGrow: 1,
             display: "flex",
             justifyContent: "center",
@@ -78,6 +78,8 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             // backdropFilter: "blur(10px)",
             border: "1px solid rgba(75, 44, 27, 0.5)",
+            height: "calc(100dvh - 12.8rem)",
+            width:"100%"
           }}
         >
           {tourPackages && tourPackages.length > 0 ? (

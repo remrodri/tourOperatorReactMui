@@ -6,7 +6,7 @@ import MoreInfoModalContainer from "../../modal/MoreInfoModalContainer";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 import ConfirmationModal from "./ConfirmationModal";
 import DateManagerContainer from "../../DateManager/DateManagerContainer";
-
+import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
 interface TourPackageCardContainerProps {
   tourPackage: TourPackageType;
 }
@@ -21,6 +21,9 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openDateManager, setOpenDateManager] = useState(false);
   const [task, setTask] = useState<string>("");
+  const { getTouristDestinationInfoById } = useTouristDestinationContext();
+  const touristDestination = getTouristDestinationInfoById(tourPackage.touristDestination);
+  // console.log('touristDestination::: ', touristDestination);
 
   const handleClickDateManager = () => {
     setOpenDateManager(!openDateManager);
@@ -81,6 +84,7 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         tourPackage={tourPackage}
         BASE_URL={BASE_URL}
         handleOption={handleOption}
+        touristDestination={touristDestination || null}
       />
       {open && (
         <TourPackageformContainer

@@ -261,6 +261,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
     try {
       const response = await updateBookingRequest(booking.id, bookingToUpdate);
+      console.log('response::: ', response);
       if (!response || response.error) {
         setError(response?.error || "Error updating booking");
         return;
@@ -274,9 +275,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
           b.id === response.id
             ? transformApiBooking({
                 ...b,
-                notes: booking.notes,
-                status: booking.status,
-                totalPrice: booking.totalPrice,
+                notes: response.notes,
+                status: response.status,
+                totalPrice: response.totalPrice,
                 touristIds: updatedTouristIds,
               })
             : b

@@ -95,12 +95,12 @@ const PaymentForm = ({
                 formik.touched.touristId && Boolean(formik.errors.touristId)
               }
             >
-              <InputLabel id="tourist-id-label">Tourista</InputLabel>
+              <InputLabel id="tourist-id-label">Turista</InputLabel>
               <Select
                 labelId="tourist-id-label"
                 id="tourist-id"
                 value={formik.values.touristId || ""}
-                label="Tourista"
+                label="Turista"
                 onChange={(e) => {
                   formik.setFieldValue("touristId", e.target.value);
                 }}
@@ -142,7 +142,7 @@ const PaymentForm = ({
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              // justifyContent: "flex-end",
               border: "1px solid rgba(255, 255, 255, 0.2)",
               borderRadius: "6px",
               p: "5px 10px",

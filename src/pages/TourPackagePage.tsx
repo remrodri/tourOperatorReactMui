@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
@@ -21,6 +21,7 @@ const TourPackagePage: React.FC = () => {
       initialOpacity={0.6}
       className="w-full"
     >
+    {/* <FadeContent in={true} timeout={1000}> */}
       <Box
         sx={{
           height: "calc(100dvh - 5.4rem)",
@@ -55,7 +56,7 @@ const TourPackagePage: React.FC = () => {
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(4, 135, 217, 0.5)",
-            height: "calc(100dvh - 6.65rem)",
+            // height: "calc(100dvh - 6.65rem)",
             display:"flex",
             // width:"100%",
           }}

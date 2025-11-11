@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
 import CountUp from "../../../../TextAnimations/CountUp/CountUp";
+import BookingOnlineIcon from '@mui/icons-material/BookOnline';
+import { AttachMoney, Groups, Groups2 } from "@mui/icons-material";
 interface GlobalStatsProps {
   bookingsCont: number;
   revenue: number;
@@ -43,12 +45,12 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
         height: "100%",
       }}
     >
-      <Typography variant="h6">Estadisticas Generales</Typography>
+      <Typography variant="h6">Datos generales</Typography>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
-          gap: "1rem",
+          // flexDirection: "row",
+          gap: "1.5rem",
         }}
       >
         <Box
@@ -56,7 +58,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            width: "25%",
+            width: "20%",
             background: "rgba(0, 0, 0, 0.41)",
             borderRadius: "5px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -74,6 +76,17 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               textAlign: "center",
             }}
           >
+            <Box
+            sx={{
+              display:"flex",
+              alignItems:"center",
+              justifyContent:"center",
+                gap: "1.5rem",
+                // p: "0 6rem 0 0",
+                
+            }}
+            >
+            <BookingOnlineIcon fontSize="large"/>
             {/* {bookingsCont} */}
             <CountUp
               from={0}
@@ -83,6 +96,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               duration={1}
               className="count-up-text"
             />
+            </Box>
           </Typography>
         </Box>
         <Box
@@ -90,7 +104,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            width: "25%",
+            width: "20%",
             background: "rgba(0, 0, 0, 0.41)",
             borderRadius: "5px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -110,9 +124,12 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               alignItems: "center",
               justifyContent: "center",
               gap: "0.5rem",
+              // p:"0 6rem 0 0"
             }}
           >
             {/* {revenue} Bs. */}
+            <AttachMoney fontSize="large" />
+            <Box>
             <CountUp
               from={0}
               to={revenue || 0}
@@ -120,8 +137,10 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               direction="up"
               duration={0.1}
               className="count-up-text"
+              
             />
             {` Bs.`}
+            </Box>
           </Typography>
         </Box>
         <Box
@@ -129,7 +148,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            width: "25%",
+            width: "20%",
             background: "rgba(0, 0, 0, 0.41)",
             borderRadius: "5px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -145,9 +164,15 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               fontWeight: "bold",
               fontSize: "1.5rem",
               textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1.5rem",
+              // p:"0 6rem 0 0.5rem"
             }}
           >
             {/* {touristCont} */}
+            <Groups2 fontSize="large" />
             <CountUp
               from={0}
               to={touristCont || 0}
@@ -163,7 +188,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
                     display:"flex",
                     flexDirection:"column",
                     gap:"0.5rem",
-                    width:"25%",
+                    width:"20%",
                     background: "rgba(0, 0, 0, 0.41)",
                     borderRadius: "5px",
                     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -187,7 +212,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            width: "25%",
+            width: "20%",
             background: "rgba(0, 0, 0, 0.41)",
             borderRadius: "5px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -203,9 +228,15 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               fontWeight: "bold",
               fontSize: "1.5rem",
               textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1.5rem",
+              // p:"0 6rem 0 0.5rem"
             }}
           >
             {/* {bookingsCont} */}
+            <Groups2 fontSize="large" />
             <CountUp
               from={0}
               to={operatorsCont || 0}
@@ -221,7 +252,7 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            width: "25%",
+            width: "20%",
             background: "rgba(0, 0, 0, 0.41)",
             borderRadius: "5px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.51)",
@@ -237,9 +268,15 @@ const GlobalStats: React.FC<GlobalStatsProps> = ({
               fontWeight: "bold",
               fontSize: "1.5rem",
               textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1.5rem",
+              // p:"0 6rem 0 0.5rem"
             }}
           >
             {/* {bookingsCont} */}
+            <Groups2 fontSize="large" />
             <CountUp
               from={0}
               to={guidesCont || 0}

@@ -3,6 +3,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState, MouseEvent } from "react";
 
 const options = [
+  "Ver mas",
   "Ver galeria",
   "Editar",
   // "Dar de baja"
