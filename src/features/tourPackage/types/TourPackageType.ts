@@ -6,7 +6,7 @@ export interface TourPackageType {
   id: string;
   name: string;
   tourType: string;
-  cancellationPolicy: string;
+  // cancellationPolicy: string;
   touristDestination: string;
   duration: number;
   dateRanges: DateRangeType[];

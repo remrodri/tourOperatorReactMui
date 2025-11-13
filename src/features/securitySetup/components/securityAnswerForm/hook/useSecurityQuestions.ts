@@ -4,7 +4,7 @@ import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
 // import { showToast } from "../../../../../utils/modal/toast";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../../userManagement/types/User";
+import { User } from "../../../../user/types/User";
 // import { response } from "express";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import { useRoleContext } from "../../../../Role/context/RoleContext";

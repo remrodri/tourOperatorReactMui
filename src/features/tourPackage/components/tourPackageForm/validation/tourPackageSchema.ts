@@ -34,7 +34,7 @@ export const tourPackageSchema = (isEditMode: boolean) =>
 
     tourType: Yup.string().required("El campo es necesario"),
 
-    cancellationPolicy: Yup.string().required("El campo es necesario"),
+    // cancellationPolicy: Yup.string().required("El campo es necesario"),
 
     touristDestination: Yup.string().required("El campo es necesario"),
 

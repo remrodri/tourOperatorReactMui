@@ -10,7 +10,7 @@ import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { createPaymentRequest } from "../service/paymentService";
 import { jwtDecode } from "jwt-decode";
 import { TokenService } from "../../../utils/tokenService";
-import { User } from "../../userManagement/types/User";
+import { User } from "../../user/types/User";
 import { useBookingContext } from "../../booking/context/BookingContext";
 
 interface PaymentContextType {
@@ -25,8 +25,8 @@ interface PaymentContextType {
   createPayment: (payment: any) => Promise<void>;
   // getBalance: (paymentIds: string[],totalPrice:number) => number;
   // addPaymentFromBooking: (payment: any) => PaymentType;
-  addPaymentToBooking:(payment:PaymentType)=>void
-};
+  addPaymentToBooking: (payment: PaymentType) => void;
+}
 
 const PaymentContext = createContext<PaymentContextType | null>(null);
 
@@ -45,14 +45,14 @@ interface PaymentProviderProps {
 
 export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   children,
-  // addPaymentToBooking
-}:PaymentProviderProps) => {
+}: // addPaymentToBooking
+PaymentProviderProps) => {
   // const [paymentsFound, setPaymentsFound] = useState<PaymentType[]>([]);
   // const [payments, setPayments] = useState<PaymentType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
-  const {bookings,setBookings,addPaymentToBooking}=useBookingContext();
+  const { bookings, setBookings, addPaymentToBooking } = useBookingContext();
 
   // const addPaymentToBooking=(payment:PaymentType)=>{
   //   const bookingFound=bookings.find((booking)=>booking.id===payment.bookingId);
@@ -77,20 +77,20 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   const createPayment = async (payment: any): Promise<void> => {
     setLoading(true);
     const token = TokenService.getToken();
-    if(!token){
+    if (!token) {
       console.error("No token found");
       return;
     }
-    const seller:User = jwtDecode(token);
+    const seller: User = jwtDecode(token);
     const formData = new FormData();
-    formData.append("bookingId",payment.bookingId);
-    formData.append("sellerId",seller.id);
-    formData.append("amount",payment.amount.toString());
-    formData.append("paymentDate",payment.paymentDate);
-    formData.append("paymentMethod",payment.paymentMethod);
-    formData.append("touristId",payment.touristId);
-    formData.append("paymentProofImage",payment.paymentProofImage);
-    formData.append("paymentProofFolder",payment.paymentProofFolder);
+    formData.append("bookingId", payment.bookingId);
+    formData.append("sellerId", seller.id);
+    formData.append("amount", payment.amount.toString());
+    formData.append("paymentDate", payment.paymentDate);
+    formData.append("paymentMethod", payment.paymentMethod);
+    formData.append("touristId", payment.touristId);
+    formData.append("paymentProofImage", payment.paymentProofImage);
+    formData.append("paymentProofFolder", payment.paymentProofFolder);
     try {
       // for (const [key,value] of formData.entries()) {
       //   console.log(`${key}: `,value);
@@ -174,9 +174,9 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
       paymentDate: paymentData.paymentDate,
       paymentMethod: paymentData.paymentMethod,
       bookingId: paymentData.bookingId,
-      sellerId:paymentData.sellerId,
-      touristId:paymentData.touristId,
-      paymentProofImageURL:paymentData.paymentProofImageURL,
+      sellerId: paymentData.sellerId,
+      touristId: paymentData.touristId,
+      paymentProofImageURL: paymentData.paymentProofImageURL,
     };
   };
   useEffect(() => {
@@ -195,7 +195,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
         // getTotalPaid,
         addPaymentToBooking,
         createPayment,
-        // getBalance,  
+        // getBalance,
       }}
     >
       {children}

@@ -4,7 +4,7 @@ import { authService } from "../service/authService";
 import axios from "axios";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../userManagement/types/User";
+import { User } from "../../user/types/User";
 import { useRoleContext } from "../../Role/context/RoleContext";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 

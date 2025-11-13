@@ -18,7 +18,7 @@ import { useTouristContext } from "../../tourist/context/TouristContext";
 // import { BookingFormValues } from "../../bookingForm/BookingFormContainer";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../userManagement/types/User";
+import { User } from "../../user/types/User";
 import { v4 as uuidv4 } from "uuid";
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
@@ -73,6 +73,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
   // console.log('::: ', );
+
   const cancelBooking = async (
     bookingId: string,
     cancellationFee: number,
@@ -250,6 +251,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   };
 
   const updateBooking = async (booking: any): Promise<void> => {
+    console.log("booking::: ", booking);
     setLoading(true);
     const tourists = [...booking.additionalTourists, booking.mainTourist];
     const bookingToUpdate: UpdateBookingType = {
@@ -261,7 +263,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
     try {
       const response = await updateBookingRequest(booking.id, bookingToUpdate);
-      console.log('response::: ', response);
+      console.log("response::: ", response);
       if (!response || response.error) {
         setError(response?.error || "Error updating booking");
         return;

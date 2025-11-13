@@ -12,7 +12,7 @@ import { useBookingContext } from "../../../booking/context/BookingContext";
 import { useNewSnackbar } from "../../../../context/SnackbarContext";
 import { jwtDecode } from "jwt-decode";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
-import { User } from "../../../userManagement/types/User";
+import { User } from "../../../user/types/User";
 import { BookingType } from "../../../booking/types/BookingType";
 
 const TouristListContainer: React.FC = () => {

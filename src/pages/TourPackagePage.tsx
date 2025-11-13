@@ -5,7 +5,7 @@ import { DateRangeProvider } from "../features/dateRange/context/DateRangeContex
 import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
 import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
-import { UserProvider } from "../features/userManagement/context/UserContext";
+import { UserProvider } from "../features/user/context/UserContext";
 import { BookingProvider } from "../features/booking/context/BookingContext";
 import { TouristProvider } from "../features/tourist/context/TouristContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
@@ -21,7 +21,7 @@ const TourPackagePage: React.FC = () => {
       initialOpacity={0.6}
       className="w-full"
     >
-    {/* <FadeContent in={true} timeout={1000}> */}
+      {/* <FadeContent in={true} timeout={1000}> */}
       <Box
         sx={{
           height: "calc(100dvh - 5.4rem)",
@@ -57,7 +57,7 @@ const TourPackagePage: React.FC = () => {
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(4, 135, 217, 0.5)",
             // height: "calc(100dvh - 6.65rem)",
-            display:"flex",
+            display: "flex",
             // width:"100%",
           }}
         >

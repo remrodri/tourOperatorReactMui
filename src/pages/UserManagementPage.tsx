@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { UserProvider } from "../features/userManagement/context/UserContext";
+import { UserProvider } from "../features/user/context/UserContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
 import { RoleProvider } from "../features/Role/context/RoleContext";
 
@@ -59,7 +59,7 @@ const UserManagementPage: React.FC = () => {
           }}
         >
           <UserProvider>
-              <Outlet />
+            <Outlet />
           </UserProvider>
         </Box>
         {/* <Typography variant="h4" component="h2"> */}

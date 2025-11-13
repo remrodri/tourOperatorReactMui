@@ -107,13 +107,20 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     if (!tourPackageSelected) {
       return 0;
     }
-    const cancellationPolicy = getCancellationPolicyInfoById(
-      tourPackageSelected.cancellationPolicy
-    );
-    if (!cancellationPolicy) {
-      return 0;
-    }
-    const percentage = cancellationPolicy.refoundPercentage / 100;
+    // const cancellationPolicy = getCancellationPolicyInfoById(
+    //   tourPackageSelected.cancellationPolicy
+    // );
+    // if (!cancellationPolicy) {
+    //   return 0;
+    // }
+    // const percentage = cancellationPolicy.refoundPercentage / 100;
+    // const amount = percentage * totalPrice;
+    // formik.setFieldValue("firstPayment.amount", amount);
+    // const amount = tourPackageSelected?.price;
+    // if (!amount) {
+    //   return;
+    // }
+    const percentage = 50;
     const amount = percentage * totalPrice;
     formik.setFieldValue("firstPayment.amount", amount);
   };

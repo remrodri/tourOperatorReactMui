@@ -2,7 +2,7 @@ import { MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 
-const options = ["Ver detalles", "Editar", "Registrar pago","Cancelar"];
+const options = ["Ver detalles", "Editar", "Registrar pago", "Cancelar"];
 
 interface BookingCardMenuProps {
   onOptionSelect: (option: string) => void;
@@ -59,16 +59,23 @@ const BookingCardMenu: React.FC<BookingCardMenuProps> = ({
           },
         }}
       >
-        {options.map((option) => 
-        {
-          if (option === "Registrar pago" && balance === 0) { 
-            return null
+        {options.map((option) => {
+          if (option === "Registrar pago" && balance === 0) {
+            return null;
           }
-          return <MenuItem key={option} onClick={() => handleOptionClick(option)} disabled={option === "Cancelar" && status !== "pending" || option === "Editar" && status !== "pending"}>
-            {option}
-          </MenuItem>
-          }
-        )}
+          return (
+            <MenuItem
+              key={option}
+              onClick={() => handleOptionClick(option)}
+              disabled={
+                (option === "Cancelar" && status !== "pending") ||
+                (option === "Editar" && status !== "pending")
+              }
+            >
+              {option}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </>
   );

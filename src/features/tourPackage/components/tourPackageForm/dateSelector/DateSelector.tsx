@@ -13,7 +13,7 @@ import {
   TextField,
   Card,
 } from "@mui/material";
-import { User } from "../../../../userManagement/types/User";
+import { User } from "../../../../user/types/User";
 import { DateRangeType } from "../../../types/DateRangeType";
 import TextType from "../../../../../TextAnimations/TextType/TextType";
 import AddIcon from "@mui/icons-material/Add";
