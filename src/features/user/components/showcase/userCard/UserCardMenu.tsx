@@ -1,6 +1,9 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { MouseEvent, useState } from "react";
+import { TokenService } from "../../../../../utils/tokenService";
+import { User } from "../../../types/User";
+import { jwtDecode } from "jwt-decode";
 
 const options = [
   "Ver mas",
@@ -8,12 +11,17 @@ const options = [
   // "Dar de baja"
 ];
 
+// const token = TokenService.getToken();
+// const user: User = jwtDecode(token!);
+// const role = user.role;
+
+
 interface UserCardMenuProps {
   onOptionSelect: (option: string) => void;
+  role: string;
 }
 
-const UserCardMenu: React.FC<UserCardMenuProps> = ({onOptionSelect}) => {
-
+const UserCardMenu: React.FC<UserCardMenuProps> = ({ onOptionSelect, role }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -28,7 +36,7 @@ const UserCardMenu: React.FC<UserCardMenuProps> = ({onOptionSelect}) => {
   const handleOptionClick = (option: string) => {
     onOptionSelect(option);
     handleClose();
-  }
+  };
 
   // const handleOptionClick = (optionName: string) => {
   //   // console.log("optionName::: ", optionName);
@@ -48,8 +56,6 @@ const UserCardMenu: React.FC<UserCardMenuProps> = ({onOptionSelect}) => {
   //   }
   //   handleClose();
   // };
-
-
 
   return (
     <>
@@ -79,11 +85,25 @@ const UserCardMenu: React.FC<UserCardMenuProps> = ({onOptionSelect}) => {
           },
         }}
       >
-        {options.map((option) => (
+        {/* {options.map((option) => (
           <MenuItem key={option} onClick={() => handleOptionClick(option)}>
             {option}
           </MenuItem>
-        ))}
+        ))} */}
+        <MenuItem
+          key={options[0]}
+          onClick={() => handleOptionClick(options[0])}
+        >
+          {options[0]}
+        </MenuItem>
+        {role === "690cbf7c64756dcc541d8a19" && (
+          <MenuItem
+            key={options[1]}
+            onClick={() => handleOptionClick(options[1])}
+          >
+            {options[1]}
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

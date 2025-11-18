@@ -11,11 +11,13 @@ import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedC
 interface TouristDestinationCardProps {
   touristDestination: any;
   handleOption: (option: string) => void;
+  role: string;
 }
 
 const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   touristDestination,
   handleOption,
+  role,
 }) => {
   // console.log("touristDestination::: ", touristDestination);
   const BASE_URL = "http://localhost:3000";
@@ -64,7 +66,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
       >
         <CardHeader
           title={touristDestination.name}
-          action={<TouristDestinationCardMenu onOptionSelect={handleOption} />}
+          action={<TouristDestinationCardMenu onOptionSelect={handleOption} role={role} />}
           sx={{
             background:
               "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +

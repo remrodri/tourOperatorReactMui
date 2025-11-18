@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTourTypeContext } from "../../context/TourTypeContext";
 import TourTypeShowcase from "./TourTypeShowcase";
 import CreateTourTypeDialogContainer from "../createTourTypeDialog/CreateTourTypeDialogContainer";
+import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 
 const TourTypeShowcaseContainer = () => {
   // const { tourTypes } = useTourTypeContext();
@@ -18,9 +19,11 @@ const TourTypeShowcaseContainer = () => {
     setOpen(!open);
   };
   // console.log('::: ', );
+
+  const role = getCurrentUserRole();
   return (
     <>
-      <TourTypeShowcase handleClick={handleClick} />
+      <TourTypeShowcase handleClick={handleClick} role={role} />
       {open && (
         <CreateTourTypeDialogContainer open={open} handleClick={handleClick} />
       )}

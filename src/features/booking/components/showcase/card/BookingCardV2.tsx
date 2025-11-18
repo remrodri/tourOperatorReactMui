@@ -20,6 +20,7 @@ interface BookingCardV2Props {
   mainTouristInfo: TouristType | null;
   balance: number;
   handleMenuOptions: (option: string) => void;
+  role: string;
 }
 const BookingCardV2: React.FC<BookingCardV2Props> = ({
   booking,
@@ -28,6 +29,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
   mainTouristInfo,
   balance,
   handleMenuOptions,
+  role,
 }) => {
   //   console.log('booking::: ', booking);
   // console.log('tpInfo::: ', tpInfo);
@@ -103,7 +105,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
           display: "flex",
           p: "0.5rem",
           // flexDirection: "column",
-          gap: "3rem",
+          gap: "1rem",
           width: "100%",
           // justifyContent: "space-between",
         }}
@@ -138,16 +140,16 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
               gap: "0.5rem",
               width: "30%",
             }}
-            >
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: "normal",
-            }}
           >
-            {mainTouristInfo
-              ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
-              : ""}
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "normal",
+              }}
+            >
+              {mainTouristInfo
+                ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
+                : ""}
             </Typography>
           </Box>
           <Box
@@ -158,21 +160,21 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
               width: "25%",
             }}
           >
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: "normal",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            {booking.status === "pending"
-              ? `Estado: Pendiente`
-              : booking.status === "cancelled"
-              ? `Estado: Cancelado`
-              : `Estado: Pagado`}
-          </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "normal",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {booking.status === "pending"
+                ? `Estado: Pendiente`
+                : booking.status === "cancelled"
+                ? `Estado: Cancelado`
+                : `Estado: Pagado`}
+            </Typography>
           </Box>
           <Box
             sx={{
@@ -182,32 +184,31 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
               width: "15%",
             }}
           >
-
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: "normal",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            {booking.status === "cancelled" ? (
-              <Typography
-                variant="body1"
-                component="div"
-              >{`Cancelado`}</Typography>
-            ) : (
-              <Typography variant="body2" component="div">
-                {balance === 0
-                  ? "Saldo: No tiene"
-                  : `Saldo: ${balance.toFixed(2)} Bs.`}
-              </Typography>
-              // <Typography variant="body1" component="div">
-              //   {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
-              // </Typography>
-            )}
-          </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "normal",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {booking.status === "cancelled" ? (
+                <Typography
+                  variant="body1"
+                  component="div"
+                >{`Cancelado`}</Typography>
+              ) : (
+                <Typography variant="body2" component="div">
+                  {balance === 0
+                    ? "Saldo: No tiene"
+                    : `Saldo: ${balance.toFixed(2)} Bs.`}
+                </Typography>
+                // <Typography variant="body1" component="div">
+                //   {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+                // </Typography>
+              )}
+            </Typography>
           </Box>
           {/* <IconButton
           onClick={handleOpenMenu}
@@ -219,11 +220,14 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
           <MoreVert />
         </IconButton> */}
         </Box>
-        <BookingCardMenu
-          onOptionSelect={handleMenuOptions}
-          balance={balance}
-          status={booking.status}
-        />
+        <Box>
+          <BookingCardMenu
+            onOptionSelect={handleMenuOptions}
+            balance={balance}
+            status={booking.status}
+            role={role}
+          />
+        </Box>
         {/* <Typography variant="body1" component="div">
             {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
           </Typography> */}

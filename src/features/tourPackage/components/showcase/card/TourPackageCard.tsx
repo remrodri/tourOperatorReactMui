@@ -10,6 +10,7 @@ interface TourPackageCardProps {
   handleOption: (option: string) => void;
   // handleClickInfo: () => void;
   touristDestination: TouristDestinationType | null;
+  role: string;
 }
 
 const TourPackageCard: React.FC<TourPackageCardProps> = ({
@@ -18,11 +19,12 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
   handleOption,
   // handleClickInfo,
   touristDestination,
+  role,
 }) => {
   
   // console.log('touristDestination::: ', touristDestination);
   const destinationImage = `${BASE_URL}${touristDestination?.images[0]}`;
-  console.log('destinationImage::: ', destinationImage);
+  // console.log('destinationImage::: ', destinationImage);
   
   return (
     // <AnimatedContent
@@ -79,6 +81,7 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
             <TourPackageCardMenu
               onOptionSelect={handleOption}
               tourPackage={tourPackage}
+              role={role}
               // handleClickInfo={handleClickInfo}
             />
           }

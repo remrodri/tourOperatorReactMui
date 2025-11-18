@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BookingShowcase from "./BookingShowcase";
 import { useBookingContext } from "../../context/BookingContext";
 import BookingFormContainer from "../bookingForm/BookingFormContainer";
+import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 
 const BookingShowcaseContainer: React.FC = () => {
   const { bookings } = useBookingContext();
@@ -12,6 +13,8 @@ const BookingShowcaseContainer: React.FC = () => {
   //   // console.log('bookings::: ', bookings);
   // },[bookings])
 
+const role = getCurrentUserRole();
+
   const handleClick = () => {
     setOpen(!open);
   };
@@ -21,6 +24,7 @@ const BookingShowcaseContainer: React.FC = () => {
         handleClick={handleClick}
         bookings={bookings}
         open={open}
+        role={role}
       />
       {open && <BookingFormContainer open={open} handleClose={handleClick} />}
     </>

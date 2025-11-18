@@ -8,12 +8,14 @@ interface TouristDestinationShowcaseProps {
   handleClick: () => void;
   // BASE_URL: string;
   touristDestinations: any[];
+  role: string;
 }
 
 const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
   handleClick,
   // BASE_URL,
   touristDestinations,
+  role,
 }) => {
   // console.log('touristDestinations::: ', touristDestinations);
   return (
@@ -64,7 +66,8 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
               showCursor={true}
               cursorCharacter="_"
               deletingSpeed={50}
-            />
+          />
+          {role === "690cbf7c64756dcc541d8a19" && (
             <Button
               variant="contained"
               sx={{ height: "2rem", width: "12rem" }}
@@ -72,6 +75,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
             >
               nuevo
             </Button>
+          )}
           </Box>
         </Typography>
         <Box
@@ -122,6 +126,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
                 <TouristDestinationCardContainer
                   key={touristDestination.id}
                   touristDestination={touristDestination}
+                  role={role}
                 />
               ))
             ) : (

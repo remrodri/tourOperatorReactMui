@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import axiosInstance from "../../../config/axiosConfig";
 
 interface LoginRequest {
@@ -5,13 +6,15 @@ interface LoginRequest {
   password: string;
 }
 interface LoginResponse {
-  token: string;
+  data: any;
 }
 
 export const authService = {
-  login: async (data: LoginRequest): Promise<LoginResponse> => {
+  login: async (data: LoginRequest): Promise<AxiosResponse<LoginResponse>> => {
     const response = await axiosInstance.post("/auth/login", data);
+    console.log('response::: ', response);
     // console.log('response::: ', response.data.data.token);
-    return response.data.data.token;
+    // return response.data.data.token;
+    return response;
   },
 };

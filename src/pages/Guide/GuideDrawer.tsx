@@ -31,9 +31,10 @@ interface DrawerItem {
 
 interface GuideDrawerProps {
   drawerItems: DrawerItem[];
+  guideName: string;
 }
 
-const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems }) => {
+const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems, guideName }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,9 +75,12 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            "@media (max-width:600px)": {
+              fontSize: "1rem",
+            },
           }}
         >
-          Menu
+          Guia de turismo
         </Typography>
         <Tooltip title="Cerrar menu" disableInteractive>
           <IconButton
@@ -146,7 +150,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems }) => {
       }}
     >
       <Box>
-        <GuideAppBar toggleDrawer={toggleDrawer} />
+        <GuideAppBar toggleDrawer={toggleDrawer} guideName={guideName}/>
       </Box>
       {/* <Button onClick={toggleDrawer(true)}>Open drawer</Button> */}
 

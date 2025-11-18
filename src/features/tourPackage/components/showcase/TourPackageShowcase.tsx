@@ -7,10 +7,12 @@ import TextType from "../../../../TextAnimations/TextType/TextType";
 interface TourPackageShowcaseProps {
   handleClick: () => void;
   tourPackages: TourPackageType[];
+  role: string;
 }
 const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
   handleClick,
   tourPackages,
+  role,
 }) => {
   return (
     <Box
@@ -47,13 +49,15 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
             cursorCharacter="_"
             deletingSpeed={50}
           />
-          <Button
-            variant="contained"
-            sx={{ height: "2rem", width: "12rem" }}
-            onClick={handleClick}
-          >
-            nuevo
-          </Button>
+          {role === "690cbf7c64756dcc541d8a19" && (
+            <Button
+              variant="contained"
+              sx={{ height: "2rem", width: "12rem" }}
+              onClick={handleClick}
+            >
+              nuevo
+            </Button>
+          )}
         </Box>
       </Typography>
       <Box
@@ -84,7 +88,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
         >
           {tourPackages && tourPackages.length > 0 ? (
             tourPackages.map((tp, index) => (
-              <TourPackageCardContainer key={index} tourPackage={tp} />
+              <TourPackageCardContainer key={index} tourPackage={tp} role={role}/>
             ))
           ) : (
             <p>No se encuentran paquetes turisticos</p>

@@ -9,9 +9,10 @@ import MoreInfoModalContainer from "./modal/MoreInfoModalContainer";
 
 interface TourTypeCardProps {
   tourType: any;
+  role: string;
 }
 
-const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
+const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType, role }) => {
   // const { handleUpdate } = useTourTypeContext();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -77,6 +78,7 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
             onOptionSelect={handleOpcionMenuCard}
             handleOpenDialog={handleOpenDialog}
             handleClickMoreInfo={handleClickMoreInfo}
+            role={role}
           />
         }
       />

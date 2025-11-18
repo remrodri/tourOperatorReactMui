@@ -17,11 +17,13 @@ import { CancellationPolicy } from "../../../../cancellationPolicy/types/Cancell
 interface BookingCardContainerProps {
   booking: BookingType;
   index: number;
+  role: string;
 }
 
 const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   booking,
   index,
+  role,
 }) => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getTouristInfoById } = useTouristContext();
@@ -164,8 +166,7 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
           mainTouristInfo={mainTouristInfo}
           balance={balance}
           handleMenuOptions={handleMenuOptions}
-          // handleOpenMenu={handleOpenMenu}
-          // handleCloseMenu={handleCloseMenu}
+          role={role}
         />
       )}
       {openMoreInfo && localBooking && (

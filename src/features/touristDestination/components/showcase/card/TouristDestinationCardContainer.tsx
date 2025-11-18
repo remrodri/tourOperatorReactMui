@@ -7,11 +7,12 @@ import MoreInfoModalContainer from "./modal/MoreInfoModalContainer";
 
 interface TouristDestinationCardContainerProps {
   touristDestination: any;
+  role: string;
 }
 
 const TouristDestinationCardContainer: React.FC<
   TouristDestinationCardContainerProps
-> = ({ touristDestination }) => {
+> = ({ touristDestination, role }) => {
   const [open, setOpen] = useState(false);
   const [openGallery, setOpenGallery] = useState(false);
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
@@ -52,6 +53,7 @@ const TouristDestinationCardContainer: React.FC<
       <TouristDestinationCard
         touristDestination={touristDestination}
         handleOption={handleOption}
+        role={role}
       />
       {open && (
         <TouristDestinationFormContainer
