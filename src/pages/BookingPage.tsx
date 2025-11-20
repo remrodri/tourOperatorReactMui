@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { UserProvider } from "../features/userManagement/context/UserContext";
+import { UserProvider } from "../features/user/context/UserContext";
 import { BookingProvider } from "../features/booking/context/BookingContext";
 import { TouristProvider } from "../features/tourist/context/TouristContext";
 import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";

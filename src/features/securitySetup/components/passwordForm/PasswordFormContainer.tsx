@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useUpdatePassword } from "./hook/useUpdatePassword";
 import PasswordForm from "./PasswordForm";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../userManagement/types/User";
+import { User } from "../../../user/types/User";
 
 const PasswordFormContainer: React.FC = () => {
   const {
@@ -24,13 +24,12 @@ const PasswordFormContainer: React.FC = () => {
     // console.log("passwords::: ", passwords);
     // try {
     //   if (!params.userId) {
-        updatePassword(passwords.password);
+    updatePassword(passwords.password);
     //   }
     //   updatePasswordWithoutToken(passwords.password, params.userId);
     // } catch (error) {
     //   console.error(useUpdatePasswordError);
     // }
-
   };
   return <PasswordForm onSubmit={onSubmit} />;
 };

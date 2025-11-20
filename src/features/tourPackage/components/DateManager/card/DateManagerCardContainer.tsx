@@ -1,14 +1,14 @@
 import DateManagerCard from "./DateManagerCard";
 import { DateRangeType } from "../../../types/DateRangeType";
 // import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
-import { useUserContext } from "../../../../userManagement/context/UserContext";
-import { User } from "../../../../userManagement/types/User";
+import { useUserContext } from "../../../../user/context/UserContext";
+import { User } from "../../../../user/types/User";
 import { useEffect, useState } from "react";
 import { useBookingContext } from "../../../../booking/context/BookingContext";
 import ConfirmationModal from "./ConfirmationModal";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 import DateSelectorFormContainer from "../DateSelectorForm/DateSelectorFormContainer";
-import DateRangeBookingsDialogContainer from '../dateRangeBookingsDialog/DateRangeBookingsDialogContainer';
+import DateRangeBookingsDialogContainer from "../dateRangeBookingsDialog/DateRangeBookingsDialogContainer";
 interface DateManagerCardContainerProps {
   dateRange: DateRangeType;
   duration: number;
@@ -36,7 +36,7 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [openDateRangeBookingsDialog, setOpenDateRangeBookingsDialog] =
     useState<boolean>(false);
-  
+
   const handleOpenDateRangeBookingsDialog = () => {
     setOpenDateRangeBookingsDialog(true);
   };
@@ -84,7 +84,7 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
     // updateDateRangeStatus(dateRange.id, selectedOption); // ⬅ llamada al contexto
     updateDateRange({
       id: dateRange.id,
-      state: selectedOption==="completado"?"completed":"cancelled",
+      state: selectedOption === "completado" ? "completed" : "cancelled",
     });
     setOpenConfirmModal(false);
   };

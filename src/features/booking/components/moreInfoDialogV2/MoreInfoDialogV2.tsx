@@ -16,11 +16,11 @@ import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import TourPackageInfo from "./TourPackageInfo";
 import { CancellationPolicy } from "../../../cancellationPolicy/types/CancellationPolicy";
 import CancellationPolicyInfo from "./CancellationPolicyInfo";
-import { TourType } from "../../../userManagement/types/TourType";
+import { TourType } from "../../../user/types/TourType";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { PaymentType } from "../../types/PaymentType";
 import { TouristType } from "../../types/TouristType";
-import { User } from "../../../userManagement/types/User";
+import { User } from "../../../user/types/User";
 import TourTypeInfo from "./TourTypeInfo";
 import TouristDestinationInfo from "./TouristDestinationInfo";
 import SellerInfo from "./SellerInfo";
@@ -183,6 +183,18 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
               </BookingDialogStyledBox>
               <BookingDialogStyledBox
                 sx={{
+                  // gridRow: "1 / 3",
+                  // gridColumn: "4 / 5",
+                  p: 1,
+                  // height: "12.5rem",
+                  height: "60%",
+                  width: "100%",
+                }}
+              >
+                <PaymentsInfo payments={payments ?? []} />
+              </BookingDialogStyledBox>
+              {/* <BookingDialogStyledBox
+                sx={{
                   // gridRow: "4 / 5",
                   // gridColumn: "3 / 5",
                   p: 1,
@@ -194,7 +206,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
                 <TouristDestinationInfo
                   touristDestination={touristDestination}
                 />
-              </BookingDialogStyledBox>
+              </BookingDialogStyledBox> */}
             </Box>
             <BookingDialogStyledBox
               sx={{
@@ -259,7 +271,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
                   width: "100%",
                 }}
               >
-                <StatusInfo status={translateStatus(booking.status) || ""}/>
+                <StatusInfo status={translateStatus(booking.status) || ""} />
               </BookingDialogStyledBox>
               <BookingDialogStyledBox
                 sx={{
@@ -277,17 +289,18 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
             <BookingDialogStyledBox
               sx={{
-                // gridRow: "1 / 3",
-                // gridColumn: "4 / 5",
+                // gridRow: "4 / 5",
+                // gridColumn: "3 / 5",
                 p: 1,
-                height: "12.5rem",
-                width: "33%",
+                // height: "30rem",
+                height: "9.5rem",
+                width: "100%",
               }}
             >
-              <PaymentsInfo payments={payments ?? []} />
+              <TouristDestinationInfo touristDestination={touristDestination} />
             </BookingDialogStyledBox>
 
-            <BookingDialogStyledBox
+            {/* <BookingDialogStyledBox
               sx={{
                 // gridRow: "3 / 5",
                 // gridColumn: "1 / 2",
@@ -297,7 +310,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
               }}
             >
               <CancellationPolicyInfo cancellationPolicy={cancellationPolicy} />
-            </BookingDialogStyledBox>
+            </BookingDialogStyledBox> */}
 
             {/* <BookingDialogStyledBox
               sx={{
@@ -322,7 +335,6 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
               <TouristsInfo tourists={tourists ?? []} />
             </BookingDialogStyledBox> */}
           </Box>
-          
         </Box>
       </DialogContent>
     </Dialog>

@@ -20,7 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 // import DeleteIcon from "@mui/icons-material/Delete";
 // import CloseIcon from "@mui/icons-material/Close";
 import { DateRangeType } from "../../../types/DateRangeType";
-import { User } from "../../../../userManagement/types/User";
+import { User } from "../../../../user/types/User";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 // import TextType from "../../../../../TextAnimations/TextType/TextType";
 import DateSelector from "./DateSelector";

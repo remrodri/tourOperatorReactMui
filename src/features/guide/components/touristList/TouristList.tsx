@@ -91,6 +91,9 @@ const TouristList: React.FC<TouristListProps> = ({
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              "@media (max-width:600px)": {
+                fontSize: "1rem",
+              },
             }}
           >
             Lista de turistas
@@ -122,6 +125,9 @@ const TouristList: React.FC<TouristListProps> = ({
                   variant="h6"
                   sx={{
                     pl: "10px",
+                    "@media (max-width:600px)": {
+                      fontSize: "1rem",
+                    },
                   }}
                 >
                   Grupo: {groupIndex + 1}
@@ -131,6 +137,7 @@ const TouristList: React.FC<TouristListProps> = ({
                     key={touristIndex}
                     sx={{
                       display: "flex",
+                      // width: "100%",
                       justifyContent: "space-between",
                       // justifyContent: "center",
                       // alignItems: "center",
@@ -151,41 +158,46 @@ const TouristList: React.FC<TouristListProps> = ({
                       },
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <PersonIcon />
-                      <Typography
+                    <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
+                      <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "center",
                           alignItems: "center",
+                          gap: "10px",
                         }}
                       >
-                        {tourist.tourist.firstName} {tourist.tourist.lastName}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <PhoneIcon />
-                      <Typography
+                        <PersonIcon />
+                        <Typography
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            "@media (max-width:600px)": {
+                              fontSize: "0.8rem",
+                            },
+                          }}
+                        >
+                          {tourist.tourist.firstName} {tourist.tourist.lastName}
+                        </Typography>
+                      </Box>
+                      <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "center",
                           alignItems: "center",
+                          gap: "10px",
                         }}
                       >
-                        {tourist.tourist.phone}
-                      </Typography>
+                        <PhoneIcon />
+                        <Typography
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {tourist.tourist.phone}
+                        </Typography>
+                      </Box>
                     </Box>
                     <Checkbox
                       checked={tourist.status === "present"}

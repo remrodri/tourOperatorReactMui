@@ -16,7 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
 import Chip from "@mui/material/Chip";
-import { User } from "../../../../userManagement/types/User";
+import { User } from "../../../../user/types/User";
 import { FormikProps } from "formik";
 import { DateRangeFormValues } from "./DateSelectorFormContainer";
 import customParseFormat from "dayjs/plugin/customParseFormat";

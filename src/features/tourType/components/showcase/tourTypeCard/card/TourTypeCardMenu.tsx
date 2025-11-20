@@ -8,12 +8,14 @@ const options = ["Ver mas", "Editar", "Eliminar"];
 
 interface CardMenuProps {
   onOptionSelect: (option: string) => void;
+  role: string;
   handleOpenDialog: () => void;
   handleClickMoreInfo: () => void;
 }
 
 const CardMenu: React.FC<CardMenuProps> = ({
   onOptionSelect,
+  role,
   handleOpenDialog,
   handleClickMoreInfo,
 }) => {
@@ -66,11 +68,24 @@ const CardMenu: React.FC<CardMenuProps> = ({
           },
         }}
       >
-        {options.map((option) => (
+        <MenuItem onClick={() => handleOptionClick("Ver mas")}>
+          Ver mas
+        </MenuItem>
+        {role === "690cbf7c64756dcc541d8a19" && (
+          <>
+            <MenuItem onClick={() => handleOptionClick("Editar")}>
+              Editar
+            </MenuItem>
+            {/* <MenuItem onClick={() => handleOptionClick("Eliminar")}>
+              Eliminar
+            </MenuItem> */}
+          </>
+        )}
+        {/* {options.map((option) => (
           <MenuItem key={option} onClick={() => handleOptionClick(option)}>
             {option}
           </MenuItem>
-        ))}
+        ))} */}
       </Menu>
       {/* {openDialog && (
         <DeleteDialog open={openDialog} handleClose={handleOpenDialog} />

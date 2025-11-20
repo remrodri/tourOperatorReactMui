@@ -70,7 +70,7 @@ const updateUser = async (
       // Remove Content-Type header - axios will set it automatically
     },
   });
-  console.log('response::: ', response.data);
+  console.log("response::: ", response.data);
   return response.data;
 };
 

@@ -12,6 +12,7 @@ interface UserCardProps {
   userRole: Role;
   roles: Role[];
   handleMenuOption: (option: string) => void;
+  role: string;
 }
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -19,6 +20,7 @@ const UserCard: React.FC<UserCardProps> = ({
   userRole,
   roles,
   handleMenuOption,
+  role,
 }) => {
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
@@ -114,7 +116,7 @@ const UserCard: React.FC<UserCardProps> = ({
               {roleChar}
             </Avatar>
           }
-          action={<UserCardMenu onOptionSelect={handleMenuOption} />}
+          action={<UserCardMenu onOptionSelect={handleMenuOption} role={role} />}
           title={`${userRole.name.toUpperCase()}`}
           subheader={
             <Box>

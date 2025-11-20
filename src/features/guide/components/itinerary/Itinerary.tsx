@@ -93,10 +93,32 @@ const Itinerary: React.FC<ItineraryProps> = ({ tourPackage, loading }) => {
                   </Typography>
                   {day.activities.map((activity, index) => {
                     return (
-                      <Box key={index}>
-                        <Typography variant="body2" align="center">
-                          {`${activity.time} - ${activity.description}`}
+                      <Box key={index}
+                        sx={{
+                          display:"flex",
+                          justifyContent:"center",
+                          gap:"10px",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "10px",
+                            width: {
+                              xs: "100%",
+                              sm: "70%",
+                              md: "50%",
+                            },
+                          }}
+                        >
+                          <Typography variant="body2">
+                            {`${activity.time}`}
+                          </Typography>
+                        <Typography variant="body2">
+                          {`${activity.description}`}
                         </Typography>
+                        </Box>
                       </Box>
                     );
                   })}

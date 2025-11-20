@@ -8,12 +8,14 @@ interface BookingShowcaseProps {
   handleClick: () => void;
   bookings: BookingType[] | null;
   open: boolean;
+  role: string;
 }
 
 const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   handleClick,
   bookings,
   open,
+  role,
 }) => {
   // console.log('bookings::: ', bookings);
   // if (!bookings || bookings.length === 0) {
@@ -99,6 +101,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                   key={booking.id}
                   booking={booking}
                   index={index}
+                  role={role}
                 />
               ))
             )}

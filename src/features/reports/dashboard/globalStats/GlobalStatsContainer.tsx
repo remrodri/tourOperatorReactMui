@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useBookingContext } from "../../../booking/context/BookingContext";
 import GlobalStats from "./GlobalStats";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
-import { useUserContext } from "../../../userManagement/context/UserContext";
+import { useUserContext } from "../../../user/context/UserContext";
 
 const GlobalStatsContainer: React.FC<{}> = () => {
   const [bookingsCont, setBookingsCont] = useState<number>(0);

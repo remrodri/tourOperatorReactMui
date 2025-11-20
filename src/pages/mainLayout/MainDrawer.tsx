@@ -26,7 +26,7 @@ import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
-import { User } from "../../features/userManagement/types/User";
+import { User } from "../../features/user/types/User";
 import MainAppBar from "./MainAppBar";
 import { AppBarStyle } from "./MainLayout";
 // import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
@@ -524,7 +524,7 @@ export default function MainDrawer({ currentStyles }: Props) {
               <ListItemText primary={open ? "Tipos de tour" : ""} />
             </ListItemButton>
           </Tooltip>
-          <Tooltip title="Politicas de cancelacion" placement="right">
+          {/* <Tooltip title="Politicas de cancelacion" placement="right">
             <ListItemButton
               sx={{
                 pl: open ? 4 : 2.5,
@@ -558,7 +558,7 @@ export default function MainDrawer({ currentStyles }: Props) {
               </ListItemIcon>
               <ListItemText primary={open ? "Politicas " : ""} />
             </ListItemButton>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="Destinos" placement="right">
             <ListItemButton
               sx={{
@@ -734,7 +734,6 @@ export default function MainDrawer({ currentStyles }: Props) {
             // backdropFilter: "blur(10px)",
           }}
         >
-            
           <Outlet />
         </Box>
       </Box>

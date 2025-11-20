@@ -11,7 +11,7 @@ import TourPackageShowcaseContainer from "../features/tourPackage/components/sho
 import TourTypeContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
 import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/components/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/components/showcase/TouristDestinationShowcaseContainer";
-import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
+import UserShowcaseContainer from "../features/user/components/showcase/UserShowcaseContainer";
 import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/components/showcase/BookingShowcaseContainer";
 import ReportsPage from "../pages/ReportsPage";

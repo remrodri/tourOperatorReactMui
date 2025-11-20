@@ -9,10 +9,12 @@ import DateManagerContainer from "../../DateManager/DateManagerContainer";
 import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
 interface TourPackageCardContainerProps {
   tourPackage: TourPackageType;
+  role: string;
 }
 
 const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   tourPackage,
+  role,
 }) => {
   const BASE_URL = "http://localhost:3000";
   const [open, setOpen] = useState(false);
@@ -85,6 +87,7 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         BASE_URL={BASE_URL}
         handleOption={handleOption}
         touristDestination={touristDestination || null}
+        role={role}
       />
       {open && (
         <TourPackageformContainer

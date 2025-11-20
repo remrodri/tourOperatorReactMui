@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../service/authService";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../userManagement/types/User";
+import { User } from "../../user/types/User";
 import { useRoleContext } from "../../Role/context/RoleContext";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
@@ -23,12 +23,13 @@ export const useLogin = () => {
     try {
       const response = await authService.login(values);
       // console.log('response::: ', response);
-      if (!response) {
-        setError("Login fallido");
-        showSnackbar("Login fallido", "error");
-        return;
-      }
-      TokenService.saveToken(response.toString());
+      // if (!response) {
+      //   setError("Login fallido");
+      //   showSnackbar("Login fallido", "error");
+      //   return;
+      // }
+      
+      TokenService.saveToken(response.data.data.token);
       const token = TokenService.getToken();
       if (token) {
         const user: User = jwtDecode(token);
@@ -57,10 +58,17 @@ export const useLogin = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         console.log(err.response?.data);
+        // setError(err.response?.data.message || "Login fallido");
+        // showSnackbar(err.response?.data.message || "Login fallido", "error");
       }
       if (err instanceof Error) {
         setError(err.message || "Login fallido");
         showSnackbar(err.message || "Login fallido", "error");
+      }
+      if (err instanceof AxiosError) {
+        console.log(err.response?.data);
+        setError(err.response?.data.message || "Login fallido");
+        showSnackbar(err.response?.data.message || "Login fallido", "error");
       }
     }
   };

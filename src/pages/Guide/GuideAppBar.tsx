@@ -19,9 +19,10 @@ const BASE_URL = "http://localhost:3000";
 
 interface Props {
     toggleDrawer: (newOpen: boolean) => () => void;
+    guideName: string;
 }
 
-const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
+const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [imageUrl, setImageUrl] = React.useState<string>("");
@@ -106,8 +107,18 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
               <MenuIcon />
             </IconButton>
           </Tooltip>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Guia turistico
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              flexGrow: 1,
+              // fontSize: "2rem",
+              "@media (max-width:600px)": {
+                fontSize: "1rem",
+              },
+            }}
+          >
+            {guideName}
           </Typography>
           {auth && (
             <div>
@@ -141,7 +152,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer})=> {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handlePerfil}>Perfil</MenuItem>
+                {/* <MenuItem onClick={handlePerfil}>Perfil</MenuItem> */}
                 <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </div>

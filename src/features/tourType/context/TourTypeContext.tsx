@@ -12,7 +12,7 @@ import {
   updateTourTypeRequest,
 } from "../service/tourTypeService";
 import { Snackbar } from "@mui/material";
-import { TourType } from "../../userManagement/types/TourType";
+import { TourType } from "../../user/types/TourType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface TourTypeContextType {
@@ -53,8 +53,8 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
     if (!id) {
       console.warn("tourType called without id");
       return null;
-    };
-    const ttFound = tourTypes.find((tt:TourType) => tt.id === id);
+    }
+    const ttFound = tourTypes.find((tt: TourType) => tt.id === id);
     if (!ttFound) {
       console.warn("tourType not found");
       return null;
@@ -160,7 +160,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
         updateTourType,
         deleteTourType,
         getTourTypeNameById,
-        getTourTypeInfoById
+        getTourTypeInfoById,
         // handleUpdate,
       }}
     >

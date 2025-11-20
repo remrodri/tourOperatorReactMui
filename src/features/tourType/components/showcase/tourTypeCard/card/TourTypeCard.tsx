@@ -2,16 +2,17 @@ import { Card, CardHeader } from "@mui/material";
 import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
 import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
-import UpdateTourTypeDialogContainer from "../../../createTourTypeDialog/UpdateTourTypeDialogContainer";
+import UpdateTourTypeDialogContainer from "../../../tourTypeForm/UpdateTourTypeDialogContainer";
 import AnimatedContent from "../../../../../../Animations/AnimatedContent/AnimatedContent";
 import { truncateText } from "../../../../../../utils/truncateText";
 import MoreInfoModalContainer from "./modal/MoreInfoModalContainer";
 
 interface TourTypeCardProps {
   tourType: any;
+  role: string;
 }
 
-const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
+const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType, role }) => {
   // const { handleUpdate } = useTourTypeContext();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -77,6 +78,7 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType }) => {
             onOptionSelect={handleOpcionMenuCard}
             handleOpenDialog={handleOpenDialog}
             handleClickMoreInfo={handleClickMoreInfo}
+            role={role}
           />
         }
       />

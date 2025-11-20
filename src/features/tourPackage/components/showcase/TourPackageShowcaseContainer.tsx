@@ -3,6 +3,7 @@ import TourPackageShowcase from "./TourPackageShowcase";
 import { useState } from "react";
 import TourPackageformContainer from "../tourPackageForm/TourPackageFormContainer";
 import { useTourPackageContext } from "../../context/TourPackageContext";
+import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 
 const TourPackageShowcaseContainer: React.FC = () => {
   const { tourPackages } = useTourPackageContext();
@@ -11,6 +12,9 @@ const TourPackageShowcaseContainer: React.FC = () => {
   const handleClickForm = () => {
     setOpen(!open);
   };
+
+  const role = getCurrentUserRole();
+  // console.log('role::: ', role);
   // console.log('tourPackages::: ', tourPackages);
   // console.log('tourPackages::: ', tourPackages);
   return (
@@ -20,6 +24,7 @@ const TourPackageShowcaseContainer: React.FC = () => {
           <TourPackageShowcase
             handleClick={handleClickForm}
             tourPackages={tourPackages}
+            role={role}
           />
         </Box>
       </Fade>

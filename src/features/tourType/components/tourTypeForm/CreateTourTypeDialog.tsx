@@ -12,12 +12,14 @@ interface CreateTourTypeDialogProps {
   open: boolean;
   handleClick: () => void;
   formik: any;
+  isEdit?: boolean;
 }
 
 const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
   open,
   handleClick,
   formik,
+  isEdit,
 }) => {
   return (
     <Dialog open={open} onClose={handleClick}>
@@ -25,7 +27,7 @@ const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
       <DialogTitle>
         <TextType
           className="text-lg"
-          text="Nuevo tipo de tour"
+          text={isEdit === true ? "Editar tipo de tour" : "Nuevo tipo de tour"}
           typingSpeed={50}
           pauseDuration={1000}
           showCursor={true}

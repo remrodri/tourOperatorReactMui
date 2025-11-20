@@ -7,26 +7,29 @@ import TextType from "../../../../TextAnimations/TextType/TextType";
 interface UserShowcaseProps {
   handleClick: () => void;
   users: User[];
+  role: string;
 }
 
-const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
+const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users, role }) => {
   if (!users) {
     return <p>No hay usuarios</p>;
   }
   return (
     <Fade in={true} timeout={1000}>
       <Box
-        sx={{
-          // flexGrow: 1,
-          // display: "flex",
-          // flexDirection: "column",
-          // background: "rgba(78, 140, 179, 0.4)",
-          // borderRadius: "16px",
-          // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
-          // backdropFilter: "blur(10px)",
-          // WebkitBackdropFilter: "blur(10px)",
-          // border: "1px solid rgba(78, 140, 179, 0.5)",
-        }}
+        sx={
+          {
+            // flexGrow: 1,
+            // display: "flex",
+            // flexDirection: "column",
+            // background: "rgba(78, 140, 179, 0.4)",
+            // borderRadius: "16px",
+            // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+            // backdropFilter: "blur(10px)",
+            // WebkitBackdropFilter: "blur(10px)",
+            // border: "1px solid rgba(78, 140, 179, 0.5)",
+          }
+        }
       >
         <Typography
           variant="h4"
@@ -55,7 +58,19 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
               cursorCharacter="_"
               deletingSpeed={50}
             />
-            <Button
+            {role === "690cbf7c64756dcc541d8a19" && (
+              <Button
+                variant="contained"
+                sx={{
+                  height: "2rem",
+                  width: "12rem",
+                }}
+                onClick={handleClick}
+              >
+                nuevo
+              </Button>
+            )}
+            {/* <Button
               variant="contained"
               sx={{
                 height: "2rem",
@@ -64,7 +79,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
               onClick={handleClick}
             >
               nuevo
-            </Button>
+            </Button> */}
           </Box>
         </Typography>
         <Box
@@ -77,7 +92,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
           <Box
             sx={{
               // pt: "30px",
-              p:"20px",
+              p: "20px",
               // flexGrow: 1,
               display: "flex",
               justifyContent: "center",
@@ -94,12 +109,12 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users }) => {
               boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
               border: "1px solid rgba(89, 69, 57, 0.5)",
               height: "calc(100dvh - 12.8rem)",
-              width:"100%",
+              width: "100%",
             }}
           >
             {users && users.length > 0 ? (
               users.map((user) => (
-                <UserCardContainer key={user.id} user={user} />
+                <UserCardContainer key={user.id} user={user} role={role}/>
               ))
             ) : (
               <p>Cargando usuarios</p>

@@ -6,17 +6,17 @@ import { useTourPackageContext } from "../../../tourPackage/context/TourPackageC
 import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { CancellationPolicy } from "../../../cancellationPolicy/types/CancellationPolicy";
-import { TourType } from "../../../userManagement/types/TourType";
+import { TourType } from "../../../user/types/TourType";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { PaymentType } from "../../types/PaymentType";
 import { TouristType } from "../../types/TouristType";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
-import { User } from "../../../userManagement/types/User";
+import { User } from "../../../user/types/User";
 import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { usePaymentContext } from "../../../payment/context/PaymentContext";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
-import { useUserContext } from "../../../userManagement/context/UserContext";
+import { useUserContext } from "../../../user/context/UserContext";
 
 interface MoreInfoDialogContainerProps {
   open: boolean;
@@ -31,7 +31,7 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   booking,
   balance,
 }) => {
-  console.log('booking::: ', booking);
+  console.log("booking::: ", booking);
   const { getDateRangeInfoById } = useDateRangeContext();
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getCancellationPolicyInfoById } = useCancellationConditionContext();

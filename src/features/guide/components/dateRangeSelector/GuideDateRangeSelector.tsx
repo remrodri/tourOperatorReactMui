@@ -50,7 +50,7 @@ const GuideDateRangeSelector: React.FC<GuideDateRangeSelectorProps> = ({
             height: "100%",
           }}
         >
-          <Typography variant="h6">Elije una salida</Typography>
+          <Typography variant="h6">Tours asignados</Typography>
           {guideDateRanges.map((dateRange) => (
             <Button
               key={dateRange.id}

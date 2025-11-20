@@ -2,10 +2,17 @@ import { useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import UserShowcase from "./UserShowcase";
 import UserFormContainer from "../userForm/UserFormContainer";
+import { TokenService } from "../../../../utils/tokenService";
+import { User } from "../../types/User";
+import { jwtDecode } from "jwt-decode";
 
 const UserShowcaseContainer: React.FC = () => {
   const { users } = useUserContext();
   const [open, setOpen] = useState(false);
+
+  const token = TokenService.getToken();
+  const user: User = jwtDecode(token!);
+  const role = user.role;
   
   // console.log('users::: ', users);
   const handleClick = () => {
@@ -13,7 +20,7 @@ const UserShowcaseContainer: React.FC = () => {
   };
   return (
     <>
-      <UserShowcase handleClick={handleClick} users={users} />
+      <UserShowcase handleClick={handleClick} users={users} role={role} />
       {open && <UserFormContainer open={open} handleClick={handleClick} />}
     </>
   );

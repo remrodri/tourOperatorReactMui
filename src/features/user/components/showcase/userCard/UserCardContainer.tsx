@@ -8,8 +8,9 @@ import UserFormContainer from "../../userForm/UserFormContainer";
 
 interface UserCardContainerProps {
   user: User;
+  role: string;
 }
-const UserCardContainer: React.FC<UserCardContainerProps> = ({ user }) => {
+const UserCardContainer: React.FC<UserCardContainerProps> = ({ user, role }) => {
   const [openUserForm, setOpenUserForm] = useState(false);
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const { getRoleById, loading, roles } = useRoleContext();
@@ -59,6 +60,7 @@ const UserCardContainer: React.FC<UserCardContainerProps> = ({ user }) => {
         userRole={userRole}
         roles={roles}
         handleMenuOption={handleMenuOption}
+        role={role}
       />
       {openMoreInfo && (
         <MoreInfoModalContainer

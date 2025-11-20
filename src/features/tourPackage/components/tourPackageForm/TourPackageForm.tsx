@@ -18,9 +18,9 @@ import DayItineraryManager from "../itineraryManager/DayItineraryManager";
 import { TourItineraryType } from "../../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../../types/DateRangeType";
-import { User } from "../../../userManagement/types/User";
+import { User } from "../../../user/types/User";
 import TextType from "../../../../TextAnimations/TextType/TextType";
-import { Close } from '@mui/icons-material';
+import { Close } from "@mui/icons-material";
 
 interface TourPackageFormProps {
   guides: User[];
@@ -30,7 +30,7 @@ interface TourPackageFormProps {
     id?: string;
     name: string;
     tourType: string;
-    cancellationPolicy: string;
+    // cancellationPolicy: string;
     touristDestination: string;
     duration: number;
     dateRanges: DateRangeType[];
@@ -38,7 +38,7 @@ interface TourPackageFormProps {
     price: number;
   }>;
   tourTypes: any[];
-  cancellationPolicy: any[];
+  // cancellationPolicy: any[];
   touristDestinations: any[];
   isEditing: boolean;
 }
@@ -49,7 +49,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
   handleClick,
   formik,
   tourTypes,
-  cancellationPolicy,
+  // cancellationPolicy,
   touristDestinations,
   isEditing,
 }) => {
@@ -145,7 +145,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
               </Typography>
             )}
           </Box>
-          <Box sx={{ height: "70px" }}>
+          {/* <Box sx={{ height: "70px" }}>
             <FormControl size="small" fullWidth>
               <InputLabel id="cancellationPolicy">
                 Politica de cancelacion
@@ -176,7 +176,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
                 {formik.errors.cancellationPolicy}
               </Typography>
             )}
-          </Box>
+          </Box> */}
           <Box sx={{ height: "70px" }}>
             <FormControl size="small" fullWidth>
               <InputLabel id="touristDestination">Destino turistico</InputLabel>

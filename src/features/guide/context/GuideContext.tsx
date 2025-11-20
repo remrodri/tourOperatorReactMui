@@ -7,8 +7,8 @@ import {
 } from "react";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
-import { User } from "../../userManagement/types/User";
-import { useUserContext } from "../../userManagement/context/UserContext";
+import { User } from "../../user/types/User";
+import { useUserContext } from "../../user/context/UserContext";
 import { jwtDecode } from "jwt-decode";
 import { TouristType } from "../../booking/types/TouristType";
 import { BookingType } from "../../booking/types/BookingType";
@@ -115,7 +115,6 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
     setAttendanceList(updated as Group[]);
   };
 
-
   const getDateRangeBookings = (
     dateRangeId: string,
     bookings: BookingType[],
@@ -210,11 +209,8 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
       setCurrentTourPackage(localStorage.getItem("currentTourPackage") ?? "");
     }
 
-
     getDateRangeBookings(currentDateRange!, bookings, currentTourPackage!);
   }, [bookings, currentDateRange, currentTourPackage]);
-
-
 
   return (
     <GuideContext.Provider

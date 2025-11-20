@@ -5,16 +5,18 @@ import { useState, MouseEvent } from "react";
 const options = [
   "Ver mas",
   "Ver galeria",
-  "Editar",
+  // "Editar",
   // "Dar de baja"
 ];
 
 interface TouristDestinationCardMenuProps {
   onOptionSelect: (option: string) => void;
+  role: string;
 }
 
 const TouristDestinationCardMenu: React.FC<TouristDestinationCardMenuProps> = ({
   onOptionSelect,
+  role,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -61,6 +63,11 @@ const TouristDestinationCardMenu: React.FC<TouristDestinationCardMenuProps> = ({
             {option}
           </MenuItem>
         ))}
+        {role === "690cbf7c64756dcc541d8a19" && (
+          <MenuItem key="Editar" onClick={() => handleOptionClick("Editar")}>
+            Editar
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

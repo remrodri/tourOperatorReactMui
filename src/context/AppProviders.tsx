@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { UserProvider } from "../features/userManagement/context/UserContext";
+import { UserProvider } from "../features/user/context/UserContext";
 import { RoleProvider } from "../features/Role/context/RoleContext";
 import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";

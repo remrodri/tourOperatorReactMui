@@ -31,12 +31,15 @@ const UpdateTourTypeDialogContainer: React.FC<
     onSubmit,
   });
 
+  const isEdit = true;
+
   return (
     <>
       <CreateTourTypeDialog
         open={open}
         handleClick={handleClick}
         formik={formik}
+        isEdit={isEdit}
       />
       <NewSnackbar />
     </>

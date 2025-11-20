@@ -11,11 +11,13 @@ import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedC
 interface TouristDestinationCardProps {
   touristDestination: any;
   handleOption: (option: string) => void;
+  role: string;
 }
 
 const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   touristDestination,
   handleOption,
+  role,
 }) => {
   // console.log("touristDestination::: ", touristDestination);
   const BASE_URL = "http://localhost:3000";
@@ -46,10 +48,10 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
           // minWidth: 300,
           width: 300,
           borderRadius: "10px",
-          background: "rgba(10,10,10,0.52)",
+          // background: "rgba(10,10,10,0.52)",
           boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
           // backdropFilter: "blur(10px)",
-          border: "1px solid rgba(10,10,10,0.6)",
+          // border: "1px solid rgba(10,10,10,0.6)",
           height: "260px",
           backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
           backgroundSize: "cover",
@@ -64,7 +66,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
       >
         <CardHeader
           title={touristDestination.name}
-          action={<TouristDestinationCardMenu onOptionSelect={handleOption} />}
+          action={<TouristDestinationCardMenu onOptionSelect={handleOption} role={role} />}
           sx={{
             background:
               "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +

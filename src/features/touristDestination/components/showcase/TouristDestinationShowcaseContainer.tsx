@@ -3,6 +3,7 @@ import TouristDestinationShowcase from "./TouristDestinationShowcase";
 import TouristDestinationFormContainer from "../touristDestinationForm/TouristDestinationFormContainer";
 import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
 import { Box, Fade } from "@mui/material";
+import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 
 const TouristDestinationShowcaseContainer: React.FC = () => {
   const { touristDestinations } = useTouristDestinationContext();
@@ -10,6 +11,8 @@ const TouristDestinationShowcaseContainer: React.FC = () => {
   const handleClick = () => {
     setOpen(!open);
   };
+
+  const role = getCurrentUserRole();
   return (
     <>
       <Fade in={true} timeout={1000}>
@@ -17,6 +20,7 @@ const TouristDestinationShowcaseContainer: React.FC = () => {
           <TouristDestinationShowcase
             handleClick={handleClick}
             touristDestinations={touristDestinations}
+            role={role}
           />
         </Box>
       </Fade>

@@ -12,12 +12,11 @@ import TourPackage from "./TourPackage";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useEffect, useState } from "react";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-import { useUserContext } from "../../../userManagement/context/UserContext";
+import { useUserContext } from "../../../user/context/UserContext";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../userManagement/types/User";
+import { User } from "../../../user/types/User";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
 import { useGuideContext } from "../../context/GuideContext";
-
 
 const TourPackageContainer: React.FC = () => {
   const { getTourPackageInfoById } = useTourPackageContext();

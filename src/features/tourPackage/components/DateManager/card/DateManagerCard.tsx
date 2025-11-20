@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DateRangeType } from "../../../types/DateRangeType";
-import { User } from "../../../../userManagement/types/User";
+import { User } from "../../../../user/types/User";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DateManagerCardMenu from "./DateManagerCardMenu";
 import { useEffect, useState } from "react";
@@ -122,7 +122,11 @@ const DateManagerCard: React.FC<DateManagerCardProps> = ({
           {/* <Chip label={dateRange.state} color={color} /> */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Typography variant="body2">Estado:</Typography>
-          <Chip label={estateName} color={color} sx={{ fontSize: "0.8rem" }} />
+            <Chip
+              label={estateName}
+              color={color}
+              sx={{ fontSize: "0.8rem" }}
+            />
           </Box>
         </Box>
         <Box
@@ -204,7 +208,10 @@ const DateManagerCard: React.FC<DateManagerCardProps> = ({
           width: "3rem",
         }}
       >
-        <DateManagerCardMenu onOptionSelect={handleOptionSelect} state={dateRange.state ?? ""}/>
+        <DateManagerCardMenu
+          onOptionSelect={handleOptionSelect}
+          state={dateRange.state ?? ""}
+        />
       </Box>
       {/* {dateRange.state === "pending" && (
         <Box
