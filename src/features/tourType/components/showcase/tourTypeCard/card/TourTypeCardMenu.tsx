@@ -76,9 +76,9 @@ const CardMenu: React.FC<CardMenuProps> = ({
             <MenuItem onClick={() => handleOptionClick("Editar")}>
               Editar
             </MenuItem>
-            <MenuItem onClick={() => handleOptionClick("Eliminar")}>
+            {/* <MenuItem onClick={() => handleOptionClick("Eliminar")}>
               Eliminar
-            </MenuItem>
+            </MenuItem> */}
           </>
         )}
         {/* {options.map((option) => (

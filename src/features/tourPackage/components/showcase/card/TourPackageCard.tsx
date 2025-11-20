@@ -42,7 +42,10 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
       <Card
         sx={{
           // backgroundImage: `url(${destinationImage})`,
-          backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`,
+          // backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`,
+        backgroundImage: tourPackage.status === "active"
+          ? `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`
+          : `linear-gradient(rgba(73, 17, 17, 0.93), rgba(73,17,17,0.52)), url(${destinationImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -65,10 +68,10 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
               : "0 4px 10px rgba(73,17,17,0.6)",
           // backdropFilter: "blur(10px)",
           // border: "1px solid rgba(10,10,10,0.6)",
-          border:
-            tourPackage.status === "active"
-              ? "1px solid rgba(10,10,10,0.6)"
-              : "1px solid rgba(73, 17, 17, 0.6)",
+          // border:
+          //   tourPackage.status === "active"
+          //     ? "1px solid rgba(10,10,10,0.6)"
+          //     : "1px solid rgba(73, 17, 17, 0.6)",
           height: "12rem",
           display: "flex",
           flexDirection: "column",

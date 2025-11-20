@@ -2,7 +2,7 @@ import { Card, CardHeader } from "@mui/material";
 import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
 import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
-import UpdateTourTypeDialogContainer from "../../../createTourTypeDialog/UpdateTourTypeDialogContainer";
+import UpdateTourTypeDialogContainer from "../../../tourTypeForm/UpdateTourTypeDialogContainer";
 import AnimatedContent from "../../../../../../Animations/AnimatedContent/AnimatedContent";
 import { truncateText } from "../../../../../../utils/truncateText";
 import MoreInfoModalContainer from "./modal/MoreInfoModalContainer";

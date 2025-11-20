@@ -68,16 +68,17 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
         <MenuItem onClick={() => handleOptionClick("Ver mas")}>
           Ver mas
         </MenuItem>
-        {role === "690cbf7c64756dcc541d8a19" && (
-          <>
-            <MenuItem onClick={() => handleOptionClick("Editar")}>
-              Editar
-            </MenuItem>
-            <MenuItem onClick={() => handleOptionClick("Gestion de fechas")}>
-              Gestion de fechas
-            </MenuItem>
-          </>
-        )}
+        {role === "690cbf7c64756dcc541d8a19" && [
+          <MenuItem key="editar" onClick={() => handleOptionClick("Editar")}>
+            Editar
+          </MenuItem>,
+          <MenuItem
+            key="gestion"
+            onClick={() => handleOptionClick("Gestion de fechas")}
+          >
+            Gestion de fechas
+          </MenuItem>,
+        ]}
         {role === "690cbf7c64756dcc541d8a19" && (
           <MenuItem
             onClick={() =>

@@ -2,8 +2,8 @@ import { Box, Button, Fade, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import React, { useState } from "react";
 import { useTourTypeContext } from "../../context/TourTypeContext";
-import CreateTourTypeDialog from "../createTourTypeDialog/CreateTourTypeDialog";
-import CreateTourTypeDialogContainer from "../createTourTypeDialog/CreateTourTypeDialogContainer";
+import CreateTourTypeDialog from "../tourTypeForm/CreateTourTypeDialog";
+import CreateTourTypeDialogContainer from "../tourTypeForm/CreateTourTypeDialogContainer";
 import TourTypeCard from "./tourTypeCard/card/TourTypeCard";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
@@ -14,7 +14,10 @@ interface TourTypeShowcaseProps {
   // open:boolean;
 }
 
-const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick, role }) => {
+const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({
+  handleClick,
+  role,
+}) => {
   // const { openDialog, handleClick, tourTypes } = useTourTypeContext();
   const { openDialog, tourTypes } = useTourTypeContext();
 
@@ -57,13 +60,13 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick, role }
               deletingSpeed={50}
             />
             {role === "690cbf7c64756dcc541d8a19" && (
-            <Button
-              variant="contained"
-              sx={{ height: "2rem", width: "12rem" }}
-              onClick={handleClick}
-            >
-              Nuevo
-            </Button>
+              <Button
+                variant="contained"
+                sx={{ height: "2rem", width: "12rem" }}
+                onClick={handleClick}
+              >
+                Nuevo
+              </Button>
             )}
             {/* {openDialog && <CreateTourTypeDialogContainer/>} */}
           </Box>
@@ -98,7 +101,11 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({ handleClick, role }
           >
             {tourTypes && tourTypes.length > 0 ? (
               tourTypes.map((tourType) => (
-                <TourTypeCard key={tourType.id} tourType={tourType} role={role}/>
+                <TourTypeCard
+                  key={tourType.id}
+                  tourType={tourType}
+                  role={role}
+                />
               ))
             ) : (
               <p>No hay tipos de tour registrados</p>

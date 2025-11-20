@@ -63,12 +63,12 @@ const TouristDestinationCardMenu: React.FC<TouristDestinationCardMenuProps> = ({
             {option}
           </MenuItem>
         ))}
+        {role === "690cbf7c64756dcc541d8a19" && (
+          <MenuItem key="Editar" onClick={() => handleOptionClick("Editar")}>
+            Editar
+          </MenuItem>
+        )}
       </Menu>
-      {role === "690cbf7c64756dcc541d8a19" && (
-        <MenuItem key="Editar" onClick={() => handleOptionClick("Editar")}>
-          Editar
-        </MenuItem>
-      )}
     </>
   );
 };
