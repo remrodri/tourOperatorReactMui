@@ -37,7 +37,7 @@ const BookingSearchByCode: React.FC<BookingSearchByCodeProps> = ({
               // border: "1px solid rgba(10,10,10,0.6)",
               // background: "rgba(8, 13, 10, 0.4)",
               background: "rgba(8, 13, 10, 0.4)",
-              // color: "white",
+              color: "white",
               p: 0,
             },
             endAdornment: (
@@ -62,22 +62,29 @@ const BookingSearchByCode: React.FC<BookingSearchByCodeProps> = ({
           },
         }}
         sx={{
-          "& .MuiInputBase-input": { color: "white" }, // texto
-          "& .MuiInputLabel-root": { color: "white", p: 0 }, // label
-          "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            // borderColor: "rgba(10,10,10,0.6)",
-            // background:"rgba(10,10,10,0.52)"
-            // borderColor: "1px solid white",
-            // borderColor: "rgba(236, 236, 236, 0.93)",
-            borderColor: "rgba(8, 13, 10, 0.4)",
+          // Texto dentro del input
+          "& .MuiInputBase-input": {
+            color: "white",
           },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            // borderColor: "rgba(236, 236, 236, 0.93)",
-            borderColor: "rgba(8, 13, 10, 0.4)",
+          // Label normal y enfocado
+          "& .MuiInputLabel-root": {
+            color: "white",
           },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            // borderColor: "rgba(236, 236, 236, 0.93)",
-            borderColor: "rgba(8, 13, 10, 0.4)",
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "white",
+          },
+          // Estilos del contenedor del input
+          "& .MuiOutlinedInput-root": {
+            backgroundColor: "rgba(10,10,10,0.52)", // fondo oscuro
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(8, 13, 10, 0.4)", // borde normal
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(8, 13, 10, 0.4)", // borde hover
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(8, 13, 10, 0.4)", // borde enfocado
+            },
           },
         }}
       />

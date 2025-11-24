@@ -4,6 +4,7 @@ import BookingCardContainer from "./card/BookingCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import BookingSearchByCodeContainer from "./searchByCode/BookingSearchByCodeContainer";
 import BookingFilterContainer from "./filter/BookingFilterContainer";
+import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 
 interface BookingShowcaseProps {
   handleClick: () => void;
@@ -12,6 +13,9 @@ interface BookingShowcaseProps {
   role: string;
   setBookingFound: (booking: BookingType | null) => void;
   bookingFound: BookingType | null;
+  // tourPackages: TourPackageType[] | null;
+  filteredBookings: BookingType[];
+  setFilteredBookings: (bookings: BookingType[]) => void;
 }
 
 const BookingShowcase: React.FC<BookingShowcaseProps> = ({
@@ -21,6 +25,9 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   role,
   setBookingFound,
   bookingFound,
+  // tourPackages,
+  filteredBookings,
+  setFilteredBookings,
 }) => {
   // console.log('bookings::: ', bookings);
   // console.log('bookingFound::: ', bookingFound);
@@ -73,7 +80,11 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                 setBookingFound={setBookingFound}
               />
             </Box>
-            <BookingFilterContainer />
+            <BookingFilterContainer
+              bookings={bookings}
+              // tourPackages={tourPackages}
+              setFilteredBookings={setFilteredBookings}
+            />
             <Button
               variant="contained"
               sx={{ height: "2rem", width: "12rem" }}
@@ -146,10 +157,10 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
               />
             ) : (
               <>
-                {!bookings || bookings.length === 0 ? (
+                {!filteredBookings || filteredBookings.length === 0 ? (
                   <p>No hay reservas</p>
                 ) : (
-                  bookings.map((booking, index) => (
+                  filteredBookings.map((booking, index) => (
                     <BookingCardContainer
                       key={booking.id}
                       booking={booking}
