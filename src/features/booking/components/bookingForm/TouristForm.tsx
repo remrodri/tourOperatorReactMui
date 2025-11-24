@@ -74,9 +74,15 @@ const TouristForm: React.FC<TouristFormProps> = ({
     }
     if (!tourist.documentType) {
       onChange("documentType", "ci");
-    } else if (tourist.documentType === "CI") {
+    }
+    if (tourist.documentType === "CI") {
       // Corregir el valor "CI" a "ci" para asegurar la coincidencia con las opciones
       onChange("documentType", "ci");
+
+    }
+    if (tourist.documentType === "passportNumber") {
+      // Corregir el valor "passport" a "pasaporte" para asegurar la coincidencia con las opciones
+      onChange("documentType", "passportNumber");
     }
   }, [tourist?.dateOfBirth]);
 
