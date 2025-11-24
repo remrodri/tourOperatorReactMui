@@ -131,7 +131,8 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
               width: "30%",
             }}
           >
-            {`${index + 1}. Paquete: ${tpInfo?.name}`}
+            {/* {`${index + 1}. Paquete: ${tpInfo?.name}`} */}
+            {`${index +1}. ${booking.bookingCode}`}
           </Box>
           <Box
             sx={{
@@ -148,7 +149,8 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
               }}
             >
               {mainTouristInfo
-                ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
+              // ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
+              ? `${tpInfo?.name}`
                 : ""}
             </Typography>
           </Box>
@@ -169,11 +171,12 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
                 gap: "0.5rem",
               }}
             >
-              {booking.status === "pending"
-                ? `Estado: Pendiente`
+              {/* {booking.status === "pending"
+                ? `Pendiente`
                 : booking.status === "cancelled"
-                ? `Estado: Cancelado`
-                : `Estado: Pagado`}
+                ? `Cancelado`
+                : `Pagado`} */}
+              { `${booking.totalPrice.toFixed(2)} Bs.`}
             </Typography>
           </Box>
           <Box
@@ -201,8 +204,8 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
               ) : (
                 <Typography variant="body2" component="div">
                   {balance === 0
-                    ? "Saldo: No tiene"
-                    : `Saldo: ${balance.toFixed(2)} Bs.`}
+                    ? "No tiene"
+                    : `${balance.toFixed(2)} Bs.`}
                 </Typography>
                 // <Typography variant="body1" component="div">
                 //   {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}

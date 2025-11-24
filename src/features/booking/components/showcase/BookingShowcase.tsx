@@ -76,7 +76,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
           <Box
             sx={{
               // pt: "30px",
-              p:"20px",
+              p: "20px",
               // flexGrow: 1,
               display: "flex",
               justifyContent: "center",
@@ -90,9 +90,30 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
               // backdropFilter: "blur(10px)",
               border: "1px solid rgba(8, 13, 10, 0.5)",
               height: "calc(100dvh - 12.8rem)",
-              width:"100%",
+              width: "100%",
             }}
           >
+            <Box
+              sx={{
+                // display: "flex",
+                // justifyContent: "space-around",
+                width: "100%",
+                pr:"3.5rem"
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  width: "100%",
+                }}
+              >
+                <Typography sx={{ width: "30%",pl:"3.5rem" }}>Codigo de reserva</Typography>
+                <Typography sx={{ width: "30%",pl:"3.5rem" }}>Nombre del paquete</Typography>
+                <Typography sx={{ width: "25%",pl:"1rem" }}>Costo total</Typography>
+                <Typography sx={{ width: "15%",pl:"1rem" }}>Saldo</Typography>
+              </Box>
+            </Box>
             {!bookings || bookings.length === 0 ? (
               <p>No hay reservas</p>
             ) : (

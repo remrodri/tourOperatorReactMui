@@ -20,5 +20,6 @@ export interface BookingType {
   }[],
   cancellationFee?:number,
   refundAmount?:number,
-  refundedAt?:Date
+  refundedAt?: Date
+  bookingCode:string
 }
