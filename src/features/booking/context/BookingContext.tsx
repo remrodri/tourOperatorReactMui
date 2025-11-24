@@ -337,6 +337,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     cancellationFee: apiBooking.cancellationFee,
     refundAmount: apiBooking.refundAmount,
     refundedAt: apiBooking.refundedAt,
+    bookingCode: apiBooking.bookingCode,
   });
 
   useEffect(() => {

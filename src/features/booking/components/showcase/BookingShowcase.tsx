@@ -1,14 +1,21 @@
 import { Box, Button, Fade, Typography } from "@mui/material";
-import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import { BookingType } from "../../types/BookingType";
 import BookingCardContainer from "./card/BookingCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
+import BookingSearchByCodeContainer from "./searchByCode/BookingSearchByCodeContainer";
+import BookingFilterContainer from "./filter/BookingFilterContainer";
+import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 
 interface BookingShowcaseProps {
   handleClick: () => void;
   bookings: BookingType[] | null;
   open: boolean;
   role: string;
+  setBookingFound: (booking: BookingType | null) => void;
+  bookingFound: BookingType | null;
+  // tourPackages: TourPackageType[] | null;
+  filteredBookings: BookingType[];
+  setFilteredBookings: (bookings: BookingType[]) => void;
 }
 
 const BookingShowcase: React.FC<BookingShowcaseProps> = ({
@@ -16,11 +23,18 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   bookings,
   open,
   role,
+  setBookingFound,
+  bookingFound,
+  // tourPackages,
+  filteredBookings,
+  setFilteredBookings,
 }) => {
   // console.log('bookings::: ', bookings);
-  // if (!bookings || bookings.length === 0) {
-  //   return <Box>No hay reservas disponibles</Box>;
-  // }
+  // console.log('bookingFound::: ', bookingFound);
+  if (!bookings || bookings.length === 0) {
+    return <Box>No hay reservas disponibles</Box>;
+  }
+
   return (
     <Fade in={true} timeout={1000}>
       <Box
@@ -30,8 +44,8 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
           // flexDirection: "column",
         }}
       >
-        <Typography
-          variant="h4"
+        <Box
+          // variant="h4"
           sx={{
             // height: "5rem",
             display: "flex",
@@ -49,13 +63,27 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
               justifyContent: "space-between",
             }}
           >
-            <TextType
-              text={"Reservas"}
-              typingSpeed={50}
-              pauseDuration={1000}
-              showCursor={true}
-              cursorCharacter="_"
-              deletingSpeed={50}
+            <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <Typography variant="h4">
+                <TextType
+                  text={"Reservas"}
+                  typingSpeed={50}
+                  pauseDuration={1000}
+                  showCursor={true}
+                  cursorCharacter="_"
+                  deletingSpeed={50}
+                />
+              </Typography>
+              {/* <Button variant="contained" sx={{ height: "2rem" }}>buscar por codigo</Button> */}
+              <BookingSearchByCodeContainer
+                bookings={bookings}
+                setBookingFound={setBookingFound}
+              />
+            </Box>
+            <BookingFilterContainer
+              bookings={bookings}
+              // tourPackages={tourPackages}
+              setFilteredBookings={setFilteredBookings}
             />
             <Button
               variant="contained"
@@ -65,7 +93,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
               nuevo
             </Button>
           </Box>
-        </Typography>
+        </Box>
         <Box
           sx={{
             // height: "calc(100% - 5rem)",
@@ -76,7 +104,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
           <Box
             sx={{
               // pt: "30px",
-              p:"20px",
+              p: "20px",
               // flexGrow: 1,
               display: "flex",
               justifyContent: "center",
@@ -90,20 +118,58 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
               // backdropFilter: "blur(10px)",
               border: "1px solid rgba(8, 13, 10, 0.5)",
               height: "calc(100dvh - 12.8rem)",
-              width:"100%",
+              width: "100%",
             }}
           >
-            {!bookings || bookings.length === 0 ? (
-              <p>No hay reservas</p>
+            <Box
+              sx={{
+                // display: "flex",
+                // justifyContent: "space-around",
+                width: "100%",
+                pr: "3.5rem",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  width: "100%",
+                }}
+              >
+                <Typography sx={{ width: "30%", pl: "3.5rem" }}>
+                  Codigo de reserva
+                </Typography>
+                <Typography sx={{ width: "30%", pl: "3.5rem" }}>
+                  Nombre del paquete
+                </Typography>
+                <Typography sx={{ width: "25%", pl: "1rem" }}>
+                  Costo total
+                </Typography>
+                <Typography sx={{ width: "15%", pl: "1rem" }}>Saldo</Typography>
+              </Box>
+            </Box>
+            {bookingFound ? (
+              <BookingCardContainer
+                key={bookingFound.id}
+                booking={bookingFound}
+                index={0}
+                role={role}
+              />
             ) : (
-              bookings.map((booking, index) => (
-                <BookingCardContainer
-                  key={booking.id}
-                  booking={booking}
-                  index={index}
-                  role={role}
-                />
-              ))
+              <>
+                {!filteredBookings || filteredBookings.length === 0 ? (
+                  <p>No hay reservas</p>
+                ) : (
+                  filteredBookings.map((booking, index) => (
+                    <BookingCardContainer
+                      key={booking.id}
+                      booking={booking}
+                      index={index}
+                      role={role}
+                    />
+                  ))
+                )}
+              </>
             )}
           </Box>
         </Box>
