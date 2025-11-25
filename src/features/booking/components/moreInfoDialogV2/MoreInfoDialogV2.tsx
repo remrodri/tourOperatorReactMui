@@ -1,11 +1,13 @@
 import { Close } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
   Slide,
+  Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { forwardRef, ReactElement, Ref, useEffect, useState } from "react";
@@ -30,6 +32,9 @@ import GuidesInfo from "./GuidesInfo";
 import BookingDialogStyledBox from "./template/BookingDialogStyledBox";
 import background from "../../../../assets/images/home.webp";
 import StatusInfo from "./StatusInfo";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import BookingProofPDF from "../pdf/BookingProofPDF";
+
 
 interface MoreInfoDialogProps {
   open: boolean;
@@ -37,7 +42,7 @@ interface MoreInfoDialogProps {
   booking: BookingType;
   dateRangeInfo: DateRangeType | null;
   tourPackageInfo: TourPackageType | null;
-  cancellationPolicy: CancellationPolicy | null;
+  // cancellationPolicy: CancellationPolicy | null;
   tourType: TourType | null;
   touristDestination: TouristDestinationType | null;
   payments: PaymentType[] | null;
@@ -62,7 +67,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   booking,
   dateRangeInfo,
   tourPackageInfo,
-  cancellationPolicy,
+  // cancellationPolicy,
   tourType,
   touristDestination,
   payments,
@@ -125,9 +130,41 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
           border: "1px solid rgba(0, 0, 0, 0.45)",
+          display: "flex",
+          gap: "1rem",
         }}
       >
-        Detalle de la reserva
+        <Typography sx={{ alignContent: "center" }} variant="h6">
+          Detalle de la reserva
+        </Typography>
+        {/* <Button
+          variant="contained"
+        >Imprimir</Button> */}
+        <PDFDownloadLink
+          document={
+            <BookingProofPDF
+              booking={booking}
+              dateRangeInfo={dateRangeInfo}
+              tourPackageInfo={tourPackageInfo}
+              // cancellationPolicy={cancellationPolicy}
+              tourType={tourType}
+              touristDestination={touristDestination}
+              payments={payments}
+              tourists={tourists}
+              dateRange={dateRange}
+              guides={guides}
+              sellerInfo={sellerInfo}
+            />
+          }
+          fileName={`RESERVA-${booking.bookingCode}.pdf`}
+        >
+          {({ blob, loading, error }) => (
+            <Button variant="contained">
+              {loading ? "Generando PDF..." : "Generar PDF"}
+            </Button>
+          )}
+          {/* {({ loading }) => (loading ? "Generando PDF..." : "Generar PDF")} */}
+        </PDFDownloadLink>
       </DialogTitle>
       <IconButton
         autoFocus
