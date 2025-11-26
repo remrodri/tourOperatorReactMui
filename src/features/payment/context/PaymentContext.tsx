@@ -53,6 +53,7 @@ PaymentProviderProps) => {
   const [error, setError] = useState<string | null>(null);
   const { showSnackbar } = useNewSnackbar();
   const { bookings, setBookings, addPaymentToBooking } = useBookingContext();
+  // const [payments,setPayments]=useState<PaymentType[]>([]);
 
   // const addPaymentToBooking=(payment:PaymentType)=>{
   //   const bookingFound=bookings.find((booking)=>booking.id===payment.bookingId);
@@ -179,10 +180,14 @@ PaymentProviderProps) => {
       paymentProofImageURL: paymentData.paymentProofImageURL,
     };
   };
-  useEffect(() => {
+  // useEffect(() => {
     // fetchPayments();
     // console.log('::: ', );
-  }, []);
+  // }, []);
+
+  // const getPaymentInfoById = (id: string): PaymentType => {
+  //   return payments.find((payment) => payment.id === id) as PaymentType;
+  // };
 
   return (
     <PaymentContext.Provider
