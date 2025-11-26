@@ -105,12 +105,12 @@ interface BookingProofPDFProps {
   booking: BookingType;
   dateRangeInfo: DateRangeType | null;
   tourPackageInfo: TourPackageType | null;
-  tourType: TourType | null;
-  touristDestination: TouristDestinationType | null;
+  // tourType: TourType | null;
+  // touristDestination: TouristDestinationType | null;
   payments: PaymentType[] | null;
   tourists: TouristType[] | null;
   dateRange: DateRangeType | null;
-  guides: User[] | null;
+  // guides: User[] | null;
   sellerInfo: User | null;
 }
 // dayjs.extend(utc);
@@ -120,12 +120,12 @@ export const ComprobanteReservaPDF: React.FC<BookingProofPDFProps> = ({
   booking,
   dateRangeInfo,
   tourPackageInfo,
-  tourType,
-  touristDestination,
+  // tourType,
+  // touristDestination,
   payments,
   tourists,
   dateRange,
-  guides,
+  // guides,
   sellerInfo,
 }) => {
   // const { code, createdAt, packageInfo, tourists, payments } = booking;

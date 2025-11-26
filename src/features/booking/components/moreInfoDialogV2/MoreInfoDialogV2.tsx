@@ -147,12 +147,12 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
               dateRangeInfo={dateRangeInfo}
               tourPackageInfo={tourPackageInfo}
               // cancellationPolicy={cancellationPolicy}
-              tourType={tourType}
-              touristDestination={touristDestination}
+              // tourType={tourType}
+              // touristDestination={touristDestination}
               payments={payments}
               tourists={tourists}
               dateRange={dateRange}
-              guides={guides}
+              // guides={guides}
               sellerInfo={sellerInfo}
             />
           }

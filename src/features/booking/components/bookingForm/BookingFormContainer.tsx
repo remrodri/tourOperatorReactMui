@@ -15,6 +15,7 @@ import { useBookingContext } from "../../context/BookingContext";
 import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext";
 import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
+import BookingProofDialogContainer from "./bookingProofDialog/BookingProofDialogContainer";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("es");
@@ -23,6 +24,7 @@ interface BookingFormProps {
   open: boolean;
   handleClose: () => void;
   booking?: BookingType | null;
+  setBookingProof: (booking: BookingType | null) => void;
 }
 
 const DEFAULT_PAYMENT: any = {
@@ -62,6 +64,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   open,
   handleClose,
   booking,
+  setBookingProof,
 }) => {
   const { getTouristInfoById, getTouristInfoByIds } = useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
@@ -78,6 +81,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   const [destinationImages, setDestinationImages] = useState<(string | File)[]>(
     []
   );
+  const [bookingCreated, setBookingCreated] = useState<boolean>(false);
   const { createBooking, updateBooking } = useBookingContext();
   // const {getTotalPaid}=usePaymentContext()
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -85,6 +89,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   const [filteredDateRanges, setFilteredDateRanges] = useState<DateRangeType[]>(
     []
   );
+  
 
   const filteredTourPackages = () => {
     const filteredTourPackages = tourPackages.filter(
@@ -268,16 +273,27 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
 
   const onSubmit = async (values: BookingFormValues) => {
     console.log("formik.errors::: ", formik.errors);
-    console.log("values::: ", values);
+    // console.log("values::: ", values);
     if (isEditing) {
       // console.log('actualizar values::: ', values);
       await updateBooking(values);
-    } else {
-      // console.log('crear values::: ', values);
-      await createBooking(values);
     }
+    // console.log('crear values::: ', values);
+    const res = await createBooking(values);
+    console.log("res::: ", res);
+    setBookingProof(res);
+    // console.log("::: ", res);
     handleClose();
+    // handleOpenBookingProof();
   };
+  
+// useEffect(() => {
+//   if (bookingProof) {
+//     setOpenBookingProof(true);
+//   }
+// }, [bookingProof]);
+
+
 
   const formik = useFormik<BookingFormValues>({
     initialValues: {
@@ -366,6 +382,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
           severity="error"
         />
       )}
+      
     </>
   );
 };

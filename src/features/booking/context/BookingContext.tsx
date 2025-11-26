@@ -31,7 +31,7 @@ interface BookingContextType {
   loading: boolean;
   error: string | null;
   getBookingById: (id: string) => BookingType | null;
-  createBooking: (booking: BookingFormValues) => Promise<void>;
+  createBooking: (booking: BookingFormValues) => Promise<BookingType | null>;
   updateBooking: (booking: any) => Promise<void>;
   setBookings: (bookings: BookingType[]) => void;
   addPaymentToBooking: (payment: PaymentType) => void;
@@ -187,11 +187,17 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     );
   };
 
-  const createBooking = async (booking: BookingFormValues): Promise<void> => {
+  const createBooking = async (
+    booking: BookingFormValues
+  ): Promise<BookingType | null> => {
+    let res = null
+    setError("");
+    setLoading(true);
     const token = TokenService.getToken();
     if (!token) {
       showSnackbar("Error al crear la reserva", "error");
-      return;
+      setError("Error al crear la reserva");
+      return res;
     }
 
     const seller: User = jwtDecode(token);
@@ -226,7 +232,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       const response = await createBookingRequest(formData);
       if (!response || response.error) {
         setError(response?.error || "Error creating booking");
-        return;
+        setLoading(false);
+        showSnackbar("Error al crear la reserva", "error");
+        return res;
       }
 
       const newTourists = response.tourists.map((t: any) =>
@@ -241,12 +249,17 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
       setBookings((prev) => [...prev, newBooking]);
       showSnackbar("Reserva creada exitosamente", "success");
+      setLoading(false);
+      // return newBooking;
+      res = newBooking
     } catch (error) {
       console.error("Error creating booking", error);
       setError("Failed to create booking");
       showSnackbar("Error al crear la reserva", "error");
-    } finally {
+    }
+    finally {
       setLoading(false);
+      return res
     }
   };
 
