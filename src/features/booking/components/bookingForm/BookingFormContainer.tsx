@@ -16,6 +16,11 @@ import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext"
 import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
 import BookingProofDialogContainer from "./bookingProofDialog/BookingProofDialogContainer";
+import SearchTouristByDocument from "./SearchTouristByDocument";
+import {
+  SnackbarProvider,
+  useNewSnackbar,
+} from "../../../../context/SnackbarContext";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("es");
@@ -46,6 +51,7 @@ const DEFAULT_TOURIST: TouristType = {
   dateOfBirth: "",
   passportNumber: "",
   documentType: "CI",
+  tempId: "",
 };
 
 export interface BookingFormValues {
@@ -66,7 +72,8 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   booking,
   setBookingProof,
 }) => {
-  const { getTouristInfoById, getTouristInfoByIds } = useTouristContext();
+  const { getTouristInfoById, getTouristInfoByIds, tourists } =
+    useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
   const { dateRanges } = useDateRangeContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
@@ -89,7 +96,96 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   const [filteredDateRanges, setFilteredDateRanges] = useState<DateRangeType[]>(
     []
   );
-  
+  const [openSearchTourist, setOpenSearchTourist] = useState<boolean>(false);
+  const [documentNumber, setDocumentNumber] = useState<string>("");
+  const [touristsBySearch, setTouristsBySearch] = useState<TouristType[]>([]);
+  const { showSnackbar } = useNewSnackbar();
+
+  const handleOpenSearchTourist = () => {
+    setOpenSearchTourist(true);
+  };
+
+  const handleCloseSearchTourist = () => {
+    setOpenSearchTourist(false);
+  };
+
+  const searchTourist = () => {
+    if (!tourists) return;
+    if (!documentNumber) {
+      showSnackbar("Debe ingresar un número de documento", "error");
+      return;
+    }
+    if (
+      touristsBySearch.some(
+        (tourist) =>
+          tourist.ci === documentNumber ||
+          tourist.passportNumber === documentNumber
+      )
+    ) {
+      showSnackbar("Turista ya agregado", "error");
+      return;
+    }
+    const touristFound = tourists.find(
+      (tourist) =>
+        tourist.ci === documentNumber ||
+        tourist.passportNumber === documentNumber
+    );
+    console.log("touristFound::: ", touristFound);
+    if (!touristFound) {
+      showSnackbar("Turista no encontrado", "error");
+      return null;
+    }
+    setTouristsBySearch((prev) => [...prev, touristFound]);
+    showSnackbar("Se agregaron los datos del turista", "success");
+    setDocumentNumber("");
+    handleCloseSearchTourist();
+    return touristFound;
+  };
+
+  const getTouristInfoByIdOrPassport = (value: string) => {
+    const touristFound = tourists.find(
+      (tourist) => tourist.ci === value || tourist.passportNumber === value
+    );
+    if (!touristFound) {
+      return null;
+    }
+    return touristFound;
+  };
+
+  const searchAndFillTourist = (
+    type: "main" | "additional",
+    value: string, // puede ser CI o Passport
+    index?: number // solo necesario si es additional
+  ) => {
+    try {
+      // Llamada a tu contexto que busca el turista
+      const touristFound = getTouristInfoByIdOrPassport(value); // <- implementar según tu contexto
+      console.log("touristFound::: ", touristFound);
+
+      if (!touristFound) {
+        setAlertMessage("Turista no encontrado");
+        setOpenAlert(true);
+        setTimeout(() => setOpenAlert(false), 3000);
+        return;
+      }
+
+      if (type === "main") {
+        // Rellenar el mainTourist completo
+        formik.setFieldValue("mainTourist", touristFound);
+      } else if (type === "additional" && index !== undefined) {
+        // Rellenar un turista adicional específico
+        const currentTourists = [...formik.values.additionalTourists];
+        currentTourists[index] = touristFound;
+        formik.setFieldValue("additionalTourists", currentTourists);
+      }
+      console.log("formik.values::: ", formik.values);
+    } catch (error) {
+      console.error("Error buscando turista:", error);
+      setAlertMessage("Error buscando turista");
+      setOpenAlert(true);
+      setTimeout(() => setOpenAlert(false), 3000);
+    }
+  };
 
   const filteredTourPackages = () => {
     const filteredTourPackages = tourPackages.filter(
@@ -205,9 +301,24 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     loadGallery(tourPackage);
   };
 
+  // const handleAddAdditionalTourist = () => {
+  //   const currentTourists = [...(formik.values.additionalTourists || [])];
+  //   currentTourists.push(DEFAULT_TOURIST);
+  //   formik.setFieldValue("additionalTourists", currentTourists);
+
+  //   const newTotalPrice = calculateTotalPrice(currentTourists.length);
+  //   formik.setFieldValue("totalPrice", newTotalPrice);
+  // };
   const handleAddAdditionalTourist = () => {
     const currentTourists = [...(formik.values.additionalTourists || [])];
-    currentTourists.push(DEFAULT_TOURIST);
+
+    const newTourist = {
+      ...DEFAULT_TOURIST,
+      tempId: crypto.randomUUID(), // ← ID único
+    };
+
+    currentTourists.push(newTourist);
+
     formik.setFieldValue("additionalTourists", currentTourists);
 
     const newTotalPrice = calculateTotalPrice(currentTourists.length);
@@ -278,22 +389,20 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
       // console.log('actualizar values::: ', values);
       await updateBooking(values);
     }
-    // console.log('crear values::: ', values);
-    const res = await createBooking(values);
-    console.log("res::: ", res);
+    console.log("crear values::: ", values);
+    const res = await createBooking(values,touristsBySearch);
+    // console.log("res::: ", res);
     setBookingProof(res);
     // console.log("::: ", res);
     handleClose();
     // handleOpenBookingProof();
   };
-  
-// useEffect(() => {
-//   if (bookingProof) {
-//     setOpenBookingProof(true);
-//   }
-// }, [bookingProof]);
 
-
+  // useEffect(() => {
+  //   if (bookingProof) {
+  //     setOpenBookingProof(true);
+  //   }
+  // }, [bookingProof]);
 
   const formik = useFormik<BookingFormValues>({
     initialValues: {
@@ -308,7 +417,10 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
       notes: booking?.notes || "",
     },
     // validationSchema:bookingSchema,
-    validationSchema: bookingSchemaWithContext({ isEditing }),
+    validationSchema: bookingSchemaWithContext({
+      isEditing,
+      hasTouristsBySearch: touristsBySearch.length > 0,
+    }),
     onSubmit,
     enableReinitialize: true,
     validateOnChange: false,
@@ -372,6 +484,9 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
         fileSelected={fileSelected}
         handleAmountChange={handleAmountChange}
         destinationImages={destinationImages}
+        handleOpenSearchTourist={handleOpenSearchTourist}
+        // searchAndFillTourist={searchAndFillTourist}
+        touristsBySearch={touristsBySearch}
       />
       {openAlert && (
         <AlertDialog
@@ -382,7 +497,15 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
           severity="error"
         />
       )}
-      
+      {openSearchTourist && (
+        <SearchTouristByDocument
+          open={openSearchTourist}
+          onClose={handleCloseSearchTourist}
+          documentNumber={documentNumber}
+          setDocumentNumber={setDocumentNumber}
+          searchTourist={searchTourist}
+        />
+      )}
     </>
   );
 };
