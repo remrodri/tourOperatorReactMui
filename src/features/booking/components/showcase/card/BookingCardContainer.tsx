@@ -13,17 +13,21 @@ import { useCancellationConditionContext } from "../../../../cancellationPolicy/
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import BookingCardV2 from "./BookingCardV2";
 import { CancellationPolicy } from "../../../../cancellationPolicy/types/CancellationPolicy";
+import PaymentProofDialogContainer from "../../../../payment/components/paymentProofDialog/PaymentProofDialogContainer";
+import { PaymentType } from "../../../types/PaymentType";
 
 interface BookingCardContainerProps {
   booking: BookingType;
   index: number;
   role: string;
+  setBookingProof: (booking: BookingType | null) => void;
 }
 
 const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   booking,
   index,
   role,
+  setBookingProof,
 }) => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getTouristInfoById } = useTouristContext();
@@ -51,7 +55,22 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   const { showSnackbar } = useNewSnackbar();
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+
   const openMenu = Boolean(anchor);
+
+  const [openPaymentProof, setOpenPaymentProof] = useState(false);
+  const [createdPayment, setCreatedPayment] = useState<PaymentType | null>(
+    null
+  );
+
+  const handleOpenPaymentProof = () => {
+    setOpenPaymentProof(true);
+  };
+
+  const handleClosePaymentProof = () => {
+    setOpenPaymentProof(false);
+  };
+
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchor(event.currentTarget);
   };
@@ -90,10 +109,10 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
       // console.log("cancellationFee::: ", cancellationFee);
       // const refoundAmount = totalPaid - cancellationFee;
       // if (refoundAmount < 0) {
-        // console.log("refoundAmount::: ", refoundAmount);
-        // cancelBooking(booking.id!, cancellationFee, 0, new Date());
+      // console.log("refoundAmount::: ", refoundAmount);
+      // cancelBooking(booking.id!, cancellationFee, 0, new Date());
       // } else {
-        // cancelBooking(booking.id!, cancellationFee, refoundAmount, new Date());
+      // cancelBooking(booking.id!, cancellationFee, refoundAmount, new Date());
       // }
       showSnackbar("Reserva cancelada exitosamente", "success");
       setOpenConfirmation(false);
@@ -182,6 +201,7 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
           open={openEditForm}
           handleClose={() => setOpenEditForm(false)}
           booking={localBooking}
+          setBookingProof={setBookingProof}
         />
       )}
       {openPaymentForm && localBooking && (
@@ -190,6 +210,8 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
           onClose={() => setOpenPaymentForm(false)}
           booking={localBooking}
           balance={balance}
+          handleOpenPaymentProof={handleOpenPaymentProof}
+          setCreatedPayment={setCreatedPayment}
         />
       )}
       {openConfirmation && (
@@ -197,6 +219,14 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
           open={openConfirmation}
           handleClick={handleClickClose}
           handleClickCancel={handleClickConfirmation}
+        />
+      )}
+      {openPaymentProof && localBooking && (
+        <PaymentProofDialogContainer
+          open={openPaymentProof}
+          onClose={handleClosePaymentProof}
+          // payment={localBooking.payments.at(-1)!}
+          payment={createdPayment}
         />
       )}
     </>

@@ -22,7 +22,7 @@ interface PaymentContextType {
   // paymentsFound: PaymentType[];
   // getPaymentInfoByIds: (ids: string[]) => PaymentType[];
   // getTotalPaid: (PaymentsId: string[]) => number;
-  createPayment: (payment: any) => Promise<void>;
+  createPayment: (payment: any) => Promise<PaymentType | null>;
   // getBalance: (paymentIds: string[],totalPrice:number) => number;
   // addPaymentFromBooking: (payment: any) => PaymentType;
   addPaymentToBooking: (payment: PaymentType) => void;
@@ -75,12 +75,14 @@ PaymentProviderProps) => {
   //   return totalPrice-totalPaid;
   // };
 
-  const createPayment = async (payment: any): Promise<void> => {
+  const createPayment = async (payment: any): Promise<PaymentType | null> => {
+    let res = null;
     setLoading(true);
     const token = TokenService.getToken();
     if (!token) {
       console.error("No token found");
-      return;
+      // return null;
+      return res;
     }
     const seller: User = jwtDecode(token);
     const formData = new FormData();
@@ -100,14 +102,17 @@ PaymentProviderProps) => {
       const transformedPayment = transformApiPayment(paymentData);
       // setPayments((prevPayments) => [...prevPayments, transformedPayment]);
       addPaymentToBooking(transformedPayment);
+      res = transformedPayment;
       setError(null);
       showSnackbar("Pago registrado exitosamente", "success");
+      // return res;
     } catch (error) {
       console.error("Error creating payment", error);
       setError("Failed to create payment");
       showSnackbar("Error al registrar pago", "error");
     } finally {
       setLoading(false);
+      return res;
     }
   };
 
@@ -181,8 +186,8 @@ PaymentProviderProps) => {
     };
   };
   // useEffect(() => {
-    // fetchPayments();
-    // console.log('::: ', );
+  // fetchPayments();
+  // console.log('::: ', );
   // }, []);
 
   // const getPaymentInfoById = (id: string): PaymentType => {
