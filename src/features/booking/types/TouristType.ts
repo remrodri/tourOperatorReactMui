@@ -9,5 +9,6 @@ export interface TouristType {
   dateOfBirth: string;
   passportNumber?: string;
   documentType: string;
-  bookingIds?:string[]
+  bookingIds?: string[]
+  tempId?: string
 }

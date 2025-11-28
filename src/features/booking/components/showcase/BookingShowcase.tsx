@@ -16,6 +16,7 @@ interface BookingShowcaseProps {
   // tourPackages: TourPackageType[] | null;
   filteredBookings: BookingType[];
   setFilteredBookings: (bookings: BookingType[]) => void;
+  setBookingProof: (booking: BookingType | null) => void;
 }
 
 const BookingShowcase: React.FC<BookingShowcaseProps> = ({
@@ -28,6 +29,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   // tourPackages,
   filteredBookings,
   setFilteredBookings,
+  setBookingProof,
 }) => {
   // console.log('bookings::: ', bookings);
   // console.log('bookingFound::: ', bookingFound);
@@ -154,6 +156,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                 booking={bookingFound}
                 index={0}
                 role={role}
+                setBookingProof={setBookingProof}
               />
             ) : (
               <>
@@ -166,6 +169,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                       booking={booking}
                       index={index}
                       role={role}
+                      setBookingProof={setBookingProof}
                     />
                   ))
                 )}

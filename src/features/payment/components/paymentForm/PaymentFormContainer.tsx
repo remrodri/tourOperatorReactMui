@@ -8,12 +8,16 @@ import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { TouristType } from "../../../booking/types/TouristType";
 import dayjs from "dayjs";
 import { usePaymentContext } from "../../context/PaymentContext";
+import { useNewSnackbar } from "../../../../context/SnackbarContext";
+import { PaymentType } from "../../../booking/types/PaymentType";
 
 interface PaymentFormContainerProps {
   open: boolean;
   onClose: () => void;
   booking: BookingType;
   balance: number;
+  handleOpenPaymentProof: () => void;
+  setCreatedPayment: (payment: PaymentType | null) => void;
 }
 
 export interface PaymentFormContainerValues {
@@ -34,6 +38,8 @@ const PaymentFormContainer: React.FC<PaymentFormContainerProps> = ({
   onClose,
   booking,
   balance,
+  handleOpenPaymentProof,
+  setCreatedPayment,
 }: PaymentFormContainerProps) => {
   const [openDialogAlert, setOpenDialogAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
@@ -43,6 +49,7 @@ const PaymentFormContainer: React.FC<PaymentFormContainerProps> = ({
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [fileSelected, setFileSelected] = useState<File | null>(null);
   const { createPayment } = usePaymentContext();
+  const { showSnackbar } = useNewSnackbar();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -98,7 +105,12 @@ const PaymentFormContainer: React.FC<PaymentFormContainerProps> = ({
         bookingId: booking.id,
         paymentProofFolder: booking.paymentProofFolder,
       };
-      await createPayment(paymentTocreate);
+      const paymentCreated = await createPayment(paymentTocreate);
+      if (!paymentCreated) {
+        return;
+      }
+      setCreatedPayment(paymentCreated);
+      handleOpenPaymentProof();
     } catch (error) {
       console.error("Error al guardar el pago:", error);
     } finally {

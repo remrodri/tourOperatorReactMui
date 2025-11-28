@@ -53,6 +53,7 @@ const BookingShowcaseContainer: React.FC = () => {
         // tourPackages={tourPackages}
         filteredBookings={filteredBookings}
         setFilteredBookings={setFilteredBookings}
+        setBookingProof={setBookingProof}
       />
       {open && (
         <BookingFormContainer

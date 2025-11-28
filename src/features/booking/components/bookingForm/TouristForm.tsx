@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -13,6 +14,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+// import SearchTouristByDocument from "./SearchTouristByDocument";
+// import { useTouristContext } from "../../../tourist/context/TouristContext";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("es");
@@ -22,6 +25,8 @@ interface TouristFormProps {
   onChange: (field: string, value: any) => void;
   errors?: any;
   touched?: any;
+  // searchAndFillTourist: any;
+  // isMain?: boolean;
 }
 
 const documentTypes = [
@@ -34,7 +39,51 @@ const TouristForm: React.FC<TouristFormProps> = ({
   onChange,
   errors,
   touched,
+  // searchAndFillTourist,
+  // isMain,
 }) => {
+  // const [openSearchTourist, setOpenSearchTourist] = useState<boolean>(false);
+  // const [documentNumber, setDocumentNumber] = useState<string>("");
+  // const { tourists } = useTouristContext();
+  // const [isTouristFound, setIsTouristFound] = useState<boolean>(false);
+
+  // const handleSearchTourist = () => {
+  //   setOpenSearchTourist(true);
+  // };
+
+  // const handleCloseSearchNumber = () => {
+  //   setOpenSearchTourist(false);
+  // };
+
+  // const searchTourist = () => {
+  //   console.log("isMain::: ", isMain);
+  //   if (isMain) {
+  //     searchAndFillTourist("main", documentNumber);
+  //   } else {
+  //     searchAndFillTourist("secondary", documentNumber);
+  //   }
+  //   // // console.log("documentNumber::: ", documentNumber);
+  //   // const touristFound = tourists.find(
+  //   //   (tourist) =>
+  //   //     tourist.ci === documentNumber ||
+  //   //     tourist.passportNumber === documentNumber
+  //   // );
+  //   // console.log("touristFound::: ", touristFound);
+  //   // if (touristFound) {
+  //   //   // setIsTouristFound(true);
+  //   //   onChange("ci", touristFound.ci);
+  //   //   onChange("firstName", touristFound.firstName);
+  //   //   onChange("lastName", touristFound.lastName);
+  //   //   onChange("email", touristFound.email);
+  //   //   onChange("phone", touristFound.phone);
+  //   //   onChange("nationality", touristFound.nationality);
+  //   //   onChange("dateOfBirth", touristFound.dateOfBirth);
+  //   //   onChange("documentType", touristFound.documentType);
+  //   //   onChange("passportNumber", touristFound.passportNumber);
+  //   // }
+  //   // handleCloseSearchNumber();
+  //   // setDocumentNumber("");
+  // };
   // console.log('tourist::: ', tourist);
   const [birthDate, setBirthDate] = useState<Dayjs | null>(
     // tourist?.dateOfBirth ? dayjs(tourist.dateOfBirth) : null
@@ -78,7 +127,6 @@ const TouristForm: React.FC<TouristFormProps> = ({
     if (tourist.documentType === "CI") {
       // Corregir el valor "CI" a "ci" para asegurar la coincidencia con las opciones
       onChange("documentType", "ci");
-
     }
     if (tourist.documentType === "passportNumber") {
       // Corregir el valor "passport" a "pasaporte" para asegurar la coincidencia con las opciones
@@ -86,18 +134,36 @@ const TouristForm: React.FC<TouristFormProps> = ({
     }
   }, [tourist?.dateOfBirth]);
 
-  return (
-    <Box 
-      sx={{ 
+  useEffect(() => {
+    // resetear flag para permitir escribir en nuevos turistas
+    // setIsTouristFound(false);
 
-      display: "flex", 
-      flexDirection: "column", 
-      gap: 2,
-        
+    // resetear fecha cuando cambia el turista
+    if (tourist?.dateOfBirth) {
+      if (tourist.dateOfBirth.includes("-")) {
+        setBirthDate(dayjs(tourist.dateOfBirth, "DD-MM-YYYY"));
+      } else {
+        setBirthDate(dayjs(tourist.dateOfBirth));
+      }
+    } else {
+      setBirthDate(null);
+    }
+  }, [tourist]);
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
       }}
-      >
+    >
+      {/* <Button variant="contained" onClick={handleSearchTourist}>
+        Buscar por documento
+      </Button> */}
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
+          // disabled={isTouristFound}
           label="Nombre(s)"
           size="small"
           fullWidth
@@ -106,10 +172,10 @@ const TouristForm: React.FC<TouristFormProps> = ({
           error={touched?.firstName && Boolean(errors?.firstName)}
           helperText={touched?.firstName && errors?.firstName}
         />
-        
       </Box>
       <Box sx={{ display: "flex", gap: 2 }}>
-      <TextField
+        <TextField
+          // disabled={isTouristFound}
           label="Apellido(s)"
           size="small"
           fullWidth
@@ -121,6 +187,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
       </Box>
 
       <TextField
+        // disabled={isTouristFound}
         label="Email"
         type="email"
         size="small"
@@ -132,6 +199,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
       />
 
       <TextField
+        // disabled={isTouristFound}
         label="Telefono"
         size="small"
         fullWidth
@@ -149,6 +217,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
         >
           <InputLabel id="document-type-label">Documento</InputLabel>
           <Select
+            // disabled={isTouristFound}
             labelId="document-type-label"
             id="document-type"
             value={documentType.toLowerCase()} // Asegurarse de que siempre sea minúsculas
@@ -170,6 +239,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
 
         {documentType.toLowerCase() === "ci" ? (
           <TextField
+            // disabled={isTouristFound}
             label="Numero de CI"
             size="small"
             fullWidth
@@ -180,6 +250,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
           />
         ) : (
           <TextField
+            // disabled={isTouristFound}
             label="Numero de pasaporte"
             size="small"
             fullWidth
@@ -192,6 +263,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
       </Box>
 
       <TextField
+        // disabled={isTouristFound}
         label="Nacionalidad"
         size="small"
         fullWidth
@@ -203,6 +275,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
+          // disabled={isTouristFound}
           label="Fecha de nacimiento"
           // value={birthDate}
           value={birthDate}
@@ -220,6 +293,15 @@ const TouristForm: React.FC<TouristFormProps> = ({
           }}
         />
       </LocalizationProvider>
+      {/* {openSearchTourist && (
+        <SearchTouristByDocument
+          open={openSearchTourist}
+          onClose={handleCloseSearchNumber}
+          documentNumber={documentNumber}
+          setDocumentNumber={setDocumentNumber}
+          searchTourist={searchTourist}
+        />
+      )} */}
     </Box>
   );
 };

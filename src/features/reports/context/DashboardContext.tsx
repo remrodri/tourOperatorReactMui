@@ -4,67 +4,53 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
 } from "react";
+import dayjs from "dayjs";
+
 import { useBookingContext } from "../../booking/context/BookingContext";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
+import { useUserContext } from "../../user/context/UserContext";
+import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
+
+import { BookingType } from "../../booking/types/BookingType";
 import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
-import { BookingType } from "../../booking/types/BookingType";
-import dayjs from "dayjs";
-import { useUserContext } from "../../user/context/UserContext";
 import { User } from "../../user/types/User";
-import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
-import { date } from "yup";
-import { useRoleContext } from "../../Role/context/RoleContext";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
-import { TouristType } from "../../booking/types/TouristType";
 
 interface DashboardContextType {
   loading: boolean;
   error: string | null;
-  bookings: any[];
-  touristDestinations: any[];
-  tourPackages: any[];
+  bookings: BookingType[];
+  touristDestinations: TouristDestinationType[];
+  tourPackages: TourPackageType[];
   touristDestinationWithBookings: any[];
   totalBookings: number;
-  getBokingsByYear: (year: string) => void;
   countedBookings: any[];
   yearSelected: string;
+
+  getBokingsByYear: (year: string) => void;
   getBookingsByMonth: () => void;
   getBookingsByTouristDestination: () => void;
+
   bookingsByTouristDestination: { name: string; value: number }[];
+
   packagesSoldBySeller: {
     name: string;
     value: number;
     img: string;
     bookings: BookingType[];
   }[];
+
   getPackagesSoldBySeller: () => void;
-  getCumulativeBookings: () => void;
+
   cumulativeBookings: any[];
+  getCumulativeBookings: () => void;
+
   guidesStats: GuideStatsType[];
 }
-
-interface Month {
-  name: string;
-  counts: number[];
-}
-// Inicializar months vacío y nuevo en cada ejecución
-const months: Month[] = [
-  { name: "Ene", counts: [] },
-  { name: "Feb", counts: [] },
-  { name: "Mar", counts: [] },
-  { name: "Abr", counts: [] },
-  { name: "May", counts: [] },
-  { name: "Jun", counts: [] },
-  { name: "Jul", counts: [] },
-  { name: "Ago", counts: [] },
-  { name: "Sep", counts: [] },
-  { name: "Oct", counts: [] },
-  { name: "Nov", counts: [] },
-  { name: "Dic", counts: [] },
-];
 
 export interface GuideStatsType {
   guideId: string;
@@ -79,13 +65,12 @@ export interface GuideStatsType {
 const DashboardContext = createContext<DashboardContextType | null>(null);
 
 export const useDashboardContext = () => {
-  const context = useContext(DashboardContext);
-  if (!context) {
+  const ctx = useContext(DashboardContext);
+  if (!ctx)
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
     );
-  }
-  return context;
+  return ctx;
 };
 
 interface DashboardProviderProps {
@@ -93,258 +78,190 @@ interface DashboardProviderProps {
 }
 
 export const DashboardProvider = ({ children }: DashboardProviderProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const { bookings } = useBookingContext();
   const { touristDestinations } = useTouristDestinationContext();
   const { tourPackages } = useTourPackageContext();
-  const [touristDestinationWithBookings, setTouristDestinationWithBookings] =
-    useState<any>([]);
-  const [countedBookings, setCountedBookings] = useState<any>([]);
-  const [yearSelected, setYearSelected] = useState<string>(
+  const { users, guides, fetchGuides } = useUserContext();
+  const { dateRanges } = useDateRangeContext();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [yearSelected, setYearSelected] = useState(
     new Date().getFullYear().toString()
   );
-  const [totalBookings, setTotalBookings] = useState<number>(0);
-  const [bookingsByTouristDestination, setBookingsByTouristDestination] =
-    useState<any>([]);
-  const [packagesSoldBySeller, setPackagesSoldBySeller] = useState<
-    { name: string; value: number; img: string; bookings: BookingType[] }[]
-  >([]);
-  const { users, guides, fetchGuides } = useUserContext();
-  const [cumulativeBookings, setCumulativeBookings] = useState<any>([]);
-  const { dateRanges, getDateRangeInfoById } = useDateRangeContext();
+
+  const [touristDestinationWithBookings, setTDWithBookings] = useState<any[]>(
+    []
+  );
+  const [totalBookings, setTotalBookings] = useState(0);
+
+  const [countedBookings, setCountedBookings] = useState<any[]>([]);
+  const [bookingsByTouristDestination, setBookingsByTD] = useState<any[]>([]);
+
+  const [packagesSoldBySeller, setPackagesSoldBySeller] = useState<any[]>([]);
+  const [cumulativeBookings, setCumulativeBookings] = useState<any[]>([]);
   const [guidesStats, setGuidesStats] = useState<GuideStatsType[]>([]);
 
-  const getGuidesStats = () => {
-    const guideStats: Record<string, Record<string, number>> = {};
+  // ---------------------------------------
+  // HELPERS
+  // ---------------------------------------
 
-    // Mapeamos todos los dateRanges por su id
-    const dateRangeMap = new Map<string, DateRangeType>();
-    for (const dr of dateRanges) {
-      if (dr.id) {
-        dateRangeMap.set(dr.id, dr);
-      }
-    }
+  const buildTDWithBookings = () => {
+    return touristDestinations.map((td) => {
+      const filtered = bookings.filter((b) => {
+        const pkg = tourPackages.find((tp) => tp.id === b.tourPackageId);
+        return pkg?.touristDestination === td.id;
+      });
 
-    for (const pkg of tourPackages) {
-      const destinationId = pkg.touristDestination;
+      return { ...td, filteredBookings: filtered };
+    });
+  };
 
-      for (const { id: drId } of pkg.dateRanges) {
-        if (!drId) continue;
-        const dateRange = dateRangeMap.get(drId);
-        if (!dateRange) continue;
-        if (!dateRange.guides) continue;
-        for (const guideId of dateRange.guides) {
-          if (!guideStats[guideId]) guideStats[guideId] = {};
-          if (!guideStats[guideId][destinationId])
-            guideStats[guideId][destinationId] = 0;
-
-          guideStats[guideId][destinationId]++;
-        }
-      }
-    }
-
-    // Definir orden fijo de destinos
-    const orderedDestinations = touristDestinations.map((dest) => ({
-      id: dest.id,
-      name: dest.name,
+  const buildMonthlyBookings = (data: any[]) => {
+    const template = Array.from({ length: 12 }, (_, i) => ({
+      name: dayjs().month(i).format("MMM"),
+      counts: [] as number[], // <-- TIPADO CORRECTO
     }));
 
-    // const result: GuideStatsType[] = Object.entries(guideStats).map(([guideId, destMap]) => {
-    //   const guide = guides.find(g => g.id === guideId);
-    //   return {
-    //     guideId,
-    //     guideName: guide ? `${guide.firstName} ${guide.lastName}` : "Guía desconocido",
-    //     guideImage: guide?.imageUrl || "",
-    //     destinations: orderedDestinations.map(dest => ({
-    //       destinationName: dest.name,
-    //       count: destMap[dest.id] || 0,
-    //     })),
-    //   };
-    // });
-
-    const result: GuideStatsType[] = Object.entries(guideStats).map(
-      ([guideId, destMap]) => {
-        const guide = guides.find((g) => g.id === guideId);
-        return {
-          guideId,
-          guideName: guide
-            ? `${guide.firstName} ${guide.lastName}`
-            : "Guía desconocido",
-          guideImage: guide?.imageUrl || "",
-          destinations: orderedDestinations
-            .map((dest) => ({
-              destinationName: dest.name,
-              count: destMap[dest.id] || 0,
-            }))
-            .filter((dest) => dest.count > 0), // 👈 aquí filtramos los destinos vacíos
-        };
-      }
-    );
-
-    setGuidesStats(result);
-  };
-
-  const getCumulativeBookings = () => {
-    try {
-      setLoading(true);
-      const bookingsByYear = bookings.filter((booking: BookingType) => {
-        const bookingDate = dayjs(booking.createdAt);
-        return bookingDate.year() === Number(yearSelected);
+    data.forEach((dest: any) => {
+      const monthly = Array(12).fill(0);
+      dest.filteredBookings.forEach((b: BookingType) => {
+        const d = dayjs(b.createdAt);
+        if (d.year() === Number(yearSelected)) {
+          monthly[d.month()]++;
+        }
       });
-      const dates = bookingsByYear.map((booking: BookingType) =>
-        dayjs(booking.createdAt).format("YYYY-MM-DD")
-      );
-      const uniqueDates = Array.from(new Set(dates));
-      // console.log('uniqueDates::: ', uniqueDates);
-      const res = uniqueDates.map((date: string) => {
-        const bookingDate = dayjs(date);
-        const filteredBookings = bookingsByYear.filter(
-          (booking: BookingType) =>
-            dayjs(booking.createdAt).format("YYYY-MM-DD") ===
-            bookingDate.format("YYYY-MM-DD")
-        );
-        return {
-          date: bookingDate.format("YYYY-MM-DD"),
-          value: filteredBookings.length,
-        };
-      });
-      // console.log('res::: ', res);
-      setCumulativeBookings(res);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError(error as string);
-    }
-  };
 
-  const getPackagesSoldBySeller = () => {
-    try {
-      setLoading(true);
-      const sellerIds = bookings.map(
-        (booking: BookingType) => booking.sellerId
-      );
-      const uniqueSellerIds = Array.from(new Set(sellerIds));
-      const res = uniqueSellerIds.map((sellerId: string) => {
-        const seller = users.find((user: User) => user.id === sellerId);
-        const filteredBookings = bookings.filter(
-          (booking: BookingType) => booking.sellerId === sellerId
-        );
-        return {
-          name: seller?.firstName || "",
-          value: filteredBookings.length,
-          img: seller?.imageUrl || "",
-          bookings: filteredBookings,
-        };
+      monthly.forEach((count, index) => {
+        (template[index].counts as number[]).push(count); // <-- FIX
       });
-      setPackagesSoldBySeller(res);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError(error as string);
-    }
-  };
-
-  const getBookingsByTouristDestination = () => {
-    try {
-      setLoading(true);
-      const res = touristDestinationWithBookings.map((td: any) => {
-        // const bookingCount = td.filteredBookings.length;
-        return { name: td.name, value: td.filteredBookings.length };
-      });
-      setBookingsByTouristDestination(res);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError(error as string);
-    }
-  };
-
-  const getBookingsByMonth = () => {
-    try {
-      setLoading(true);
-      touristDestinationWithBookings.forEach((destination: any) => {
-        const monthCounts = new Array(12).fill(0); // Inicializar para este destino
-        destination.filteredBookings.forEach((booking: BookingType) => {
-          const bookingDate = dayjs(booking.createdAt);
-          // console.log('bookingDate::: ', bookingDate);
-          if (bookingDate.year() === Number(yearSelected)) {
-            const monthIndex = bookingDate.month(); // 0 = enero
-            monthCounts[monthIndex]++;
-          }
-        });
-        // Agregar los conteos al arreglo months
-        monthCounts.forEach((value, index: number) => {
-          months[index].counts.push(value);
-        });
-      });
-      setCountedBookings(months);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError(error as string);
-    }
-  };
-
-  const getBokingsByYear = (year: string) => {
-    const bookingsByYear = bookings.filter((booking: BookingType) => {
-      const bookingDate = dayjs(booking.createdAt);
-      return bookingDate.year() === Number(year);
     });
-    // setCountedBookings(bookingsByYear);
-    setTotalBookings(bookingsByYear.length);
+
+    return template;
   };
 
-  const getTourPackageById = (id: string) => {
-    const tourPackage = tourPackages.find(
-      (tourPackage: TourPackageType) => tourPackage.id === id
+  const buildBookingsByTD = (data: any[]) =>
+    data.map((td) => ({
+      name: td.name,
+      value: td.filteredBookings.length,
+    }));
+
+  const buildPackagesSoldBySeller = () => {
+    const sellerMap: Record<string, BookingType[]> = {};
+
+    bookings.forEach((b) => {
+      if (!sellerMap[b.sellerId]) sellerMap[b.sellerId] = [];
+      sellerMap[b.sellerId].push(b);
+    });
+
+    return Object.entries(sellerMap).map(([id, arr]) => {
+      const seller = users.find((u) => u.id === id);
+      return {
+        name: seller?.firstName || "Vendedor",
+        value: arr.length,
+        img: seller?.imageUrl || "",
+        bookings: arr,
+      };
+    });
+  };
+
+  const buildCumulativeBookings = () => {
+    const filtered = bookings.filter(
+      (b) => dayjs(b.createdAt).year() === Number(yearSelected)
     );
-    return tourPackage;
+
+    const byDate: Record<string, number> = {};
+    filtered.forEach((b) => {
+      const d = dayjs(b.createdAt).format("YYYY-MM-DD");
+      byDate[d] = (byDate[d] || 0) + 1;
+    });
+
+    return Object.entries(byDate).map(([date, value]) => ({
+      date,
+      value,
+    }));
   };
 
-  const getTouristDestinationWithBookings = () => {
-    // console.log('bookings::: ', bookings);
-    const touristDestinationWithBookings = touristDestinations.map(
-      (touristDestination: TouristDestinationType) => {
-        const filteredBookings = bookings.filter((booking: BookingType) => {
-          const tourPackage = getTourPackageById(booking.tourPackageId);
-          return tourPackage?.touristDestination === touristDestination.id;
+  const buildGuidesStats = () => {
+    const dateRangeMap = new Map<string, DateRangeType>();
+    dateRanges.forEach((dr) => dr.id && dateRangeMap.set(dr.id, dr));
+
+    const guideStats: Record<string, Record<string, number>> = {};
+
+    tourPackages.forEach((pkg) => {
+      pkg.dateRanges.forEach((dr) => {
+        const drData = dr.id ? dateRangeMap.get(dr.id) : null;
+        if (!drData?.guides) return;
+
+        drData.guides.forEach((gid) => {
+          if (!guideStats[gid]) guideStats[gid] = {};
+          guideStats[gid][pkg.touristDestination] =
+            (guideStats[gid][pkg.touristDestination] || 0) + 1;
         });
-        return { ...touristDestination, filteredBookings };
-      }
-    );
-    setTouristDestinationWithBookings(touristDestinationWithBookings);
+      });
+    });
+
+    return Object.entries(guideStats).map(([gid, dests]) => {
+      const guide = guides.find((g) => g.id === gid);
+      return {
+        guideId: gid,
+        guideName: guide
+          ? `${guide.firstName} ${guide.lastName}`
+          : "Guía desconocido",
+        guideImage: guide?.imageUrl || "",
+        destinations: touristDestinations
+          .map((td) => ({
+            destinationName: td.name,
+            count: dests[td.id] || 0,
+          }))
+          .filter((d) => d.count > 0),
+      };
+    });
   };
+
+  // ---------------------------------------
+  // EFFECTS
+  // ---------------------------------------
 
   useEffect(() => {
-    getTouristDestinationWithBookings();
-    getBokingsByYear(yearSelected);
-    getCumulativeBookings();
-    // console.log('::: ', );
+    console.log(":::1 ");
+    const tdWB = buildTDWithBookings();
+    setTDWithBookings(tdWB);
+    setTotalBookings(
+      tdWB.reduce((acc, td) => acc + td.filteredBookings.length, 0)
+    );
+  }, [bookings, tourPackages, touristDestinations]);
+
+  useEffect(() => {
+    // console.log(":::2 ");
+    setCountedBookings(buildMonthlyBookings(touristDestinationWithBookings));
+  }, [touristDestinationWithBookings, yearSelected]);
+
+  useEffect(() => {
+    // console.log(":::3 ");
+    setBookingsByTD(buildBookingsByTD(touristDestinationWithBookings));
+  }, [touristDestinationWithBookings]);
+
+  useEffect(() => {
+    // console.log(":::4 ");
+    setPackagesSoldBySeller(buildPackagesSoldBySeller());
+  }, [bookings, users]);
+
+  useEffect(() => {
+    // console.log(":::5 ");
+    fetchGuides();
+    setGuidesStats(buildGuidesStats());
+  }, [dateRanges, users, touristDestinations, tourPackages]);
+
+  useEffect(() => {
+    setCumulativeBookings(buildCumulativeBookings());
   }, [bookings, yearSelected]);
 
-  useEffect(() => {
-    getBookingsByMonth();
-    // console.log('::: ', );
-  }, [yearSelected]);
-  useEffect(() => {
-    // console.log('::: ', );
-    getBookingsByTouristDestination();
-  }, [touristDestinationWithBookings]);
-  useEffect(() => {
-    // console.log('::: ', );
-    getPackagesSoldBySeller();
-  }, [bookings, users]);
-  useEffect(() => {
-    // console.log('::: ', );
-    fetchGuides();
-    // getGuidesRankingByDestination();
-    getGuidesStats();
-  }, [dateRanges, users, touristDestinations, tourPackages]);
-  // console.log('::: ', );
-  // console.log('touristDestinations::: ', touristDestinations);
-  // const touristDestinationsCounted = touristDestinations.length;
-  // console.log('touristDestinationsCounted::: ', touristDestinationsCounted);
+  // ---------------------------------------
+  // RETURN
+  // ---------------------------------------
+
   return (
     <DashboardContext.Provider
       value={{
@@ -355,16 +272,29 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
         tourPackages,
         touristDestinationWithBookings,
         totalBookings,
-        getBokingsByYear,
-        getBookingsByMonth,
-        getBookingsByTouristDestination,
-        bookingsByTouristDestination,
         yearSelected,
         countedBookings,
-        getPackagesSoldBySeller,
+        getBokingsByYear: setYearSelected,
+
+        getBookingsByMonth: () =>
+          setCountedBookings(
+            buildMonthlyBookings(touristDestinationWithBookings)
+          ),
+
+        getBookingsByTouristDestination: () =>
+          setBookingsByTD(buildBookingsByTD(touristDestinationWithBookings)),
+
+        bookingsByTouristDestination,
+
+        getPackagesSoldBySeller: () =>
+          setPackagesSoldBySeller(buildPackagesSoldBySeller()),
+
         packagesSoldBySeller,
-        getCumulativeBookings,
+
         cumulativeBookings,
+        getCumulativeBookings: () =>
+          setCumulativeBookings(buildCumulativeBookings()),
+
         guidesStats,
       }}
     >

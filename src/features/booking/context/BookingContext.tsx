@@ -31,7 +31,10 @@ interface BookingContextType {
   loading: boolean;
   error: string | null;
   getBookingById: (id: string) => BookingType | null;
-  createBooking: (booking: BookingFormValues) => Promise<BookingType | null>;
+  createBooking: (
+    booking: BookingFormValues,
+    touristsBySearch: TouristType[]
+  ) => Promise<BookingType | null>;
   updateBooking: (booking: any) => Promise<void>;
   setBookings: (bookings: BookingType[]) => void;
   addPaymentToBooking: (payment: PaymentType) => void;
@@ -188,9 +191,10 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   };
 
   const createBooking = async (
-    booking: BookingFormValues
+    booking: BookingFormValues,
+    touristsBySearch: TouristType[]
   ): Promise<BookingType | null> => {
-    let res = null
+    let res = null;
     setError("");
     setLoading(true);
     const token = TokenService.getToken();
@@ -201,7 +205,18 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     }
 
     const seller: User = jwtDecode(token);
-    const tourists = [...booking.additionalTourists, booking.mainTourist];
+    // const tourists = [...booking.additionalTourists, booking.mainTourist];
+    let tourists: TouristType[] = [];
+    if (booking.mainTourist) {
+      tourists.push(booking.mainTourist);
+    }
+    if (booking.additionalTourists) {
+      tourists = [...booking.additionalTourists];
+    }
+    if (touristsBySearch) {
+      tourists.push(...touristsBySearch);
+    }
+    console.log("tourists::: ", tourists);
     const paymentProofFolder = uuidv4();
 
     const formData = new FormData();
@@ -251,15 +266,14 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       showSnackbar("Reserva creada exitosamente", "success");
       setLoading(false);
       // return newBooking;
-      res = newBooking
+      res = newBooking;
     } catch (error) {
       console.error("Error creating booking", error);
       setError("Failed to create booking");
       showSnackbar("Error al crear la reserva", "error");
-    }
-    finally {
+    } finally {
       setLoading(false);
-      return res
+      return res;
     }
   };
 
