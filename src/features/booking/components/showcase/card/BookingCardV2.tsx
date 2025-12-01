@@ -188,6 +188,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
             }}
           >
             <Typography
+              component="div"
               variant="body2"
               sx={{
                 fontWeight: "normal",

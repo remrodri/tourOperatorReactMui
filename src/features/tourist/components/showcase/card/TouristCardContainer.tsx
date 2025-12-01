@@ -16,6 +16,8 @@ import BookingCardV2 from "./TouristCard";
 import PaymentProofDialogContainer from "../../../../payment/components/paymentProofDialog/PaymentProofDialogContainer";
 import TouristCard from "./TouristCard";
 import { TouristType } from "../../../../booking/types/TouristType";
+import MoreInfoDialogContainer from "../../../moreInfoDialog/MoreInfoDialogContainer";
+import EditFormContainer from "../../editForm/EditTouristFormContainer";
 // import { PaymentType } from "../../../types/PaymentType";
 
 interface TouristCardContainerProps {
@@ -27,22 +29,24 @@ interface TouristCardContainerProps {
   // setBookingProof: (booking: BookingType | null) => void;
 }
 
-const TouristCardContainer: React.FC<TouristCardContainerProps> = (
-  {
-    tourist,
-    index,
-    // booking,
-    // index,
-    role,
-    // setBookingProof,
-  }
-) => {
+const TouristCardContainer: React.FC<TouristCardContainerProps> = ({
+  tourist,
+  index,
+  // booking,
+  // index,
+  role,
+  // setBookingProof,
+}) => {
   // const { getTourPackageInfoById } = useTourPackageContext();
   // const { getTouristInfoById } = useTouristContext();
   // const { bookings, cancelBooking } = useBookingContext();
 
-  // const [openMoreInfo, setOpenMoreInfo] = useState(false);
-  // const [openEditForm, setOpenEditForm] = useState(false);
+  const [openMoreInfo, setOpenMoreInfo] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+
+  const handleCloseEditForm = () => {
+    setOpenEditForm(false);
+  };
   // const [openPaymentForm, setOpenPaymentForm] = useState(false);
 
   // const [currentBooking, setCurrentBooking] = useState<BookingType | null>(
@@ -168,13 +172,14 @@ const TouristCardContainer: React.FC<TouristCardContainerProps> = (
     switch (option) {
       case "Ver detalles":
         // setOpenMoreInfo(true);
-        console.log('Ver detalles::: ', option);
+        console.log("Ver detalles::: ", option);
+        setOpenMoreInfo(true);
         break;
       case "Editar":
-        // setOpenEditForm(true);
-        console.log('Editar::: ', option);
+        setOpenEditForm(true);
+        console.log("Editar::: ", option);
         break;
-    
+
       default:
         console.log("Opción inválida");
     }
@@ -187,32 +192,33 @@ const TouristCardContainer: React.FC<TouristCardContainerProps> = (
         tourist={tourist}
         index={index}
         handleMenuOptions={handleMenuOptions}
-
-      // booking={localBooking}
-      // index={index}
-      // tpInfo={tpInfo}
-      // mainTouristInfo={mainTouristInfo}
-      // balance={balance}
-      // handleMenuOptions={handleMenuOptions}
-      role={role}
+        // booking={localBooking}
+        // index={index}
+        // tpInfo={tpInfo}
+        // mainTouristInfo={mainTouristInfo}
+        // balance={balance}
+        // handleMenuOptions={handleMenuOptions}
+        role={role}
       />
       {/* )} */}
-      {/* {openMoreInfo && localBooking && (
+      {openMoreInfo && (
         <MoreInfoDialogContainer
           open={openMoreInfo}
           handleClose={() => setOpenMoreInfo(false)}
-          booking={localBooking}
-          balance={balance}
+          tourist={tourist}
+          // booking={localBooking}
+          // balance={balance}
         />
       )}
-      {openEditForm && localBooking && (
-        <BookingFormContainer
+
+      {openEditForm && (
+        <EditFormContainer
           open={openEditForm}
           handleClose={() => setOpenEditForm(false)}
-          booking={localBooking}
-          setBookingProof={setBookingProof}
+          tourist={tourist}
         />
       )}
+      {/*
       {openPaymentForm && localBooking && (
         <PaymentFormContainer
           open={openPaymentForm}

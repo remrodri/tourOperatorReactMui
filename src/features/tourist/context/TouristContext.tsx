@@ -7,7 +7,10 @@ import {
 } from "react";
 import { TouristType } from "../../booking/types/TouristType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
-import { getAllTouristsRequest } from "../service/touristService";
+import {
+  getAllTouristsRequest,
+  updateTouristRequest,
+} from "../service/touristService";
 
 type TouristContextType = {
   tourists: TouristType[];
@@ -19,8 +22,9 @@ type TouristContextType = {
   getTouristInfoByIds: (id: string[]) => TouristType[];
   addTouristFromBooking: (tourist: any) => TouristType;
   updateTourist: (tourist: TouristType) => void;
-  handleTouristBookingIds:(tourist:TouristType,bookingId:string)=>void
-  getTouristInfoById:(id:string)=>TouristType|null
+  handleTouristBookingIds: (tourist: TouristType, bookingId: string) => void;
+  getTouristInfoById: (id: string) => TouristType | null;
+  updateOnlyTourist: (touristValues: TouristType) => void;
 };
 
 const TouristContext = createContext<TouristContextType | null>(null);
@@ -46,52 +50,71 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
   const { showSnackbar } = useNewSnackbar();
   const [touristFound, setTouristFound] = useState<TouristType | null>(null);
 
-  const getTouristInfoById=(id:string):TouristType|null=>{
+  const getTouristInfoById = (id: string): TouristType | null => {
     // console.log('id::: ', id);
     const touristFound = tourists.find((tourist) => tourist.id === id);
     if (!touristFound) {
-      
       return null;
     }
     return touristFound;
-  }
+  };
 
-  const handleTouristBookingIds=(tourist:TouristType,bookingId:string)=>{
+  const handleTouristBookingIds = (tourist: TouristType, bookingId: string) => {
     // console.log('tourist::: ', tourist);
     // console.log('bookingId::: ', bookingId);
-  //   if (!tourist.bookingIds) {
-  //     tourist.bookingIds=[];
-  //   }
-  //   const updatedTourist={...tourist,bookingIds:[...tourist.bookingIds!,bookingId]}
-  //   updateTourist(updatedTourist);
-  //   return updatedTourist
-  }
+    //   if (!tourist.bookingIds) {
+    //     tourist.bookingIds=[];
+    //   }
+    //   const updatedTourist={...tourist,bookingIds:[...tourist.bookingIds!,bookingId]}
+    //   updateTourist(updatedTourist);
+    //   return updatedTourist
+  };
 
   const updateTourist = (tourist: TouristType) => {
     if (!tourists.find((prevTourist) => prevTourist.id === tourist.id)) {
       setTourists((prevTourists) => [...prevTourists, tourist]);
       // showSnackbar("Turista actualizado exitosamente", "success");
-    }else{
+    } else {
       setTourists((prevTourists) =>
         prevTourists
-      .map((prevTourist) =>
-          {return prevTourist.id === tourist?.id 
-            ? {...prevTourist, 
-              tourPackageId:tourist.id,
-              bookingIds:tourist.bookingIds,
-              documentType:tourist.documentType,
-              firstName:tourist.firstName,
-              lastName:tourist.lastName,
-              phone:tourist.phone,
-              ci:tourist.ci,
-              nationality:tourist.nationality,
-              dateOfBirth:tourist.dateOfBirth,
-              passportNumber:tourist.passportNumber} 
-            : prevTourist})
-      .filter((tourist) => tourist !== null)
+          .map((prevTourist) => {
+            return prevTourist.id === tourist?.id
+              ? {
+                  ...prevTourist,
+                  tourPackageId: tourist.id,
+                  bookingIds: tourist.bookingIds,
+                  documentType: tourist.documentType,
+                  firstName: tourist.firstName,
+                  lastName: tourist.lastName,
+                  phone: tourist.phone,
+                  ci: tourist.ci,
+                  nationality: tourist.nationality,
+                  dateOfBirth: tourist.dateOfBirth,
+                  passportNumber: tourist.passportNumber,
+                }
+              : prevTourist;
+          })
+          .filter((tourist) => tourist !== null)
       );
     }
     showSnackbar("Turista actualizado exitosamente", "success");
+  };
+
+  const updateOnlyTourist = async (touristValues: TouristType) => {
+    const touristToUpdate = transformApiTourist(touristValues);
+    const response = await updateTouristRequest(touristToUpdate);
+    if (!response) {
+      showSnackbar("Error al actualizar turista", "error");
+      return;
+    }
+    setTourists((prevTourists) =>
+      prevTourists.map((prevTourist) =>
+        prevTourist.id === touristToUpdate.id ? response : prevTourist
+      )
+    );
+    showSnackbar("Turista actualizado exitosamente", "success");
+
+    return response;
   };
 
   const addTouristFromBooking = (tourist: any) => {
@@ -101,29 +124,34 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
       return touristData;
     }
     const touristData = transformApiTourist(tourist);
-      setTourists((prevTourists)=>
+    setTourists((prevTourists) =>
       prevTourists
-    .map((prevTourist) =>
-        {return prevTourist.id === tourist?.id 
-          ? {...prevTourist, 
-            id:tourist.id,
-            bookingIds:tourist.bookingIds,
-            documentType:tourist.documentType,
-            firstName:tourist.firstName,
-            lastName:tourist.lastName,
-            phone:tourist.phone,
-            ci:tourist.ci,
-            nationality:tourist.nationality,
-            dateOfBirth:tourist.dateOfBirth,
-            passportNumber:tourist.passportNumber} 
-          : prevTourist})
-    .filter((tourist) => tourist !== null)
+        .map((prevTourist) => {
+          return prevTourist.id === tourist?.id
+            ? {
+                ...prevTourist,
+                id: tourist.id,
+                bookingIds: tourist.bookingIds,
+                documentType: tourist.documentType,
+                firstName: tourist.firstName,
+                lastName: tourist.lastName,
+                phone: tourist.phone,
+                ci: tourist.ci,
+                nationality: tourist.nationality,
+                dateOfBirth: tourist.dateOfBirth,
+                passportNumber: tourist.passportNumber,
+              }
+            : prevTourist;
+        })
+        .filter((tourist) => tourist !== null)
     );
     return touristData;
   };
 
   const getTouristInfoByIds = (ids: string[]): TouristType[] => {
-    return ids && ids.length > 0 ? tourists.filter((tourist) => ids.includes(tourist.id!)) : [];
+    return ids && ids.length > 0
+      ? tourists.filter((tourist) => ids.includes(tourist.id!))
+      : [];
   };
 
   // const getTouristById = (id: string): TouristType | null => {
@@ -187,7 +215,8 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
         addTouristFromBooking,
         updateTourist,
         handleTouristBookingIds,
-        getTouristInfoById
+        getTouristInfoById,
+        updateOnlyTourist,
       }}
     >
       {children}

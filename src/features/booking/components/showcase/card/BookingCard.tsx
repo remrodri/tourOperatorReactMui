@@ -110,6 +110,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
       >
         <Typography
           variant="body2"
+          component="div"
           sx={{
             fontWeight: "normal",
             display: "flex",
@@ -148,7 +149,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
             ? `Estado: Cancelado`
             : `Estado: Pagado`}
         </Typography>
-        
+
         <Typography
           variant="body2"
           sx={{
@@ -160,7 +161,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         >
           {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
         </Typography>
-        
+
         <Typography
           variant="body2"
           sx={{
