@@ -25,8 +25,10 @@ import ItineraryContainer from "../features/guide/components/itinerary/Itinerary
 import GuidePerfilContainer from "../features/guide/components/perfil/GuidePerfilContainer";
 // import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import MainLayout from "../pages/mainLayout/MainLayout";
-import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
+// import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import GuideDateRangeSelectorContainer from "../features/guide/components/dateRangeSelector/GuideDateRangeSelectorContainer";
+import TouristPage from "../pages/TouristPage";
+import TouristShowcaseContainer from "../features/tourist/components/showcase/TouristShowcaseContainer";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -109,6 +111,16 @@ export const AppRouter = createBrowserRouter(
           path: "reportes",
           element: <ReportsPage />,
           children: [{ path: "dashboard", element: <DashboardContainer /> }],
+        },
+        {
+          path: "turistas",
+          element: <TouristPage />,
+          children: [
+            {
+              path: "todos",
+              element: <TouristShowcaseContainer />,
+            },
+          ],
         },
       ],
     },

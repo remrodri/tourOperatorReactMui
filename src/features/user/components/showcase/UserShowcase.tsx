@@ -103,18 +103,18 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users, role })
               // background: "rgba(255,255,255,0.2)",
               // background: "rgba(13, 24, 31, 0.4)",
               // background: "rgba(217, 166, 121, 0.4)",
-              background: "rgba(89, 69, 57, 0.4)",
+              background: "rgba(0, 0, 0, 0.44)",
               borderRadius: "10px",
               // backdropFilter: "blur(10px)",
               boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
-              border: "1px solid rgba(89, 69, 57, 0.5)",
+              border: "1px solid rgba(0, 0, 0, 0.5)",
               height: "calc(100dvh - 12.8rem)",
               width: "100%",
             }}
           >
             {users && users.length > 0 ? (
               users.map((user) => (
-                <UserCardContainer key={user.id} user={user} role={role}/>
+                <UserCardContainer key={user.id} user={user} role={role} />
               ))
             ) : (
               <p>Cargando usuarios</p>

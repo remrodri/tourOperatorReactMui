@@ -37,33 +37,17 @@ const BookingPage = () => {
           sx={{
             display: "flex",
             flexGrow: 1,
-            background: "rgba(86, 101, 115, 0.6)",
+            background: "rgba(64, 89, 66, 0.6)",
             borderRadius: "16px",
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             backdropFilter: "blur(10px)",
-            border: "1px solid rgba(86, 101, 115, 0.7)",
+            border: "1px solid rgba(64, 89, 66, 0.7)",
             height: "100%",
           }}
         >
-          <TourTypeProvider>
-            <CancellationPolicyProvider>
-              <TouristDestinationProvider>
-                <DateRangeProvider>
-                  <TourPackageProvider>
-                    <TouristProvider>
-                      <BookingProvider>
-                        <PaymentProvider>
-                          <UserProvider>
-                            <Outlet />
-                          </UserProvider>
-                        </PaymentProvider>
-                      </BookingProvider>
-                    </TouristProvider>
-                  </TourPackageProvider>
-                </DateRangeProvider>
-              </TouristDestinationProvider>
-            </CancellationPolicyProvider>
-          </TourTypeProvider>
+          <TouristProvider>
+            <Outlet />
+          </TouristProvider>
         </Box>
       </Box>
     </FadeContent>

@@ -90,11 +90,11 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({
               overflowY: "auto",
               gap: "1rem",
               // background: "rgba(255, 255, 255, 0.2)",
-              background: "rgba(75, 44, 27, 0.4)",
+              background: "rgba(0, 0, 0, 0.44)",
               borderRadius: "10px",
               boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
               // backdropFilter: "blur(10px)",
-              border: "1px solid rgba(75, 44, 27, 0.5)",
+              border: "1px solid rgba(0, 0, 0, 0.5)",
               height: "calc(100dvh - 12.8rem)",
               width: "100%",
             }}

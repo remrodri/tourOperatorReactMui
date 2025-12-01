@@ -9,10 +9,11 @@ import { RoleProvider } from "../../features/Role/context/RoleContext";
 // import securitySetupBackground from "../../assets/images/securitySetup.webp";
 
 const userManagementBackground = "/src/assets/images/userManagement.webp";
-const homeBackground = "/src/assets/images/home.webp";
+// const homeBackground = "/src/assets/images/home.webp";
 const tourPackageBackground = "/src/assets/images/tourPackage.webp";
 const bookingBackground = "/src/assets/images/booking.webp";
 const reportsBackground = "/src/assets/images/reports.webp";
+const touristBackground = "/src/assets/images/tourist.webp";
 // const guideBackground = "/src/assets/images/guide.webp";
 
 export interface AppBarStyle {
@@ -29,47 +30,57 @@ export interface AppBarStyle {
 const appBarStyles = [
   {
     // background: "rgba(88, 83, 79, 0.4)",
-    background: "rgba(78, 140, 179, 0.4)",
+    background: "rgba(191, 161, 143, 0.6)",
     borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(78, 140, 179, 0.5)",
+    border: "1px solid rgba(191, 161, 143, 0.7)",
     // drawerBackground: "rgba(61, 48, 39, 0.53)",
-    drawerBackground: "rgba(89, 69, 57, 0.5)",
-    drawerBorder: "1px solid rgba(89, 69, 57, 0.6)",
+    drawerBackground: "rgba(191, 161, 143, 0.6)",
+    drawerBorder: "1px solid rgba(191, 161, 143, 0.7)",
     // drawerBoxShadow: "0 4px 10px rgba(53, 46, 41, 0.99)",
-    drawerBoxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+    drawerBoxShadow: "0 4px 10px rgba(0,0,0,0.5)",
   },
   {
-    background: "rgba(4, 135, 217, 0.4)",
+    background: "rgba(102, 188, 242	, 0.4)",
     borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(4, 96, 217, 0.5)",
-    drawerBackground: "rgba(89, 69, 57, 0.4)",
-    drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
-    drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
+    border: "1px solid rgba(102, 188, 242	, 0.5)",
+    drawerBackground: "rgba(102, 188, 242	, 0.4)",
+    drawerBorder: "1px solid rgba(102, 188, 242	, 0.5)",
+    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   },
   {
     // background: "rgba(63, 64, 59, 0.4)",
-    background: "rgba(86, 101, 115, 0.4)",
+    background: "rgba(86, 101, 115, 0.6)",
     borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(86, 101, 115, 0.5)",
-    drawerBackground: "rgba(89, 69, 57, 0.4)",
-    drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
-    drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
+    border: "1px solid rgba(86, 101, 115, 0.7)",
+    drawerBackground: "rgba(86, 101, 115, 0.6)",
+    drawerBorder: "1px solid rgba(86, 101, 115, 0.7)",
+    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   },
   {
-    background: "rgba(140, 109, 81, 0.4)",
+    background: "rgba(140, 109, 81, 0.7)",
     borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(140, 109, 81, 0.5)",
-    drawerBackground: "rgba(89, 69, 57, 0.4)",
-    drawerBorder: "1px solid rgba(89, 69, 57, 0.4)",
-    drawerBoxShadow: "0 4px 10px rgba(89, 69, 57, 0.4)",
+    border: "1px solid rgba(140, 109, 81, 1)",
+    drawerBackground: "rgba(140, 109, 81, 0.7)",
+    drawerBorder: "1px solid rgba(140, 109, 81, 1)",
+    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+  },
+  {
+    background: "rgba(64, 89, 66, 0.6)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(64, 89, 66, 0.7)",
+    drawerBackground: "rgba(64, 89, 66, 0.6)",
+    drawerBorder: "1px solid rgba(64, 89, 66, 0.7)",
+    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   },
 ];
 
@@ -83,6 +94,7 @@ const MainLayout: React.FC = () => {
     ["/gestion-de-paquetes-turisticos"]: tourPackageBackground,
     ["/reservas"]: bookingBackground,
     ["/reportes"]: reportsBackground,
+    ["/turistas"]: touristBackground,
     // ["/guia-de-turismo"]: guideBackground,
     // ["/configuracion-de-seguridad"]: securitySetupBackground,
   };
@@ -125,6 +137,10 @@ const MainLayout: React.FC = () => {
     if (location.pathname.includes("reportes")) {
       setBackgroundImg(reportsBackground);
       setCurrentStyles(appBarStyles[3]);
+    }
+    if (location.pathname.includes("turistas")) {
+      setBackgroundImg(touristBackground);
+      setCurrentStyles(appBarStyles[4]);
     }
     // if (location.pathname.includes("guia-de-turismo")) {
     //   setBackgroundImg(guideBackground);

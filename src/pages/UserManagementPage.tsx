@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { UserProvider } from "../features/user/context/UserContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
-import { RoleProvider } from "../features/Role/context/RoleContext";
+// import { RoleProvider } from "../features/Role/context/RoleContext";
 
 const UserManagementPage: React.FC = () => {
   return (
@@ -49,10 +49,11 @@ const UserManagementPage: React.FC = () => {
             // boxShadow: "0 4px 10px rgba(0,0,0,1)",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
             // backdropFilter: "blur(1px)",
-            border: "1px solid rgba(78, 140, 179, 0.5)",
+            border: "1px solid rgba(191, 161, 143, 0.7)",
             // WebkitBackdropFilter: "blur(10px)",
             // overflowY: "auto",
-            backgroundColor: "rgba(78, 140, 179, 0.6)",
+            // backgroundColor: "rgba(78, 140, 179, 0.6)",
+            backgroundColor: "rgba(191, 161, 143, 0.6)",
             backdropFilter: "blur(10px)",
             WebkitBackdropFilter: "blur(10px)",
             // isolation: "isolate",

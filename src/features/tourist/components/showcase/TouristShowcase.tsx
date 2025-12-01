@@ -1,41 +1,45 @@
 import { Box, Button, Fade, Typography } from "@mui/material";
-import { BookingType } from "../../types/BookingType";
-import BookingCardContainer from "./card/BookingCardContainer";
+// import { BookingType } from "../../types/BookingType";
+// import BookingCardContainer from "./card/BookingCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
-import BookingSearchByCodeContainer from "./searchByCode/BookingSearchByCodeContainer";
-import BookingFilterContainer from "./filter/BookingFilterContainer";
-import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
+import { TouristType } from "../../../booking/types/TouristType";
+import TouristCardContainer from "./card/TouristCardContainer";
+// import BookingSearchByCodeContainer from "./searchByCode/BookingSearchByCodeContainer";
+// import BookingFilterContainer from "./filter/BookingFilterContainer";
+// import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 
-interface BookingShowcaseProps {
-  handleClick: () => void;
-  bookings: BookingType[] | null;
-  open: boolean;
+interface TouristShowcaseProps {
+  tourists: TouristType[] | null;
+  // handleClick: () => void;
+  // bookings: BookingType[] | null;
+  // open: boolean;
   role: string;
-  setBookingFound: (booking: BookingType | null) => void;
-  bookingFound: BookingType | null;
-  // tourPackages: TourPackageType[] | null;
-  filteredBookings: BookingType[];
-  setFilteredBookings: (bookings: BookingType[]) => void;
-  setBookingProof: (booking: BookingType | null) => void;
+  // setBookingFound: (booking: BookingType | null) => void;
+  // bookingFound: BookingType | null;
+  // // tourPackages: TourPackageType[] | null;
+  // filteredBookings: BookingType[];
+  // setFilteredBookings: (bookings: BookingType[]) => void;
+  // setBookingProof: (booking: BookingType | null) => void;
 }
 
-const BookingShowcase: React.FC<BookingShowcaseProps> = ({
-  handleClick,
-  bookings,
-  open,
+const TouristShowcase: React.FC<TouristShowcaseProps> = ({
+  tourists,
+  // handleClick,
+  // bookings,
+  // open,
   role,
-  setBookingFound,
-  bookingFound,
-  // tourPackages,
-  filteredBookings,
-  setFilteredBookings,
-  setBookingProof,
+  // setBookingFound,
+  // bookingFound,
+  // // tourPackages,
+  // filteredBookings,
+  // setFilteredBookings,
+  // setBookingProof,
 }) => {
   // console.log('bookings::: ', bookings);
   // console.log('bookingFound::: ', bookingFound);
-  if (!bookings || bookings.length === 0) {
-    return <Box>No hay reservas disponibles</Box>;
-  }
+  // if (!bookings || bookings.length === 0) {
+  //   return <Box>No hay reservas disponibles</Box>;
+  // }
 
   return (
     <Fade in={true} timeout={1000}>
@@ -68,7 +72,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
             <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               <Typography variant="h4" sx={{ width: "10rem" }}>
                 <TextType
-                  text={"Reservas"}
+                  text={"Turistas"}
                   typingSpeed={50}
                   pauseDuration={1000}
                   showCursor={true}
@@ -77,23 +81,23 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                 />
               </Typography>
               {/* <Button variant="contained" sx={{ height: "2rem" }}>buscar por codigo</Button> */}
-              <BookingSearchByCodeContainer
+              {/* <BookingSearchByCodeContainer
                 bookings={bookings}
                 setBookingFound={setBookingFound}
-              />
+              /> */}
             </Box>
-            <BookingFilterContainer
+            {/* <BookingFilterContainer
               bookings={bookings}
               // tourPackages={tourPackages}
               setFilteredBookings={setFilteredBookings}
-            />
-            <Button
+            /> */}
+            {/* <Button
               variant="contained"
               sx={{ height: "2rem", width: "12rem" }}
               onClick={handleClick}
             >
               nuevo
-            </Button>
+            </Button> */}
           </Box>
         </Box>
         <Box
@@ -138,21 +142,29 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                   width: "100%",
                 }}
               >
-                <Typography sx={{ width: "30%", pl: "1rem" }}>
-                  Codigo de reserva
+                <Typography sx={{ width: "30%", pl: "2rem" }}>
+                  Documento
                 </Typography>
-                <Typography sx={{ width: "30%", pl: "1rem" }}>
-                  Nombre del paquete
+                <Typography sx={{ width: "30%", pl: "3rem" }}>
+                  Nombre
                 </Typography>
-                <Typography sx={{ width: "25%", pl: "0.7rem" }}>
-                  Costo total
+                <Typography sx={{ width: "20%", pl: "1rem" }}>
+                  Edad
                 </Typography>
-                <Typography sx={{ width: "15%", pl: "0.2rem" }}>
-                  Saldo
+                <Typography sx={{ width: "20%", pl: "3rem" }}>
+                  Viajes realizados
                 </Typography>
               </Box>
             </Box>
-            {bookingFound ? (
+            {tourists?.map((tourist, index) => (
+              <TouristCardContainer
+                key={tourist.id}
+                tourist={tourist}
+                index={index}
+                role={role}
+              />
+            ))}
+            {/* {bookingFound ? (
               <BookingCardContainer
                 key={bookingFound.id}
                 booking={bookingFound}
@@ -176,11 +188,11 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                   ))
                 )}
               </>
-            )}
+            )} */}
           </Box>
         </Box>
       </Box>
     </Fade>
   );
 };
-export default BookingShowcase;
+export default TouristShowcase;

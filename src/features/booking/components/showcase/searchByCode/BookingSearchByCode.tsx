@@ -39,6 +39,7 @@ const BookingSearchByCode: React.FC<BookingSearchByCodeProps> = ({
               background: "rgba(8, 13, 10, 0.4)",
               color: "white",
               p: 0,
+              width: "15rem",
             },
             endAdornment: (
               <InputAdornment

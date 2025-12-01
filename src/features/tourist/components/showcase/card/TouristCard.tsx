@@ -1,0 +1,238 @@
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import { TouristType } from "../../../../booking/types/TouristType";
+import dayjs from "dayjs";
+import TouristCardMenu from "./TouristCardMenu";
+// import { BookingType } from "../../../types/BookingType";
+// import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
+// import { TouristType } from "../../../types/TouristType";
+// import BookingCardMenu from "./BookingCardMenu";
+// import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
+// import { MoreVert } from "@mui/icons-material";
+
+interface TouristCardProps {
+  tourist: TouristType;
+  index: number;
+  handleMenuOptions: (option: string) => void;
+  // booking: BookingType | null;
+  // index: number;
+  // tpInfo: TourPackageType | null;
+  // mainTouristInfo: TouristType | null;
+  // balance: number;
+  // handleMenuOptions: (option: string) => void;
+  role: string;
+}
+const TouristCard: React.FC<TouristCardProps> = ({
+  tourist,
+  index,
+  handleMenuOptions,
+  // booking,
+  // index,
+  // tpInfo,
+  // mainTouristInfo,
+  // balance,
+  // handleMenuOptions,
+  role,
+}) => {
+  //   console.log('booking::: ', booking);
+  // console.log('tpInfo::: ', tpInfo);
+  // console.log('mainTouristInfo::: ', mainTouristInfo);
+  // console.log('balance::: ', balance);
+
+  // if (!booking) {
+  //   return (
+  //     <Card sx={{ width: 300, borderRadius: "10px" }}>
+  //       <CardContent>
+  //         <Typography>Cargando datos de la reserva...</Typography>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // }
+  return (
+    // <AnimatedContent
+    //   distance={100}
+    //   direction="vertical"
+    //   reverse={true}
+    //   duration={1.2}
+    //   ease="power3.out"
+    //   initialOpacity={0.2}
+    //   animateOpacity
+    //   scale={1.1}
+    //   threshold={0.2}
+    //   delay={0.3}
+    // >
+    <Card
+      sx={{
+        borderRadius: "10px",
+        // background: "rgba(10,10,10,0.52)",
+        background: "rgba(10,10,10,0.52)",
+
+        // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        // backdropFilter: "Blur(5px)",
+        // border: "1px solid rgba(10,10,10,0.6)",
+        border: "1px solid rgba(10,10,10,0.6)",
+        width: "100%",
+        // height: "100%",
+        display: "flex",
+        // flexDirection: "column",
+        // justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          p: "0.5rem",
+          // flexDirection: "column",
+          gap: "1rem",
+          width: "100%",
+          // justifyContent: "space-between",
+        }}
+      >
+        <Box
+          sx={{
+            pl: "1rem",
+            // pr: "0.5rem",
+            display: "flex",
+            // flexDirection: "column",
+            justifyContent: "space-between",
+            gap: "0.5rem",
+            width: "100%",
+          }}
+        >
+          <Box
+            // variant="body2"
+            sx={{
+              fontWeight: "normal",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "30%",
+            }}
+          >
+            {/* {`${index + 1}. Paquete: ${tpInfo?.name}`} */}
+            {`${index + 1}. ${tourist.ci || tourist.passportNumber}`}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "30%",
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "normal",
+              }}
+            >
+              {tourist.firstName + " " + tourist.lastName}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "25%",
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "normal",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {dayjs().diff(dayjs(tourist.dateOfBirth, "DD/MM/YYYY"), "year")}
+              {/* {booking.status === "pending"
+                ? `Pendiente`
+                : booking.status === "cancelled"
+                ? `Cancelado`
+                : `Pagado`} */}
+              {/* { `${booking.totalPrice.toFixed(2)} Bs.`} */}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              width: "15%",
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "normal",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {tourist.bookingIds?.length || 0}
+              {/* {booking.status === "cancelled" ? (
+                <Typography
+                  variant="body1"
+                  component="div"
+                >{`Cancelado`}</Typography>
+              ) : (
+                <Typography variant="body2" component="div">
+                  {balance === 0
+                    ? "No tiene"
+                    : `${balance.toFixed(2)} Bs.`}
+                </Typography>
+                // <Typography variant="body1" component="div">
+                //   {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+                // </Typography>
+              )} */}
+            </Typography>
+          </Box>
+          {/* <IconButton
+          onClick={handleOpenMenu}
+          aria-label="more options"
+          aria-controls="booking-menu"
+          aria-haspopup="true"
+          // aria-expanded={openMenu? "true": "false"}
+        >
+          <MoreVert />
+        </IconButton> */}
+        </Box>
+        <Box>
+          <TouristCardMenu
+            onOptionSelect={handleMenuOptions}
+            // balance={balance}
+            // status={booking.status}
+            role={role}
+          />
+        </Box>
+        {/* <Typography variant="body1" component="div">
+            {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+          </Typography> */}
+
+        {/* {booking.status === "cancelled" ? (
+            <Typography
+              variant="body1"
+              component="div"
+            >Monto retenido: {booking.cancellationFee?.toFixed(2)} Bs.</Typography>
+          ) : (
+            <Typography variant="body1" component="div">
+              {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
+            </Typography>
+          )} */}
+      </Box>
+    </Card>
+    // </AnimatedContent>
+  );
+};
+export default TouristCard;
