@@ -16,11 +16,13 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
 }) => {
   return (
     <Box
-      sx={{
-        // flexGrow: 1,
-        // display: "flex",
-        // flexDirection: "column",
-      }}
+      sx={
+        {
+          // flexGrow: 1,
+          // display: "flex",
+          // flexDirection: "column",
+        }
+      }
     >
       <Typography
         variant="h4"
@@ -77,18 +79,22 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
             overflowY: "auto",
             gap: "1rem",
             alignContent: "flex-start",
-            background: "rgba(75, 44, 27, 0.4)",
+            background: "rgba(0, 0, 0, 0.44)",
             borderRadius: "10px",
             boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
             // backdropFilter: "blur(10px)",
-            border: "1px solid rgba(75, 44, 27, 0.5)",
+            border: "1px solid rgba(0, 0, 0, 0.5)",
             height: "calc(100dvh - 12.8rem)",
-            width:"100%"
+            width: "100%",
           }}
         >
           {tourPackages && tourPackages.length > 0 ? (
             tourPackages.map((tp, index) => (
-              <TourPackageCardContainer key={index} tourPackage={tp} role={role}/>
+              <TourPackageCardContainer
+                key={index}
+                tourPackage={tp}
+                role={role}
+              />
             ))
           ) : (
             <p>No se encuentran paquetes turisticos</p>

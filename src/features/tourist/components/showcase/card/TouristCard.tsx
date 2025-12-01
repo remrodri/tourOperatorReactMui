@@ -6,29 +6,38 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { BookingType } from "../../../types/BookingType";
-import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
-import { TouristType } from "../../../types/TouristType";
-import BookingCardMenu from "./BookingCardMenu";
-import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
-import { MoreVert } from "@mui/icons-material";
+import { TouristType } from "../../../../booking/types/TouristType";
+import dayjs from "dayjs";
+import TouristCardMenu from "./TouristCardMenu";
+// import { BookingType } from "../../../types/BookingType";
+// import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
+// import { TouristType } from "../../../types/TouristType";
+// import BookingCardMenu from "./BookingCardMenu";
+// import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
+// import { MoreVert } from "@mui/icons-material";
 
-interface BookingCardV2Props {
-  booking: BookingType | null;
+interface TouristCardProps {
+  tourist: TouristType;
   index: number;
-  tpInfo: TourPackageType | null;
-  mainTouristInfo: TouristType | null;
-  balance: number;
   handleMenuOptions: (option: string) => void;
+  // booking: BookingType | null;
+  // index: number;
+  // tpInfo: TourPackageType | null;
+  // mainTouristInfo: TouristType | null;
+  // balance: number;
+  // handleMenuOptions: (option: string) => void;
   role: string;
 }
-const BookingCardV2: React.FC<BookingCardV2Props> = ({
-  booking,
+const TouristCard: React.FC<TouristCardProps> = ({
+  tourist,
   index,
-  tpInfo,
-  mainTouristInfo,
-  balance,
   handleMenuOptions,
+  // booking,
+  // index,
+  // tpInfo,
+  // mainTouristInfo,
+  // balance,
+  // handleMenuOptions,
   role,
 }) => {
   //   console.log('booking::: ', booking);
@@ -36,15 +45,15 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
   // console.log('mainTouristInfo::: ', mainTouristInfo);
   // console.log('balance::: ', balance);
 
-  if (!booking) {
-    return (
-      <Card sx={{ width: 300, borderRadius: "10px" }}>
-        <CardContent>
-          <Typography>Cargando datos de la reserva...</Typography>
-        </CardContent>
-      </Card>
-    );
-  }
+  // if (!booking) {
+  //   return (
+  //     <Card sx={{ width: 300, borderRadius: "10px" }}>
+  //       <CardContent>
+  //         <Typography>Cargando datos de la reserva...</Typography>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // }
   return (
     // <AnimatedContent
     //   distance={100}
@@ -62,21 +71,13 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
       sx={{
         borderRadius: "10px",
         // background: "rgba(10,10,10,0.52)",
-        background:
-          booking.status === "pending"
-            ? "rgba(10,10,10,0.52)"
-            : "rgba(73, 17, 17, 0.52)",
+        background: "rgba(10,10,10,0.52)",
+
         // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-        boxShadow:
-          booking.status === "pending"
-            ? "0 4px 10px rgba(10,10,10,0.6)"
-            : "0 4px 10px rgba(73,17,17,0.6)",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         // backdropFilter: "Blur(5px)",
         // border: "1px solid rgba(10,10,10,0.6)",
-        border:
-          booking.status === "pending"
-            ? "1px solid rgba(10,10,10,0.6)"
-            : "1px solid rgba(73, 17, 17, 0.6)",
+        border: "1px solid rgba(10,10,10,0.6)",
         width: "100%",
         // height: "100%",
         display: "flex",
@@ -85,21 +86,6 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
         alignItems: "center",
       }}
     >
-      {/* <CardHeader
-        title={`${index + 1}. ${tpInfo?.name}`}
-        subheader={
-          mainTouristInfo
-            ? `${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
-            : ""
-        }
-        action={
-          <BookingCardMenu
-            onOptionSelect={handleMenuOptions}
-            balance={balance}
-            status={booking.status}
-          />
-        }
-      /> */}
       <Box
         sx={{
           display: "flex",
@@ -132,7 +118,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
             }}
           >
             {/* {`${index + 1}. Paquete: ${tpInfo?.name}`} */}
-            {`${index +1}. ${booking.bookingCode}`}
+            {`${index + 1}. ${tourist.ci || tourist.passportNumber}`}
           </Box>
           <Box
             sx={{
@@ -148,10 +134,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
                 fontWeight: "normal",
               }}
             >
-              {mainTouristInfo
-              // ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
-              ? `${tpInfo?.name}`
-                : ""}
+              {tourist.firstName + " " + tourist.lastName}
             </Typography>
           </Box>
           <Box
@@ -171,12 +154,13 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
                 gap: "0.5rem",
               }}
             >
+              {dayjs().diff(dayjs(tourist.dateOfBirth, "DD/MM/YYYY"), "year")}
               {/* {booking.status === "pending"
                 ? `Pendiente`
                 : booking.status === "cancelled"
                 ? `Cancelado`
                 : `Pagado`} */}
-              { `${booking.totalPrice.toFixed(2)} Bs.`}
+              {/* { `${booking.totalPrice.toFixed(2)} Bs.`} */}
             </Typography>
           </Box>
           <Box
@@ -188,7 +172,6 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
             }}
           >
             <Typography
-              component="div"
               variant="body2"
               sx={{
                 fontWeight: "normal",
@@ -197,7 +180,8 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
                 gap: "0.5rem",
               }}
             >
-              {booking.status === "cancelled" ? (
+              {tourist.bookingIds?.length || 0}
+              {/* {booking.status === "cancelled" ? (
                 <Typography
                   variant="body1"
                   component="div"
@@ -211,7 +195,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
                 // <Typography variant="body1" component="div">
                 //   {`Costo total: ${booking.totalPrice.toFixed(2)} Bs.`}
                 // </Typography>
-              )}
+              )} */}
             </Typography>
           </Box>
           {/* <IconButton
@@ -225,10 +209,10 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
         </IconButton> */}
         </Box>
         <Box>
-          <BookingCardMenu
+          <TouristCardMenu
             onOptionSelect={handleMenuOptions}
-            balance={balance}
-            status={booking.status}
+            // balance={balance}
+            // status={booking.status}
             role={role}
           />
         </Box>
@@ -251,4 +235,4 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
     // </AnimatedContent>
   );
 };
-export default BookingCardV2;
+export default TouristCard;

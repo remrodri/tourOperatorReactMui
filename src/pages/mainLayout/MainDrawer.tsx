@@ -35,6 +35,7 @@ import TextType from "../../TextAnimations/TextType/TextType";
 import PeopleIcon from "@mui/icons-material/People";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CategoryIcon from "@mui/icons-material/Category";
+import { Group, Groups } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -204,6 +205,9 @@ export default function MainDrawer({ currentStyles }: Props) {
       case "Reportes":
         navigate("reportes/dashboard");
         break;
+      case "Turistas":
+        navigate("turistas/todos");
+        break;
       default:
         console.warn("la ruta no existe");
         break;
@@ -255,6 +259,7 @@ export default function MainDrawer({ currentStyles }: Props) {
       setSelectedOption("Destinos");
     if (path.includes("reservas/todos")) setSelectedOption("Reservas");
     if (path.includes("reportes/dashboard")) setSelectedOption("Reportes");
+    if (path.includes("turistas/todos")) setSelectedOption("Turistas");
     // if (path.includes("home")) setSelectedOption("Home");
   }, [location.pathname]);
 
@@ -379,12 +384,15 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 2 : 0,
               }}
             >
-              Usuarios
+              Personal
             </Typography>
           </Box>
           {/* <Collapse in={userOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding> */}
-          <Tooltip title="Listar usuarios" placement="right">
+          <Tooltip
+            title="En este modulo puedes gestionar el personal registrado de la operadora que incluye administradores, operadores de venta, guias de turismo"
+            placement="right"
+          >
             <ListItemButton
               // selected={location.pathname.includes("gestion-de-usuarios")}
               sx={{
@@ -451,10 +459,13 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 2 : 0,
               }}
             >
-              Paquetes
+              Servicios
             </Typography>
           </Box>
-          <Tooltip title="Ver todos los paquetes" placement="right">
+          <Tooltip
+            title="En este modulo puedes crear y gestionar los paquetes turisticos registrados, tambien gestionar su disponibilidad y sus fechas disponibles "
+            placement="right"
+          >
             <ListItemButton
               sx={{
                 pl: open ? 4 : 2.5,
@@ -486,10 +497,13 @@ export default function MainDrawer({ currentStyles }: Props) {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText primary={open ? "Ver todos" : ""} />
+              <ListItemText primary={open ? "Paquetes" : ""} />
             </ListItemButton>
           </Tooltip>
-          <Tooltip title="Tipo de tour" placement="right">
+          <Tooltip
+            title="En este modulo puedes gestionar los tipos de tour registrados "
+            placement="right"
+          >
             <ListItemButton
               sx={{
                 pl: open ? 4 : 2.5,
@@ -559,7 +573,10 @@ export default function MainDrawer({ currentStyles }: Props) {
               <ListItemText primary={open ? "Politicas " : ""} />
             </ListItemButton>
           </Tooltip> */}
-          <Tooltip title="Destinos" placement="right">
+          <Tooltip
+            title="En este modulo puedes crear nuevos destinos turisticos y gestionar los destinos existentes "
+            placement="right"
+          >
             <ListItemButton
               sx={{
                 pl: open ? 4 : 2.5,
@@ -614,7 +631,10 @@ export default function MainDrawer({ currentStyles }: Props) {
               Reservas
             </Typography>
           </Box>
-          <Tooltip title="Ver todas las reservas" placement="right">
+          <Tooltip
+            title="En este modulo puedes crear, gestionar y buscar las reservas registradas, ademas puedes gestionar pagos y cancelaciones de los mismos"
+            placement="right"
+          >
             <ListItemButton
               sx={{
                 pl: open ? 4 : 2.5,
@@ -668,10 +688,70 @@ export default function MainDrawer({ currentStyles }: Props) {
                 pl: open ? 2 : 0,
               }}
             >
+              Turistas
+            </Typography>
+          </Box>
+          <Tooltip
+            title="En este modulo puedes crear, gestionar y buscar los turistas registrados"
+            placement="right"
+          >
+            <ListItemButton
+              sx={{
+                pl: open ? 4 : 2.5,
+                backgroundColor:
+                  selectedOption === "Turistas"
+                    ? "rgba(255, 255, 255, 0.4)"
+                    : "transparent",
+                "&:hover": {
+                  // backgroundColor:
+                  //   selectedOption === "Reportes"
+                  //     ? "rgba(255, 255, 255, 0.4)"
+                  //     : "rgba(255, 255, 255, 0.4)",
+                  backgroundColor: "rgba(255,255,255,0.4)",
+                },
+                color:
+                  selectedOption === "Turistas"
+                    ? "rgba(43, 43, 43, 0.88)"
+                    : "inherit",
+              }}
+              onClick={() => handleClick("Turistas")}
+            >
+              <ListItemIcon>
+                <Groups
+                  sx={{
+                    color:
+                      selectedOption === "Turistas"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText primary={open ? "Ver todos" : ""} />
+            </ListItemButton>
+          </Tooltip>
+        </List>
+        <List>
+          <Box width="100%">
+            <Typography
+              // variant="caption"
+              // component="div"
+              sx={{
+                // flexGrow: 1,
+                fontSize: open ? "0.8rem" : "0.7rem",
+                width: open ? "100%" : "3.8rem",
+                fontWeight: "100",
+                display: "flex",
+                justifyContent: open ? "left" : "center",
+                pl: open ? 2 : 0,
+              }}
+            >
               Reportes
             </Typography>
           </Box>
-          <Tooltip title="Reportes" placement="right">
+          <Tooltip
+            title="En este modulo puedes visualizar reportes sobre datos relevantes de la operadora de turismo"
+            placement="right"
+          >
             <ListItemButton
               sx={{
                 pl: open ? 4 : 2.5,
