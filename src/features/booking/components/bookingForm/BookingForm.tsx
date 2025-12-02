@@ -234,7 +234,11 @@ const BookingForm: React.FC<BookingFormProps> = ({
                       deletingSpeed={50}
                     />
                   </Typography>
-                  <Button variant="contained" onClick={handleOpenSearchTourist}>
+                  <Button
+                    variant="outlined"
+                    onClick={handleOpenSearchTourist}
+                    color="info"
+                  >
                     Buscar por documento
                   </Button>
                   {touristsBySearch.map((tourist) => (
@@ -314,7 +318,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   ))}
                 </Box>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   color="info"
                   size="small"
                   onClick={handleAddAdditionalTourist}
