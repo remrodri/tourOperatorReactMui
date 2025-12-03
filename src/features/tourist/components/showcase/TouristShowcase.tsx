@@ -2,6 +2,8 @@ import { Box, Container, Fade, Grow, Typography } from "@mui/material";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { TouristType } from "../../../booking/types/TouristType";
 import TouristCardContainer from "./card/TouristCardContainer";
+import TouristSearchByCodeContainer from "./search/TouristSearchByCode.Container";
+import { useState } from "react";
 interface TouristShowcaseProps {
   tourists: TouristType[] | null;
   role: string;
@@ -11,6 +13,7 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
   tourists,
   role,
 }) => {
+  const [touristFound, setTouristFound] = useState<TouristType | null>(null);
   return (
     <Fade in={true} timeout={1000}>
       <Box
@@ -55,6 +58,11 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
                 bookings={bookings}
                 setBookingFound={setBookingFound}
               /> */}
+              <TouristSearchByCodeContainer
+                tourists={tourists}
+                setTouristFound={setTouristFound}
+                touristFound={touristFound}
+              />
             </Box>
             {/* <BookingFilterContainer
               bookings={bookings}
@@ -146,29 +154,37 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
                 gap: "0.5rem",
               }}
             >
-              {tourists?.map((tourist, index) => (
-                // <TouristCardContainer
-                //   key={tourist.id}
-                //   tourist={tourist}
-                //   index={index}
-                //   role={role}
-                // />
+              {touristFound ? (
+                <TouristCardContainer
+                  tourist={touristFound}
+                  index={0}
+                  role={role}
+                />
+              ) : (
+                tourists?.map((tourist, index) => (
+                  // <TouristCardContainer
+                  //   key={tourist.id}
+                  //   tourist={tourist}
+                  //   index={index}
+                  //   role={role}
+                  // />
 
-                <Grow
-                  in={true} // o una condición si quieres mostrar/ocultar
-                  style={{ transformOrigin: "0 0 0" }}
-                  timeout={500 + index * 300} // cada card entra con más delay
-                  key={tourist.id}
-                >
-                  <Box sx={{ width: "100%" }}>
-                    <TouristCardContainer
-                      tourist={tourist}
-                      index={index}
-                      role={role}
-                    />
-                  </Box>
-                </Grow>
-              ))}
+                  <Grow
+                    in={true} // o una condición si quieres mostrar/ocultar
+                    style={{ transformOrigin: "0 0 0" }}
+                    timeout={500 + index * 300} // cada card entra con más delay
+                    key={tourist.id}
+                  >
+                    <Box sx={{ width: "100%" }}>
+                      <TouristCardContainer
+                        tourist={tourist}
+                        index={index}
+                        role={role}
+                      />
+                    </Box>
+                  </Grow>
+                ))
+              )}
             </Box>
             {/* {bookingFound ? (
               <BookingCardContainer
