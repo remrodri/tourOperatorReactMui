@@ -1,57 +1,27 @@
-import { Box, Button, Fade, Typography } from "@mui/material";
-// import { BookingType } from "../../types/BookingType";
-// import BookingCardContainer from "./card/BookingCardContainer";
+import { Box, Container, Fade, Grow, Typography } from "@mui/material";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { TouristType } from "../../../booking/types/TouristType";
 import TouristCardContainer from "./card/TouristCardContainer";
-// import BookingSearchByCodeContainer from "./searchByCode/BookingSearchByCodeContainer";
-// import BookingFilterContainer from "./filter/BookingFilterContainer";
-// import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-
 interface TouristShowcaseProps {
   tourists: TouristType[] | null;
-  // handleClick: () => void;
-  // bookings: BookingType[] | null;
-  // open: boolean;
   role: string;
-  // setBookingFound: (booking: BookingType | null) => void;
-  // bookingFound: BookingType | null;
-  // // tourPackages: TourPackageType[] | null;
-  // filteredBookings: BookingType[];
-  // setFilteredBookings: (bookings: BookingType[]) => void;
-  // setBookingProof: (booking: BookingType | null) => void;
 }
 
 const TouristShowcase: React.FC<TouristShowcaseProps> = ({
   tourists,
-  // handleClick,
-  // bookings,
-  // open,
   role,
-  // setBookingFound,
-  // bookingFound,
-  // // tourPackages,
-  // filteredBookings,
-  // setFilteredBookings,
-  // setBookingProof,
 }) => {
-  // console.log('bookings::: ', bookings);
-  // console.log('bookingFound::: ', bookingFound);
-  // if (!bookings || bookings.length === 0) {
-  //   return <Box>No hay reservas disponibles</Box>;
-  // }
-
   return (
     <Fade in={true} timeout={1000}>
       <Box
         sx={{
           flexGrow: 1,
+          width: "calc(100vw - 106px)",
           // display: "flex",
           // flexDirection: "column",
         }}
       >
         <Box
-          // variant="h4"
           sx={{
             // height: "5rem",
             display: "flex",
@@ -148,22 +118,58 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
                 <Typography sx={{ width: "30%", pl: "3rem" }}>
                   Nombre
                 </Typography>
-                <Typography sx={{ width: "20%", pl: "1rem" }}>
-                  Edad
-                </Typography>
+                <Typography sx={{ width: "20%", pl: "1rem" }}>Edad</Typography>
                 <Typography sx={{ width: "20%", pl: "3rem" }}>
                   Viajes realizados
                 </Typography>
               </Box>
             </Box>
-            {tourists?.map((tourist, index) => (
-              <TouristCardContainer
-                key={tourist.id}
-                tourist={tourist}
-                index={index}
-                role={role}
-              />
-            ))}
+            {/* <Box
+            sx={{
+              // width: "100%",
+              flexGrow:1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          > */}
+            <Box
+              sx={{
+                width: "100%",
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {tourists?.map((tourist, index) => (
+                // <TouristCardContainer
+                //   key={tourist.id}
+                //   tourist={tourist}
+                //   index={index}
+                //   role={role}
+                // />
+
+                <Grow
+                  in={true} // o una condición si quieres mostrar/ocultar
+                  style={{ transformOrigin: "0 0 0" }}
+                  timeout={500 + index * 300} // cada card entra con más delay
+                  key={tourist.id}
+                >
+                  <Box sx={{ width: "100%" }}>
+                    <TouristCardContainer
+                      tourist={tourist}
+                      index={index}
+                      role={role}
+                    />
+                  </Box>
+                </Grow>
+              ))}
+            </Box>
             {/* {bookingFound ? (
               <BookingCardContainer
                 key={bookingFound.id}

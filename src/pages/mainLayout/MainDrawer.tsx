@@ -11,16 +11,10 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Collapse, Tooltip, useMediaQuery } from "@mui/material";
-// import { ExpandLess, ExpandMore, HorizontalSplit } from "@mui/icons-material";
-// import RecentActorsIcon from "@mui/icons-material/RecentActors";
-// import CoPresentIcon from "@mui/icons-material/CoPresent";
-// import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
+import { Fade, Tooltip, useMediaQuery } from "@mui/material";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-// import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExploreIcon from "@mui/icons-material/Explore";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import { TokenService } from "../../utils/tokenService";
@@ -29,13 +23,11 @@ import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/user/types/User";
 import MainAppBar from "./MainAppBar";
 import { AppBarStyle } from "./MainLayout";
-// import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
 import TextType from "../../TextAnimations/TextType/TextType";
-// import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 import PeopleIcon from "@mui/icons-material/People";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CategoryIcon from "@mui/icons-material/Category";
-import { Group, Groups } from "@mui/icons-material";
+import { Groups } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -70,51 +62,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-// interface AppBarProps extends MuiAppBarProps {
-//   open?: boolean;
-// }
-
-// const AppBar = styled(MuiAppBar, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })<AppBarProps>(({ theme }) => ({
-//   position: "static",
-//   // padding:"5px",
-//   // zIndex: theme.zIndex.drawer + 1,
-//   // m:"5px 0 0 0",
-//   height: "5.5rem",
-//   // p:"5px 0 0 0",
-//   transition: theme.transitions.create(["width", "margin"], {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   variants: [
-//     {
-//       props: ({ open }) => open,
-//       style: {
-//         // marginLeft: drawerWidth,
-//         // width: `calc(100% - ${drawerWidth}px)`,
-//         transition: theme.transitions.create(["width", "margin"], {
-//           easing: theme.transitions.easing.sharp,
-//           duration: theme.transitions.duration.enteringScreen,
-//         }),
-//       },
-//     },
-//     {
-//       props: ({ open }) => !open,
-//       style: {
-//         // marginLeft: drawerWidth,
-//         // width: `calc(100% - 5rem)`,
-//         // padding:"5px",
-//         // height:"4rem",
-//         transition: theme.transitions.create(["width", "margin"], {
-//           easing: theme.transitions.easing.sharp,
-//           duration: theme.transitions.duration.enteringScreen,
-//         }),
-//       },
-//     },
-//   ],
-// }));
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
@@ -140,31 +87,28 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-// const settings = ["Cerrar sesion"];
-
 interface Props {
   currentStyles: AppBarStyle;
 }
 
-export default function MainDrawer({ currentStyles }: Props) {
+export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [userOpen, setUserOpen] = useState(true);
-  // const [userMenuOpen, setUserMenuOpen] = useState<null | HTMLElement>(null);
-  // const { error, logout } = useLogout();
   const [selectedOption, setSelectedOption] = useState("");
-  const [packageOpen, setPackageOpen] = useState(true);
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
-  const [bookingOpen, setBookingOpen] = useState(true);
+  const [showOutlet, setShowOutlet] = useState(false);
+  const location = useLocation();
 
-  // const handleClickBooking = () => {
-  //   setBookingOpen(!bookingOpen);
-  // };
+  useEffect(() => {
+    setShowOutlet(false);
+    const timer = setTimeout(() => {
+      setShowOutlet(true);
+    }, 200);
 
-  // const packageHandleClick = () => {
-  //   setPackageOpen(!packageOpen);
-  // };
+    // Limpieza del timer cuando el componente se desmonte
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -175,7 +119,6 @@ export default function MainDrawer({ currentStyles }: Props) {
   };
 
   function handleClick(text: string): void {
-    // theme.breakpoints.down("sm") && setOpen(false);
     setSelectedOption(text);
     switch (text) {
       case "Home":
@@ -213,37 +156,7 @@ export default function MainDrawer({ currentStyles }: Props) {
         break;
     }
     matches && setOpen(false);
-    // if (theme.breakpoints.down("sm")) {
-    //   setOpen(false);
-    // }
   }
-
-  // const userHandleClick = () => {
-  //   setUserOpen(!userOpen);
-  // };
-
-  // const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //   setUserMenuOpen(event.currentTarget);
-  // };
-
-  // const handleCloseUserMenu = () => {
-  //   setUserMenuOpen(null);
-  // };
-  // const handleOptionUserMenu = (setting: string) => {
-  //   switch (setting) {
-  //     case settings[0]:
-  //       console.log("cerrar sesion::: ");
-  //       logout();
-  //       break;
-  //     default:
-  //       console.log("no hay opciones::: ");
-  //       console.log(error);
-  //       break;
-  //   }
-  //   handleCloseUserMenu();
-  // };
-
-  // const icons = [<HomeIcon />, <SupervisorAccountIcon />];
 
   useEffect(() => {
     const path = location.pathname;
@@ -260,19 +173,16 @@ export default function MainDrawer({ currentStyles }: Props) {
     if (path.includes("reservas/todos")) setSelectedOption("Reservas");
     if (path.includes("reportes/dashboard")) setSelectedOption("Reportes");
     if (path.includes("turistas/todos")) setSelectedOption("Turistas");
-    // if (path.includes("home")) setSelectedOption("Home");
   }, [location.pathname]);
 
   const [roleName, setRoleName] = useState<string>("");
   const token = TokenService.getToken();
   const user: User = jwtDecode(token as string);
-  // console.log(user)
   const { getRoleById } = useRoleContext();
   const getRoleName = () => {
     const role = getRoleById(user.role);
     setRoleName(role.name);
   };
-  // console.log(roleName)
 
   useEffect(() => {
     getRoleName();
@@ -294,13 +204,10 @@ export default function MainDrawer({ currentStyles }: Props) {
           "& .MuiDrawer-paper": {
             position: "relative",
             width: "100%",
-            // background: "rgba(0, 0, 0, 0.6)",
             background: currentStyles.drawerBackground,
-            // boxShadow: "0 4px 10px rgba(0,0,0,1)",
             boxShadow: currentStyles.drawerBoxShadow,
             borderRadius: "16px",
             backdropFilter: "blur(10px)",
-            // border: "1px solid rgba(0,0,0,0.7)",
             border: currentStyles.drawerBorder,
           },
         }}
@@ -352,30 +259,9 @@ export default function MainDrawer({ currentStyles }: Props) {
         </DrawerHeader>
         <Divider />
         <List>
-          {/* <ListItemText primary="Usuarios" /> */}
-          {/* <Tooltip title="Gestion de usuarios" placement="right">
-            <ListItemButton
-              onClick={userHandleClick}
-              sx={{
-                minHeight: 48,
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon>
-                <CoPresentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Usuarios" />
-              {userOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-          </Tooltip> */}
-          {/* {!open && (
-          )} */}
           <Box width="100%">
             <Typography
-              // variant="caption"
-              // component="div"
               sx={{
-                // flexGrow: 1,
                 fontSize: open ? "0.8rem" : "0.7rem",
                 width: open ? "100%" : "3.8rem",
                 fontWeight: "100",
@@ -387,41 +273,20 @@ export default function MainDrawer({ currentStyles }: Props) {
               Personal
             </Typography>
           </Box>
-          {/* <Collapse in={userOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding> */}
           <Tooltip
             title="En este modulo puedes gestionar el personal registrado de la operadora que incluye administradores, operadores de venta, guias de turismo"
             placement="right"
           >
             <ListItemButton
-              // selected={location.pathname.includes("gestion-de-usuarios")}
               sx={{
                 pl: open ? 4 : 2.5,
-                // "&.Mui-selected": {
-                //   backgroundColor: "rgba(78, 140, 179, 0.4)",
-                //   color: "white",
-                //   // borderRadius: "10px",
-                //   // p:"10px",
-                // },
-                // "&.Mui-selected:hover": {
-                //   backgroundColor: "primary.dark",
-                //   // borderRadius: "10px",
-                //   // p:"10px",
-                // },
                 backgroundColor:
                   selectedOption === "Ver todos"
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Ver todos"
-                  //     ? "rgba(255, 255, 255, 0.5)"
-                  //     : "rgba(172, 170, 164, 0.5)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
-                // selectedOption==="Ver todos" && {
-                //   backgroundColor: "rgba(255, 255, 255, 0.4)",
-                // }
                 color:
                   selectedOption === "Ver todos"
                     ? "rgba(43, 43, 43, 0.88)"
@@ -447,10 +312,7 @@ export default function MainDrawer({ currentStyles }: Props) {
         <List sx={{ display: "flex", flexDirection: "column" }}>
           <Box width="100%">
             <Typography
-              // variant="caption"
-              // component="div"
               sx={{
-                // flexGrow: 1,
                 fontSize: open ? "0.8rem" : "0.7rem",
                 width: open ? "100%" : "3.8rem",
                 fontWeight: "100",
@@ -474,10 +336,6 @@ export default function MainDrawer({ currentStyles }: Props) {
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Paquetes turisticos"
-                  //     ? "rgba(255, 255, 255, 0.5)"
-                  //     : "rgba(172, 170, 164, 0.5)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
                 color:
@@ -512,10 +370,6 @@ export default function MainDrawer({ currentStyles }: Props) {
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Tipo de tour"
-                  //     ? "rgba(255, 255, 255, 0.5)"
-                  //     : "rgba(172, 170, 164, 0.5)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
                 color:
@@ -538,41 +392,7 @@ export default function MainDrawer({ currentStyles }: Props) {
               <ListItemText primary={open ? "Tipos de tour" : ""} />
             </ListItemButton>
           </Tooltip>
-          {/* <Tooltip title="Politicas de cancelacion" placement="right">
-            <ListItemButton
-              sx={{
-                pl: open ? 4 : 2.5,
-                backgroundColor:
-                  selectedOption === "Politicas"
-                    ? "rgba(255, 255, 255, 0.4)"
-                    : "transparent",
-                "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Politicas"
-                  //     ? "rgba(255, 255, 255, 0.5)"
-                  //     : "rgba(172, 170, 164, 0.5)",
-                  backgroundColor: "rgba(255,255,255,0.4)",
-                },
-                color:
-                  selectedOption === "Politicas"
-                    ? "rgba(43, 43, 43, 0.88)"
-                    : "inherit",
-              }}
-              onClick={() => handleClick("Politicas")}
-            >
-              <ListItemIcon>
-                <EventBusyIcon
-                  sx={{
-                    color:
-                      selectedOption === "Politicas"
-                        ? "rgba(43, 43, 43, 0.88)"
-                        : "inherit",
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText primary={open ? "Politicas " : ""} />
-            </ListItemButton>
-          </Tooltip> */}
+
           <Tooltip
             title="En este modulo puedes crear nuevos destinos turisticos y gestionar los destinos existentes "
             placement="right"
@@ -585,10 +405,6 @@ export default function MainDrawer({ currentStyles }: Props) {
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Destinos"
-                  //     ? "rgba(255, 255, 255, 0.5)"
-                  //     : "rgba(172, 170, 164, 0.5)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
                 color:
@@ -616,10 +432,7 @@ export default function MainDrawer({ currentStyles }: Props) {
         <List>
           <Box width="100%">
             <Typography
-              // variant="caption"
-              // component="div"
               sx={{
-                // flexGrow: 1,
                 fontSize: open ? "0.8rem" : "0.7rem",
                 width: open ? "100%" : "3.8rem",
                 fontWeight: "100",
@@ -643,10 +456,6 @@ export default function MainDrawer({ currentStyles }: Props) {
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Reservas"
-                  //     ? "rgba(255,255,255,0.5)"
-                  //     : "rgba(172,170,164,0.5)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
                 color:
@@ -669,17 +478,12 @@ export default function MainDrawer({ currentStyles }: Props) {
               <ListItemText primary={open ? "Ver todos" : ""} />
             </ListItemButton>
           </Tooltip>
-          {/* </List>
-          </Collapse> */}
         </List>
         <Divider />
         <List>
           <Box width="100%">
             <Typography
-              // variant="caption"
-              // component="div"
               sx={{
-                // flexGrow: 1,
                 fontSize: open ? "0.8rem" : "0.7rem",
                 width: open ? "100%" : "3.8rem",
                 fontWeight: "100",
@@ -703,10 +507,6 @@ export default function MainDrawer({ currentStyles }: Props) {
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Reportes"
-                  //     ? "rgba(255, 255, 255, 0.4)"
-                  //     : "rgba(255, 255, 255, 0.4)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
                 color:
@@ -733,10 +533,7 @@ export default function MainDrawer({ currentStyles }: Props) {
         <List>
           <Box width="100%">
             <Typography
-              // variant="caption"
-              // component="div"
               sx={{
-                // flexGrow: 1,
                 fontSize: open ? "0.8rem" : "0.7rem",
                 width: open ? "100%" : "3.8rem",
                 fontWeight: "100",
@@ -760,10 +557,6 @@ export default function MainDrawer({ currentStyles }: Props) {
                     ? "rgba(255, 255, 255, 0.4)"
                     : "transparent",
                 "&:hover": {
-                  // backgroundColor:
-                  //   selectedOption === "Reportes"
-                  //     ? "rgba(255, 255, 255, 0.4)"
-                  //     : "rgba(255, 255, 255, 0.4)",
                   backgroundColor: "rgba(255,255,255,0.4)",
                 },
                 color:
@@ -790,11 +583,6 @@ export default function MainDrawer({ currentStyles }: Props) {
       </Drawer>
       <Box
         sx={{
-          // flexGrow: 1,
-          // display: "flex",
-          // flexDirection: "column",
-          // height: "100dvh",
-          // width: "calc(100vw - 83px)",
           width: "100%",
           height: "100dvh",
           display: "flex",
@@ -804,19 +592,16 @@ export default function MainDrawer({ currentStyles }: Props) {
         <MainAppBar currentStyles={currentStyles} />
         <Box
           sx={{
-            // flexGrow: 1,
-            // height: "calc(100% - 5.5rem)",
             height: "calc(100dvh - 5.4rem)",
             display: "flex",
-            // flexDirection: "column",
-            // width: "calc(100vw - 83px)",
-            // background: "rgba(193, 45, 45, 0.4)",
-            // backdropFilter: "blur(10px)",
           }}
         >
+          {/* <Box> */}
+          {/* {showOutlet && <Outlet />} */}
           <Outlet />
+          {/* </Box> */}
         </Box>
       </Box>
     </Box>
   );
-}
+};

@@ -1,4 +1,4 @@
-import { Box, Button, Fade, Typography } from "@mui/material";
+import { Box, Button, Fade, Grow, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import React, { useState } from "react";
 import { useTourTypeContext } from "../../context/TourTypeContext";
@@ -22,7 +22,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({
   const { openDialog, tourTypes } = useTourTypeContext();
 
   return (
-    <Fade in={true} timeout={1000}>
+    // <Fade in={true} timeout={1000}>
       <Box
         sx={
           {
@@ -100,12 +100,27 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({
             }}
           >
             {tourTypes && tourTypes.length > 0 ? (
-              tourTypes.map((tourType) => (
-                <TourTypeCard
+              tourTypes.map((tourType, index) => (
+                // <TourTypeCard
+                //   key={tourType.id}
+                //   tourType={tourType}
+                //   role={role}
+                // />
+
+                <Grow
+                  in={true} // o una condición si quieres mostrar/ocultar
+                  style={{ transformOrigin: "0 0 0" }}
+                  timeout={500 + index * 300} // cada card entra con más delay
                   key={tourType.id}
-                  tourType={tourType}
-                  role={role}
-                />
+                >
+                  <Box>
+                    <TourTypeCard
+                      key={tourType.id}
+                      tourType={tourType}
+                      role={role}
+                    />
+                  </Box>
+                </Grow>
               ))
             ) : (
               <p>No hay tipos de tour registrados</p>
@@ -113,7 +128,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({
           </Box>
         </Box>
       </Box>
-    </Fade>
+    // </Fade>
   );
 };
 export default TourTypeShowcase;

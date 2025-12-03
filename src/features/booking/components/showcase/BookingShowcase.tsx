@@ -1,4 +1,4 @@
-import { Box, Button, Fade, Typography } from "@mui/material";
+import { Box, Button, Fade, Grow, Typography } from "@mui/material";
 import { BookingType } from "../../types/BookingType";
 import BookingCardContainer from "./card/BookingCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
@@ -33,9 +33,9 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
 }) => {
   // console.log('bookings::: ', bookings);
   // console.log('bookingFound::: ', bookingFound);
-  if (!bookings || bookings.length === 0) {
-    return <Box>No hay reservas disponibles</Box>;
-  }
+  // if (!bookings || bookings.length === 0) {
+  //   return <Box>No hay reservas disponibles</Box>;
+  // }
 
   return (
     <Fade in={true} timeout={1000}>
@@ -83,7 +83,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
               />
             </Box>
             <BookingFilterContainer
-              bookings={bookings}
+              bookings={bookings || []}
               // tourPackages={tourPackages}
               setFilteredBookings={setFilteredBookings}
             />
@@ -166,13 +166,29 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
                   <p>No hay reservas</p>
                 ) : (
                   filteredBookings.map((booking, index) => (
-                    <BookingCardContainer
+                    // <BookingCardContainer
+                    //   key={booking.id}
+                    //   booking={booking}
+                    //   index={index}
+                    //   role={role}
+                    //   setBookingProof={setBookingProof}
+                    // />
+                    <Grow
+                      in={true} // o una condición si quieres mostrar/ocultar
+                      style={{ transformOrigin: "0 0 0" }}
+                      timeout={500 + index * 300} // cada card entra con más delay
                       key={booking.id}
-                      booking={booking}
-                      index={index}
-                      role={role}
-                      setBookingProof={setBookingProof}
-                    />
+                    >
+                      <Box sx={{ width: "100%" }}>
+                        <BookingCardContainer
+                          key={booking.id}
+                          booking={booking}
+                          index={index}
+                          role={role}
+                          setBookingProof={setBookingProof}
+                        />
+                      </Box>
+                    </Grow>
                   ))
                 )}
               </>

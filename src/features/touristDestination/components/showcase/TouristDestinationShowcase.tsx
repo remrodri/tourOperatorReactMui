@@ -1,4 +1,4 @@
-import { Box, Button, Fade, Typography } from "@mui/material";
+import { Box, Button, Fade, Grow, Typography } from "@mui/material";
 import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import { TouristDestinationType } from "../../types/TouristDestinationType";
 import TouristDestinationCardContainer from "./card/TouristDestinationCardContainer";
@@ -19,7 +19,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
 }) => {
   // console.log('touristDestinations::: ', touristDestinations);
   return (
-    // <Fade in={true} timeout={1000}>
+    <Fade in={true} timeout={1000}>
     <Box
       sx={
         {
@@ -122,12 +122,27 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
           }}
         >
           {touristDestinations && touristDestinations.length > 0 ? (
-            touristDestinations.map((touristDestination) => (
-              <TouristDestinationCardContainer
+            touristDestinations.map((touristDestination,index) => (
+              // <TouristDestinationCardContainer
+              //   key={touristDestination.id}
+              //   touristDestination={touristDestination}
+              //   role={role}
+              // />
+
+              <Grow
+                in={true} // o una condición si quieres mostrar/ocultar
+                style={{ transformOrigin: "0 0 0" }}
+                timeout={500 + index * 300} // cada card entra con más delay
                 key={touristDestination.id}
-                touristDestination={touristDestination}
-                role={role}
-              />
+              >
+                <Box>
+                  <TouristDestinationCardContainer
+                    key={touristDestination.id}
+                    touristDestination={touristDestination}
+                    role={role}
+                  />
+                </Box>
+              </Grow>
             ))
           ) : (
             <p>No se encuentran destinos turisticos</p>
@@ -135,7 +150,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
         </Box>
       </Box>
     </Box>
-    // </Fade>
+    </Fade>
   );
 };
 export default TouristDestinationShowcase;

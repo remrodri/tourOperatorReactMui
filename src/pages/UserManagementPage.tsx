@@ -8,13 +8,13 @@ const UserManagementPage: React.FC = () => {
   return (
     // <>
     //   <CssBaseline />
-    <FadeContent
-      // blur={true}
-      duration={200}
-      easing="ease-out"
-      initialOpacity={0.6}
-      className="w-full"
-    >
+    // <FadeContent
+    //   // blur={true}
+    //   duration={200}
+    //   easing="ease-out"
+    //   initialOpacity={0.6}
+    //   className="w-full"
+    // >
       <Box
         sx={{
           // flexGrow: 1,
@@ -24,7 +24,7 @@ const UserManagementPage: React.FC = () => {
           //   xs: "calc(100vh - 3.5rem)",
           //   sm: "calc(100vh - 4rem)",
           // },
-          height: "calc(100dvh - 5.4rem)",
+          // height: "calc(100dvh - 5.4rem)",
           // width: "calc(100vw - 83px)",
           p: "10px",
           // background: "rgba(78, 140, 179, 0.4)",
@@ -66,7 +66,7 @@ const UserManagementPage: React.FC = () => {
         {/* <Typography variant="h4" component="h2"> */}
         {/* </Typography> */}
       </Box>
-    </FadeContent>
+    // </FadeContent>
     // </>
   );
 };

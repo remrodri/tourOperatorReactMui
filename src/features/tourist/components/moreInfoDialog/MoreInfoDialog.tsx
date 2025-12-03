@@ -1,38 +1,30 @@
 import {
-  Avatar,
   Box,
   Button,
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
   Typography,
 } from "@mui/material";
-// import { User } from "../../types/User";
-// import { Role } from "../../types/Role";
-// import TextType from "../../../../TextAnimations/TextType/TextType";
+
 import { Close } from "@mui/icons-material";
-import TextType from "../../../TextAnimations/TextType/TextType";
-import { TouristType } from "../../booking/types/TouristType";
 import dayjs from "dayjs";
+import TextType from "../../../../TextAnimations/TextType/TextType";
+import { TouristType } from "../../../booking/types/TouristType";
 
 interface MoreInfoDialogProps {
   open: boolean;
   handleClose: () => void;
   tourist: TouristType;
-  // user: User;
-  // userRole: Role;
 }
 
 const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   open,
   handleClose,
-  // user,
-  // userRole,
+  
   tourist,
 }) => {
-  // console.log("user::: ", user);
   return (
     <Dialog
       onClose={handleClose}
@@ -75,11 +67,6 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
         <Box
           sx={{ display: "flex", justifyContent: "center", p: " 0 0 20px 0" }}
         >
-          {/* <Avatar
-            variant="rounded"
-            sx={{ height: "150px", width: "150px" }}
-            src={user.imageUrl}
-          /> */}
         </Box>
         <Box>
           <Box>Nombre(s):</Box>
