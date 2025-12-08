@@ -54,8 +54,9 @@ const TouristSearchByCode: React.FC<TouristSearchByCodeProps> = ({
               >
                 {touristFound === null ? (
                   <Button
+                    color="success"
                     onClick={onSearch}
-                    variant="outlined"
+                    variant="contained"
                     sx={{ height: "2.4rem", boxShadow: "none" }}
                   >
                     <SearchIcon />
@@ -63,7 +64,7 @@ const TouristSearchByCode: React.FC<TouristSearchByCodeProps> = ({
                 ) : (
                   <Button
                     onClick={onClear}
-                    variant="outlined"
+                    variant="contained"
                     disabled={searchValue === ""}
                     color="error"
                     sx={{ height: "2.4rem", boxShadow: "none" }}

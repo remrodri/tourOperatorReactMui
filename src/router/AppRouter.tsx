@@ -29,6 +29,10 @@ import MainLayout from "../pages/mainLayout/MainLayout";
 import GuideDateRangeSelectorContainer from "../features/guide/components/dateRangeSelector/GuideDateRangeSelectorContainer";
 import TouristPage from "../pages/TouristPage";
 import TouristShowcaseContainer from "../features/tourist/components/showcase/TouristShowcaseContainer";
+import TouristDestinationPage from "../pages/TouristDestinationPage";
+import TourTypePage from "../pages/TourTypePage";
+import TourTypeShowcaseContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
+import Page from "../pages/NotFoundPage";
 
 export const AppRouter = createBrowserRouter(
   [
@@ -70,11 +74,11 @@ export const AppRouter = createBrowserRouter(
 
       children: [
         {
-          path: "gestion-de-usuarios",
+          path: "personal",
           element: <UserManagementPage />,
           children: [
             {
-              path: "usuarios",
+              path: "",
               element: <UserShowcaseContainer />,
               children: [],
             },
@@ -85,39 +89,59 @@ export const AppRouter = createBrowserRouter(
           element: <TourPackagePage />,
           children: [
             {
-              path: "ver-todos",
+              path: "",
               element: <TourPackageShowcaseContainer />,
             },
+            // {
+            //   path: "tipo-de-tour",
+            //   element: <TourTypeContainer />,
+            // },
+            // {
+            //   path: "politicas",
+            //   element: <CancellationPolicyShowcaseContainer />,
+            // },
+            // {
+            //   path: "destinos",
+            //   element: <TouristDestinationShowcaseContainer />,
+            // },
+          ],
+        },
+        {
+          path: "destinos-turisticos",
+          element: <TouristDestinationPage />,
+          children: [
             {
-              path: "tipo-de-tour",
-              element: <TourTypeContainer />,
-            },
-            {
-              path: "politicas",
-              element: <CancellationPolicyShowcaseContainer />,
-            },
-            {
-              path: "destinos",
+              path: "",
               element: <TouristDestinationShowcaseContainer />,
+            },
+          ],
+        },
+        {
+          path: "tipos-de-tour",
+          element: <TourTypePage />,
+          children: [
+            {
+              path: "",
+              element: <TourTypeShowcaseContainer />,
             },
           ],
         },
         {
           path: "reservas",
           element: <BookingPage />,
-          children: [{ path: "todos", element: <BookingShowcaseContainer /> }],
+          children: [{ path: "", element: <BookingShowcaseContainer /> }],
         },
         {
           path: "reportes",
           element: <ReportsPage />,
-          children: [{ path: "dashboard", element: <DashboardContainer /> }],
+          children: [{ path: "", element: <DashboardContainer /> }],
         },
         {
           path: "turistas",
           element: <TouristPage />,
           children: [
             {
-              path: "todos",
+              path: "",
               element: <TouristShowcaseContainer />,
             },
           ],
@@ -159,6 +183,10 @@ export const AppRouter = createBrowserRouter(
           ],
         },
       ],
+    },
+    {
+      path: "*",
+      element: <Page />,
     },
   ],
 

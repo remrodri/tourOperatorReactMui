@@ -3,101 +3,128 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { RoleProvider } from "../../features/Role/context/RoleContext";
 import { MainDrawer } from "./MainDrawer";
+import { AppBarStyle, appBarStyles } from "./style/MainStyles";
 
 const userManagementBackground = "/src/assets/images/userManagement.webp";
 const tourPackageBackground = "/src/assets/images/tourPackage.webp";
 const bookingBackground = "/src/assets/images/booking.webp";
 const reportsBackground = "/src/assets/images/reports.webp";
 const touristBackground = "/src/assets/images/tourist.webp";
+const tourTypesBackground = "/src/assets/images/tourTypes2.webp";
+const touristDestination = "/src/assets/images/touristDestination.webp";
 
-export interface AppBarStyle {
-  background: string;
-  borderRadius: string;
-  boxShadow: string;
-  backdropFilter: string;
-  border: string;
-  drawerBackground: string;
-  drawerBorder: string;
-  drawerBoxShadow: string;
-}
+// export interface AppBarStyle {
+//   background: string;
+//   borderRadius: string;
+//   boxShadow: string;
+//   backdropFilter: string;
+//   border: string;
+//   drawerBackground: string;
+//   drawerBorder: string;
+//   drawerBoxShadow: string;
+// }
 
-const appBarStyles = [
-  {
-    background: "rgba(191, 161, 143, 0.6)",
-    borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(191, 161, 143, 0.7)",
-    drawerBackground: "rgba(191, 161, 143, 0.6)",
-    drawerBorder: "1px solid rgba(191, 161, 143, 0.7)",
-    drawerBoxShadow: "0 4px 10px rgba(0,0,0,0.5)",
-  },
-  {
-    background: "rgba(102, 188, 242	, 0.4)",
-    borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(102, 188, 242	, 0.5)",
-    drawerBackground: "rgba(102, 188, 242	, 0.4)",
-    drawerBorder: "1px solid rgba(102, 188, 242	, 0.5)",
-    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-  },
-  {
-    background: "rgba(86, 101, 115, 0.6)",
-    borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(86, 101, 115, 0.7)",
-    drawerBackground: "rgba(86, 101, 115, 0.6)",
-    drawerBorder: "1px solid rgba(86, 101, 115, 0.7)",
-    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-  },
-  {
-    background: "rgba(140, 109, 81, 0.7)",
-    borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(140, 109, 81, 1)",
-    drawerBackground: "rgba(140, 109, 81, 0.7)",
-    drawerBorder: "1px solid rgba(140, 109, 81, 1)",
-    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-  },
-  {
-    background: "rgba(64, 89, 66, 0.6)",
-    borderRadius: "16px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(64, 89, 66, 0.7)",
-    drawerBackground: "rgba(64, 89, 66, 0.6)",
-    drawerBorder: "1px solid rgba(64, 89, 66, 0.7)",
-    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-  },
-];
+// const appBarStyles = [
+//   {
+//     background: "rgba(176, 143, 123, 0.6)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(191, 161, 143, 0.7)",
+//     drawerBackground: "rgba(191, 161, 143, 0.6)",
+//     drawerBorder: "1px solid rgba(191, 161, 143, 0.7)",
+//     drawerBoxShadow: "0 4px 10px rgba(0,0,0,0.5)",
+//   },
+//   {
+//     background: "rgba(71, 133, 172, 0.6)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(71, 133, 172, 0.7)",
+//     drawerBackground: "rgba(71, 133, 172, 0.6)",
+//     drawerBorder: "1px solid rgba(71, 133, 172, 0.7)",
+//     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//   },
+//   {
+//     background: "rgba(86, 101, 115, 0.6)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(86, 101, 115, 0.7)",
+//     drawerBackground: "rgba(86, 101, 115, 0.6)",
+//     drawerBorder: "1px solid rgba(86, 101, 115, 0.7)",
+//     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//   },
+//   {
+//     background: "rgba(140, 109, 81, 0.7)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(140, 109, 81, 1)",
+//     drawerBackground: "rgba(140, 109, 81, 0.7)",
+//     drawerBorder: "1px solid rgba(140, 109, 81, 1)",
+//     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//   },
+//   {
+//     background: "rgba(64, 89, 66, 0.6)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(64, 89, 66, 0.7)",
+//     drawerBackground: "rgba(64, 89, 66, 0.6)",
+//     drawerBorder: "1px solid rgba(64, 89, 66, 0.7)",
+//     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//   },
+//   {
+//     background: "rgba(126, 126, 126, 0.6)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(126, 126, 126, 0.7)",
+//     drawerBackground: "rgba(126, 126, 126, 0.6)",
+//     drawerBorder: "1px solid rgba(126, 126, 126, 0.7)",
+//     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+//   },
+//   {
+//     background: "rgba(158, 118, 81, 0.6)",
+//     borderRadius: "16px",
+//     boxShadow: "0 4px 10px rgba(158, 118, 81, 0.5)",
+//     backdropFilter: "blur(10px)",
+//     border: "1px solid rgba(158, 118, 81, 0.7)",
+//     drawerBackground: "rgba(158, 118, 81, 0.6)",
+//     drawerBorder: "1px solid rgba(158, 118, 81, 0.7)",
+//     drawerBoxShadow: "0 4px 10px rgba(158, 118, 81, 0.5)",
+//   },
+// ];
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
   const [backgroundImg, setBackgroundImg] = useState<string>("");
   const [showBackground, setShowBackground] = useState<boolean>(true);
 
+  // const MainStyles:AppBarStyle[] = appBarStyles;
+
   const backgroundImgs: { [key: string]: string } = {
-    ["/gestion-de-usuarios"]: userManagementBackground,
-    ["/gestion-de-paquetes-turisticos"]: tourPackageBackground,
+    ["/personal"]: userManagementBackground,
+    ["/paquetes-turisticos"]: tourPackageBackground,
     ["/reservas"]: bookingBackground,
     ["/reportes"]: reportsBackground,
     ["/turistas"]: touristBackground,
+    ["/tipos-de-tour"]: tourTypesBackground,
+    ["/destinos-turisticos"]: touristDestination,
   };
 
   const [open, setOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [currentStyles, setCurrentStyles] = useState<AppBarStyle>({
-    background: "",
-    borderRadius: "",
-    boxShadow: "",
-    backdropFilter: "",
-    border: "",
-    drawerBackground: "",
-    drawerBorder: "",
-    drawerBoxShadow: "",
+    background: "rgba(87, 87, 87, 1)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+    backdropFilter: "blur(10px)",
+    border: "rgba(87, 87, 87, 1)",
+    drawerBackground: "rgba(87, 87, 87, 1)",
+    drawerBorder: "rgba(87, 87, 87, 1)",
+    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   });
 
   const handleSelectedOption = (option: string) => {
@@ -113,7 +140,7 @@ const MainLayout: React.FC = () => {
     const timer = setTimeout(() => {
       setBackgroundImg(backgroundImgs[location.pathname] || "/home");
 
-      if (location.pathname.includes("gestion-de-usuarios")) {
+      if (location.pathname.includes("personal")) {
         setBackgroundImg(userManagementBackground);
         setCurrentStyles(appBarStyles[0]);
       }
@@ -133,7 +160,14 @@ const MainLayout: React.FC = () => {
         setBackgroundImg(touristBackground);
         setCurrentStyles(appBarStyles[4]);
       }
-
+      if (location.pathname.includes("tipos-de-tour")) {
+        setBackgroundImg(tourTypesBackground);
+        setCurrentStyles(appBarStyles[5]);
+      }
+      if (location.pathname.includes("destinos-turisticos")) {
+        setBackgroundImg(touristDestination);
+        setCurrentStyles(appBarStyles[6]);
+      }
       // Fade in después de cambiar la imagen
       setShowBackground(true);
     }, 300); // Duración del fade out

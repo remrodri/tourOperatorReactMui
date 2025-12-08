@@ -15,11 +15,12 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
 }) => {
   const [touristFound, setTouristFound] = useState<TouristType | null>(null);
   return (
-    <Fade in={true} timeout={1000}>
+    // <Fade in={true} timeout={1000}>
       <Box
         sx={{
-          flexGrow: 1,
-          width: "calc(100vw - 106px)",
+          // backgroundColor: "rgba(0, 0, 0, 1)",
+          // flexGrow: 1,
+          // width: "calc(100vw - 106px)",
           // display: "flex",
           // flexDirection: "column",
         }}
@@ -89,7 +90,7 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
             sx={{
               // pt: "30px",
               p: "20px",
-              // flexGrow: 1,
+              flexGrow: 1,
               display: "flex",
               justifyContent: "center",
               flexWrap: "wrap",
@@ -214,7 +215,7 @@ const TouristShowcase: React.FC<TouristShowcaseProps> = ({
           </Box>
         </Box>
       </Box>
-    </Fade>
+    // </Fade>
   );
 };
 export default TouristShowcase;

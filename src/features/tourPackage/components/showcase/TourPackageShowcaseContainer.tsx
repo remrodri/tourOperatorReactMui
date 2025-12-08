@@ -19,15 +19,15 @@ const TourPackageShowcaseContainer: React.FC = () => {
   // console.log('tourPackages::: ', tourPackages);
   return (
     <>
-      <Fade in={true} timeout={1000}>
-        <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+      {/* <Fade in={true} timeout={1000}> */}
+        {/* <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}> */}
           <TourPackageShowcase
             handleClick={handleClickForm}
             tourPackages={tourPackages}
             role={role}
           />
-        </Box>
-      </Fade>
+        {/* </Box> */}
+      {/* </Fade> */}
       {open && (
         <TourPackageformContainer open={open} handleClick={handleClickForm} />
       )}

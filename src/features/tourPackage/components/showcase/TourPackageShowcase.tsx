@@ -15,7 +15,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
   role,
 }) => {
   return (
-    <Fade in={true} timeout={1000}>
+    // <Fade in={true} timeout={1000}>
       <Box
         sx={
           {
@@ -25,8 +25,9 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
           }
         }
       >
-        <Typography
-          variant="h4"
+        <Box
+          // component={"div"}
+          // variant="h4"
           sx={{
             // height: "5rem",
             display: "flex",
@@ -44,14 +45,16 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
               justifyContent: "space-between",
             }}
           >
-            <TextType
-              text={"Paquetes turisticos"}
-              typingSpeed={50}
-              pauseDuration={1000}
-              showCursor={true}
-              cursorCharacter="_"
-              deletingSpeed={50}
-            />
+            <Typography variant="h4">
+              <TextType
+                text={"Paquetes turisticos"}
+                typingSpeed={50}
+                pauseDuration={1000}
+                showCursor={true}
+                cursorCharacter="_"
+                deletingSpeed={50}
+              />
+            </Typography>
             {role === "690cbf7c64756dcc541d8a19" && (
               <Button
                 variant="contained"
@@ -62,7 +65,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
               </Button>
             )}
           </Box>
-        </Typography>
+        </Box>
         <Box
           sx={{
             // height: "calc(100% - 5rem)",
@@ -123,7 +126,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
           </Box>
         </Box>
       </Box>
-    </Fade>
+    // </Fade>
   );
 };
 export default TourPackageShowcase;

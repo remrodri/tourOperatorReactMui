@@ -20,7 +20,7 @@ const TouristSearchByCodeContainer: React.FC<
       return;
     }
     if (!searchValue) {
-      showSnackbar("Ingresa un nro. de documento", "info");
+      showSnackbar("Ingresa un nro. de documento", "error");
       handleClear();
       return;
     }

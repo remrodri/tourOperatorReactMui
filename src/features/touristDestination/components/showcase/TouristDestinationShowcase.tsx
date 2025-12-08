@@ -19,7 +19,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
 }) => {
   // console.log('touristDestinations::: ', touristDestinations);
   return (
-    <Fade in={true} timeout={1000}>
+    // <Fade in={true} timeout={1000}>
     <Box
       sx={
         {
@@ -150,7 +150,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
         </Box>
       </Box>
     </Box>
-    </Fade>
+    // </Fade>
   );
 };
 export default TouristDestinationShowcase;

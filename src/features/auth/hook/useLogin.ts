@@ -45,11 +45,11 @@ export const useLogin = () => {
             return;
           }
           if (getRoleById(user.role).name === "administrador") {
-            navigate("reservas/todos");
+            navigate("reservas");
             return;
           }
           if (getRoleById(user.role).name === "operador de ventas") {
-            navigate("reservas/todos");
+            navigate("reservas");
             return;
           }
           navigate("/");

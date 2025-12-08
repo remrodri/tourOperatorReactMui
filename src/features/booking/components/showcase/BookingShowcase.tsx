@@ -38,7 +38,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   // }
 
   return (
-    <Fade in={true} timeout={1000}>
+    // <Fade in={true} timeout={1000}>
       <Box
         sx={{
           flexGrow: 1,
@@ -196,7 +196,7 @@ const BookingShowcase: React.FC<BookingShowcaseProps> = ({
           </Box>
         </Box>
       </Box>
-    </Fade>
+    // </Fade>
   );
 };
 export default BookingShowcase;

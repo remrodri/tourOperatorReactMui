@@ -13,7 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Fade, Tooltip, useMediaQuery } from "@mui/material";
+import { Tooltip, useMediaQuery } from "@mui/material";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ExploreIcon from "@mui/icons-material/Explore";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
@@ -22,12 +22,13 @@ import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
 import { User } from "../../features/user/types/User";
 import MainAppBar from "./MainAppBar";
-import { AppBarStyle } from "./MainLayout";
+// import { AppBarStyle } from "./MainLayout";
 import TextType from "../../TextAnimations/TextType/TextType";
 import PeopleIcon from "@mui/icons-material/People";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CategoryIcon from "@mui/icons-material/Category";
 import { Groups } from "@mui/icons-material";
+import { AppBarStyle } from "./style/MainStyles";
 
 const drawerWidth = 240;
 
@@ -125,34 +126,37 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
         navigate("home");
         break;
       case "Ver todos":
-        navigate("gestion-de-usuarios/usuarios");
+        navigate("personal");
         break;
       case "Paquetes turisticos":
-        navigate("paquetes-turisticos/ver-todos");
+        navigate("paquetes-turisticos");
         break;
       case "Nuevo paquete turistico":
         navigate("paquetes-turisticos/nuevo");
         break;
       case "Tipo de tour":
-        navigate("paquetes-turisticos/tipo-de-tour");
+        // navigate("paquetes-turisticos/tipo-de-tour");
+        navigate("tipos-de-tour");
         break;
       case "Politicas":
         navigate("paquetes-turisticos/politicas");
         break;
       case "Destinos":
-        navigate("paquetes-turisticos/destinos");
+        // navigate("paquetes-turisticos/destinos");
+        navigate("destinos-turisticos");
+
         break;
       case "Reservas":
-        navigate("reservas/todos");
+        navigate("reservas");
         break;
       case "Reportes":
-        navigate("reportes/dashboard");
+        navigate("reportes");
         break;
       case "Turistas":
-        navigate("turistas/todos");
+        navigate("turistas");
         break;
       default:
-        console.warn("la ruta no existe");
+        navigate("*");
         break;
     }
     matches && setOpen(false);
@@ -160,19 +164,16 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
 
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes("gestion-de-usuarios/usuarios"))
-      setSelectedOption("Ver todos");
-    if (path.includes("paquetes-turisticos/ver-todos"))
+    if (path.includes("personal")) setSelectedOption("Ver todos");
+    if (path.includes("paquetes-turisticos"))
       setSelectedOption("Paquetes turisticos");
-    if (path.includes("paquetes-turisticos/tipo-de-tour"))
-      setSelectedOption("Tipo de tour");
-    if (path.includes("paquetes-turisticos/politicas"))
-      setSelectedOption("Politicas");
-    if (path.includes("paquetes-turisticos/destinos"))
-      setSelectedOption("Destinos");
-    if (path.includes("reservas/todos")) setSelectedOption("Reservas");
-    if (path.includes("reportes/dashboard")) setSelectedOption("Reportes");
-    if (path.includes("turistas/todos")) setSelectedOption("Turistas");
+    if (path.includes("tipos-de-tour")) setSelectedOption("Tipo de tour");
+    // if (path.includes("paquetes-turisticos/politicas"))
+    //   setSelectedOption("Politicas");
+    if (path.includes("destinos-turisticos")) setSelectedOption("Destinos");
+    if (path.includes("reservas")) setSelectedOption("Reservas");
+    if (path.includes("reportes")) setSelectedOption("Reportes");
+    if (path.includes("turistas")) setSelectedOption("Turistas");
   }, [location.pathname]);
 
   const [roleName, setRoleName] = useState<string>("");
@@ -229,7 +230,7 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
             </Typography>
           )}
           {open ? (
-            <Tooltip title="Cerrar" placement="right">
+            <Tooltip title="Cerrar menu" placement="right">
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
                   <ChevronRightIcon />
@@ -239,7 +240,7 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title="Abrir" placement="right">
+            <Tooltip title="Abrir menu" placement="right">
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -259,20 +260,6 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
         </DrawerHeader>
         <Divider />
         <List>
-          <Box width="100%">
-            <Typography
-              sx={{
-                fontSize: open ? "0.8rem" : "0.7rem",
-                width: open ? "100%" : "3.8rem",
-                fontWeight: "100",
-                display: "flex",
-                justifyContent: open ? "left" : "center",
-                pl: open ? 2 : 0,
-              }}
-            >
-              Personal
-            </Typography>
-          </Box>
           <Tooltip
             title="En este modulo puedes gestionar el personal registrado de la operadora que incluye administradores, operadores de venta, guias de turismo"
             placement="right"
@@ -304,26 +291,28 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText primary={open ? "Ver todos" : ""} />
+              <ListItemText primary={open ? "Personal" : ""} />
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Personal
+              </Typography>
+            </Box>
+          )}
         </List>
         <Divider />
         <List sx={{ display: "flex", flexDirection: "column" }}>
-          <Box width="100%">
-            <Typography
-              sx={{
-                fontSize: open ? "0.8rem" : "0.7rem",
-                width: open ? "100%" : "3.8rem",
-                fontWeight: "100",
-                display: "flex",
-                justifyContent: open ? "left" : "center",
-                pl: open ? 2 : 0,
-              }}
-            >
-              Servicios
-            </Typography>
-          </Box>
           <Tooltip
             title="En este modulo puedes crear y gestionar los paquetes turisticos registrados, tambien gestionar su disponibilidad y sus fechas disponibles "
             placement="right"
@@ -358,6 +347,22 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
               <ListItemText primary={open ? "Paquetes" : ""} />
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Paquetes
+              </Typography>
+            </Box>
+          )}
           <Tooltip
             title="En este modulo puedes gestionar los tipos de tour registrados "
             placement="right"
@@ -392,7 +397,22 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
               <ListItemText primary={open ? "Tipos de tour" : ""} />
             </ListItemButton>
           </Tooltip>
-
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Tipos
+              </Typography>
+            </Box>
+          )}
           <Tooltip
             title="En este modulo puedes crear nuevos destinos turisticos y gestionar los destinos existentes "
             placement="right"
@@ -427,23 +447,22 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
               <ListItemText primary={open ? "Destinos" : ""} />
             </ListItemButton>
           </Tooltip>
-        </List>
-        <Divider />
-        <List>
-          <Box width="100%">
-            <Typography
-              sx={{
-                fontSize: open ? "0.8rem" : "0.7rem",
-                width: open ? "100%" : "3.8rem",
-                fontWeight: "100",
-                display: "flex",
-                justifyContent: open ? "left" : "center",
-                pl: open ? 2 : 0,
-              }}
-            >
-              Reservas
-            </Typography>
-          </Box>
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Destinos
+              </Typography>
+            </Box>
+          )}
           <Tooltip
             title="En este modulo puedes crear, gestionar y buscar las reservas registradas, ademas puedes gestionar pagos y cancelaciones de los mismos"
             placement="right"
@@ -475,26 +494,28 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText primary={open ? "Ver todos" : ""} />
+              <ListItemText primary={open ? "Reservas" : ""} />
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Reservas
+              </Typography>
+            </Box>
+          )}
         </List>
         <Divider />
         <List>
-          <Box width="100%">
-            <Typography
-              sx={{
-                fontSize: open ? "0.8rem" : "0.7rem",
-                width: open ? "100%" : "3.8rem",
-                fontWeight: "100",
-                display: "flex",
-                justifyContent: open ? "left" : "center",
-                pl: open ? 2 : 0,
-              }}
-            >
-              Turistas
-            </Typography>
-          </Box>
           <Tooltip
             title="En este modulo puedes crear, gestionar y buscar los turistas registrados"
             placement="right"
@@ -526,25 +547,28 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText primary={open ? "Ver todos" : ""} />
+              <ListItemText primary={open ? "Turistas" : ""} />
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Turistas
+              </Typography>
+            </Box>
+          )}
         </List>
+        <Divider />
         <List>
-          <Box width="100%">
-            <Typography
-              sx={{
-                fontSize: open ? "0.8rem" : "0.7rem",
-                width: open ? "100%" : "3.8rem",
-                fontWeight: "100",
-                display: "flex",
-                justifyContent: open ? "left" : "center",
-                pl: open ? 2 : 0,
-              }}
-            >
-              Reportes
-            </Typography>
-          </Box>
           <Tooltip
             title="En este modulo puedes visualizar reportes sobre datos relevantes de la operadora de turismo"
             placement="right"
@@ -576,9 +600,25 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText primary={open ? "Ver todos" : ""} />
+              <ListItemText primary={open ? "Reportes" : ""} />
             </ListItemButton>
           </Tooltip>
+          {!open && (
+            <Box width="100%">
+              <Typography
+                sx={{
+                  fontSize: open ? "0.8rem" : "0.7rem",
+                  width: open ? "100%" : "3.8rem",
+                  fontWeight: "100",
+                  display: "flex",
+                  justifyContent: open ? "left" : "center",
+                  pl: open ? 2 : 0,
+                }}
+              >
+                Reportes
+              </Typography>
+            </Box>
+          )}
         </List>
       </Drawer>
       <Box
@@ -598,7 +638,7 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
         >
           {/* <Box> */}
           {/* {showOutlet && <Outlet />} */}
-          <Outlet />
+          <Outlet context={currentStyles} />
           {/* </Box> */}
         </Box>
       </Box>

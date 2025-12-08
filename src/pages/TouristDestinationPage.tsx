@@ -1,11 +1,12 @@
 import { Box } from "@mui/material";
-import { Outlet, useOutletContext } from "react-router-dom";
-import { TouristProvider } from "../features/tourist/context/TouristContext";
-import { AppBarStyle } from "./mainLayout/style/MainStyles";
 import FadeContent from "../Animations/FadeContent/FadeContent";
+import { AppBarStyle } from "./mainLayout/style/MainStyles";
+import { Outlet, useOutletContext } from "react-router-dom";
+import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
 
-const BookingPage: React.FC = () => {
+const TouristDestinationPage: React.FC = () => {
   const style: AppBarStyle = useOutletContext();
+
   return (
     <FadeContent
       duration={200}
@@ -15,29 +16,24 @@ const BookingPage: React.FC = () => {
     >
       <Box
         sx={{
-          // height: "calc(100dvh - 5.4rem)",
           p: "10px",
-          // display: "flex",
-          // backgroundColor: "red",
         }}
       >
         <Box
           sx={{
-            // flexGrow: 1,
             background: style.background,
             borderRadius: style.borderRadius,
             boxShadow: style.boxShadow,
             backdropFilter: style.backdropFilter,
             border: style.border,
-            // display: "flex",
           }}
         >
-          <TouristProvider>
+          <TouristDestinationProvider>
             <Outlet />
-          </TouristProvider>
+          </TouristDestinationProvider>
         </Box>
       </Box>
     </FadeContent>
   );
 };
-export default BookingPage;
+export default TouristDestinationPage;
