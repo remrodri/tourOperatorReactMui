@@ -15,7 +15,7 @@ const TouristDestinationShowcaseContainer: React.FC = () => {
   const role = getCurrentUserRole();
   return (
     <>
-      <Fade in={true} timeout={1000}>
+      {/* <Fade in={true} timeout={1000}> */}
         <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
           <TouristDestinationShowcase
             handleClick={handleClick}
@@ -23,7 +23,7 @@ const TouristDestinationShowcaseContainer: React.FC = () => {
             role={role}
           />
         </Box>
-      </Fade>
+      {/* </Fade> */}
       {open && (
         <TouristDestinationFormContainer
           open={open}

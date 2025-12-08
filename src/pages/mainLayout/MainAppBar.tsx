@@ -14,10 +14,11 @@ import Menu from "@mui/material/Menu";
 import { Avatar } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { AppBarStyle } from "./MainLayout";
+// import { AppBarStyle } from "./MainLayout";
 // import TextType from "../../TextAnimations/TextType/TextType";
 // import AnimatedContent from "../../Animations/AnimatedContent/AnimatedContent";
 import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
+import { AppBarStyle } from "./style/MainStyles";
 // import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 
 const BASE_URL = "http://localhost:3000";
@@ -42,7 +43,7 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
     }
     const user: any = jwtDecode(token);
     setImageUrl(`${BASE_URL}${user.imagePath}`);
-    setUserName(`${user.firstName} ${user.lastName}`);
+    setUserName((`${user.firstName} ${user.lastName}`).toUpperCase());
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

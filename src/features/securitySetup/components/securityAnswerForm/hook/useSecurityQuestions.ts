@@ -106,7 +106,7 @@ export const useSecurityQuestions = () => {
         navigate("../../guia-de-turismo");
         return;
       }
-      navigate("/gestion-de-usuarios/usuarios");
+      navigate("/personal");
     } catch (error) {
       setError("Error al enviar las respuestas de seguridad");
     }

@@ -1,13 +1,20 @@
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { loginSchema } from "../../validations/loginSchema";
 import TextType from "../../../../TextAnimations/TextType/TextType";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface LoginFormContainerProps {
   onSubmit: (userData: any) => void;
+  setShowPassword: (showPassword: boolean) => void;
+  showPassword: boolean;
 }
 
-const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
+const LoginForm: React.FC<LoginFormContainerProps> = ({
+  onSubmit,
+  setShowPassword,
+  showPassword,
+}) => {
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -117,7 +124,22 @@ const LoginForm: React.FC<LoginFormContainerProps> = ({ onSubmit }) => {
               label="Contraseña"
               variant="outlined"
               defaultValue=""
-              type="password"
+              type={showPassword ? "text" : "password"}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={

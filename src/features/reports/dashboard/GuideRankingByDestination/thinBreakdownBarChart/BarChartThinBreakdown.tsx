@@ -1,39 +1,22 @@
 import React, { CSSProperties, useEffect, useState } from "react";
-import {
-  GuideStatsType,
-  useDashboardContext,
-} from "../../../context/DashboardContext";
+import { GuideStatsType } from "../../../context/DashboardContext";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { Avatar, Box } from "@mui/material";
 
-const colors = [
-  {
-    destinationName: "Incachaca",
-    color:
-      "from-fuchsia-300/80 to-fuchsia-400/80 dark:from-fuchsia-500 dark:to-fuchsia-700",
-  },
-  {
-    destinationName: "Salar de Uyuni",
-    color:
-      "from-violet-300 to-violet-400 dark:from-violet-500 dark:to-violet-700",
-  },
-  {
-    destinationName: "Toro Toro",
-    color: "from-blue-300 to-blue-400 dark:from-blue-500 dark:to-blue-700",
-  },
-  {
-    destinationName: "Villa Tunari",
-    color: "from-sky-300 to-sky-400 dark:from-sky-500 dark:to-sky-700",
-  },
-  {
-    destinationName: "Incallajta",
-    color:
-      "from-orange-200 to-orange-300 dark:from-amber-500 dark:to-amber-700",
-  },
+const colorPalette = [
+  "from-fuchsia-400 to-fuchsia-600",
+  "from-orange-400 to-orange-600",
+  "from-blue-400 to-blue-600",
+  "from-violet-400 to-violet-600",
+  "from-sky-400 to-sky-600",
+  "from-green-400 to-green-600",
+  "from-red-400 to-red-600",
+  "from-pink-400 to-pink-600",
+  "from-teal-400 to-teal-600",
+  "from-indigo-400 to-indigo-600",
 ];
 
 interface BarChartThinBreakdownProps {
-  // data:{destinationName:string,count:number}[]
   data: GuideStatsType;
   maxValue: number;
 }
@@ -42,26 +25,21 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
   data,
   maxValue,
 }) => {
-  // console.log("data::: ", data);
-  // console.log('maxValue::: ', maxValue);
-  const [newData, setNewData] = useState<any>([]);
+  const [newData, setNewData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const addColorToData = (data: GuideStatsType) => {
-    const newData: any = [];
-    const destinationswithColor = data.destinations;
-    for (const destination of destinationswithColor) {
-      const newDataElement = {
+    const updatedData: any[] = [];
+    data.destinations.forEach((destination, index) => {
+      const color = colorPalette[index % colorPalette.length]; // asigna color por índice
+      updatedData.push({
         key: destination.destinationName,
         value: destination.count,
-        color: colors.find(
-          (color) => color.destinationName === destination.destinationName
-        )?.color,
+        color,
         img: data.guideImage,
-      };
-      newData.push(newDataElement);
-    }
-    setNewData([...newData]);
+      });
+    });
+    setNewData(updatedData);
   };
 
   useEffect(() => {
@@ -72,19 +50,17 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
     setLoading(false);
     addColorToData(data);
   }, [data]);
-  // console.log("newData::: ", newData);
-  const gap = 0.3; // gap between bars
+
+  const gap = 0.3;
   const totalValue = newData.reduce((acc: any, d: any) => acc + d.value, 0);
   const barHeight = 12;
-  const totalWidth = totalValue + gap * (newData.length - 1);
-  // console.log('totalWidth::: ', totalWidth);
   let cumulativeWidth = 0;
-
-  const cornerRadius = 4; // Adjust this value to change the roundness
+  const cornerRadius = 4;
 
   if (loading) {
     return <div>Cargando...</div>;
   }
+
   return (
     <div
       className="relative h-[var(--height)] mt-1 mb-6"
@@ -98,7 +74,6 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
         } as CSSProperties
       }
     >
-      {/* Chart Area */}
       <div
         className="absolute inset-0 
           h-[calc(100%-var(--marginTop)-var(--marginBottom))]
@@ -108,12 +83,10 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
           overflow-visible
         "
       >
-        {/* Bars with Gradient Fill */}
         {newData.map((d: any, index: number) => {
-          const barWidth = (d.value / totalValue) * 100; // proporción real
-          const xPosition = cumulativeWidth; // se acumula en %
-
-          cumulativeWidth += barWidth; // no sumamos el gap aquí
+          const barWidth = (d.value / totalValue) * 100;
+          const xPosition = cumulativeWidth;
+          cumulativeWidth += barWidth;
 
           return (
             <Box key={index}>
@@ -124,7 +97,7 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
                     style={{
                       width: `calc(${barWidth}% - ${
                         index < newData.length - 1 ? 1 : 0
-                      }px)`, // se resta un gap en px
+                      }px)`,
                       height: `${barHeight}px`,
                       left: `${xPosition}%`,
                       position: "absolute",
@@ -136,7 +109,7 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
                         width: "100%",
                         height: "100%",
                         borderRadius: `${cornerRadius}px`,
-                        marginRight: "4px", // el gap real entre barras
+                        marginRight: "4px",
                       }}
                     />
                     <div
@@ -169,4 +142,5 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
     </div>
   );
 };
+
 export default BarChartThinBreakdown;

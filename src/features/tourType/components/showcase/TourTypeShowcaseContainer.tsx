@@ -5,6 +5,7 @@ import { useTourTypeContext } from "../../context/TourTypeContext";
 import TourTypeShowcase from "./TourTypeShowcase";
 import CreateTourTypeDialogContainer from "../tourTypeForm/CreateTourTypeDialogContainer";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
+import { useOutletContext } from "react-router-dom";
 
 const TourTypeShowcaseContainer = () => {
   // const { tourTypes } = useTourTypeContext();
@@ -21,6 +22,8 @@ const TourTypeShowcaseContainer = () => {
   // console.log('::: ', );
 
   const role = getCurrentUserRole();
+
+  // const styles = useOutletContext();
   return (
     <>
       <TourTypeShowcase handleClick={handleClick} role={role} />

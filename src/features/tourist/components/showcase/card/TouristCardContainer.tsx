@@ -16,8 +16,9 @@ import BookingCardV2 from "./TouristCard";
 import PaymentProofDialogContainer from "../../../../payment/components/paymentProofDialog/PaymentProofDialogContainer";
 import TouristCard from "./TouristCard";
 import { TouristType } from "../../../../booking/types/TouristType";
-import MoreInfoDialogContainer from "../../../moreInfoDialog/MoreInfoDialogContainer";
+// import MoreInfoDialogContainer from "../../../moreInfoDialog/MoreInfoDialogContainer";
 import EditFormContainer from "../../editForm/EditTouristFormContainer";
+import MoreInfoDialogContainer from "../../moreInfoDialog/MoreInfoDialogContainer";
 // import { PaymentType } from "../../../types/PaymentType";
 
 interface TouristCardContainerProps {

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Outlet, useOutletContext } from "react-router-dom";
 import { UserProvider } from "../features/user/context/UserContext";
 import { BookingProvider } from "../features/booking/context/BookingContext";
 import { TouristProvider } from "../features/tourist/context/TouristContext";
@@ -10,11 +10,12 @@ import { CancellationPolicyProvider } from "../features/cancellationPolicy/conte
 import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
 import { PaymentProvider } from "../features/payment/context/PaymentContext";
+import { AppBarStyle } from "./mainLayout/style/MainStyles";
 
 const BookingPage = () => {
+  const style: AppBarStyle = useOutletContext<AppBarStyle>();
   return (
     <FadeContent
-      // blur={true}
       duration={200}
       easing="ease-out"
       initialOpacity={0.6}
@@ -23,26 +24,18 @@ const BookingPage = () => {
       <Box
         sx={{
           display: "flex",
-          // flexGrow: 1,
-          height: "100%",
-          // width: "calc(100vw - 83px)",
           p: "10px",
-          // background: "rgba(86, 101, 115, 0.4)",
-          // flexGrow: 1,
-          // flexWrap: "wrap",
-          // height: "100vh",
         }}
       >
         <Box
           sx={{
-            display: "flex",
             flexGrow: 1,
-            background: "rgba(86, 101, 115, 0.6)",
-            borderRadius: "16px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(86, 101, 115, 0.7)",
-            height: "100%",
+            background: style.background,
+            borderRadius: style.borderRadius,
+            boxShadow: style.boxShadow,
+            backdropFilter: style.backdropFilter,
+            border: style.border,
+            display: "flex",
           }}
         >
           <TourTypeProvider>

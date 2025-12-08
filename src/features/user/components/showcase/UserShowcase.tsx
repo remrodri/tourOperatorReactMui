@@ -1,4 +1,4 @@
-import { Box, Button, Fade, Typography } from "@mui/material";
+import { Box, Button, Fade, Grow, Typography } from "@mui/material";
 import { User } from "../../types/User";
 import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
 import UserCardContainer from "./userCard/UserCardContainer";
@@ -10,12 +10,16 @@ interface UserShowcaseProps {
   role: string;
 }
 
-const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users, role }) => {
-  if (!users) {
-    return <p>No hay usuarios</p>;
-  }
+const UserShowcase: React.FC<UserShowcaseProps> = ({
+  handleClick,
+  users,
+  role,
+}) => {
+  // if (!users) {
+  //   return <p>No hay usuarios</p>;
+  // }
   return (
-    <Fade in={true} timeout={1000}>
+    // <Fade in={true} timeout={1000}>
       <Box
         sx={
           {
@@ -32,6 +36,7 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users, role })
         }
       >
         <Typography
+          component="div"
           variant="h4"
           sx={{
             // height: "5rem",
@@ -112,17 +117,23 @@ const UserShowcase: React.FC<UserShowcaseProps> = ({ handleClick, users, role })
               width: "100%",
             }}
           >
-            {users && users.length > 0 ? (
-              users.map((user) => (
-                <UserCardContainer key={user.id} user={user} role={role} />
-              ))
-            ) : (
-              <p>Cargando usuarios</p>
-            )}
+            {users.map((user, index) => (
+              // <UserCardContainer key={user.id} user={user} role={role} />
+              <Grow
+                in={true} // o una condición si quieres mostrar/ocultar
+                style={{ transformOrigin: "0 0 0" }}
+                timeout={500 + index * 300} // cada card entra con más delay
+                key={user.id}
+              >
+                <Box>
+                  <UserCardContainer key={user.id} user={user} role={role} />
+                </Box>
+              </Grow>
+            ))}
           </Box>
         </Box>
       </Box>
-    </Fade>
+    // </Fade>
   );
 };
 export default UserShowcase;

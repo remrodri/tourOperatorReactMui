@@ -1,6 +1,7 @@
 // import { Role } from "../../types/Role";
 // import { User } from "../../types/User";
-import { TouristType } from "../../booking/types/TouristType";
+// import { TouristType } from "../../../booking/types/TouristType";
+import { TouristType } from "../../../booking/types/TouristType";
 import MoreInfoDialog from "./MoreInfoDialog";
 
 interface MoreInfoDialogContainerProps {
@@ -21,7 +22,7 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   // user,
   // userRole,
 }) => {
-  console.log('tourist::: ', tourist);
+  console.log("tourist::: ", tourist);
   return (
     <MoreInfoDialog
       open={open}
