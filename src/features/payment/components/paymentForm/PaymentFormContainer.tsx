@@ -8,7 +8,6 @@ import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { TouristType } from "../../../booking/types/TouristType";
 import dayjs from "dayjs";
 import { usePaymentContext } from "../../context/PaymentContext";
-import { useNewSnackbar } from "../../../../context/SnackbarContext";
 import { PaymentType } from "../../../booking/types/PaymentType";
 
 interface PaymentFormContainerProps {
@@ -49,7 +48,6 @@ const PaymentFormContainer: React.FC<PaymentFormContainerProps> = ({
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [fileSelected, setFileSelected] = useState<File | null>(null);
   const { createPayment } = usePaymentContext();
-  const { showSnackbar } = useNewSnackbar();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

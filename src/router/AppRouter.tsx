@@ -8,8 +8,6 @@ import EmailFormContainer from "../features/securitySetup/components/ResetPasswo
 import SecurityAnswerFormContainer from "../features/securitySetup/components/ResetPassword/securityAnswerForm/SecurityAnswerFormContainer";
 import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
-import TourTypeContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
-import CancellationPolicyShowcaseContainer from "../features/cancellationPolicy/components/showcase/CancellationPolicyShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/components/showcase/TouristDestinationShowcaseContainer";
 import UserShowcaseContainer from "../features/user/components/showcase/UserShowcaseContainer";
 import BookingPage from "../pages/BookingPage";
@@ -23,9 +21,7 @@ import TourPackageContainer from "../features/guide/components/tourPackage/TourP
 import TouristDestinationContainer from "../features/guide/components/touristDestination/TouristDestinationContainer";
 import ItineraryContainer from "../features/guide/components/itinerary/ItineraryContainer";
 import GuidePerfilContainer from "../features/guide/components/perfil/GuidePerfilContainer";
-// import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import MainLayout from "../pages/mainLayout/MainLayout";
-// import MainLayoutSplashScreen from "../pages/mainLayout/MainLayoutSplashScreen";
 import GuideDateRangeSelectorContainer from "../features/guide/components/dateRangeSelector/GuideDateRangeSelectorContainer";
 import TouristPage from "../pages/TouristPage";
 import TouristShowcaseContainer from "../features/tourist/components/showcase/TouristShowcaseContainer";
@@ -33,11 +29,16 @@ import TouristDestinationPage from "../pages/TouristDestinationPage";
 import TourTypePage from "../pages/TourTypePage";
 import TourTypeShowcaseContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
 import Page from "../pages/NotFoundPage";
+import HomePageContainer from "../pages/home/HomePageContainer";
 
 export const AppRouter = createBrowserRouter(
   [
     {
       path: "/",
+      element: <HomePageContainer />,
+    },
+    {
+      path: "/iniciar-sesion",
       element: <LoginPage />,
     },
     {
@@ -92,18 +93,6 @@ export const AppRouter = createBrowserRouter(
               path: "",
               element: <TourPackageShowcaseContainer />,
             },
-            // {
-            //   path: "tipo-de-tour",
-            //   element: <TourTypeContainer />,
-            // },
-            // {
-            //   path: "politicas",
-            //   element: <CancellationPolicyShowcaseContainer />,
-            // },
-            // {
-            //   path: "destinos",
-            //   element: <TouristDestinationShowcaseContainer />,
-            // },
           ],
         },
         {
@@ -127,7 +116,7 @@ export const AppRouter = createBrowserRouter(
           ],
         },
         {
-          path: "reservas",
+          path: "/reservas",
           element: <BookingPage />,
           children: [{ path: "", element: <BookingShowcaseContainer /> }],
         },

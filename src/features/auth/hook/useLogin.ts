@@ -41,15 +41,15 @@ export const useLogin = () => {
           // navigate("home");
           if (getRoleById(user.role).name === "guia de turismo") {
             localStorage.removeItem("attendanceList");
-            navigate("guia-de-turismo/fechas-asignadas");
+            navigate("/guia-de-turismo/fechas-asignadas");
             return;
           }
           if (getRoleById(user.role).name === "administrador") {
-            navigate("reservas");
+            navigate("/reservas");
             return;
           }
           if (getRoleById(user.role).name === "operador de ventas") {
-            navigate("reservas");
+            navigate("/reservas");
             return;
           }
           navigate("/");

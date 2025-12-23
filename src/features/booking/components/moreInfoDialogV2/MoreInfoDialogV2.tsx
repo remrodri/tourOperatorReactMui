@@ -16,8 +16,8 @@ import DateRangeInfo from "./DateRangeInfo";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import TourPackageInfo from "./TourPackageInfo";
-import { CancellationPolicy } from "../../../cancellationPolicy/types/CancellationPolicy";
-import CancellationPolicyInfo from "./CancellationPolicyInfo";
+// import { CancellationPolicy } from "../../../cancellationPolicy/types/CancellationPolicy";
+// import CancellationPolicyInfo from "./CancellationPolicyInfo";
 import { TourType } from "../../../user/types/TourType";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { PaymentType } from "../../types/PaymentType";
@@ -28,7 +28,7 @@ import TouristDestinationInfo from "./TouristDestinationInfo";
 import SellerInfo from "./SellerInfo";
 import PaymentsInfo from "./PaymentsInfo";
 import TouristsInfo from "./TouristsInfo";
-import GuidesInfo from "./GuidesInfo";
+// import GuidesInfo from "./GuidesInfo";
 import BookingDialogStyledBox from "./template/BookingDialogStyledBox";
 import background from "../../../../assets/images/home.webp";
 import StatusInfo from "./StatusInfo";
@@ -73,7 +73,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
   payments,
   tourists,
   dateRange,
-  guides,
+  // guides,
   sellerInfo,
 }) => {
   const [isOpen, setIsOpen] = useState(false);

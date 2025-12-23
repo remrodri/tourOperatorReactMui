@@ -174,14 +174,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const fetchUsers = async () => {
-    if (!token) {
-      // setError("No se encontro el token");
-      setLoading(false);
-      showSnackbar("No hay token", "error");
-      return;
-    }
+    // if (!token) {
+    //   // setError("No se encontro el token");
+    //   setLoading(false);
+    //   showSnackbar("No hay token", "error");
+    //   return;
+    // }
     try {
-      const response = await userService.getUsers(token);
+      const response = await userService.getUsers();
       if (!response?.data) {
         showSnackbar("Error al cargar", "error");
         throw new Error("No se recupero la lista de usuarios");

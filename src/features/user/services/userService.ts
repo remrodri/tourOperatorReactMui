@@ -9,10 +9,8 @@ interface ApiResponse {
   data: User;
 }
 
-const getUsers = async (token: string): Promise<ApiResponse> => {
-  const response = await axios.get(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+const getUsers = async (): Promise<ApiResponse> => {
+  const response = await axios.get(API_URL);
   // console.log('response::: ', response);
   return response.data;
 };

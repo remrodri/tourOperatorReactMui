@@ -8,4 +8,6 @@ export interface PaymentType {
   // paymentProofFolder?: string;
   touristId?: string;
   sellerId: string;
+  paymentProofImage?: File | null;
+  paymentProofFolder?: string;
 }

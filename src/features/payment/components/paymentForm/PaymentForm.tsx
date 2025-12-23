@@ -15,9 +15,6 @@ import {
 } from "@mui/material";
 import { PaymentFormContainerValues } from "./PaymentFormContainer";
 import { FormikProps } from "formik";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import { TouristType } from "../../../booking/types/TouristType";
 import { CloudUpload } from "@mui/icons-material";
 import { ChangeEvent } from "react";
@@ -55,11 +52,9 @@ const PaymentForm = ({
   paymentMethods,
   handleMethodChange,
   handleAmountChange,
-  handleDateChange,
   tourists,
   handleFileChange,
   previewImage,
-  fileSelected,
 }: PaymentFormProps) => {
   // console.log('tourists::: ', tourists);
   return (
