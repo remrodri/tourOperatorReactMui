@@ -2,11 +2,10 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardMedia,
   Typography,
 } from "@mui/material";
 import TouristDestinationCardMenu from "./TouristDestinationCardMenu";
-import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
+// import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface TouristDestinationCardProps {
   touristDestination: any;

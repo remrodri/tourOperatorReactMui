@@ -1,5 +1,5 @@
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import { EffectFade, Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Box, Card, CardContent, Typography } from "@mui/material";
+import { EffectFade, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -16,11 +16,11 @@ const Gallery: React.FC = () => {
         height: "100%",
         // p: "1rem 0 1rem 1rem",
         pr: "1rem",
+        display: { xs: "none",md:"flex" },
         // borderRadius: "10px 0 0 10px",
         // background: "rgba(0,0,0,0.5)",
         // backdropFilter: "blur(5px)",
         // border: "1px solid rgba(49, 49, 49, 0.23)",
-        
       }}
     >
       <Swiper

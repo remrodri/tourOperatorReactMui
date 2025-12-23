@@ -21,7 +21,7 @@ const LoginShowcase: React.FC = () => {
           justifyContent: "center",
           border: "1px solid rgba(68, 68, 68,0.5)",
           height: "40rem",
-          width: "60rem",
+          width: {md:"60rem"},
           boxShadow: "0 4px 30px rgba(17, 17, 17, 0.8)",
           borderRadius: "15px",
           // background: "rgba(0,0,0,0.5)",

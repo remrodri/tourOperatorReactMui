@@ -80,7 +80,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems, guideName }) => 
             },
           }}
         >
-          Guia de turismo
+          GUIA DE TURISMO
         </Typography>
         <Tooltip title="Cerrar menu" disableInteractive>
           <IconButton
