@@ -206,16 +206,18 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
     const seller: User = jwtDecode(token);
     // const tourists = [...booking.additionalTourists, booking.mainTourist];
-    let tourists: TouristType[] = [];
+
+    const tourists: TouristType[] = [];
     if (booking.mainTourist) {
       tourists.push(booking.mainTourist);
     }
     if (booking.additionalTourists) {
-      tourists = [...booking.additionalTourists];
+      tourists.push(...booking.additionalTourists);
     }
     if (touristsBySearch) {
       tourists.push(...touristsBySearch);
     }
+
     console.log("tourists::: ", tourists);
     const paymentProofFolder = uuidv4();
 
@@ -244,7 +246,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
 
     setLoading(true);
     try {
+      console.log([...formData.entries()]);
       const response = await createBookingRequest(formData);
+      // const response = { error: "error", tourists: [] };
       if (!response || response.error) {
         setError(response?.error || "Error creating booking");
         setLoading(false);

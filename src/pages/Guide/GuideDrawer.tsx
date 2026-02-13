@@ -1,31 +1,26 @@
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { createElement, useState } from "react";
+import { useState } from "react";
 import GuideAppBar from "./GuideAppBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { IconButton, Tooltip, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import ExploreIcon from "@mui/icons-material/Explore";
-import PlaceIcon from "@mui/icons-material/Place";
-import PeopleIcon from "@mui/icons-material/People";
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
-import { useLocation, useNavigate } from "react-router-dom";
+import { SvgIconComponent } from "@mui/icons-material";
+// import ExploreIcon from "@mui/icons-material/Explore";
+// import PlaceIcon from "@mui/icons-material/Place";
+// import PeopleIcon from "@mui/icons-material/People";
+// import PendingActionsIcon from "@mui/icons-material/PendingActions";
 
-const icons = [PlaceIcon, ExploreIcon, PeopleIcon, PendingActionsIcon];
+// const icons = [PlaceIcon, ExploreIcon, PeopleIcon, PendingActionsIcon];
 
 interface DrawerItem {
   text: string;
-  icon: (typeof icons)[number];
+  icon: SvgIconComponent;
   path: string;
 }
 
@@ -34,7 +29,10 @@ interface GuideDrawerProps {
   guideName: string;
 }
 
-const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems, guideName }) => {
+const GuideDrawer: React.FC<GuideDrawerProps> = ({
+  drawerItems,
+  guideName,
+}) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,6 +40,11 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems, guideName }) => 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+
+  const currentDateRange = localStorage.getItem("currentDateRange");
+  const currentTourPackage = localStorage.getItem("currentTourPackage");
+
+  const blockButton = !currentDateRange || !currentTourPackage;
 
   const DrawerList = (
     <Box
@@ -108,6 +111,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems, guideName }) => 
             }
           >
             <ListItemButton
+              disabled={blockButton}
               selected={location.pathname.includes(path)} // ✅ activa el color si estás en esa ruta
               onClick={() => {
                 navigate(path);
@@ -150,7 +154,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({ drawerItems, guideName }) => 
       }}
     >
       <Box>
-        <GuideAppBar toggleDrawer={toggleDrawer} guideName={guideName}/>
+        <GuideAppBar toggleDrawer={toggleDrawer} guideName={guideName} />
       </Box>
       {/* <Button onClick={toggleDrawer(true)}>Open drawer</Button> */}
 

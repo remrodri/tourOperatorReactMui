@@ -288,46 +288,49 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
             border: "1px solid rgba(0, 0, 0, 0.45)",
             boxShadow: "0 4px 30px rgba(0, 0, 0, 0.7)",
             p: 2,
+            overflowY: "auto",
           }}
         >
           <Typography variant="h6" fontFamily={"Montserrat"} gutterBottom>
             Itinerario
           </Typography>
-          {booking.tourPackageFound &&
-            booking.tourPackageFound.itinerary &&
-            booking.tourPackageFound.itinerary.days &&
-            booking.tourPackageFound.itinerary.days.map(
-              (
-                day: { dayNumber: number; activities: ActivityType[] },
-                index
-              ) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1,
-                    // gap: 1,
-                    background: "rgba(0,0,0,0.45)",
-                    // backdropFilter: "blur(6px)",
-                    borderRadius: "16px",
-                    // WebkitBackdropFilter: "blur(6px)",
-                    border: "1px solid rgba(0, 0, 0, 0.45)",
-                    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.7)",
-                    p: 2,
-                  }}
-                >
-                  <Typography>{`Dia: ${day.dayNumber}`}</Typography>
-                  {day.activities &&
-                    day.activities.length > 0 &&
-                    day.activities.map((activity, index) => (
-                      <Typography variant="body2" key={index}>
-                        {activity.time} - {activity.description}
-                      </Typography>
-                    ))}
-                </Box>
-              )
-            )}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {booking.tourPackageFound &&
+              booking.tourPackageFound.itinerary &&
+              booking.tourPackageFound.itinerary.days &&
+              booking.tourPackageFound.itinerary.days.map(
+                (
+                  day: { dayNumber: number; activities: ActivityType[] },
+                  index
+                ) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      // gap: 1,
+                      background: "rgba(0,0,0,0.45)",
+                      // backdropFilter: "blur(6px)",
+                      borderRadius: "16px",
+                      // WebkitBackdropFilter: "blur(6px)",
+                      border: "1px solid rgba(0, 0, 0, 0.45)",
+                      boxShadow: "0 4px 30px rgba(0, 0, 0, 0.7)",
+                      p: 2,
+                    }}
+                  >
+                    <Typography>{`Dia: ${day.dayNumber}`}</Typography>
+                    {day.activities &&
+                      day.activities.length > 0 &&
+                      day.activities.map((activity, index) => (
+                        <Typography variant="body2" key={index}>
+                          {activity.time} - {activity.description}
+                        </Typography>
+                      ))}
+                  </Box>
+                )
+              )}
+          </Box>
         </Box>
         <Box
           sx={{
@@ -434,7 +437,9 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
                         : "Transferencia"
                     }`}
                   </Typography>
-                  <Typography variant="body2">{`Monto: ${payment.amount.toFixed(2)} Bs.`}</Typography>
+                  <Typography variant="body2">{`Monto: ${payment.amount.toFixed(
+                    2
+                  )} Bs.`}</Typography>
                 </Box>
               ))}
           </Box>
