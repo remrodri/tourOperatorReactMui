@@ -85,15 +85,15 @@ const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
               <Button
                 variant="contained"
                 color="success"
-                // sx={{ height: "2rem", width: "12rem" }}
+                sx={{ width: "45%" }}
                 type="submit"
               >
-                Registrar
+                {isEdit ? "Editar" : "Registrar"}
               </Button>
               <Button
                 variant="contained"
                 color="error"
-                // sx={{ height: "2rem", width: "12rem" }}
+                sx={{ width: "45%" }}
                 onClick={handleClick}
               >
                 Cancelar

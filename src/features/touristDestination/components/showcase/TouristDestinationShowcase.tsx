@@ -1,6 +1,4 @@
 import { Box, Button, Fade, Grow, Typography } from "@mui/material";
-import BreadCrumbsContainer from "../../../breadCrumbs/BreadCrumbsContainer";
-import { TouristDestinationType } from "../../types/TouristDestinationType";
 import TouristDestinationCardContainer from "./card/TouristDestinationCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 
@@ -60,8 +58,8 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
           }}
         >
           <TextType
-            text={"Destinos turisticos"}
             typingSpeed={50}
+            text={"Destinos turísticos"}
             pauseDuration={1000}
             showCursor={true}
             cursorCharacter="_"
@@ -122,7 +120,7 @@ const TouristDestinationShowcase: React.FC<TouristDestinationShowcaseProps> = ({
           }}
         >
           {touristDestinations && touristDestinations.length > 0 ? (
-            touristDestinations.map((touristDestination,index) => (
+            touristDestinations.map((touristDestination, index) => (
               // <TouristDestinationCardContainer
               //   key={touristDestination.id}
               //   touristDestination={touristDestination}

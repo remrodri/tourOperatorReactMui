@@ -4,6 +4,8 @@ import {
   useGuideContext,
 } from "../../context/GuideContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import TourAssignedDialog from "./dialog/TourAssignedDialog";
 
 const GuideDateRangeSelectorContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -13,23 +15,32 @@ const GuideDateRangeSelectorContainer: React.FC = () => {
     setCurrentDateRange,
     setCurrentTourPackage,
   } = useGuideContext();
-  // console.log('guideDateRanges::: ', guideDateRanges);
-  // localStorage.setItem("currentDateRange", JSON.stringify(guideDateRanges));
+  
+const [openModal, setOpenModal] = useState(() => {
+  const dr = localStorage.getItem("currentDateRange");
+  const tp = localStorage.getItem("currentTourPackage");
+  return !dr && !tp; // abre si faltan ambos
+});
+
+  const handleCloseModal = () => setOpenModal(false);
+
   const modifyCurrentDateRange = (dateRange: CustomDateRangeType) => {
-    // console.log("dateRange::: ", dateRange);
     localStorage.setItem("currentDateRange", dateRange.id ?? "");
     localStorage.setItem("currentTourPackage", dateRange.tourPackageId ?? "");
-    // localStorage.removeItem("attendanceList");
     setCurrentDateRange(dateRange.id!);
     setCurrentTourPackage(dateRange.tourPackageId!);
     navigate("/guia-de-turismo/turistas");
   };
+
   return (
-    <GuideDateRangeSelector
-      guideDateRanges={guideDateRanges}
-      loading={loading}
-      setCurrentDateRange={modifyCurrentDateRange}
-    />
+    <>
+      <GuideDateRangeSelector
+        guideDateRanges={guideDateRanges}
+        loading={loading}
+        setCurrentDateRange={modifyCurrentDateRange}
+      />
+      <TourAssignedDialog open={openModal} onClose={handleCloseModal} />
+    </>
   );
 };
 

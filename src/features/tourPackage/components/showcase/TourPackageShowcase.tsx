@@ -47,7 +47,7 @@ const TourPackageShowcase: React.FC<TourPackageShowcaseProps> = ({
           >
             <Typography variant="h4">
               <TextType
-                text={"Paquetes turisticos"}
+                text={"Paquetes turísticos"}
                 typingSpeed={50}
                 pauseDuration={1000}
                 showCursor={true}

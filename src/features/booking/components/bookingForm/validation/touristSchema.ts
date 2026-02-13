@@ -4,7 +4,7 @@ export const touristSchema = yup.object().shape({
   firstName: yup.string().required("El campo es requerido"),
   lastName: yup.string().required("El campo es requerido"),
   email: yup.string().email("Email invalido").required("El campo es requerdio"),
-  phone: yup.string().required("El campo es requerido"),
+  phone: yup.string().required("El campo es requerido").min(8),
   // ci: yup.string().required("El campo es requerido"),
   // passport: yup.string(),
   documentType: yup

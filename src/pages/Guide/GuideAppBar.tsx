@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
+// import Switch from '@mui/material/Switch';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Avatar, Tooltip } from '@mui/material';
@@ -34,13 +34,14 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
     if(!token){
       return
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const user:any = jwtDecode(token)
     setImageUrl(`${BASE_URL}${user.imagePath}`)
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAuth(event.target.checked);
+  // };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     // console.log('handleMenu::: ', event);
@@ -53,14 +54,16 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("currentDateRange");
+    localStorage.removeItem("currentTourPackage");
     setAuth(false);
     navigate("/");
   };
 
-  const handlePerfil = () => {
-    navigate("/guia-de-turismo/perfil");
-    handleClose();
-  };
+  // const handlePerfil = () => {
+  //   navigate("/guia-de-turismo/perfil");
+  //   handleClose();
+  // };
 
   React.useEffect(()=>{
     getImage()

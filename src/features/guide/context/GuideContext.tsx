@@ -12,9 +12,9 @@ import { useUserContext } from "../../user/context/UserContext";
 import { jwtDecode } from "jwt-decode";
 import { TouristType } from "../../booking/types/TouristType";
 import { BookingType } from "../../booking/types/BookingType";
-import { useTouristContext } from "../../tourist/context/TouristContext";
+// import { useTouristContext } from "../../tourist/context/TouristContext";
 import { useBookingContext } from "../../booking/context/BookingContext";
-import { getAttendanceListFromLocalStorage } from "../localStorageService/localStorageService";
+// import { getAttendanceListFromLocalStorage } from "../localStorageService/localStorageService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 export interface CustomDateRangeType extends DateRangeType {
@@ -69,7 +69,7 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
   const [guideInfo, setGuideInfo] = useState<User | null>(null);
   const { getUserById } = useUserContext();
   const [attendanceList, setAttendanceList] = useState<Group[]>([]);
-  const { getTouristInfoById } = useTouristContext();
+  // const { getTouristInfoById } = useTouristContext();
   const { bookings, getBookingsByDateRangeId, updateAttendance } =
     useBookingContext();
   const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
@@ -93,6 +93,7 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
       await updateAttendance(bookingsPayload);
       showSnackbar("Asistencia guardada exitosamente", "success");
     } catch (error) {
+      console.error("Error al guardar la asistencia:", error);
       showSnackbar("Error al guardar la asistencia", "error");
     } finally {
       setLoading(false);
@@ -182,6 +183,7 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
       setGuideInfo(guideInfo);
       setLoading(false);
     } catch (error) {
+      console.error("Error obteniendo info del guía:", error);
       // console.error("❌ Error obteniendo info del guía:", error);
       setLoading(false);
     }
