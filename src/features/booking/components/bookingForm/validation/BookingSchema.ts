@@ -8,7 +8,7 @@ export const bookingSchema=yup.object().shape({
   mainTourist:touristSchema,
   additionalTourists:yup.array().of(touristSchema).optional(),
   // firstPayment:yup.object().when('$isEditing',([isEditing],schema)=>isEditing===true ? paymentSchema : schema.notRequired()),
-  firstPayment: yup.object().when('$isEditing', ([isEditing], schema) => {
+  firstPayment: yup.object().when('$isEditing', ([isEditing]) => {
     return isEditing === false ? paymentSchema : yup.object().optional();
   }),
   // firstPayment:paymentSchema,

@@ -1,10 +1,9 @@
-import { Box, Button, Fade, Grow, Typography } from "@mui/material";
+import { Box, Button, Grow, Typography } from "@mui/material";
 import { BookingType } from "../../types/BookingType";
 import BookingCardContainer from "./card/BookingCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import BookingSearchByCodeContainer from "./searchByCode/BookingSearchByCodeContainer";
 import BookingFilterContainer from "./filter/BookingFilterContainer";
-import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 
 interface BookingShowcaseProps {
   handleClick: () => void;
@@ -22,7 +21,6 @@ interface BookingShowcaseProps {
 const BookingShowcase: React.FC<BookingShowcaseProps> = ({
   handleClick,
   bookings,
-  open,
   role,
   setBookingFound,
   bookingFound,
