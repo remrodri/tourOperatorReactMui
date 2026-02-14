@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import BookingShowcase from "./BookingShowcase";
 import { useBookingContext } from "../../context/BookingContext";
-import BookingFormContainer from "../bookingForm/BookingFormContainer";
+// import BookingFormContainer from "../bookingForm/BookingFormContainer";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 import { BookingType } from "../../types/BookingType";
 import BookingProofDialogContainer from "../bookingForm/bookingProofDialog/BookingProofDialogContainer";
+import BookingFormContainer from "../bookingForm2/BookingFormContainer";
 
 const BookingShowcaseContainer: React.FC = () => {
   const { bookings } = useBookingContext();

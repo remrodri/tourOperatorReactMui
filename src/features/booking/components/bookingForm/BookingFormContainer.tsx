@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFormik } from "formik";
 import { BookingType } from "../../types/BookingType";
 import { TouristType } from "../../types/TouristType";
@@ -13,7 +14,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { useBookingContext } from "../../context/BookingContext";
 import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext";
-import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
+// import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
 import SearchTouristByDocument from "./SearchTouristByDocument";
 import { useNewSnackbar } from "../../../../context/SnackbarContext";
@@ -67,7 +68,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   booking,
   setBookingProof,
 }) => {
-  const { getTouristInfoById, getTouristInfoByIds, tourists } =
+  const {tourists } =
     useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
   const { dateRanges } = useDateRangeContext();
@@ -84,7 +85,6 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   );
   const [touristsBySearch, setTouristsBySearch] = useState<TouristType[]>([]);
   const { createBooking, updateBooking } = useBookingContext();
-  const { getCancellationPolicyInfoById } = useCancellationConditionContext();
   const [filteredDateRanges, setFilteredDateRanges] = useState<DateRangeType[]>(
     []
   );
@@ -176,9 +176,9 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     }),
     onSubmit,
     enableReinitialize: true,
-    validateOnChange: false,
-    validateOnBlur: false,
-    validateOnMount: false,
+    // validateOnChange: false,
+    // validateOnBlur: false,
+    // validateOnMount: false,
   });
 
   const calculateTotalPrice = (): number => {

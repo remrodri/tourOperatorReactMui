@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -85,7 +86,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   handleTourPackageChange,
   tourPackages,
   dateRanges,
-  selectedTourPackage,
+  // selectedTourPackage,
   handleDateRangeChange,
   handlePaymentChange,
   handleFileChange,
@@ -604,7 +605,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   variant="contained"
                   color="primary"
                   type="submit"
-                  disabled={formik.isSubmitting}
+                  disabled={formik.isSubmitting || !formik.isValid}
                   sx={{
                     height: "2rem",
                     width: !isEditing ? "100%" : "20rem",
