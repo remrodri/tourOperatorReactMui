@@ -12,12 +12,18 @@ import background from "../../../../assets/images/home.webp";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { BookingType } from "../../types/BookingType";
 import { Close } from "@mui/icons-material";
+import { FormikProps, FormikProvider } from "formik";
+import TouristSection from "./TouristSection";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import TourPackageSection from "./TourPackageSection";
 
 interface BookingFormProps {
   open: boolean;
   handleClose: () => void;
   isEditing: boolean;
   booking: BookingType | null;
+  formik: FormikProps<any>;
 }
 
 const Transition = forwardRef(function Transition(
@@ -34,9 +40,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
   handleClose,
   isEditing,
   booking,
+  formik,
 }: BookingFormProps) => {
-
-const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsOpen(open);
@@ -100,7 +106,21 @@ const [isOpen, setIsOpen] = useState(false);
           height: "100%",
           width: "100%",
         }}
-      ></DialogContent>
+      >
+        <FormikProvider value={formik}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <form onSubmit={formik.handleSubmit}>
+              <TouristSection />
+              <TourPackageSection
+                isEditing={isEditing}
+                dateRanges={[]}
+                onTourPackageChange={() => {}}
+                onDateRangeChange={() => {}}
+              />
+            </form>
+          </LocalizationProvider>
+        </FormikProvider>
+      </DialogContent>
     </Dialog>
   );
 };
