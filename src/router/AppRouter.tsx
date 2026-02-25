@@ -29,7 +29,7 @@ import TouristDestinationPage from "../pages/TouristDestinationPage";
 import TourTypePage from "../pages/TourTypePage";
 import TourTypeShowcaseContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
 import Page from "../pages/NotFoundPage";
-import HomePageContainer from "../pages/home/HomePageContainer";
+import HomePageContainer from "../pages/landingPage/HomePageContainer";
 
 export const AppRouter = createBrowserRouter(
   [

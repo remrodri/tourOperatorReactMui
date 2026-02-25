@@ -1,24 +1,15 @@
 import {
-  // AppBar,
   Box,
   Button,
-  // Container,
   Divider,
-  // IconButton,
-  // Menu,
-  // MenuItem,
-  // TextField,
-  // Toolbar,
   Typography,
 } from "@mui/material";
-// import MenuIcon from "@mui/icons-material/Menu";
-import TouristDestinationSectionContainer from "../../features/home/components/touristDestinationSection/TouristDestinationSectionContainer";
-import Footer from "../../features/home/components/footer/Footer";
-import ReviewSectionContainer from "../../features/home/components/reviewSection/ReviewSectionContainer";
-// import { SearchOutlined } from "@mui/icons-material";
-import HomeAppBar from "../../features/home/components/appBar/HomeAppBar";
-import TourPackageSectionContainer from "../../features/home/components/tourPackageSection/TourPackageSectionContainer";
-import ContactSection from "../../features/home/components/contactSection/ContactSection";
+import TouristDestinationSectionContainer from "../../features/landingPage/components/touristDestinationSection/TouristDestinationSectionContainer";
+import Footer from "../../features/landingPage/components/footer/Footer";
+import ReviewSectionContainer from "../../features/landingPage/components/reviewSection/ReviewSectionContainer";
+import HomeAppBar from "../../features/landingPage/components/appBar/HomeAppBar";
+import TourPackageSectionContainer from "../../features/landingPage/components/tourPackageSection/TourPackageSectionContainer";
+import ContactSection from "../../features/landingPage/components/contactSection/ContactSection";
 
 interface HomePageProps {
   anchorElNav: null | HTMLElement;
@@ -31,7 +22,6 @@ interface HomePageProps {
   anchorEl: null | HTMLElement;
   open: boolean;
   handleClose: () => void;
-  // handleClickSearchByBookingCode: () => void;
   bookingCode: string;
   setBookingCode: (code: string) => void;
 }
@@ -43,7 +33,6 @@ const HomePage: React.FC<HomePageProps> = ({
   anchorEl,
   open,
   handleClose,
-  // handleClickSearchByBookingCode,
   bookingCode,
   setBookingCode,
 }) => {
@@ -69,7 +58,6 @@ const HomePage: React.FC<HomePageProps> = ({
           anchorEl={anchorEl}
           open={open}
           handleClose={handleClose}
-          // handleClickSearchByBookingCode={handleClickSearchByBookingCode}
           bookingCode={bookingCode}
           setBookingCode={setBookingCode}
         />
@@ -146,12 +134,6 @@ const HomePage: React.FC<HomePageProps> = ({
               // pb: "1.5rem",
             }}
           >
-            {/* <Box
-              sx={{
-                height: "80%",
-                width: "100%",
-              }}
-            ></Box> */}
             <Box
               sx={{
                 // padding: "0 2.5rem 0.7rem 2.5rem",

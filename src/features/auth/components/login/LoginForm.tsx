@@ -1,11 +1,19 @@
-import { Box, Button, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useFormik } from "formik";
 import { loginSchema } from "../../validations/loginSchema";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface LoginFormContainerProps {
-  onSubmit: (userData: any) => void;
+  onSubmit: (userData: { email: string; password: string }) => void;
   setShowPassword: (showPassword: boolean) => void;
   showPassword: boolean;
 }

@@ -17,7 +17,6 @@ const BookingInfoContainer: React.FC<BookingInfoContainerProps> = ({
   open,
   handleClose,
 }) => {
-  console.log("::: ", booking);
   const { tourPackages } = useTourPackageContext();
   const { tourTypes } = useTourTypeContext();
   const { users } = useUserContext();
@@ -48,9 +47,6 @@ const BookingInfoContainer: React.FC<BookingInfoContainerProps> = ({
     };
   }, [booking, tourPackages, tourTypes, users, getTouristInfoById]);
 
-  // console.log("BookingInfoContainer", booking);
-
-  console.log("memoizedBooking::: ", memoizedBooking);
   return (
     <BookingInfo
       booking={memoizedBooking}

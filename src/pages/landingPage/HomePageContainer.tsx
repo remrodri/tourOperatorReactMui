@@ -3,17 +3,14 @@ import HomePage from "./HomePage";
 import { useNavigate } from "react-router-dom";
 import { TouristDestinationProvider } from "../../features/touristDestination/context/TouristDestinationContext";
 import { TourPackageProvider } from "../../features/tourPackage/context/TourPackageContext";
-import {
-  BookingProvider,
-  // useBookingContext,
-} from "../../features/booking/context/BookingContext";
+import { BookingProvider } from "../../features/booking/context/BookingContext";
 import { TouristProvider } from "../../features/tourist/context/TouristContext";
 
 const HomePageContainer: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const [anchorElReserva, setAnchorElReserva] = useState<null | HTMLElement>(
-    null
+    null,
   );
   const open = Boolean(anchorElReserva);
   const handleCloseReserva = () => {
@@ -21,23 +18,17 @@ const HomePageContainer: React.FC = () => {
   };
 
   const [bookingCode, setBookingCode] = useState("");
-  // const [openBookingInfo, setOpenBookingInfo] = useState(false);
-  // const { bookings } = useBookingContext();
 
-  // const handleClickSearchByBookingCode = () => {
-  //   console.log("::: ", bookingCode);
-  // };
-
-const handleScroll = (id: string) => {
-  const section = document.getElementById(id);
-  if (section) {
-    section.scrollIntoView({ behavior: "smooth" });
-  }
-};
+  const handleScroll = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const handleOption = (
     option: string,
-    event?: React.MouseEvent<HTMLButtonElement>
+    event?: React.MouseEvent<HTMLButtonElement>,
   ) => {
     setAnchorElNav(null);
     if (option === "Iniciar sesion") {
@@ -59,7 +50,7 @@ const handleScroll = (id: string) => {
       handleScroll("reseñas");
     }
     if (option === "Contacto") {
-      handleScroll("contacto")
+      handleScroll("contacto");
     }
   };
 
@@ -84,10 +75,8 @@ const handleScroll = (id: string) => {
               anchorEl={anchorElReserva}
               open={open}
               handleClose={handleCloseReserva}
-              // handleClickSearchByBookingCode={handleClickSearchByBookingCode}
               bookingCode={bookingCode}
               setBookingCode={setBookingCode}
-              
             />
           </BookingProvider>
         </TourPackageProvider>

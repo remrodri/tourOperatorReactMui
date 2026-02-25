@@ -56,31 +56,33 @@ const ReviewsSection: React.FC = () => {
         padding: "2rem",
       }}
     >
-      <Box sx={{
-        background: "rgba(82, 91, 51, 0.46)",
-        borderRadius: "10px",
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-        backdropFilter: "blur(5px)",
-        border: "1px solid rgba(107, 118, 66, 0.46)",
-        padding: "2rem",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "1rem",
-      }}>
+      <Box
+        sx={{
+          background: "rgba(82, 91, 51, 0.46)",
+          borderRadius: "10px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+          backdropFilter: "blur(5px)",
+          border: "1px solid rgba(107, 118, 66, 0.46)",
+          padding: "2rem",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "1rem",
+        }}
+      >
         <Typography
           variant="h4"
           align="center"
           gutterBottom
           fontFamily="Montserrat"
-          sx={{fontWeight:"500"}}
+          sx={{ fontWeight: "500" }}
         >
           Opiniones de nuestros clientes
         </Typography>
         <Grid container spacing={3} justifyContent="center" gap="3rem">
           {reviews.map((review, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid component="div" size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Card
                 sx={{
                   borderRadius: 3,
@@ -100,7 +102,9 @@ const ReviewsSection: React.FC = () => {
                         color: "#1C1C1C",
                       }}
                     >
-                      <Typography variant="h6" fontFamily="Montserrat">{review.name}</Typography>
+                      <Typography variant="h6" fontFamily="Montserrat">
+                        {review.name}
+                      </Typography>
                       <Rating value={review.rating} readOnly />
                     </Box>
                   </Box>

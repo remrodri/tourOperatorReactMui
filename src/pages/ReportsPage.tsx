@@ -7,7 +7,6 @@ import { TouristDestinationProvider } from "../features/touristDestination/conte
 import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
 import { UserProvider } from "../features/user/context/UserContext";
-// import FadeContent from "../Animations/FadeContent/FadeContent";
 import { AppBarStyle } from "./mainLayout/style/MainStyles";
 import FadeContent from "../Animations/FadeContent/FadeContent";
 

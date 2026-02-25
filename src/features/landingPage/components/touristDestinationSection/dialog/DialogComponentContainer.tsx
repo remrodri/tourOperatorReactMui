@@ -14,7 +14,6 @@ const DialogComponentContainer: React.FC<DialogComponentContainerProps> = ({
   touristDestination,
 }) => {
   const { tourPackages } = useTourPackageContext();
-  // console.log("::: ", tourPackages);
   const tourPackagesByTouristDestinationId = tourPackages.filter(
     (tourPackage) => tourPackage.touristDestination === touristDestination.id
   );

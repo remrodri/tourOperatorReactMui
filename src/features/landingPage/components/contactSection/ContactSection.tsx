@@ -29,7 +29,7 @@ const ContactSection = () => {
       <Button
         variant="contained"
         color="success"
-        sx={{ fontSize: "1.2rem",  }}
+        sx={{ fontSize: "1.2rem" }}
         href={whatsappLink}
         target="_blank"
       >

@@ -7,7 +7,6 @@ interface SectionCardContainerProps {
 const SectionCardContainer: React.FC<SectionCardContainerProps> = ({
   tourPackage,
 }) => {
-  console.log("::: tourPackage", tourPackage);
   return <SectionCard tourPackage={tourPackage} />;
 };
 export default SectionCardContainer;

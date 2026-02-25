@@ -1,28 +1,21 @@
 import {
   Box,
-  // AppBar,
   Dialog,
   DialogContent,
   IconButton,
-  Slide,
-  // Toolbar,
   Typography,
 } from "@mui/material";
-import { TransitionProps } from "@mui/material/transitions";
-import { forwardRef, ReactElement } from "react";
-// import CloseIcon from "@mui/icons-material/Close";
 import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 import { Close } from "@mui/icons-material";
-import { Ref } from "react";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import DialogCardContainer from "./card/DialogCardContainer";
 
+import { forwardRef } from "react";
+import Slide, { type SlideProps } from "@mui/material/Slide";
+
 const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children: ReactElement<any, any>;
-  },
-  ref: Ref<unknown>
+  props: SlideProps,
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -42,8 +35,6 @@ const DialogComponent: React.FC<DialogProps> = ({
   touristDestination,
   tourPackagesByTouristDestinationId,
 }) => {
-  console.log("touristDestination::: ", touristDestination);
-  // console.log("::: ", tourPackagesByTouristDestinationId);
   return (
     <Dialog
       open={open}
@@ -60,70 +51,28 @@ const DialogComponent: React.FC<DialogProps> = ({
           // padding:"1rem"
         },
       }}
-      // fullScreen
-      // maxWidth="md"
-      // slots={{
-      //   transition: Transition,
-      // }}
-      TransitionComponent={Transition}
-      TransitionProps={{
-        timeout: 300,
-        onExited: onClose,
+      slots={{
+        transition: Transition,
       }}
-      PaperProps={{
-        sx: {
-          backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          // width: "60rem",
-          // height: "30rem",
-          borderRadius: "10px",
-          // overflowY: "auto",
+      slotProps={{
+        transition: {
+          timeout: 300,
+          onExited: onClose,
+        },
+        paper: {
+          sx: {
+            backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            // width: "60rem",
+            // height: "30rem",
+            borderRadius: "10px",
+            // overflowY: "auto",
+          },
         },
       }}
     >
-      {/* <AppBar sx={{ position: "relative" }}>
-        <Toolbar>
-          <IconButton edge="end" color="inherit" onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            {touristDestination.name}
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
-      {/* <DialogTitle
-        sx={{
-          background: "rgba(0, 0, 0, 0.45)",
-          // borderRadius: "16px",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.7)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          // border: "1px solid rgba(0, 0, 0, 0.45)",
-          display: "flex",
-          gap: "1rem",
-          // border: "none",
-          borderBottom: "1px solid rgba(70, 88, 109, 0.48)",
-          // height: "3rem",
-        }}
-      >
-        <Typography sx={{ alignContent: "center" }} variant="h6">
-          {touristDestination.name}
-        </Typography>
-      </DialogTitle> */}
-      {/* <IconButton
-        autoFocus
-        aria-label="close"
-        onClick={onClose}
-        sx={{
-          position: "absolute",
-          right: 12,
-          top: 12,
-        }}
-      >
-        <Close />
-      </IconButton> */}
       <DialogContent
         sx={{
           // width: "40rem",
@@ -138,7 +87,7 @@ const DialogComponent: React.FC<DialogProps> = ({
           sx={{
             width: "30%",
             height: "100%",
-            display: {xs:"none", md:"flex"},
+            display: { xs: "none", md: "flex" },
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "rgba(0, 0, 0, 1)",
@@ -158,20 +107,15 @@ const DialogComponent: React.FC<DialogProps> = ({
             src={
               typeof touristDestination.images[0] === "string"
                 ? BASE_URL + touristDestination.images[0]
-                : // : URL.createObjectURL(touristDestination.images[0])
-                  ""
+                : "tourist-destination-image"
             }
-            alt=""
-            // style={{
-            //   width: "100%",
-            //   height: "100%",
-            // }}
+            alt="tourist-destination-image"
           />
         </Box>
         <Box
           sx={{
             backgroundColor: "rgba(0, 0, 0, 0.55)",
-            width: {xs:"100%", md:"70%"},
+            width: { xs: "100%", md: "70%" },
             height: "100%",
             // borderRadius: "6px",
             backdropFilter: "blur(10px)",
