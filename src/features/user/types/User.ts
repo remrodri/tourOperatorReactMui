@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface User {
   id: string;
   firstName: string;
@@ -10,4 +11,5 @@ export interface User {
   address: string;
   imageUrl?: string;
   image?: any;
+  deleted: boolean;
 }

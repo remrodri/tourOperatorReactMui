@@ -78,62 +78,68 @@ const UserCard: React.FC<UserCardProps> = ({
     //   threshold={0.2}
     //   delay={0.3}
     // >
-      <Card
-        sx={{
-          width: 400,
-          background: "rgba(10, 10, 10, 0.52)",
-          borderRadius: "10px",
-          borderTopLeftRadius: "4rem",
-          borderBottomLeftRadius: "4rem",
-          boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-          border: "1px solid rgba(53, 53, 53, 0.6)",
-          ".MuiCardHeader-root": {
-            p: "10px",
-          },
-          ".MuiCardContent-root": {
-            p: "0 15px 10px 0",
-            display: "flex",
-            justifyContent: "end",
-          },
-        }}
-      >
-        <CardHeader
-          avatar={
-            <Avatar
-              sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
-              aria-label="user"
-              // Add timestamp parameter to prevent caching
-              src={user.imageUrl ? `${user.imageUrl}?t=${imgKey}` : undefined}
-              // Handle image loading errors
-              imgProps={{
-                onError: () => {
-                  console.log("Image failed to load:", user.imageUrl);
-                  setImgLoaded(false);
-                },
-                onLoad: () => setImgLoaded(true),
+    <Card
+      sx={{
+        width: 400,
+        background: "rgba(10, 10, 10, 0.52)",
+        borderRadius: "10px",
+        borderTopLeftRadius: "4rem",
+        borderBottomLeftRadius: "4rem",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        border: "1px solid rgba(53, 53, 53, 0.6)",
+        ".MuiCardHeader-root": {
+          p: "10px",
+        },
+        ".MuiCardContent-root": {
+          p: "0 15px 10px 0",
+          display: "flex",
+          justifyContent: "end",
+        },
+      }}
+    >
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
+            aria-label="user"
+            // Add timestamp parameter to prevent caching
+            src={user.imageUrl ? `${user.imageUrl}?t=${imgKey}` : undefined}
+            // Handle image loading errors
+            imgProps={{
+              onError: () => {
+                console.log("Image failed to load:", user.imageUrl);
+                setImgLoaded(false);
+              },
+              onLoad: () => setImgLoaded(true),
+            }}
+          >
+            {roleChar}
+          </Avatar>
+        }
+        action={<UserCardMenu onOptionSelect={handleMenuOption} role={role} user={user} />}
+        title={`${userRole.name.toUpperCase()}`}
+        subheader={
+          <Box>
+            <Typography sx={{ fontSize: "16px" }}>
+              {shortenUserName(`${user.firstName} ${user.lastName}`)}
+            </Typography>
+            <Typography
+              sx={{
+                pt: "11px",
+                fontSize: "0.9rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
               }}
             >
-              {roleChar}
-            </Avatar>
-          }
-          action={<UserCardMenu onOptionSelect={handleMenuOption} role={role} />}
-          title={`${userRole.name.toUpperCase()}`}
-          subheader={
-            <Box>
-              <Typography sx={{ fontSize: "16px" }}>
-                {shortenUserName(`${user.firstName} ${user.lastName}`)}
-              </Typography>
-              <Typography
-                sx={{ pt: "11px", fontSize: "0.9rem",  display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <ContactPhone />
-                {/* <br /> */}
-                {user.phone}
-              </Typography>
-            </Box>
-          }
-        />
-      </Card>
+              <ContactPhone />
+              {/* <br /> */}
+              {user.phone}
+            </Typography>
+          </Box>
+        }
+      />
+    </Card>
     // </AnimatedContent>
   );
 };

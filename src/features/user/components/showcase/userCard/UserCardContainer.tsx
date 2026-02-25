@@ -5,6 +5,7 @@ import UserCard from "./UserCard";
 import { Role } from "../../../types/Role";
 import MoreInfoModalContainer from "../../moreInfoModal/MoreInfoModalContainer";
 import UserFormContainer from "../../userForm/UserFormContainer";
+import { useUserContext } from "../../../context/UserContext";
 
 interface UserCardContainerProps {
   user: User;
@@ -14,10 +15,12 @@ const UserCardContainer: React.FC<UserCardContainerProps> = ({ user, role }) => 
   const [openUserForm, setOpenUserForm] = useState(false);
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const { getRoleById, loading, roles } = useRoleContext();
+  const { enableUser, disableUser } = useUserContext();
   const [userRole, setUserRole] = useState<Role>({
     id: "default",
     name: "sin rol",
   });
+
 
   const handleOpenUserFormClick = () => {
     setOpenUserForm(!openUserForm);
@@ -37,8 +40,13 @@ const UserCardContainer: React.FC<UserCardContainerProps> = ({ user, role }) => 
         console.log("Editar::: ");
         handleOpenUserFormClick();
         break;
-      case "Dar de baja":
-        console.log("Dar de baja::: ");
+      case "Habilitar":
+        console.log("habilitar::: ");
+        await enableUser(user.id);
+        break;
+      case "Deshabilitar":
+        console.log("deshabilitar::: ");
+        await disableUser(user.id);
         break;
       default:
         console.log("Opcion invalida");

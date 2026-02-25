@@ -9,19 +9,26 @@ const options = [
   "Ver mas",
   "Editar",
   // "Dar de baja"
+  "Habilitar",
+  "Deshabilitar",
 ];
 
 // const token = TokenService.getToken();
 // const user: User = jwtDecode(token!);
 // const role = user.role;
 
-
 interface UserCardMenuProps {
   onOptionSelect: (option: string) => void;
   role: string;
+  user: User;
 }
 
-const UserCardMenu: React.FC<UserCardMenuProps> = ({ onOptionSelect, role }) => {
+const UserCardMenu: React.FC<UserCardMenuProps> = ({
+  onOptionSelect,
+  role,
+  user,
+}) => {
+  // console.log("::: ", user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -102,6 +109,22 @@ const UserCardMenu: React.FC<UserCardMenuProps> = ({ onOptionSelect, role }) => 
             onClick={() => handleOptionClick(options[1])}
           >
             {options[1]}
+          </MenuItem>
+        )}
+        {role === "690cbf7c64756dcc541d8a19" && user.deleted === true && (
+          <MenuItem
+            key={options[2]}
+            onClick={() => handleOptionClick(options[2])}
+          >
+            {options[2]}
+          </MenuItem>
+        )}
+        {role === "690cbf7c64756dcc541d8a19" && user.deleted === false && (
+          <MenuItem
+            key={options[3]}
+            onClick={() => handleOptionClick(options[3])}
+          >
+            {options[3]}
           </MenuItem>
         )}
       </Menu>

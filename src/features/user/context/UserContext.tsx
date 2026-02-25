@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createContext,
   ReactNode,
@@ -27,6 +28,8 @@ interface UserContextType {
   userInfo: any | null;
   setUsers: (users: User[]) => void;
   operators: User[];
+  disableUser: (userId: string) => Promise<any>;
+  enableUser: (userId: string) => Promise<any>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -43,6 +46,36 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [userFound, setUserFound] = useState<User | null>(null);
   const [userInfo, setUserInfo] = useState<any | null>(null);
   const [operators, setOperators] = useState<User[]>([]);
+
+  const disableUser = async (userId: string) => {
+    try {
+      const response = await userService.disableUser(userId);
+      showSnackbar("Usuario deshabilitado correctamente", "success");
+      return response;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar(error.message, "error");
+      }
+    }
+  };
+
+  const enableUser = async (userId: string) => {
+    try {
+      const response = await userService.enableUser(userId);
+      showSnackbar("Usuario habilitado correctamente", "success");
+      return response;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response);
+      }
+      if (error instanceof Error) {
+        showSnackbar(error.message, "error");
+      }
+    }
+  };
 
   const getOperators = () => {
     try {
@@ -322,6 +355,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         userInfo,
         setUsers,
         operators,
+        disableUser,
+        enableUser,
       }}
     >
       {children}

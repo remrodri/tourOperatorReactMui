@@ -9,9 +9,27 @@ interface ApiResponse {
   data: User;
 }
 
+const disableUser = async (userId: string, token: string): Promise<ApiResponse> => {
+  const response = await axios.patch(
+    `${API_URL}/disable-user`,
+    { userId: userId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+const enableUser = async (userId: string, token: string): Promise<ApiResponse> => {
+  const response = await axios.patch(
+    `${API_URL}/enable-user`,
+    { userId: userId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
 const getUsers = async (): Promise<ApiResponse> => {
   const response = await axios.get(API_URL);
-  // console.log('response::: ', response);
+  console.log('response::: ', response);
   return response.data;
 };
 
@@ -89,4 +107,6 @@ export const userService = {
   registerUser,
   updateUser,
   deleteUser,
+  disableUser,
+  enableUser,
 };
