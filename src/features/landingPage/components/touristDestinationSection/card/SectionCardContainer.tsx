@@ -23,17 +23,13 @@ const SectionCardContainer: React.FC<SectionCardContainerProps> = ({
     <>
       <SectionCard
         touristDestination={touristDestination}
-        // openDialog={openDialog}
-        // handleCloseDialog={handleCloseDialog}
         handleOpenDialog={handleOpenDialog}
       />
-      {openDialog && (
-        <DialogComponentContainer
-          open={openDialog}
-          onClose={handleCloseDialog}
-          touristDestination={touristDestination}
-        />
-      )}
+      <DialogComponentContainer
+        open={openDialog}
+        onClose={handleCloseDialog}
+        touristDestination={touristDestination}
+      />
     </>
   );
 };

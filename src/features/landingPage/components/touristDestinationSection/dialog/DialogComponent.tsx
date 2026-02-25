@@ -13,12 +13,13 @@ import DialogCardContainer from "./card/DialogCardContainer";
 import { forwardRef } from "react";
 import Slide, { type SlideProps } from "@mui/material/Slide";
 
-const Transition = forwardRef(function Transition(
-  props: SlideProps,
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = forwardRef<unknown, SlideProps>(
+  function Transition(props, ref) {
+    const { in: inProp, ...other } = props;
+
+    return <Slide in={inProp} direction="up" ref={ref} {...other} />;
+  },
+);
 
 interface DialogProps {
   open: boolean;
@@ -35,6 +36,11 @@ const DialogComponent: React.FC<DialogProps> = ({
   touristDestination,
   tourPackagesByTouristDestinationId,
 }) => {
+  const firstImage = touristDestination.images[0];
+
+  const backgroundImageUrl =
+    typeof firstImage === "string" && `${BASE_URL}${firstImage}`;
+
   return (
     <Dialog
       open={open}
@@ -56,12 +62,16 @@ const DialogComponent: React.FC<DialogProps> = ({
       }}
       slotProps={{
         transition: {
-          timeout: 300,
-          onExited: onClose,
+          timeout: { enter: 300, exit: 300 },
+          // onExited: onClose,
+          easing: {
+            enter: "ease-out",
+            exit: "ease-in",
+          },
         },
         paper: {
           sx: {
-            backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
+            backgroundImage: `url(${backgroundImageUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",

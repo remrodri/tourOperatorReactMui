@@ -22,6 +22,11 @@ const SectionCard: React.FC<SectionCardProps> = ({
   // handleCloseDialog,
   handleOpenDialog,
 }) => {
+  const firstImage = touristDestination.images[0];
+
+  const backgroundImageUrl =
+    typeof firstImage === "string" && `${BASE_URL}${firstImage}`;
+
   return (
     <Card
       sx={{
@@ -29,7 +34,7 @@ const SectionCard: React.FC<SectionCardProps> = ({
         height: "260px",
         borderRadius: "10px",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-        backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
+        backgroundImage: `url(${backgroundImageUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -90,9 +95,7 @@ const SectionCard: React.FC<SectionCardProps> = ({
               // color: "white",
               // fontWeight: "200",
             }}
-            // noWrap
           >
-            {/* {touristDestination.description} */}
             Click para ver mas
           </Typography>
         </CardContent>
