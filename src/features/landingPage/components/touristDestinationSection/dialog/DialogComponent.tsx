@@ -12,6 +12,7 @@ import DialogCardContainer from "./card/DialogCardContainer";
 
 import { forwardRef } from "react";
 import Slide, { type SlideProps } from "@mui/material/Slide";
+import { ENV } from "../../../../../config/env";
 
 const Transition = forwardRef<unknown, SlideProps>(
   function Transition(props, ref) {
@@ -28,7 +29,8 @@ interface DialogProps {
   tourPackagesByTouristDestinationId: TourPackageType[];
 }
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = ENV.API_BASE_URL;
 
 const DialogComponent: React.FC<DialogProps> = ({
   open,

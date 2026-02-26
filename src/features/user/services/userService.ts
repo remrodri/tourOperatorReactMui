@@ -1,5 +1,6 @@
 import axios from "axios";
 import { User } from "../types/User";
+import axiosInstance from "../../../config/axiosConfig";
 
 const API_URL = "http://localhost:3000/api/v1/users";
 
@@ -28,7 +29,7 @@ const enableUser = async (userId: string, token: string): Promise<ApiResponse> =
 };
 
 const getUsers = async (): Promise<ApiResponse> => {
-  const response = await axios.get(API_URL);
+  const response = await axiosInstance.get("/users");
   console.log('response::: ', response);
   return response.data;
 };

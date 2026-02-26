@@ -7,7 +7,7 @@ import { useUserContext } from "../../../user/context/UserContext";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 
 interface BookingInfoContainerProps {
-  booking: BookingType;
+  booking: BookingType | null;
   open: boolean;
   handleClose: () => void;
 }
@@ -23,20 +23,37 @@ const BookingInfoContainer: React.FC<BookingInfoContainerProps> = ({
   const { getTouristInfoById } = useTouristContext();
 
   const memoizedBooking = useMemo(() => {
+    if (!booking) {
+      return {
+        booking: null,
+        tourPackageFound: null,
+        tourTypeFound: null,
+        sellerFound: null,
+        dateRange: null,
+        tourists: [],
+      };
+    }
+
     const tourPackageFound =
       tourPackages.find((tp) => tp.id === booking.tourPackageId) || null;
+
     const tourTypeFound =
       tourTypes.find((tt) => tt.id === tourPackageFound?.tourType) || null;
+
     const sellerFound =
       users.find((user) => user.id === booking.sellerId) || null;
+
     const dateRange =
       tourPackageFound?.dateRanges.find(
-        (dr) => dr.id === booking.dateRangeId
+        (dr) => dr.id === booking.dateRangeId,
       ) || null;
-    const tourists =
-      booking.touristIds
-        .map((touristId) => getTouristInfoById(touristId))
-        .filter((tourist) => tourist !== null) || [];
+
+    const tourists = booking.touristIds
+      .map((touristId) => getTouristInfoById(touristId))
+      .filter(
+        (tourist): tourist is NonNullable<typeof tourist> => tourist !== null,
+      );
+
     return {
       booking,
       tourPackageFound,
@@ -46,6 +63,10 @@ const BookingInfoContainer: React.FC<BookingInfoContainerProps> = ({
       tourists,
     };
   }, [booking, tourPackages, tourTypes, users, getTouristInfoById]);
+
+  if (!memoizedBooking.booking) {
+    return null;
+  }
 
   return (
     <BookingInfo

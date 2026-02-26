@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
+// import LoginPage from "../pages/LoginPage";
 import UserManagementPage from "../pages/UserManagementPage";
 import SecuritySetupPage from "../pages/SecuritySetupPage";
 import PasswordFormContainer from "../features/securitySetup/components/passwordForm/PasswordFormContainer";
@@ -29,18 +29,18 @@ import TouristDestinationPage from "../pages/TouristDestinationPage";
 import TourTypePage from "../pages/TourTypePage";
 import TourTypeShowcaseContainer from "../features/tourType/components/showcase/TourTypeShowcaseContainer";
 import Page from "../pages/NotFoundPage";
-import HomePageContainer from "../pages/landingPage/HomePageContainer";
+import LandingPageContainer from "../pages/landingPage/LandingPageContainer";
 
 export const AppRouter = createBrowserRouter(
   [
     {
       path: "/",
-      element: <HomePageContainer />,
+      element: <LandingPageContainer />,
     },
-    {
-      path: "/iniciar-sesion",
-      element: <LoginPage />,
-    },
+    // {
+    //   path: "/iniciar-sesion",
+    //   element: <LoginPage />,
+    // },
     {
       path: "configuracion-de-seguridad",
       element: <SecuritySetupPage />,
@@ -188,5 +188,5 @@ export const AppRouter = createBrowserRouter(
       v7_partialHydration: true,
       v7_skipActionErrorRevalidation: true,
     },
-  }
+  },
 );

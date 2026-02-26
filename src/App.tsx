@@ -15,6 +15,8 @@ import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/800.css";
 import "video.js/dist/video-js.css";
 
+import { Toaster } from "sileo";
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -31,6 +33,18 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <SnackbarProvider>
+        <Toaster
+          position="bottom-left"
+          options={{
+            fill: "#ffffffff", // fondo
+            roundness: 16, // border-radius
+            styles: {
+              title: "text-white font-semibold",
+              description: "text-gray-800",
+              badge: "bg-emerald-500",
+            },
+          }}
+        />
         {/* RouterProvider debe ir ANTES que AppProviders */}
         {/* <AppProviders> */}
         <RouterProvider router={AppRouter} />

@@ -1,14 +1,12 @@
 import { useState } from "react";
-import HomePage from "./HomePage";
-import { useNavigate } from "react-router-dom";
+import LandingPage from "./LandingPage";
 import { TouristDestinationProvider } from "../../features/touristDestination/context/TouristDestinationContext";
 import { TourPackageProvider } from "../../features/tourPackage/context/TourPackageContext";
 import { BookingProvider } from "../../features/booking/context/BookingContext";
 import { TouristProvider } from "../../features/tourist/context/TouristContext";
 
-const HomePageContainer: React.FC = () => {
+const LandingPageContainer: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const navigate = useNavigate();
   const [anchorElReserva, setAnchorElReserva] = useState<null | HTMLElement>(
     null,
   );
@@ -26,13 +24,23 @@ const HomePageContainer: React.FC = () => {
     }
   };
 
+  const [openLoginDialog, setOpenLoginDialog] = useState(false);
+
+  const handleCloseLoginDialog = () => {
+    setOpenLoginDialog(false);
+  };
+
+  const handleOpenLoginDialog = () => {
+    setOpenLoginDialog(true);
+  };
+
   const handleOption = (
     option: string,
     event?: React.MouseEvent<HTMLButtonElement>,
   ) => {
     setAnchorElNav(null);
     if (option === "Iniciar sesion") {
-      navigate("/iniciar-sesion");
+      handleOpenLoginDialog();
     }
     if (option === "Consultar reserva" && event) {
       setAnchorElReserva(event.currentTarget);
@@ -67,7 +75,7 @@ const HomePageContainer: React.FC = () => {
       <TouristDestinationProvider>
         <TourPackageProvider>
           <BookingProvider>
-            <HomePage
+            <LandingPage
               anchorElNav={anchorElNav}
               handleOpenNavMenu={handleOpenNavMenu}
               handleCloseNavMenu={handleCloseNavMenu}
@@ -77,6 +85,8 @@ const HomePageContainer: React.FC = () => {
               handleClose={handleCloseReserva}
               bookingCode={bookingCode}
               setBookingCode={setBookingCode}
+              openLoginDialog={openLoginDialog}
+              handleCloseLoginDialog={handleCloseLoginDialog}
             />
           </BookingProvider>
         </TourPackageProvider>
@@ -84,4 +94,4 @@ const HomePageContainer: React.FC = () => {
     </TouristProvider>
   );
 };
-export default HomePageContainer;
+export default LandingPageContainer;

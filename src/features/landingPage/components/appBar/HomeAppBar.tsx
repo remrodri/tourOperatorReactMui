@@ -20,6 +20,7 @@ import { DateRangeProvider } from "../../../dateRange/context/DateRangeContext";
 import { TourTypeProvider } from "../../../tourType/context/TourTypeContext";
 import { UserProvider } from "../../../user/context/UserContext";
 import BookingInfoContainer from "../bookingInfo/BookingInfoContainer";
+import LoginDialogComponentContainer from "../login/dialog/LoginDialogComponentContainer";
 
 interface HomeAppBarProps {
   anchorElNav: null | HTMLElement;
@@ -27,14 +28,15 @@ interface HomeAppBarProps {
   handleCloseNavMenu: () => void;
   handleOption: (
     option: string,
-    event?: React.MouseEvent<HTMLButtonElement>
+    event?: React.MouseEvent<HTMLButtonElement>,
   ) => void;
   anchorEl: null | HTMLElement;
   open: boolean;
   handleClose: () => void;
-  // handleClickSearchByBookingCode: () => void;
   bookingCode: string;
   setBookingCode: (code: string) => void;
+  openLoginDialog: boolean;
+  handleCloseLoginDialog: () => void;
 }
 
 const sections = [
@@ -55,51 +57,55 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
   anchorEl,
   open,
   handleClose,
-  // handleClickSearchByBookingCode,
   bookingCode,
   setBookingCode,
+  openLoginDialog,
+  handleCloseLoginDialog,
 }) => {
   const { bookings } = useBookingContext();
   const { showSnackbar } = useNewSnackbar();
 
-  const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
-  const handleCloseMoreInfo = () => {
-    setBookingCode("");
-    setOpenMoreInfoDialog(false);
-  };
+  // const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
+  // const handleCloseMoreInfo = () => {
+  //   setBookingCode("");
+  //   setOpenMoreInfoDialog(false);
+  // };
 
-  const handleOpenMoreInfo = () => {
-    setOpenMoreInfoDialog(true);
-  };
+  // const handleOpenMoreInfo = () => {
+  //   setOpenMoreInfoDialog(true);
+  // };
 
   const handleClickSearchByBookingCode = () => {
-    // handleClose();
-    const res = searchByBookingCode();
-    if (!bookingCode) {
+    if (!bookingCode.trim()) {
       showSnackbar("Debe ingresar un codigo de reserva", "error");
       return;
     }
-    if (!res) {
+
+    const bookingFound = searchByBookingCode();
+
+    if (!bookingFound) {
       showSnackbar("No se encontro la reserva", "error");
       return;
     }
-    handleOpenMoreInfo();
+
+    setSelectedBooking(bookingFound);
   };
 
-  const searchByBookingCode = () => {
+  const searchByBookingCode = (): BookingType | null => {
     const bCode = bookingCode.trim();
-    const bookingFound: BookingType | undefined = bookings.find(
-      (booking) => booking.bookingCode === bCode
-    );
-    if (!bookingFound) {
-      return null;
-    }
-    handleClose();
-    // setBookingCode("");
-    return bookingFound;
+    return bookings.find((booking) => booking.bookingCode === bCode) ?? null;
   };
 
-  
+  const [selectedBooking, setSelectedBooking] = useState<BookingType | null>(
+    null,
+  );
+
+  const handleCloseBookingInfo = () => {
+    setSelectedBooking(null);
+    setBookingCode("");
+  };
+
+
 
   return (
     <>
@@ -244,19 +250,21 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
           </Toolbar>
         </Container>
       </AppBar>
-      {openMoreInfoDialog && (
-        <UserProvider>
-          <TourTypeProvider>
-            <DateRangeProvider>
-              <BookingInfoContainer
-                booking={searchByBookingCode() as BookingType}
-                open={openMoreInfoDialog}
-                handleClose={handleCloseMoreInfo}
-              />
-            </DateRangeProvider>
-          </TourTypeProvider>
-        </UserProvider>
-      )}
+      <UserProvider>
+        <TourTypeProvider>
+          <DateRangeProvider>
+            <BookingInfoContainer
+              booking={selectedBooking as BookingType}
+              open={Boolean(selectedBooking)}
+              handleClose={handleCloseBookingInfo}
+            />
+          </DateRangeProvider>
+        </TourTypeProvider>
+      </UserProvider>
+      <LoginDialogComponentContainer
+        open={openLoginDialog}
+        onClose={handleCloseLoginDialog}
+      />
     </>
   );
 };

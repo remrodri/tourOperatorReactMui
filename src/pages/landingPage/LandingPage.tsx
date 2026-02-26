@@ -11,7 +11,7 @@ import HomeAppBar from "../../features/landingPage/components/appBar/HomeAppBar"
 import TourPackageSectionContainer from "../../features/landingPage/components/tourPackageSection/TourPackageSectionContainer";
 import ContactSection from "../../features/landingPage/components/contactSection/ContactSection";
 
-interface HomePageProps {
+interface LandingPageProps {
   anchorElNav: null | HTMLElement;
   handleOpenNavMenu: (event: React.MouseEvent<HTMLElement>) => void;
   handleCloseNavMenu: () => void;
@@ -24,8 +24,10 @@ interface HomePageProps {
   handleClose: () => void;
   bookingCode: string;
   setBookingCode: (code: string) => void;
+  openLoginDialog: boolean;
+  handleCloseLoginDialog: () => void;
 }
-const HomePage: React.FC<HomePageProps> = ({
+const LandingPage: React.FC<LandingPageProps> = ({
   anchorElNav,
   handleOpenNavMenu,
   handleCloseNavMenu,
@@ -35,6 +37,8 @@ const HomePage: React.FC<HomePageProps> = ({
   handleClose,
   bookingCode,
   setBookingCode,
+  openLoginDialog,
+  handleCloseLoginDialog,
 }) => {
   return (
     <Box
@@ -60,6 +64,8 @@ const HomePage: React.FC<HomePageProps> = ({
           handleClose={handleClose}
           bookingCode={bookingCode}
           setBookingCode={setBookingCode}
+          openLoginDialog={openLoginDialog}
+          handleCloseLoginDialog={handleCloseLoginDialog}
         />
         <Box
           sx={{
@@ -194,4 +200,4 @@ const HomePage: React.FC<HomePageProps> = ({
     </Box>
   );
 };
-export default HomePage;
+export default LandingPage;

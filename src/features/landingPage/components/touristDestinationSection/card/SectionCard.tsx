@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
+import { ENV } from "../../../../../config/env";
 
 interface SectionCardProps {
   touristDestination: TouristDestinationType;
@@ -14,7 +15,8 @@ interface SectionCardProps {
   handleOpenDialog: () => void;
 }
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = ENV.API_BASE_URL
 
 const SectionCard: React.FC<SectionCardProps> = ({
   touristDestination,
