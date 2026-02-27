@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DateRangeType } from "../../../../types/DateRangeType";
-import { User } from "../../../../../user/types/User";
+import { User } from "../../../../../userManagement/types/UserType";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState, MouseEvent } from "react";

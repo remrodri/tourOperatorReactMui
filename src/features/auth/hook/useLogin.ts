@@ -3,7 +3,7 @@ import { authService } from "../service/authService";
 import axios from "axios";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../user/types/User";
+import { User } from "../../userManagement/types/UserType";
 import { useRoleContext } from "../../Role/context/RoleContext";
 import { sileo } from "sileo";
 

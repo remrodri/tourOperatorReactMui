@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import axiosInstance from "../../../config/axiosConfig";
+import { axiosPublic } from "../../../config/axiosConfig";
 
 interface LoginRequest {
   email: string;
@@ -15,7 +15,7 @@ interface LoginResponse {
 
 export const authService = {
   login: async (data: LoginRequest): Promise<AxiosResponse<LoginResponse>> => {
-    const response = await axiosInstance.post("/auth/login", data);
+    const response = await axiosPublic.post("/auth/login", data);
     return response;
   },
 };

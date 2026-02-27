@@ -3,7 +3,7 @@ import { BookingType } from "../../../booking/types/BookingType";
 import BookingInfo from "./BookingInfo";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
-import { useUserContext } from "../../../user/context/UserContext";
+import { useUserContext } from "../../../userManagement/context/UserContext";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 
 interface BookingInfoContainerProps {

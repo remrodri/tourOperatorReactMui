@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 
 interface TourPackageProps {
   loading: boolean;

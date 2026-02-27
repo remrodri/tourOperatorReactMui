@@ -15,7 +15,7 @@ import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import { DateRangeType } from "../../../../tourPackage/types/DateRangeType";
 import { TouristType } from "../../../types/TouristType";
 import { PaymentType } from "../../../types/PaymentType";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import BookingProofPDF from "../../pdf/BookingProofPDF";
 import dayjs from "dayjs";

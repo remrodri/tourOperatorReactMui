@@ -7,8 +7,8 @@ import {
 } from "react";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
-import { User } from "../../user/types/User";
-import { useUserContext } from "../../user/context/UserContext";
+import { User } from "../../userManagement/types/UserType";
+import { useUserContext } from "../../userManagement/context/UserContext";
 import { jwtDecode } from "jwt-decode";
 import { TouristType } from "../../booking/types/TouristType";
 import { BookingType } from "../../booking/types/BookingType";
@@ -63,7 +63,7 @@ export const useGuideContext = () => {
 export const GuideProvider = ({ children }: GuideProviderProps) => {
   const { tourPackages } = useTourPackageContext();
   const [guideDateRanges, setGuideDateRanges] = useState<CustomDateRangeType[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [guideInfo, setGuideInfo] = useState<User | null>(null);
@@ -119,7 +119,7 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
   const getDateRangeBookings = (
     dateRangeId: string,
     bookings: BookingType[],
-    currentTourPackage: string
+    currentTourPackage: string,
   ) => {
     // console.log("📅 Obteniendo bookings para dateRange:", dateRangeId);
     // console.log("📊 Total bookings disponibles:", bookings.length);
@@ -127,7 +127,7 @@ export const GuideProvider = ({ children }: GuideProviderProps) => {
     const result = getBookingsByDateRangeId(
       dateRangeId,
       bookings,
-      currentTourPackage
+      currentTourPackage,
     );
 
     // console.log("✅ DateRange bookings encontrados:", result.length);

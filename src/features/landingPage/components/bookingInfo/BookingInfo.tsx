@@ -14,8 +14,8 @@ import { forwardRef, ReactElement, useEffect, useState, Ref } from "react";
 import background from "../../../../assets/images/bookingDialog2.webp";
 import { BookingType } from "../../../booking/types/BookingType";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-import { TourType } from "../../../user/types/TourType";
-import { User } from "../../../user/types/User";
+import { TourType } from "../../../userManagement/types/TourType";
+import { User } from "../../../userManagement/types/UserType";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
 import { ActivityType } from "../../../tourPackage/types/ActivityType";
 import { TouristType } from "../../../booking/types/TouristType";
@@ -37,7 +37,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: ReactElement<any, any>;
   },
-  ref: Ref<unknown>
+  ref: Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -183,7 +183,7 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
               booking.booking?.totalPrice || 0
             }`}</Typography>
             <Typography>{`Estado: ${translateStatus(
-              booking.booking?.status || ""
+              booking.booking?.status || "",
             )}`}</Typography>
             <Typography>
               {`Fecha de inicio: ${booking.dateRange?.dates?.[0] || "-"}`}
@@ -301,7 +301,7 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
               booking.tourPackageFound.itinerary.days.map(
                 (
                   day: { dayNumber: number; activities: ActivityType[] },
-                  index
+                  index,
                 ) => (
                   <Box
                     key={index}
@@ -328,7 +328,7 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
                         </Typography>
                       ))}
                   </Box>
-                )
+                ),
               )}
           </Box>
         </Box>
@@ -438,7 +438,7 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
                     }`}
                   </Typography>
                   <Typography variant="body2">{`Monto: ${payment.amount.toFixed(
-                    2
+                    2,
                   )} Bs.`}</Typography>
                 </Box>
               ))}

@@ -11,13 +11,13 @@ import dayjs from "dayjs";
 import { useBookingContext } from "../../booking/context/BookingContext";
 import { useTouristDestinationContext } from "../../touristDestination/context/TouristDestinationContext";
 import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
-import { useUserContext } from "../../user/context/UserContext";
+import { useUserContext } from "../../userManagement/context/UserContext";
 import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
 
 import { BookingType } from "../../booking/types/BookingType";
 import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
-import { User } from "../../user/types/User";
+import { User } from "../../userManagement/types/UserType";
 import { DateRangeType } from "../../tourPackage/types/DateRangeType";
 
 interface DashboardContextType {
@@ -68,7 +68,7 @@ export const useDashboardContext = () => {
   const ctx = useContext(DashboardContext);
   if (!ctx)
     throw new Error(
-      "useDashboardContext must be used within a DashboardProvider"
+      "useDashboardContext must be used within a DashboardProvider",
     );
   return ctx;
 };
@@ -88,11 +88,11 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
   const [error, setError] = useState<string | null>(null);
 
   const [yearSelected, setYearSelected] = useState(
-    new Date().getFullYear().toString()
+    new Date().getFullYear().toString(),
   );
 
   const [touristDestinationWithBookings, setTDWithBookings] = useState<any[]>(
-    []
+    [],
   );
   const [totalBookings, setTotalBookings] = useState(0);
 
@@ -168,7 +168,7 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
 
   const buildCumulativeBookings = () => {
     const filtered = bookings.filter(
-      (b) => dayjs(b.createdAt).year() === Number(yearSelected)
+      (b) => dayjs(b.createdAt).year() === Number(yearSelected),
     );
 
     const byDate: Record<string, number> = {};
@@ -229,7 +229,7 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
     const tdWB = buildTDWithBookings();
     setTDWithBookings(tdWB);
     setTotalBookings(
-      tdWB.reduce((acc, td) => acc + td.filteredBookings.length, 0)
+      tdWB.reduce((acc, td) => acc + td.filteredBookings.length, 0),
     );
   }, [bookings, tourPackages, touristDestinations]);
 
@@ -278,7 +278,7 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
 
         getBookingsByMonth: () =>
           setCountedBookings(
-            buildMonthlyBookings(touristDestinationWithBookings)
+            buildMonthlyBookings(touristDestinationWithBookings),
           ),
 
         getBookingsByTouristDestination: () =>

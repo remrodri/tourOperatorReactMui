@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Role } from "../../user/types/Role";
+import { Role } from "../../userManagement/types/RoleType";
 import { roleService } from "../service/roleService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 

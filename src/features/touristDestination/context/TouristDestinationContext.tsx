@@ -5,8 +5,8 @@ import {
   useEffect,
   useState,
 } from "react";
+
 import { TouristDestinationType } from "../types/TouristDestinationType";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
 import {
   createTouristDestinationRequest,
   deleteTouristDestinationRequest,
@@ -16,25 +16,20 @@ import {
 
 interface TouristDestinationContextType {
   touristDestinations: TouristDestinationType[];
-  createTouristDestination: (data: {
-    id?: string;
-    name: string;
-    description: string;
-    newImages: File[];
-    existingImages: string[];
-  }) => void;
-  updateTouristDestination: (values: {
-    id?: string;
-    name: string;
-    description: string;
-    newImages: File[];
-    existingImages: string[];
-  }) => void;
-  // BASE_URL: string;
-  deleteTouristDestination: (id: string) => void;
+  createTouristDestination: (data: CreateOrUpdatePayload) => Promise<void>;
+  updateTouristDestination: (data: CreateOrUpdatePayload) => Promise<void>;
+  deleteTouristDestination: (id: string) => Promise<void>;
   getTouristDestinationById: (id: string) => string;
   getTouristDestinationInfoById: (id: string) => TouristDestinationType | null;
 }
+
+type CreateOrUpdatePayload = {
+  id?: string;
+  name: string;
+  description: string;
+  newImages: File[];
+  existingImages: string[];
+};
 
 const TouristDestinationContext = createContext<
   TouristDestinationContextType | undefined
@@ -46,111 +41,64 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
   const [touristDestinations, setTouristDestinations] = useState<
     TouristDestinationType[]
   >([]);
-  const { showSnackbar } = useNewSnackbar();
-  // const BASE_URL = "http://localhost:3000";
+
+  /* ===================== GETTERS ===================== */
+
   const getTouristDestinationInfoById = (
-    id: string
+    id: string,
   ): TouristDestinationType | null => {
-    if (!id) {
-      console.warn("touristDestination called without id");
-      return null;
-    }
-    const td = touristDestinations.find((td) => td.id === id);
-    if (!td) {
-      console.warn("Tourist destination not found");
-      return null;
-    }
-    return td;
+    if (!id) return null;
+    return touristDestinations.find((td) => td.id === id) ?? null;
   };
 
-  const getTouristDestinationById = (id: string) => {
-    const tdFound = touristDestinations.find((td) => td.id === id);
-    if (!tdFound) {
-      return "Destino turistico no encontrado";
-    }
-    return tdFound.name;
+  const getTouristDestinationById = (id: string): string => {
+    const td = touristDestinations.find((td) => td.id === id);
+    return td ? td.name : "Destino turístico no encontrado";
+  };
+
+  /* ===================== ACTIONS ===================== */
+
+  const fetchTouristDestinations = async () => {
+    const destinations = await getAllTouristDestinationRequest();
+    if (!destinations) return;
+    setTouristDestinations(destinations);
+  };
+
+  const createTouristDestination = async (values: CreateOrUpdatePayload) => {
+    const created = await createTouristDestinationRequest(values);
+    if (!created) return;
+
+    setTouristDestinations((prev) => [...prev, created]);
+  };
+
+  const updateTouristDestination = async (values: CreateOrUpdatePayload) => {
+    if (!values.id) return;
+
+    const updated = await updateTouristDestinationRequest({
+      ...values,
+      id: values.id,
+    });
+
+    if (!updated) return;
+
+    setTouristDestinations((prev) =>
+      prev.map((dest) => (dest.id === updated.id ? updated : dest)),
+    );
   };
 
   const deleteTouristDestination = async (id: string) => {
-    try {
-      const response = await deleteTouristDestinationRequest(id);
-      if (!response?.data) {
-        throw new Error("Respuesta invalida del servidor");
-      }
-      setTouristDestinations((prev) =>
-        prev.filter((destination) => destination.id !== response.data.id)
-      );
-      showSnackbar("Eliminado con exito", "success");
-    } catch (error) {
-      console.error("Error al eliminar el destino turistico");
-      showSnackbar("Error al eliminar", "error");
-    }
+    const success = await deleteTouristDestinationRequest(id);
+    if (!success) return;
+
+    setTouristDestinations((prev) => prev.filter((dest) => dest.id !== id));
   };
 
-  const updateTouristDestination = async (values: {
-    id?: string;
-    name: string;
-    description: string;
-    newImages: File[];
-    existingImages: string[];
-  }) => {
-    try {
-      // console.log("values::: ", values);
-      const response = await updateTouristDestinationRequest(values);
-      if (!response?.data) {
-        throw new Error("Respuesta invalida del servidor");
-      }
-      setTouristDestinations((prev) =>
-        prev.map((dest) => (dest.id === values.id ? response.data : dest))
-      );
-      showSnackbar("Actualizado con exito", "success");
-    } catch (error) {
-      console.error("Error al actualizar el desitno turistico");
-      showSnackbar("Error al actualizar", "error");
-    }
-  };
-
-  const fetchTouristDestination = async () => {
-    try {
-      const response = await getAllTouristDestinationRequest();
-      // console.log("response::: ", response.data);
-      if (!response?.data) {
-        throw new Error("Respuesta invalida del servidor");
-      }
-      setTouristDestinations(response.data);
-    } catch (error) {
-      console.error("Error al obtener los destinos turisticos", error);
-      showSnackbar("Error al obtener", "error");
-    }
-  };
+  /* ===================== EFFECT ===================== */
 
   useEffect(() => {
-    // console.log('::: ', );
-    fetchTouristDestination();
+    fetchTouristDestinations();
   }, []);
 
-  const createTouristDestination = async (values: {
-    id?: string;
-    name: string;
-    description: string;
-    newImages: File[];
-    existingImages: string[];
-  }) => {
-    try {
-      const response = await createTouristDestinationRequest(values);
-      console.log("response::: ", response);
-      if (!response?.data) {
-        // if (!response || !response.data) {
-        // showSnackbar("Error al registrar", "error");
-        throw new Error("Respuesta invalida del servidor");
-      }
-      setTouristDestinations([...touristDestinations, response.data]);
-      showSnackbar("creado con exito", "success");
-    } catch (error) {
-      console.error("Error al registrar destino turistico", error);
-      showSnackbar("Error al registrar", "error");
-    }
-  };
   return (
     <TouristDestinationContext.Provider
       value={{
@@ -160,7 +108,6 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
         deleteTouristDestination,
         getTouristDestinationById,
         getTouristDestinationInfoById,
-        // BASE_URL,
       }}
     >
       {children}
@@ -170,9 +117,9 @@ export const TouristDestinationProvider: React.FC<{ children: ReactNode }> = ({
 
 export const useTouristDestinationContext = () => {
   const context = useContext(TouristDestinationContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
-      "useTouristDestination must be used within a TouristDestinationProvider"
+      "useTouristDestinationContext must be used within a TouristDestinationProvider",
     );
   }
   return context;

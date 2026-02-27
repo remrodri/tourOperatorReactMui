@@ -1,7 +1,7 @@
 import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 import { useTouristContext } from "../../../../tourist/context/TouristContext";
 import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
-import { useUserContext } from "../../../../user/context/UserContext";
+import { useUserContext } from "../../../../userManagement/context/UserContext";
 import { BookingType } from "../../../types/BookingType";
 import BookingProofDialog from "./BookingProofDialog";
 
@@ -23,9 +23,9 @@ const BookingProofDialogContainer: React.FC<
     return;
   }
   const tourPackage = getTourPackageInfoById(booking?.tourPackageId);
-  const tourists = booking.touristIds.map((touristId) =>
-    getTouristInfoById(touristId)
-  ).filter((tourist) => tourist !== null);
+  const tourists = booking.touristIds
+    .map((touristId) => getTouristInfoById(touristId))
+    .filter((tourist) => tourist !== null);
   const dateRange = getDateRangeInfoById(booking?.dateRangeId);
   const seller = getUserById(booking.sellerId);
 

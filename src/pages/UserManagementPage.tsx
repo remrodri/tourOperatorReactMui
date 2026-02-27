@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { Outlet, useOutletContext } from "react-router-dom";
-import { UserProvider } from "../features/user/context/UserContext";
+import { UserProvider } from "../features/userManagement/context/UserContext";
 import { AppBarStyle } from "./mainLayout/style/MainStyles";
 import FadeContent from "../Animations/FadeContent/FadeContent";
 

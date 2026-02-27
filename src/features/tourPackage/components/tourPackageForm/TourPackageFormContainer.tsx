@@ -3,13 +3,12 @@ import { useFormik } from "formik";
 import { TourPackageType } from "../../types/TourPackageType";
 import { tourPackageSchema } from "./validation/tourPackageSchema";
 import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
-import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { TourItineraryType } from "../../types/DayItineraryType";
 import { useTourPackageContext } from "../../context/TourPackageContext";
 import { useEffect, useState } from "react";
 import { DateRangeType } from "../../types/DateRangeType";
-import { useUserContext } from "../../../user/context/UserContext";
+import { useUserContext } from "../../../userManagement/context/UserContext";
 interface TourPackageFormContainerProps {
   open: boolean;
   handleClick: () => void;
@@ -37,7 +36,6 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
 }) => {
   // console.log('tourPackageDelForm::: ', tourPackage);
   const { tourTypes } = useTourTypeContext();
-  const { cancellationPolicy } = useCancellationConditionContext();
   const { touristDestinations } = useTouristDestinationContext();
   const { createTourPackage, updateTourPackage } = useTourPackageContext();
   const { guides, fetchGuides } = useUserContext();
@@ -83,7 +81,7 @@ const TourPackageformContainer: React.FC<TourPackageFormContainerProps> = ({
         (dr) => ({
           ...dr,
           guides: dr.guides ?? [],
-        })
+        }),
       ),
 
       // blockedDates: tourPackage?.blockedDates ?? [],

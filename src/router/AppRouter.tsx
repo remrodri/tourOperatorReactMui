@@ -9,7 +9,7 @@ import SecurityAnswerFormContainer from "../features/securitySetup/components/Re
 import TourPackagePage from "../pages/TourPackagePage";
 import TourPackageShowcaseContainer from "../features/tourPackage/components/showcase/TourPackageShowcaseContainer";
 import TouristDestinationShowcaseContainer from "../features/touristDestination/components/showcase/TouristDestinationShowcaseContainer";
-import UserShowcaseContainer from "../features/user/components/showcase/UserShowcaseContainer";
+import UserShowcaseContainer from "../features/userManagement/components/showcase/UserShowcaseContainer";
 import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/components/showcase/BookingShowcaseContainer";
 import ReportsPage from "../pages/ReportsPage";

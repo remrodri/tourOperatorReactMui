@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DateRangeType } from "../../../types/DateRangeType";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DateManagerCardMenu from "./DateManagerCardMenu";
 import { useEffect, useState } from "react";

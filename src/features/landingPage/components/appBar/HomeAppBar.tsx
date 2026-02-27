@@ -18,7 +18,7 @@ import { BookingType } from "../../../booking/types/BookingType";
 import { useState } from "react";
 import { DateRangeProvider } from "../../../dateRange/context/DateRangeContext";
 import { TourTypeProvider } from "../../../tourType/context/TourTypeContext";
-import { UserProvider } from "../../../user/context/UserContext";
+import { UserProvider } from "../../../userManagement/context/UserContext";
 import BookingInfoContainer from "../bookingInfo/BookingInfoContainer";
 import LoginDialogComponentContainer from "../login/dialog/LoginDialogComponentContainer";
 
@@ -104,8 +104,6 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
     setSelectedBooking(null);
     setBookingCode("");
   };
-
-
 
   return (
     <>

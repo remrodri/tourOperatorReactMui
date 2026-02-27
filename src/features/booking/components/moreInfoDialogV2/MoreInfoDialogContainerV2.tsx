@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import MoreInfoDialog from "./MoreInfoDialogV2";
 import { BookingType } from "../../types/BookingType";
@@ -8,14 +7,14 @@ import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { usePaymentContext } from "../../../payment/context/PaymentContext";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
-import { useUserContext } from "../../../user/context/UserContext";
+import { useUserContext } from "../../../userManagement/context/UserContext";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-import { TourType } from "../../../user/types/TourType";
+import { TourType } from "../../../userManagement/types/TourType";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { PaymentType } from "../../types/PaymentType";
 import { TouristType } from "../../types/TouristType";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 
 interface MoreInfoDialogContainerProps {
   open: boolean;
@@ -37,9 +36,11 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   const { getTouristInfoByIds } = useTouristContext();
   const { getUserById } = useUserContext();
 
-  const [tourPackageInfo, setTourPackageInfo] = useState<TourPackageType | null>(null);
+  const [tourPackageInfo, setTourPackageInfo] =
+    useState<TourPackageType | null>(null);
   const [tourType, setTourType] = useState<TourType | null>(null);
-  const [touristDestination, setTouristDestination] = useState<TouristDestinationType | null>(null);
+  const [touristDestination, setTouristDestination] =
+    useState<TouristDestinationType | null>(null);
   const [payments, setPayments] = useState<PaymentType[]>([]);
   const [tourists, setTourists] = useState<TouristType[]>([]);
   const [dateRange, setDateRange] = useState<DateRangeType | null>(null);
@@ -115,7 +116,9 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
         }
 
         if (tourPackageInfo.touristDestination) {
-          const td = await getTouristDestinationInfoById(tourPackageInfo.touristDestination);
+          const td = await getTouristDestinationInfoById(
+            tourPackageInfo.touristDestination,
+          );
           setTouristDestination(td);
         }
       } catch (err) {

@@ -1,77 +1,152 @@
-import axiosInstance from "../../../config/axiosConfig";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { isAxiosError } from "axios";
+import { sileo } from "sileo";
+import { axiosPublic, axiosPrivate } from "../../../config/axiosConfig";
+import type { ApiResponse } from "../../../types/api";
+
 import { BookingType } from "../types/BookingType";
 import { UpdateBookingType } from "../types/UpdateBookingType";
-// import { CreateBookingType } from "../types/CreateBookingType";
-import { getAllBookingsResponse } from "./getAllBookingsResponse";
+
+// Si tienes un tipo real para attendance, úsalo. Aquí lo tipamos mínimo:
+export type AttendanceListPayload = unknown;
 
 const url = "/bookings";
-export const createBookingRequest = async (data: FormData): Promise<any> => {
-  // console.log('data::: ', data);
-  // for (const [key,value] of data.entries()) {
-  //   console.log(`${key}: `,value);
-  // }
-  const response = await axiosInstance.post(url, data);
-  // console.log('response::: ', response.data.data);
-  return response.data.data;
-};
-// export const createBooking2Request = async (data:any):Promise<any>=>{
-//   const response = await axiosInstance.post(url, data);
-//   return response.data.data;
-// }
 
-export const getAllBookingsRequest = async () => {
-  const response = await axiosInstance.get(url);
-  // console.log("response::: ", response.data.data);
-  return response.data.data;
-  // return getAllBookingsResponse;
+/**
+ * CREATE booking
+ * Normalmente PRIVADO (si es público, cambia axiosPrivate -> axiosPublic)
+ */
+export const createBookingRequest = async (
+  data: FormData,
+): Promise<BookingType | null> => {
+  try {
+    const response = await axiosPrivate.post<ApiResponse<BookingType>>(
+      url,
+      data,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
+
+    sileo.success({
+      title: "Éxito",
+      description: "Reserva creada correctamente",
+    });
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.log(error.response?.data);
+    sileo.error({ title: "Error", description: "No se pudo crear la reserva" });
+    return null;
+  }
 };
 
+/**
+ * GET all bookings
+ * Normalmente PRIVADO (porque es data operativa)
+ * Si tu backend lo expone público, cambia axiosPrivate -> axiosPublic
+ */
+export const getAllBookingsRequest = async (): Promise<
+  BookingType[] | null
+> => {
+  try {
+    const response = await axiosPublic.get<ApiResponse<BookingType[]>>(url);
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.log(error.response?.data);
+    sileo.error({
+      title: "Error",
+      description: "No se pudieron cargar las reservas",
+    });
+    return null;
+  }
+};
+
+/**
+ * UPDATE booking
+ * PRIVADO
+ */
 export const updateBookingRequest = async (
   id: string,
-  data: Partial<UpdateBookingType>
-): Promise<any> => {
-  // console.log('data::: ', data);
+  data: Partial<UpdateBookingType>,
+): Promise<BookingType | null> => {
+  try {
+    const response = await axiosPrivate.put<ApiResponse<BookingType>>(
+      `${url}/${id}`,
+      data,
+    );
 
-  const response = await axiosInstance.put(`${url}/${id}`, data);
-  console.log("response::: ", response.data.data);
-  return response.data.data;
+    sileo.success({
+      title: "Éxito",
+      description: "Reserva actualizada correctamente",
+    });
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.log(error.response?.data);
+    sileo.error({
+      title: "Error",
+      description: "No se pudo actualizar la reserva",
+    });
+    return null;
+  }
 };
 
-export const updateAttendanceRequest = async (data: any): Promise<any> => {
-  console.log("data que se enviará::: ", data);
+/**
+ * UPDATE attendance lists
+ * PRIVADO
+ */
+export const updateAttendanceRequest = async (
+  data: AttendanceListPayload,
+): Promise<any | null> => {
+  try {
+    const response = await axiosPrivate.put<ApiResponse<any>>(
+      `${url}/attendance-lists`,
+      data,
+      { headers: { "Content-Type": "application/json" } },
+    );
 
-  const response = await axiosInstance.put(`${url}/attendance-lists`, data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  console.log("response::: ", response.data.data);
-  return response.data.data;
+    sileo.success({
+      title: "Éxito",
+      description: "Asistencia actualizada correctamente",
+    });
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.log(error.response?.data);
+    sileo.error({
+      title: "Error",
+      description: "No se pudo actualizar la asistencia",
+    });
+    return null;
+  }
 };
 
+/**
+ * CANCEL booking
+ * PRIVADO
+ */
 export const cancelBookingRequest = async (
   bookingId: string,
   cancellationFee: number,
   refundAmount: number,
-  refundedAt: Date
-): Promise<any> => {
+  refundedAt: Date,
+): Promise<BookingType | null> => {
+  try {
+    const response = await axiosPrivate.put<ApiResponse<BookingType>>(
+      `${url}/cancel/${bookingId}`,
+      { cancellationFee, refundAmount, refundedAt },
+      { headers: { "Content-Type": "application/json" } },
+    );
 
-  const response = await axiosInstance.put(
-    `${url}/cancel/${bookingId}`,
-    {
-      cancellationFee,
-      refundAmount,
-      refundedAt,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  // console.log("response::: ", response.data.data);
-  return response.data.data;
+    sileo.success({
+      title: "Éxito",
+      description: "Reserva cancelada correctamente",
+    });
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.log(error.response?.data);
+    sileo.error({
+      title: "Error",
+      description: "No se pudo cancelar la reserva",
+    });
+    return null;
+  }
 };
-

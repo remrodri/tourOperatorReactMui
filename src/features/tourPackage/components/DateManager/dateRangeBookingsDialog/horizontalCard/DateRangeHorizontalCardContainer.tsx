@@ -1,7 +1,7 @@
 import DateRangeHorizontalCard from "./DateRangeHorizontalCard";
 import { useTouristContext } from "../../../../../tourist/context/TouristContext";
 import { BookingType } from "../../../../../booking/types/BookingType";
-import MoreInfoDialogContainer from "../../../../../booking/components/moreInfoDialog/MoreInfoDialogContainer";
+// import MoreInfoDialogContainer from "../../../../../booking/components/moreInfoDialog/MoreInfoDialogContainer";
 import { useState } from "react";
 
 interface DateRangeHorizontalCardContainerProps {
@@ -24,14 +24,14 @@ const DateRangeHorizontalCardContainer: React.FC<
         touristCounter={booking.touristIds.length}
         handleClickInfoModal={handleClickInfoModal}
       />
-      {openInfoModal && (
+      {/* {openInfoModal && (
         <MoreInfoDialogContainer
           open={openInfoModal}
           handleClose={handleClickInfoModal}
           booking={booking}
           balance={0}
         />
-      )}
+      )} */}
     </>
   );
 };
