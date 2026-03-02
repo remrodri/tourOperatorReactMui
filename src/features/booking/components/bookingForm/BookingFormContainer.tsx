@@ -68,7 +68,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   booking,
   setBookingProof,
 }) => {
-  const {tourists } =
+  const {tourists,getTouristInfoByIds} =
     useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();

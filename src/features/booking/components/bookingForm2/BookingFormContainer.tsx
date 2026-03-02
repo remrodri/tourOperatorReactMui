@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import { BookingType } from "../../types/BookingType";
 import BookingForm from "./BookingForm";
 import { touristsSchema } from "./validation/touristsSchema";
-import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 
 interface BookingFormContainerProps {
   open: boolean;

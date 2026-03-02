@@ -39,7 +39,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   open,
   handleClose,
   isEditing,
-  booking,
+  // booking,
   formik,
 }: BookingFormProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -113,7 +113,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               <TouristSection />
               <TourPackageSection
                 isEditing={isEditing}
-                dateRanges={[]}
+                // dateRanges={[]}
                 onTourPackageChange={() => {}}
                 onDateRangeChange={() => {}}
               />
