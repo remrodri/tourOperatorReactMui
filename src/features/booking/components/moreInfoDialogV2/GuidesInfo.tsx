@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import { Phone } from "@mui/icons-material";
 
 interface GuidesInfoProps {
-  guides: User[];
+  guides: UserType[];
 }
 
 const GuidesInfo: React.FC<GuidesInfoProps> = ({ guides }) => {

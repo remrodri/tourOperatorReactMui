@@ -5,7 +5,6 @@ import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
-import { usePaymentContext } from "../../../payment/context/PaymentContext";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { useUserContext } from "../../../userManagement/context/UserContext";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
@@ -14,7 +13,7 @@ import { TouristDestinationType } from "../../../touristDestination/types/Touris
 import { PaymentType } from "../../types/PaymentType";
 import { TouristType } from "../../types/TouristType";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 
 interface MoreInfoDialogContainerProps {
   open: boolean;
@@ -44,8 +43,8 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   const [payments, setPayments] = useState<PaymentType[]>([]);
   const [tourists, setTourists] = useState<TouristType[]>([]);
   const [dateRange, setDateRange] = useState<DateRangeType | null>(null);
-  const [guides, setGuides] = useState<User[]>([]);
-  const [sellerInfo, setSellerInfo] = useState<User | null>(null);
+  const [guides, setGuides] = useState<UserType[]>([]);
+  const [sellerInfo, setSellerInfo] = useState<UserType | null>(null);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,31 +60,31 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
 
         // Tour Package
         if (booking.tourPackageId) {
-          const tp = await getTourPackageInfoById(booking.tourPackageId);
+          const tp = getTourPackageInfoById(booking.tourPackageId);
           setTourPackageInfo(tp);
         }
 
         // Tourists
         if (booking.touristIds?.length) {
-          const ts = await getTouristInfoByIds(booking.touristIds);
+          const ts = getTouristInfoByIds(booking.touristIds);
           setTourists(ts);
         }
 
         // Date Range + Guides
         if (booking.dateRangeId) {
-          const dr = await getDateRangeInfoById(booking.dateRangeId);
+          const dr = getDateRangeInfoById(booking.dateRangeId);
           setDateRange(dr);
           if (dr?.guides) {
             const gds = dr.guides
               .map((guideId) => getUserById(guideId))
-              .filter((g): g is User => g !== null);
+              .filter((g): g is UserType => g !== null);
             setGuides(gds);
           }
         }
 
         // Seller
         if (booking.sellerId) {
-          const seller = await getUserById(booking.sellerId);
+          const seller = getUserById(booking.sellerId);
           setSellerInfo(seller);
         }
 
@@ -111,12 +110,12 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
 
       try {
         if (tourPackageInfo.tourType) {
-          const tt = await getTourTypeInfoById(tourPackageInfo.tourType);
+          const tt = getTourTypeInfoById(tourPackageInfo.tourType);
           setTourType(tt);
         }
 
         if (tourPackageInfo.touristDestination) {
-          const td = await getTouristDestinationInfoById(
+          const td = getTouristDestinationInfoById(
             tourPackageInfo.touristDestination,
           );
           setTouristDestination(td);

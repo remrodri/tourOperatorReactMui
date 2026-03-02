@@ -7,21 +7,18 @@ import {
 } from "react";
 import {
   createTourType,
-  deleteTourTypeRequest,
   getAllTourTypes,
   updateTourTypeRequest,
 } from "../service/tourTypeService";
-import { Snackbar } from "@mui/material";
 import { TourType } from "../../userManagement/types/TourType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface TourTypeContextType {
-  tourTypes: any[];
+  tourTypes: TourType[];
   openDialog: boolean;
   handleClick: () => void;
   registerTourType: (tourTypeData: any) => void;
   updateTourType: (values: UpdateTourTypeValues, id: string) => void;
-  deleteTourType: (deleteTourType: DeleteTourTypeValues) => void;
   getTourTypeNameById: (id: string) => string;
   getTourTypeInfoById: (id: string) => TourType | null;
   // handleUpdate: (data: UpdateTourTypeValues) => void;
@@ -33,9 +30,9 @@ interface UpdateTourTypeValues {
   description: string;
 }
 
-interface DeleteTourTypeValues {
-  id: string;
-}
+// interface DeleteTourTypeValues {
+//   id: string;
+// }
 
 const TourTypeContext = createContext<TourTypeContextType | undefined>(
   undefined,
@@ -44,9 +41,8 @@ const TourTypeContext = createContext<TourTypeContextType | undefined>(
 export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [tourTypes, setTourTypes] = useState<any>([]);
+  const [tourTypes, setTourTypes] = useState<TourType[]>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const { showSnackbar } = useNewSnackbar();
 
   const getTourTypeInfoById = (id: string): TourType | null => {
@@ -54,7 +50,10 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
       console.warn("tourType called without id");
       return null;
     }
-    const ttFound = tourTypes.find((tt: TourType) => tt.id === id);
+ 
+    const ttFound = (tourTypes as TourType[]).find(
+      (tt: TourType) => tt.id === id,
+    );
     if (!ttFound) {
       console.warn("tourType not found");
       return null;
@@ -63,16 +62,13 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const getTourTypeNameById = (id: string) => {
-    const tt = tourTypes.find((tt: any) => tt.id === id);
+    const tt = tourTypes.find((tt: TourType) => tt.id === id);
     if (!tt) {
       return "tipo de tour no encontrado";
     }
     return tt.name;
   };
 
-  const handleOpenSnackbar = () => {
-    setOpenSnackbar(!openSnackbar);
-  };
 
   const handleClick = () => {
     console.log("click::: ");
@@ -93,7 +89,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
       }
       setTourTypes((prevTourTypes: TourType[]) =>
         prevTourTypes.map((tourType: TourType) =>
-          tourType.id === id ? { ...tourType, ...response.data } : tourType,
+          tourType.id === id ? { ...tourType, ...response } : tourType,
         ),
       );
       showSnackbar("El tipo de tour se actualizo", "success");
@@ -102,32 +98,32 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
       showSnackbar("Error al actualizar", "error");
     }
   };
-  const deleteTourType = async (deleteTourType: DeleteTourTypeValues) => {
-    try {
-      const response = await deleteTourTypeRequest(deleteTourType.id);
-      if (!response) {
-        showSnackbar("Error al eliminar un tipo de tour", "error");
-        return;
-      }
-      setTourTypes((prevTourTypes: TourType[]) =>
-        prevTourTypes.filter(
-          (tourType: TourType) => tourType.id !== response.data.id,
-        ),
-      );
-      showSnackbar("Eliminado con exito", "success");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const deleteTourType = async (deleteTourType: DeleteTourTypeValues) => {
+  //   try {
+  //     const response = await deleteTourTypeRequest(deleteTourType.id);
+  //     if (!response) {
+  //       showSnackbar("Error al eliminar un tipo de tour", "error");
+  //       return;
+  //     }
+  //     setTourTypes((prevTourTypes: TourType[]) =>
+  //       prevTourTypes.filter(
+  //         (tourType: TourType) => tourType.id !== response.id,
+  //       ),
+  //     );
+  //     showSnackbar("Eliminado con exito", "success");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const registerTourType = async (tourTypeData: any) => {
+  const registerTourType = async (tourTypeData: TourType) => {
     try {
       const response = await createTourType(tourTypeData);
       if (!response) {
         showSnackbar("Error al registrar tourType", "error");
         return;
       }
-      setTourTypes([...tourTypes, response.data]);
+      setTourTypes([...tourTypes, response]);
       // setOpenDialog(false);
       // handleClick();
       showSnackbar("Registrado con exito", "success");
@@ -139,7 +135,7 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   const fetchTourTypes = async () => {
     try {
       const tourTypeList = await getAllTourTypes();
-      setTourTypes(tourTypeList.data);
+      setTourTypes(tourTypeList || []);
     } catch (error) {
       console.log("Error al obtener los tipos de tour::: ", error);
     }
@@ -158,7 +154,6 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
         handleClick,
         registerTourType,
         updateTourType,
-        deleteTourType,
         getTourTypeNameById,
         getTourTypeInfoById,
         // handleUpdate,
