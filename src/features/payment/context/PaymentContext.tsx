@@ -10,7 +10,7 @@ import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { createPaymentRequest } from "../service/paymentService";
 import { jwtDecode } from "jwt-decode";
 import { TokenService } from "../../../utils/tokenService";
-import { User } from "../../userManagement/types/UserType";
+import { UserType } from "../../userManagement/types/UserType";
 import { useBookingContext } from "../../booking/context/BookingContext";
 
 /* =======================
@@ -93,7 +93,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
     formData.append("paymentDate", payment.paymentDate);
     formData.append("paymentMethod", payment.paymentMethod);
     formData.append("touristId", payment.touristId);
-    formData.append("paymentProofImage", payment.paymentProofImage);
+    formData.append("paymentProofImage", payment.paymentProofImage!);
     formData.append("paymentProofFolder", payment.paymentProofFolder);
 
     return formData;
@@ -114,7 +114,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
           throw new Error("Token no encontrado");
         }
 
-        const seller: User = jwtDecode(token);
+        const seller: UserType = jwtDecode(token);
         const formData = buildFormData(payment, seller.id);
 
         const paymentData = await createPaymentRequest(formData);

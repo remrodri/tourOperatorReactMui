@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { TouristType } from "../../booking/types/TouristType";
 
 type TouristWithStatus = {
   tourist: any; // simplificado
