@@ -12,7 +12,7 @@ import {
   updateTourTypeRequest,
 } from "../service/tourTypeService";
 import { Snackbar } from "@mui/material";
-import { TourType } from "../../user/types/TourType";
+import { TourType } from "../../userManagement/types/TourType";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface TourTypeContextType {
@@ -38,7 +38,7 @@ interface DeleteTourTypeValues {
 }
 
 const TourTypeContext = createContext<TourTypeContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
@@ -93,8 +93,8 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
       }
       setTourTypes((prevTourTypes: TourType[]) =>
         prevTourTypes.map((tourType: TourType) =>
-          tourType.id === id ? { ...tourType, ...response.data } : tourType
-        )
+          tourType.id === id ? { ...tourType, ...response.data } : tourType,
+        ),
       );
       showSnackbar("El tipo de tour se actualizo", "success");
     } catch (error) {
@@ -111,8 +111,8 @@ export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
       }
       setTourTypes((prevTourTypes: TourType[]) =>
         prevTourTypes.filter(
-          (tourType: TourType) => tourType.id !== response.data.id
-        )
+          (tourType: TourType) => tourType.id !== response.data.id,
+        ),
       );
       showSnackbar("Eliminado con exito", "success");
     } catch (error) {
@@ -172,7 +172,7 @@ export const useTourTypeContext = () => {
   const context = useContext(TourTypeContext);
   if (context === undefined) {
     throw new Error(
-      "useTourTypeContext must be used within a TourTypeProvider"
+      "useTourTypeContext must be used within a TourTypeProvider",
     );
   }
   return context;

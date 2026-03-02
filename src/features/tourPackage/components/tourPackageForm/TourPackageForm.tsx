@@ -18,7 +18,7 @@ import DayItineraryManager from "../itineraryManager/DayItineraryManager";
 import { TourItineraryType } from "../../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../../types/DateRangeType";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { Close } from "@mui/icons-material";
 

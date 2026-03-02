@@ -4,7 +4,7 @@ import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
 // import { showToast } from "../../../../../utils/modal/toast";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 // import { response } from "express";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import { useRoleContext } from "../../../../Role/context/RoleContext";
@@ -37,7 +37,7 @@ export const useSecurityQuestions = () => {
       const userId = user.id;
       const response = await securitySetupService.getSecurityQuestions(
         userId,
-        token
+        token,
       );
 
       if (!response && response.statusCode !== 200) {
@@ -50,7 +50,7 @@ export const useSecurityQuestions = () => {
         // questionsAnswers.map(
         //   (questionAnswer: any) => questionAnswer.question.questionText
         // )
-        response.data.questionsAnswers
+        response.data.questionsAnswers,
       );
       // console.log('questionsText::: ', response);
 
@@ -93,7 +93,7 @@ export const useSecurityQuestions = () => {
       const response = await securitySetupService.updateSecurityAnswers(
         token,
         answers,
-        userId
+        userId,
       );
       // console.log('response::: ', response);
       if (response.statusCode !== 200) {

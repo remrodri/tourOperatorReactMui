@@ -4,7 +4,7 @@ import { GuideProvider } from "../../features/guide/context/GuideContext";
 import { TouristProvider } from "../../features/tourist/context/TouristContext";
 import { TouristDestinationProvider } from "../../features/touristDestination/context/TouristDestinationContext";
 import { TourPackageProvider } from "../../features/tourPackage/context/TourPackageContext";
-import { UserProvider } from "../../features/user/context/UserContext";
+import { UserProvider } from "../../features/userManagement/context/UserContext";
 import GuidePage from "./GuidePage";
 import { DateRangeProvider } from "../../features/dateRange/context/DateRangeContext";
 

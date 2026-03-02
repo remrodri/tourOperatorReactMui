@@ -20,7 +20,7 @@ import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
-import { User } from "../../features/user/types/User";
+import { User } from "../../features/userManagement/types/UserType";
 import MainAppBar from "./MainAppBar";
 // import { AppBarStyle } from "./MainLayout";
 import TextType from "../../TextAnimations/TextType/TextType";

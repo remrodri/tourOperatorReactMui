@@ -10,7 +10,7 @@ import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { createPaymentRequest } from "../service/paymentService";
 import { jwtDecode } from "jwt-decode";
 import { TokenService } from "../../../utils/tokenService";
-import { User } from "../../user/types/User";
+import { User } from "../../userManagement/types/UserType";
 import { useBookingContext } from "../../booking/context/BookingContext";
 
 /* =======================
@@ -83,7 +83,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
 
   const buildFormData = (
     payment: CreatePaymentInput,
-    sellerId: string
+    sellerId: string,
   ): FormData => {
     const formData = new FormData();
 
@@ -133,7 +133,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
         setLoading(false);
       }
     },
-    [addPaymentToBooking, showSnackbar]
+    [addPaymentToBooking, showSnackbar],
   );
 
   /* =======================

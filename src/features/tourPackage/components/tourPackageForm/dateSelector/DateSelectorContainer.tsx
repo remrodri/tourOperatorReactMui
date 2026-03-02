@@ -20,7 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 // import DeleteIcon from "@mui/icons-material/Delete";
 // import CloseIcon from "@mui/icons-material/Close";
 import { DateRangeType } from "../../../types/DateRangeType";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 // import TextType from "../../../../../TextAnimations/TextType/TextType";
 import DateSelector from "./DateSelector";
@@ -88,13 +88,13 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
     if (!selectedDate) return;
 
     const newDates = Array.from({ length: duration }, (_, i) =>
-      dayjs(selectedDate).add(i, "day").format("DD-MM-YYYY")
+      dayjs(selectedDate).add(i, "day").format("DD-MM-YYYY"),
     );
 
     // Verificar si alguna fecha ya está seleccionada
     const allExistingDates = dateRangesAux.flatMap((range) => range.dates);
     const overlappingDates = newDates.filter((date) =>
-      allExistingDates.includes(date)
+      allExistingDates.includes(date),
     );
 
     if (overlappingDates.length > 0) {

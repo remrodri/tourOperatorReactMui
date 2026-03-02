@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 // import { showToast } from "../../../../../utils/modal/toast";
 
@@ -47,7 +47,7 @@ export const useUpdatePassword = () => {
       const response = await securitySetupService.updatePassword(
         password,
         token,
-        userId
+        userId,
       );
       console.log("response::: ", response);
       if (response.statusCode !== 200) {

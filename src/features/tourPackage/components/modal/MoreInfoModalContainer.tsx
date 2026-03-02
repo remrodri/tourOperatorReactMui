@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 // import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";
@@ -18,12 +17,9 @@ const MoreInfoModalContainer: React.FC<MoreInfoModalContainerProps> = ({
   tourPackage,
 }) => {
   // const { getDateRangeById, fillDateRangesByIds } = useDateRangeContext();
-  const { getCancellationPolicyById } = useCancellationConditionContext();
   const { getTouristDestinationById } = useTouristDestinationContext();
   const { getTourTypeNameById } = useTourTypeContext();
-  const cancellationPolicyName = getCancellationPolicyById(
-    tourPackage.cancellationPolicy
-  );
+
   const touristDetinationName = getTouristDestinationById(
     tourPackage.touristDestination
   );
@@ -42,7 +38,7 @@ const MoreInfoModalContainer: React.FC<MoreInfoModalContainerProps> = ({
   // const dateRangesFilled = fillDateRangesByIds(tourPackage.dateRanges);
   const tp = {
     ...tourPackage,
-    cancellationPolicy: cancellationPolicyName,
+    // cancellationPolicy: cancellationPolicyName,
     touristDestination: touristDetinationName,
     tourType: tourTypeName,
     // dateRanges:dateRangesFilled

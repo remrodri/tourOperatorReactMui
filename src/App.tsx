@@ -2,7 +2,6 @@ import { RouterProvider } from "react-router-dom";
 import { AppRouter } from "./router/AppRouter";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { SnackbarProvider } from "./context/SnackbarContext";
-// import { AppProviders } from "./context/AppProviders";
 import GlobalSnackbar from "./utils/snackbar/GlobalSnackbar";
 
 import "@fontsource/roboto/400.css"; // carga Roboto 400 por defecto
@@ -15,6 +14,11 @@ import "@fontsource/montserrat/600.css";
 import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/800.css";
 import "video.js/dist/video-js.css";
+
+import { Toaster } from "sileo";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const darkTheme = createTheme({
   palette: {
@@ -32,9 +36,23 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <SnackbarProvider>
+        <Toaster
+          position="bottom-left"
+          options={{
+            fill: "#ffffffff", // fondo
+            roundness: 16, // border-radius
+            styles: {
+              title: "text-white font-semibold",
+              description: "text-gray-800",
+              badge: "bg-emerald-500",
+            },
+          }}
+        />
         {/* RouterProvider debe ir ANTES que AppProviders */}
         {/* <AppProviders> */}
+        <QueryClientProvider client={queryClient}>
         <RouterProvider router={AppRouter} />
+        </QueryClientProvider>
         {/* Ahora todos los providers pueden usar hooks de React Router */}
         {/* <AppProviders> */}
         {/* El contenido se renderiza a través de las rutas */}

@@ -12,9 +12,9 @@ import TourPackage from "./TourPackage";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useEffect, useState } from "react";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-import { useUserContext } from "../../../user/context/UserContext";
+import { useUserContext } from "../../../userManagement/context/UserContext";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
 import { useGuideContext } from "../../context/GuideContext";
 

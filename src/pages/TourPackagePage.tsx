@@ -3,9 +3,8 @@ import { Outlet, useOutletContext } from "react-router-dom";
 import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
 import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
-import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
 import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
-import { UserProvider } from "../features/user/context/UserContext";
+import { UserProvider } from "../features/userManagement/context/UserContext";
 import { BookingProvider } from "../features/booking/context/BookingContext";
 import { TouristProvider } from "../features/tourist/context/TouristContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
@@ -43,13 +42,11 @@ const TourPackagePage: React.FC = () => {
               <BookingProvider>
                 <UserProvider>
                   <TouristDestinationProvider>
-                    <CancellationPolicyProvider>
                       <TourTypeProvider>
                         <TourPackageProvider>
                           <Outlet />
                         </TourPackageProvider>
                       </TourTypeProvider>
-                    </CancellationPolicyProvider>
                   </TouristDestinationProvider>
                 </UserProvider>
               </BookingProvider>

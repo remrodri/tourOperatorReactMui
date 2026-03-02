@@ -1,55 +1,45 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import axiosInstance from "../../../config/axiosConfig";
 import { handleError } from "./handleError";
-
-// interface PasswordValue {
-//   password: string;
-// }
-interface Response {
-  // userId: any;
-  statusCode: number;
-  message: string;
-  data: any;
-}
+import { axiosPublic, axiosPrivate } from "../../../config/axiosConfig";
+import type { ApiResponse } from "../../../types/api";
 
 export const securitySetupService = {
+  // ✅ SIN TOKEN -> axiosPublic
   updatePasswordWithoutToken: async (password: string, userId: string) => {
-    console.log('userId::: ', userId);
-    console.log('password::: ', password);
     try {
-      const response = await axiosInstance.patch<Response>(
+      const response = await axiosPublic.patch<ApiResponse<any>>(
         "/security-setup-password",
-        { userId: userId, newPassword: password }
+        { userId, newPassword: password },
       );
-      console.log("response::: ", response);
       return response.data;
     } catch (error) {
       return handleError(error);
     }
   },
 
+  // ✅ SIN TOKEN -> axiosPublic
   checkSecurityAnswer: async (answer: {
     userId: string | undefined;
     questionId: string;
     answerText: string;
   }) => {
     try {
-      // console.log('answer::: ', answer);
-      const response = await axiosInstance.post<Response>(
+      const response = await axiosPublic.post<ApiResponse<any>>(
         "/security-setup-answer",
-        answer
+        answer,
       );
-      // console.log('response::: ', response);
       return response.data;
     } catch (error) {
       return handleError(error);
     }
   },
 
-  getRandomQuestion: async (userId: string): Promise<Response> => {
+  // ✅ SIN TOKEN -> axiosPublic
+  getRandomQuestion: async (userId: string): Promise<ApiResponse<any>> => {
     try {
-      const response = await axiosInstance.get(
-        `/security-setup/random-question/${userId}`
+      const response = await axiosPublic.get<ApiResponse<any>>(
+        `/security-setup/random-question/${userId}`,
       );
       return response.data;
     } catch (error: unknown) {
@@ -57,22 +47,25 @@ export const securitySetupService = {
     }
   },
 
-  findUserByEmail: async (
-    // token: string,
-    email: string
-  ): Promise<Response> => {
+  // ✅ SIN TOKEN -> axiosPublic
+  findUserByEmail: async (email: string): Promise<ApiResponse<any>> => {
     try {
-      // console.log('email::: ', email);
-      const response = await axiosInstance.post<Response>(
+      // Si tu backend espera { email }, usa objeto. Si espera string, deja string.
+      // Te dejo el objeto porque es lo más común:
+      const response = await axiosPublic.post<ApiResponse<any>>(
         "/security-setup-question",
-        email
-        // { headers: { Authorization: `Bearer ${token}` } }
+        { email },
       );
-      // console.log("response::: ", response);
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        return error.response?.data;
+        return (
+          (error.response?.data as ApiResponse<any>) ?? {
+            statusCode: error.response?.status ?? 500,
+            message: "Error de red",
+            data: null,
+          }
+        );
       }
       return {
         statusCode: 500,
@@ -82,47 +75,48 @@ export const securitySetupService = {
     }
   },
 
+  // ✅ CON TOKEN -> axiosPrivate (YA NO RECIBES token como parámetro)
   updatePassword: async (
     password: string,
-    token: string,
-    userId: string
-  ): Promise<Response> => {
-    // console.log("password::: ", password);
-    const response = await axiosInstance.patch(
-      "/security-setup",
-      { newPassword: password, userId: userId },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    // console.log("response::: ", response);
-    return response.data;
+    userId: string,
+  ): Promise<ApiResponse<any>> => {
+    try {
+      const response = await axiosPrivate.patch<ApiResponse<any>>(
+        "/security-setup",
+        { newPassword: password, userId },
+      );
+      return response.data;
+    } catch (error) {
+      return handleError(error);
+    }
   },
 
-  getSecurityQuestions: async (userId: string, token: string): Promise<any> => {
-    // console.log("securityQuestions::: ");
-    const response = await axiosInstance.post<Response>(
-      "/security-setup-questions",
-      { userId: userId },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    // console.log('response::: ', response);
-    return response.data;
+  // ✅ CON TOKEN -> axiosPrivate
+  getSecurityQuestions: async (userId: string): Promise<ApiResponse<any>> => {
+    try {
+      const response = await axiosPrivate.post<ApiResponse<any>>(
+        "/security-setup-questions",
+        { userId },
+      );
+      return response.data;
+    } catch (error) {
+      return handleError(error);
+    }
   },
+
+  // ✅ CON TOKEN -> axiosPrivate
   updateSecurityAnswers: async (
-    token: string,
     answers: { answerId: string; answerText: string }[],
-    userId: string
-  ) => {
-    const response = await axiosInstance.patch<Response>(
-      "/security-setup-answers",
-      { answers: answers, userId: userId },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    // console.log("response::: ", response);
-    // console.log("answers::: ", answers);
-    return response.data;
+    userId: string,
+  ): Promise<ApiResponse<any>> => {
+    try {
+      const response = await axiosPrivate.patch<ApiResponse<any>>(
+        "/security-setup-answers",
+        { answers, userId },
+      );
+      return response.data;
+    } catch (error) {
+      return handleError(error);
+    }
   },
 };

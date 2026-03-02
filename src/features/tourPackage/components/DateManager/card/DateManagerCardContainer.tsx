@@ -1,8 +1,8 @@
 import DateManagerCard from "./DateManagerCard";
 import { DateRangeType } from "../../../types/DateRangeType";
 // import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
-import { useUserContext } from "../../../../user/context/UserContext";
-import { User } from "../../../../user/types/User";
+import { useUserContext } from "../../../../userManagement/context/UserContext";
+import { User } from "../../../../userManagement/types/UserType";
 import { useEffect, useState } from "react";
 import { useBookingContext } from "../../../../booking/context/BookingContext";
 import ConfirmationModal from "./ConfirmationModal";

@@ -18,11 +18,11 @@ import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import TourPackageInfo from "./TourPackageInfo";
 // import { CancellationPolicy } from "../../../cancellationPolicy/types/CancellationPolicy";
 // import CancellationPolicyInfo from "./CancellationPolicyInfo";
-import { TourType } from "../../../user/types/TourType";
+import { TourType } from "../../../userManagement/types/TourType";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { PaymentType } from "../../types/PaymentType";
 import { TouristType } from "../../types/TouristType";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 import TourTypeInfo from "./TourTypeInfo";
 import TouristDestinationInfo from "./TouristDestinationInfo";
 import SellerInfo from "./SellerInfo";
@@ -34,7 +34,6 @@ import background from "../../../../assets/images/home.webp";
 import StatusInfo from "./StatusInfo";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import BookingProofPDF from "../pdf/BookingProofPDF";
-
 
 interface MoreInfoDialogProps {
   open: boolean;
@@ -56,7 +55,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: ReactElement<any, any>;
   },
-  ref: Ref<unknown>
+  ref: Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

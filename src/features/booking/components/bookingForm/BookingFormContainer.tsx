@@ -4,7 +4,7 @@ import { BookingType } from "../../types/BookingType";
 import { TouristType } from "../../types/TouristType";
 import BookingForm from "./BookingForm";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState, useCallback, useRef } from "react";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
@@ -71,8 +71,8 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   const {tourists } =
     useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
-  const { dateRanges } = useDateRangeContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
+  const { dateRanges } = useDateRangeContext();
   const [tourPackageSelected, setTourPackageSelected] =
     useState<TourPackageType | null>(null);
   const isEditing = booking?.id ? true : false;
@@ -81,12 +81,12 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [destinationImages, setDestinationImages] = useState<(string | File)[]>(
-    []
+    [],
   );
   const [touristsBySearch, setTouristsBySearch] = useState<TouristType[]>([]);
   const { createBooking, updateBooking } = useBookingContext();
   const [filteredDateRanges, setFilteredDateRanges] = useState<DateRangeType[]>(
-    []
+    [],
   );
   const [openSearchTourist, setOpenSearchTourist] = useState<boolean>(false);
   const [documentNumber, setDocumentNumber] = useState<string>("");
@@ -105,7 +105,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
       touristsBySearch.some(
         (tourist) =>
           tourist.ci === documentNumber ||
-          tourist.passportNumber === documentNumber
+          tourist.passportNumber === documentNumber,
       )
     ) {
       showSnackbar("Turista ya agregado", "error");
@@ -114,7 +114,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     const touristFound = tourists.find(
       (tourist) =>
         tourist.ci === documentNumber ||
-        tourist.passportNumber === documentNumber
+        tourist.passportNumber === documentNumber,
     );
     if (!touristFound) {
       showSnackbar("Turista no encontrado", "error");
@@ -134,7 +134,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     const filteredDateRanges = dateRanges.filter(
       (dateRange) =>
         dateRange.tourPackageId === tourPackageId &&
-        dateRange.state === "pending"
+        dateRange.state === "pending",
     );
     setFilteredDateRanges(filteredDateRanges);
   };
@@ -142,7 +142,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   const loadGallery = (tourPackage: TourPackageType) => {
     if (tourPackage?.touristDestination) {
       const touristDestination = getTouristDestinationInfoById(
-        tourPackage.touristDestination
+        tourPackage.touristDestination,
       );
       if (touristDestination) {
         setDestinationImages(touristDestination.images);
@@ -179,6 +179,12 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     // validateOnChange: false,
     // validateOnBlur: false,
     // validateOnMount: false,
+  });
+
+  const formikRef = useRef(formik);
+
+  useEffect(() => {
+    formikRef.current = formik;
   });
 
   const calculateTotalPrice = (): number => {
@@ -253,12 +259,30 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
       setTourPackageSelected(tourPackage);
     }
     const destination = getTouristDestinationInfoById(
-      tourPackage?.touristDestination || ""
+      tourPackage?.touristDestination || "",
     );
     if (destination) {
       setDestinationImages(destination.images);
     }
-  }, [booking]);
+
+    // Cargar los datos de los turistas en modo edición
+    if (booking.touristIds && booking.touristIds.length > 0) {
+      const tourists = getTouristInfoByIds(booking.touristIds);
+      if (tourists && tourists.length > 0) {
+        // El primer turista es el mainTourist
+        const mainTourist = tourists[0];
+        // Los demás son additionalTourists
+        const additionalTourists = tourists.slice(1);
+
+        formikRef.current.setFieldValue("mainTourist", mainTourist);
+        formikRef.current.setFieldValue(
+          "additionalTourists",
+          additionalTourists,
+        );
+        setTouristsBySearch(tourists);
+      }
+    }
+  }, [booking, getTouristInfoByIds]);
 
   useEffect(() => {
     if (!tourPackageSelected) return;
@@ -269,7 +293,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     const totalPaid =
       booking?.payments?.reduce(
         (total, payment) => total + payment.amount,
-        0
+        0,
       ) || 0;
 
     const willExceedTotal = amount + totalPaid > formik.values.totalPrice;

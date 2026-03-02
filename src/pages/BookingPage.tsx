@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
 import { Outlet, useOutletContext } from "react-router-dom";
-import { UserProvider } from "../features/user/context/UserContext";
+import { UserProvider } from "../features/userManagement/context/UserContext";
 import { BookingProvider } from "../features/booking/context/BookingContext";
 import { TouristProvider } from "../features/tourist/context/TouristContext";
 import { TourPackageProvider } from "../features/tourPackage/context/TourPackageContext";
 import { DateRangeProvider } from "../features/dateRange/context/DateRangeContext";
 import { TouristDestinationProvider } from "../features/touristDestination/context/TouristDestinationContext";
-import { CancellationPolicyProvider } from "../features/cancellationPolicy/context/CancellationPolicyContext";
 import { TourTypeProvider } from "../features/tourType/context/TourTypeContext";
 import FadeContent from "../Animations/FadeContent/FadeContent";
 import { PaymentProvider } from "../features/payment/context/PaymentContext";
@@ -39,7 +38,6 @@ const BookingPage = () => {
           }}
         >
           <TourTypeProvider>
-            <CancellationPolicyProvider>
               <TouristDestinationProvider>
                 <DateRangeProvider>
                   <TourPackageProvider>
@@ -55,7 +53,6 @@ const BookingPage = () => {
                   </TourPackageProvider>
                 </DateRangeProvider>
               </TouristDestinationProvider>
-            </CancellationPolicyProvider>
           </TourTypeProvider>
         </Box>
       </Box>

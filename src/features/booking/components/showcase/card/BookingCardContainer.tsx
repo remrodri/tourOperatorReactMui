@@ -9,10 +9,8 @@ import BookingFormContainer from "../../bookingForm/BookingFormContainer";
 import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
 import MoreInfoDialogContainer from "../../moreInfoDialogV2/MoreInfoDialogContainerV2";
 import ConfirmationModal from "./ConfirmationModal";
-import { useCancellationConditionContext } from "../../../../cancellationPolicy/context/CancellationPolicyContext";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import BookingCardV2 from "./BookingCardV2";
-import { CancellationPolicy } from "../../../../cancellationPolicy/types/CancellationPolicy";
 import PaymentProofDialogContainer from "../../../../payment/components/paymentProofDialog/PaymentProofDialogContainer";
 import { PaymentType } from "../../../types/PaymentType";
 
@@ -49,7 +47,6 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   const [localBooking, setLocalBooking] = useState<BookingType | null>(null);
 
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const { getCancellationPolicyInfoById } = useCancellationConditionContext();
 
   const [loading, setLoading] = useState(false);
   const { showSnackbar } = useNewSnackbar();

@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 import { Phone } from "@mui/icons-material";
 
 interface GuidesInfoProps {

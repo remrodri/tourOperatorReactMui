@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { TourType } from "../../../user/types/TourType";
+import { TourType } from "../../../userManagement/types/TourType";
 
 interface TourTypeProps {
   tourType: TourType | null;

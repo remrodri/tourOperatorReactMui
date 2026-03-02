@@ -16,7 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
 import Chip from "@mui/material/Chip";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 import { FormikProps } from "formik";
 import { DateRangeFormValues } from "./DateSelectorFormContainer";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -54,7 +54,7 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
 
   // Guías seleccionados = mapear ids de formik a objetos User
   const selectedGuides = guides.filter((g) =>
-    formik.values.guides.includes(g.id)
+    formik.values.guides.includes(g.id),
   );
 
   // Condición para habilitar botón
@@ -98,7 +98,7 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
               onChange={(newDate) => {
                 if (newDate) {
                   const dates = Array.from({ length: duration }, (_, i) =>
-                    newDate.add(i, "day").format("DD-MM-YYYY")
+                    newDate.add(i, "day").format("DD-MM-YYYY"),
                   );
                   formik.setFieldValue("dates", dates);
                 }
@@ -107,7 +107,7 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
               sx={{ width: "100%" }}
               shouldDisableDate={(day) =>
                 blockedDates.some((d) =>
-                  dayjs(d, "DD-MM-YYYY").isSame(day, "day")
+                  dayjs(d, "DD-MM-YYYY").isSame(day, "day"),
                 )
               }
             />

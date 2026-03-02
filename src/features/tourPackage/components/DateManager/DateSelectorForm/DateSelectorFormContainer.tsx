@@ -1,9 +1,9 @@
 import DateSelectorForm from "./DateSelectorForm";
 import { useEffect, useState } from "react";
 import { Dayjs } from "dayjs";
-import { User } from "../../../../user/types/User";
+import { User } from "../../../../userManagement/types/UserType";
 import { DateRangeType } from "../../../types/DateRangeType";
-import { useUserContext } from "../../../../user/context/UserContext";
+import { useUserContext } from "../../../../userManagement/context/UserContext";
 import { dateRangeSchema } from "./validation/dateRangeSchema";
 import { useFormik } from "formik";
 import {

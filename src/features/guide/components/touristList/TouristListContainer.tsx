@@ -12,7 +12,7 @@ import { useBookingContext } from "../../../booking/context/BookingContext";
 import { useNewSnackbar } from "../../../../context/SnackbarContext";
 import { jwtDecode } from "jwt-decode";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
-import { User } from "../../../user/types/User";
+import { User } from "../../../userManagement/types/UserType";
 import { BookingType } from "../../../booking/types/BookingType";
 
 const TouristListContainer: React.FC = () => {
@@ -36,7 +36,7 @@ const TouristListContainer: React.FC = () => {
   const { tourPackages } = useTourPackageContext();
   const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
   const [guideDateRanges, setGuideDateRanges] = useState<CustomDateRangeType[]>(
-    []
+    [],
   );
   // const { getBookingsByDateRangeId } = useBookingContext();
 
@@ -146,7 +146,7 @@ const TouristListContainer: React.FC = () => {
   const getDateRangeBookings = (
     dateRangeId: string,
     bookings: BookingType[],
-    currentTourPackage: string
+    currentTourPackage: string,
   ) => {
     // console.log("📅 Obteniendo bookings para dateRange:", dateRangeId);
     // console.log("📊 Total bookings disponibles:", bookings.length);
@@ -154,7 +154,7 @@ const TouristListContainer: React.FC = () => {
     const result = getBookingsByDateRangeId(
       dateRangeId,
       bookings,
-      currentTourPackage
+      currentTourPackage,
     );
 
     // console.log("✅ DateRange bookings encontrados:", result.length);

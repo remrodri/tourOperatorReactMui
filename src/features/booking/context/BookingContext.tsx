@@ -18,7 +18,7 @@ import { useTouristContext } from "../../tourist/context/TouristContext";
 // import { BookingFormValues } from "../../bookingForm/BookingFormContainer";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../user/types/User";
+import { User } from "../../userManagement/types/UserType";
 import { v4 as uuidv4 } from "uuid";
 import { TouristType } from "../types/TouristType";
 import { PaymentType } from "../types/PaymentType";
@@ -33,7 +33,7 @@ interface BookingContextType {
   getBookingById: (id: string) => BookingType | null;
   createBooking: (
     booking: BookingFormValues,
-    touristsBySearch: TouristType[]
+    touristsBySearch: TouristType[],
   ) => Promise<BookingType | null>;
   updateBooking: (booking: any) => Promise<void>;
   setBookings: (bookings: BookingType[]) => void;
@@ -43,13 +43,13 @@ interface BookingContextType {
   getBookingsByDateRangeId: (
     dateRangeId: string,
     bookings: BookingType[],
-    tourPackageId: string
+    tourPackageId: string,
   ) => BookingType[];
   cancelBooking: (
     bookingId: string,
     cancellationFee: number,
     refundAmount: number,
-    refundedAt: Date
+    refundedAt: Date,
   ) => Promise<void>;
 }
 
@@ -81,7 +81,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     bookingId: string,
     cancellationFee: number,
     refundAmount: number,
-    refundedAt: Date
+    refundedAt: Date,
   ): Promise<void> => {
     setLoading(true);
     try {
@@ -89,7 +89,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         bookingId,
         cancellationFee,
         refundAmount,
-        refundedAt
+        refundedAt,
       );
       if (!response || response.error) {
         setError(response?.error || "Error canceling booking");
@@ -104,7 +104,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
               refundedAt: response.refundedAt,
               status: response.status,
             }
-          : booking
+          : booking,
       );
       setBookings(updatedBookings);
       showSnackbar("Reserva cancelada exitosamente", "success");
@@ -120,12 +120,12 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
   const getBookingsByDateRangeId = (
     dateRangeId: string,
     bookings: BookingType[],
-    tourPackageId: string
+    tourPackageId: string,
   ): BookingType[] => {
     const bookingsByDateRangeId = bookings.filter(
       (booking) =>
         booking.dateRangeId === dateRangeId &&
-        booking.tourPackageId === tourPackageId
+        booking.tourPackageId === tourPackageId,
     );
     return bookingsByDateRangeId;
   };
@@ -149,7 +149,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       const attendanceList = await updateAttendanceRequest(data);
       const updatedBookings = attendanceList.map((attendance: Group) => {
         const booking = bookings.find(
-          (b: BookingType) => b.id === attendance.bookingId
+          (b: BookingType) => b.id === attendance.bookingId,
         );
         if (booking) {
           return {
@@ -176,7 +176,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         if (booking.id === payment.bookingId) {
           // Verificamos si ya existe ese pago para evitar duplicados
           const alreadyExists = booking.payments.some(
-            (p) => p.id === payment.id
+            (p) => p.id === payment.id,
           );
           if (!alreadyExists) {
             return {
@@ -186,13 +186,13 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
           }
         }
         return booking;
-      })
+      }),
     );
   };
 
   const createBooking = async (
     booking: BookingFormValues,
-    touristsBySearch: TouristType[]
+    touristsBySearch: TouristType[],
   ): Promise<BookingType | null> => {
     let res = null;
     setError("");
@@ -230,7 +230,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     formData.append("notes", booking.notes || "");
     formData.append(
       "paymentProofImage",
-      booking.firstPayment.paymentProofImage
+      booking.firstPayment.paymentProofImage,
     );
     formData.append("tourists", JSON.stringify(tourists));
     formData.append("paymentProofFolder", paymentProofFolder);
@@ -241,7 +241,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
         paymentDate: booking.firstPayment.paymentDate,
         paymentMethod: booking.firstPayment.paymentMethod,
         sellerId: seller.id,
-      })
+      }),
     );
 
     setLoading(true);
@@ -257,7 +257,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       }
 
       const newTourists = response.tourists.map((t: any) =>
-        addTouristFromBooking(t)
+        addTouristFromBooking(t),
       );
       const touristIds = newTourists.map((t: TouristType) => t.id);
 
@@ -301,7 +301,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
       }
 
       const updatedTouristIds = response.tourists.map(
-        (t: any) => addTouristFromBooking(t).id
+        (t: any) => addTouristFromBooking(t).id,
       );
       setBookings((prev) =>
         prev.map((b) =>
@@ -313,8 +313,8 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
                 totalPrice: response.totalPrice,
                 touristIds: updatedTouristIds,
               })
-            : b
-        )
+            : b,
+        ),
       );
       showSnackbar("Reserva actualizada exitosamente", "success");
     } catch (error) {
@@ -331,7 +331,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({
     try {
       const response = await getAllBookingsRequest();
       const transformedBookings = response.map((b: any) =>
-        transformApiBooking(b)
+        transformApiBooking(b),
       );
       setBookings(transformedBookings);
       setError(null);
