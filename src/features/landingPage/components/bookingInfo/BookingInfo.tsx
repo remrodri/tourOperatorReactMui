@@ -15,7 +15,7 @@ import background from "../../../../assets/images/bookingDialog2.webp";
 import { BookingType } from "../../../booking/types/BookingType";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TourType } from "../../../userManagement/types/TourType";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
 import { ActivityType } from "../../../tourPackage/types/ActivityType";
 import { TouristType } from "../../../booking/types/TouristType";
@@ -27,7 +27,7 @@ interface BookingInfoProps {
     booking: BookingType | null;
     tourPackageFound: TourPackageType | null;
     tourTypeFound: TourType | null;
-    sellerFound: User | null;
+    sellerFound: UserType | null;
     dateRange: DateRangeType | null;
     tourists: TouristType[];
   };
