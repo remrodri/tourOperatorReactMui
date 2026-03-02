@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -21,7 +21,8 @@ dayjs.extend(customParseFormat);
 dayjs.locale("es");
 
 interface TouristFormProps {
-  tourist: Partial<TouristType>;
+  // tourist: Partial<TouristType>;
+  tourist: TouristType;
   onChange: (field: string, value: any) => void;
   errors?: any;
   touched?: any;
@@ -42,49 +43,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
   // searchAndFillTourist,
   // isMain,
 }) => {
-  // const [openSearchTourist, setOpenSearchTourist] = useState<boolean>(false);
-  // const [documentNumber, setDocumentNumber] = useState<string>("");
-  // const { tourists } = useTouristContext();
-  // const [isTouristFound, setIsTouristFound] = useState<boolean>(false);
-
-  // const handleSearchTourist = () => {
-  //   setOpenSearchTourist(true);
-  // };
-
-  // const handleCloseSearchNumber = () => {
-  //   setOpenSearchTourist(false);
-  // };
-
-  // const searchTourist = () => {
-  //   console.log("isMain::: ", isMain);
-  //   if (isMain) {
-  //     searchAndFillTourist("main", documentNumber);
-  //   } else {
-  //     searchAndFillTourist("secondary", documentNumber);
-  //   }
-  //   // // console.log("documentNumber::: ", documentNumber);
-  //   // const touristFound = tourists.find(
-  //   //   (tourist) =>
-  //   //     tourist.ci === documentNumber ||
-  //   //     tourist.passportNumber === documentNumber
-  //   // );
-  //   // console.log("touristFound::: ", touristFound);
-  //   // if (touristFound) {
-  //   //   // setIsTouristFound(true);
-  //   //   onChange("ci", touristFound.ci);
-  //   //   onChange("firstName", touristFound.firstName);
-  //   //   onChange("lastName", touristFound.lastName);
-  //   //   onChange("email", touristFound.email);
-  //   //   onChange("phone", touristFound.phone);
-  //   //   onChange("nationality", touristFound.nationality);
-  //   //   onChange("dateOfBirth", touristFound.dateOfBirth);
-  //   //   onChange("documentType", touristFound.documentType);
-  //   //   onChange("passportNumber", touristFound.passportNumber);
-  //   // }
-  //   // handleCloseSearchNumber();
-  //   // setDocumentNumber("");
-  // };
-  // console.log('tourist::: ', tourist);
+console.log('tourist::: ', tourist);
   const [birthDate, setBirthDate] = useState<Dayjs | null>(
     // tourist?.dateOfBirth ? dayjs(tourist.dateOfBirth) : null
     () => {

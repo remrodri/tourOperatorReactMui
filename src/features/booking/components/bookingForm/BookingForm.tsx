@@ -86,7 +86,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   handleTourPackageChange,
   tourPackages,
   dateRanges,
-  selectedTourPackage,
+  // selectedTourPackage,
   handleDateRangeChange,
   handlePaymentChange,
   handleFileChange,
@@ -605,7 +605,7 @@ console.log('isEditing::: ', isEditing);
                   variant="contained"
                   color="primary"
                   type="submit"
-                  disabled={formik.isSubmitting}
+                  disabled={formik.isSubmitting || !formik.isValid}
                   sx={{
                     height: "2rem",
                     width: !isEditing ? "100%" : "20rem",

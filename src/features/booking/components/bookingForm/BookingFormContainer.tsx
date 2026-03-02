@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFormik } from "formik";
 import { BookingType } from "../../types/BookingType";
 import { TouristType } from "../../types/TouristType";
@@ -13,6 +14,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { useBookingContext } from "../../context/BookingContext";
 import { bookingSchemaWithContext } from "./validation/bookingSchemaWithContext";
+// import { useCancellationConditionContext } from "../../../cancellationPolicy/context/CancellationPolicyContext";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
 import SearchTouristByDocument from "./SearchTouristByDocument";
 import { useNewSnackbar } from "../../../../context/SnackbarContext";
@@ -66,8 +68,8 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   booking,
   setBookingProof,
 }) => {
-  console.log("booking::: ", booking);
-  const { getTouristInfoByIds, tourists } = useTouristContext();
+  const {tourists } =
+    useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
   const { dateRanges } = useDateRangeContext();
@@ -174,9 +176,9 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     }),
     onSubmit,
     enableReinitialize: true,
-    validateOnChange: false,
-    validateOnBlur: false,
-    validateOnMount: false,
+    // validateOnChange: false,
+    // validateOnBlur: false,
+    // validateOnMount: false,
   });
 
   const formikRef = useRef(formik);
