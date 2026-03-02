@@ -9,8 +9,7 @@ import { useGuideContext } from "../../context/GuideContext";
 const TouristDestinationContainer: React.FC = () => {
   const { getTouristDestinationInfoById, touristDestinations } =
     useTouristDestinationContext();
-  const [touristDestinationInfo, setTouristDestinationInfo] =
-    useState<TouristDestinationType | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
   const { getTourPackageInfoById } = useTourPackageContext();
   const [touristDestination, setTouristDestination] =
@@ -29,7 +28,7 @@ const TouristDestinationContainer: React.FC = () => {
     // console.log("touristDestination::: ", tourPackage);
     if (tourPackage) {
       const touristDestination = getTouristDestinationInfoById(
-        tourPackage.touristDestination
+        tourPackage.touristDestination,
       );
       // console.log("touristDestination::: ", touristDestination);
       if (touristDestination) {

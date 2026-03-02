@@ -1,5 +1,4 @@
 import { PaymentType } from "./PaymentType";
-import { TouristType } from "./TouristType";
 
 export interface BookingType {
   id?: string;

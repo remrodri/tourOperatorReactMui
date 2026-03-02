@@ -2,16 +2,12 @@ import {
   Box,
   Card,
   CardContent,
-  CardHeader,
-  IconButton,
   Typography,
 } from "@mui/material";
 import { BookingType } from "../../../types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../../types/TouristType";
 import BookingCardMenu from "./BookingCardMenu";
-import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
-import { MoreVert } from "@mui/icons-material";
 
 interface BookingCardV2Props {
   booking: BookingType | null;

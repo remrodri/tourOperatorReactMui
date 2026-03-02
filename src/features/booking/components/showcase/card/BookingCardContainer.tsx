@@ -48,12 +48,12 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
 
   const [openConfirmation, setOpenConfirmation] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { showSnackbar } = useNewSnackbar();
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
 
-  const openMenu = Boolean(anchor);
+  // const openMenu = Boolean(anchor);
 
   const [openPaymentProof, setOpenPaymentProof] = useState(false);
   const [createdPayment, setCreatedPayment] = useState<PaymentType | null>(
@@ -68,13 +68,13 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
     setOpenPaymentProof(false);
   };
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchor(event.currentTarget);
-  };
+  // const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchor(event.currentTarget);
+  // };
 
-  const handleCloseMenu = () => {
-    setAnchor(null);
-  };
+  // const handleCloseMenu = () => {
+  //   setAnchor(null);
+  // };
 
   const handleClickConfirmation = () => {
     // console.log("booking::: ", booking);
@@ -86,22 +86,22 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
     );
     setOpenConfirmation(false);
     try {
-      setLoading(true);
+      // setLoading(true);
       // console.log("Cancelar booking con ID:", booking.id);
       // console.log("booking::: ", booking);
       // const discount = booking.discount;
-      const tourPackageInfo = getTourPackageInfoById(booking.tourPackageId);
+      // const tourPackageInfo = getTourPackageInfoById(booking.tourPackageId);
       // if (!tourPackageInfo) return;
       // const cancellationPolicy = getCancellationPolicyInfoById(
       //   tourPackageInfo?.cancellationPolicy!
       // );
       // if (!cancellationPolicy) return;
       // const refoundPercentage = cancellationPolicy?.refoundPercentage;
-      const totalPrice = booking.totalPrice;
-      const totalPaid = booking.payments.reduce(
-        (acc, payment) => acc + payment.amount,
-        0
-      );
+      // const totalPrice = booking.totalPrice;
+      // const totalPaid = booking.payments.reduce(
+      //   (acc, payment) => acc + payment.amount,
+      //   0
+      // );
       // const cancellationFee = totalPrice * (refoundPercentage! * 0.01);
       // console.log("cancellationFee::: ", cancellationFee);
       // const refoundAmount = totalPaid - cancellationFee;
@@ -119,7 +119,7 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
       // setError("Failed to cancel booking");
       showSnackbar("Error al cancelar la reserva", "error");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 

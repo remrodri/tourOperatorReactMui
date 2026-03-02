@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 
 interface TourPackageProps {
   loading: boolean;
   tourPackage: TourPackageType | null;
-  asignedGuides: User[];
+  asignedGuides: UserType[];
 }
 
 const TourPackage: React.FC<TourPackageProps> = ({

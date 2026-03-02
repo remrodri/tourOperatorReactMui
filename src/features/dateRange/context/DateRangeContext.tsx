@@ -4,220 +4,239 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
-import { DateRangeType } from "../../tourPackage/types/DateRangeType";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
+
+import type { DateRangeType } from "../../tourPackage/types/DateRangeType";
 import {
   createDateRangeRequest,
   getAllDateRangesRequest,
   updateDateRangeRequest,
 } from "../service/DateRangeService";
-// import { useUserContext } from "../../userManagement/context/UserContext";
-// import { useTourPackageContext } from "../../tourPackage/context/TourPackageContext";
-import { TourPackageType } from "../../tourPackage/types/TourPackageType";
 
 type DateRangeContextType = {
   dateRanges: DateRangeType[];
-  getDateRangeById(id: string): DateRangeType | null;
-  fillDateRangesByIds(DateRangeIds: DateRangeType[]): DateRangeType[];
-  findDateRangesByTourPackage(ids: DateRangeType[]): void;
   dateRangesByTP: DateRangeType[];
-  getDateRangeInfoById(id: string): DateRangeType | null;
-  addDateRange(dateRange: DateRangeType): void;
-  filterDateRangesByTourGuideId(id: string): DateRangeType[];
-  updateDateRangeStatus(id: string, status: string): void;
-  createDateRange(dateRange: DateRangeType): void;
-  updateDateRange(dateRange: DateRangeType): void;
+  loading: boolean;
+  error: string | null;
+
+  fetchDateRanges: () => void;
+
+  getDateRangeById: (id: string) => DateRangeType | null;
+  getDateRangeInfoById: (id: string) => DateRangeType | null;
+
+  fillDateRangesByIds: (dateRangeIds: DateRangeType[]) => DateRangeType[];
+  findDateRangesByTourPackage: (dateRangesIds: DateRangeType[]) => void;
+
+  addDateRange: (dateRange: DateRangeType) => void;
+  filterDateRangesByTourGuideId: (id: string) => DateRangeType[];
+
+  createDateRange: (dateRange: DateRangeType) => Promise<DateRangeType | null>;
+  updateDateRange: (dateRange: DateRangeType) => Promise<DateRangeType | null>;
+  updateDateRangeStatus: (
+    id: string,
+    status: string,
+  ) => Promise<DateRangeType | null>;
 };
 
-const DateRangeContext = createContext<DateRangeContextType | null>(null);
+const DateRangeContext = createContext<DateRangeContextType | undefined>(
+  undefined,
+);
 
-type DateRangeProviderProps = {
-  children: ReactNode;
+export const useDateRangeContext = (): DateRangeContextType => {
+  const context = useContext(DateRangeContext);
+  if (context === undefined) {
+    throw new Error(
+      "useDateRangeContext debe ser usado con un DateRangeProvider",
+    );
+  }
+  return context;
 };
 
-export const DateRangeProvider: React.FC<DateRangeProviderProps> = ({
+// ✅ Helper por si tu API devuelve _id en vez de id
+const getId = (dr: any) => dr?.id ?? dr?._id;
+
+export const DateRangeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [dateRanges, setDateRanges] = useState<DateRangeType[]>([]);
-  const { showSnackbar } = useNewSnackbar();
   const [dateRangesByTP, setDateRangesByTP] = useState<DateRangeType[]>([]);
-  // const { users,setUsers,getUserById} = useUserContext();
-  // const { tourPackages, setTourPackages, getTourPackageInfoById } =
-  //   useTourPackageContext();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const updateDateRange = async (dateRange: DateRangeType): Promise<void> => {
+  const fetchDateRanges = useCallback(async () => {
+    setLoading(true);
     try {
-      const response: any = await updateDateRangeRequest(
-        dateRange.id!,
-        dateRange
-      );
-      if (!response) {
-        showSnackbar("Fallo al actualizar", "error");
-        // throw new Error("Failed to update date range");
+      const list = await getAllDateRangesRequest();
+      if (!list) {
+        setDateRanges([]);
+        setError("No se pudieron cargar los rangos");
         return;
       }
-      setDateRanges((prev) =>
-        prev.map((dr) =>
-          dr.id === dateRange.id ? { ...dr, ...dateRange } : dr
-        )
-      );
-      showSnackbar("Actualizado exitosamente!", "success");
-    } catch (error) {
-      console.error("Error updating date range:", error);
-      // setError("Failed to update date range");
-      showSnackbar("Fallo al actualizar", "error");
+      setDateRanges(list);
+      setError(null);
+    } catch (e) {
+      console.error("Error fetching date ranges:", e);
+      setError("Failed to fetch date ranges");
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const createDateRange = async (dateRange: DateRangeType): Promise<void> => {
-    // console.log('dateRange::: ', dateRange);
-    try {
-      const response: any = await createDateRangeRequest(dateRange);
-      if (!response) {
-        showSnackbar("Fallo al crear", "error");
-        // throw new Error("Failed to create date range");
-        return;
-      }
-      console.log("response.id::: ", response);
-      setDateRanges((prev) => [...prev, response]);
-
-      // const tourPackageFound = getTourPackageInfoById(response.tourPackageId);
-      // if (tourPackageFound) {
-      //   const updatedTourPackage = {
-      //     ...tourPackageFound,
-      //     dateRanges: [...tourPackageFound.dateRanges, response],
-      //   };
-      //   const updatedTourPackages = tourPackages.map((tp) =>
-      //     tp.id === response.tourPackageId ? updatedTourPackage : tp
-      //   );
-      //   setTourPackages(updatedTourPackages);
-      // }
-
-      showSnackbar("Creado exitosamente!", "success");
-    } catch (error) {
-      console.error("Error creating date range:", error);
-      // setError("Failed to create date range");
-      showSnackbar("Fallo al crear", "error");
-    }
-  };
-
-  const updateDateRangeStatus = async (
-    id: string,
-    status: string
-  ): Promise<void> => {
-    console.log("status::: ", status);
-    let translatedStatus = "";
-    if (status === "Completado") {
-      translatedStatus = "completed";
-    }
-    if (status === "Cancelado") {
-      translatedStatus = "cancelled";
-    }
-    try {
-      const response: any = await updateDateRangeRequest(id, {
-        state: translatedStatus,
-      });
-      if (!response) {
-        showSnackbar("Fallo al actualizar", "error");
-        // throw new Error("Failed to update date range status");
-        return;
-      }
-      setDateRanges((prev) =>
-        prev.map((dr) => (dr.id === id ? { ...dr, state: response.state } : dr))
-      );
-      // setError(null);
-      showSnackbar("Actualizado exitosamente!", "success");
-    } catch (error) {
-      console.error("Error updating date range status:", error);
-      // setError("Failed to update date range status");
-      showSnackbar("Fallo al actualizar", "error");
-    }
-    // setDateRanges((prev) =>
-    //   prev.map((dr) => (dr.id === id ? { ...dr, status } : dr))
-    // );
-  };
-
-  const filterDateRangesByTourGuideId = (id: string): DateRangeType[] => {
-    return dateRanges.filter((dr) => dr.guides?.includes(id));
-  };
-
-  const addDateRange = (dateRange: DateRangeType): void => {
-    setDateRanges((prev) => [...prev, dateRange]);
-  };
-
-  const getDateRangeInfoById = (id: string): DateRangeType | null => {
-    const dateRangeFound = dateRanges.find((dr) => dr.id === id);
-    return dateRangeFound || null;
-  };
-
-  const findDateRangesByTourPackage = (
-    dateRangesIds: DateRangeType[]
-  ): void => {
-    if (dateRangesIds && dateRangesIds.length > 0) {
-      const drFound = dateRangesIds
-        .map((drId) => dateRanges.find((dr) => dr.id === drId.id))
-        .filter((dr): dr is DateRangeType => dr !== undefined);
-      setDateRangesByTP(drFound);
-    }
-  };
-
-  const fillDateRangesByIds = (
-    dateRangeIds: DateRangeType[]
-  ): DateRangeType[] => {
-    return dateRangeIds
-      .map((drId) => dateRanges.find((dr) => dr.id === drId.id))
-      .filter((dr): dr is DateRangeType => dr !== undefined);
-  };
-
-  const getDateRanges = async (): Promise<void> => {
-    const response = await getAllDateRangesRequest();
-    setDateRanges(response.data);
-  };
-
-  const getDateRangeById = (id: string): DateRangeType | null => {
-    if (!id) {
-      console.warn("dateRange called without id");
-      return null;
-    }
-    const dateRangeFound = dateRanges.find((dr) => dr.id === id);
-
-    return dateRangeFound || null;
-  };
-
-  useEffect(() => {
-    // console.log('::: ', );
-    getDateRanges();
   }, []);
 
-  return (
+  useEffect(() => {
+    fetchDateRanges();
+  }, [fetchDateRanges]);
 
+  const getDateRangeById = useCallback(
+    (id: string): DateRangeType | null => {
+      if (!id) return null;
+      return dateRanges.find((dr) => getId(dr) === id) ?? null;
+    },
+    [dateRanges],
+  );
+
+  const getDateRangeInfoById = useCallback(
+    (id: string) => getDateRangeById(id),
+    [getDateRangeById],
+  );
+
+  const fillDateRangesByIds = useCallback(
+    (dateRangeIds: DateRangeType[]): DateRangeType[] => {
+      return (dateRangeIds ?? [])
+        .map((drId) => dateRanges.find((dr) => getId(dr) === getId(drId)))
+        .filter((dr): dr is DateRangeType => Boolean(dr));
+    },
+    [dateRanges],
+  );
+
+  const findDateRangesByTourPackage = useCallback(
+    (dateRangesIds: DateRangeType[]): void => {
+      if (!dateRangesIds?.length) {
+        setDateRangesByTP([]);
+        return;
+      }
+      const found = fillDateRangesByIds(dateRangesIds);
+      setDateRangesByTP(found);
+    },
+    [fillDateRangesByIds],
+  );
+
+  const filterDateRangesByTourGuideId = useCallback(
+    (id: string): DateRangeType[] => {
+      return dateRanges.filter((dr) => dr.guides?.includes(id));
+    },
+    [dateRanges],
+  );
+
+  const addDateRange = useCallback((dateRange: DateRangeType) => {
+    setDateRanges((prev) => [...prev, dateRange]);
+  }, []);
+
+  const createDateRange = useCallback(
+    async (dateRange: DateRangeType): Promise<DateRangeType | null> => {
+      setLoading(true);
+      setError(null);
+      try {
+        const created = await createDateRangeRequest(dateRange);
+        if (!created) {
+          setError("Failed to create date range");
+          return null;
+        }
+        setDateRanges((prev) => [...prev, created]);
+        return created;
+      } catch (e) {
+        console.error("Error creating date range:", e);
+        setError("Failed to create date range");
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  const updateDateRange = useCallback(
+    async (dateRange: DateRangeType): Promise<DateRangeType | null> => {
+      const id = getId(dateRange);
+      if (!id) return null;
+
+      setLoading(true);
+      setError(null);
+      try {
+        const updated = await updateDateRangeRequest(id, dateRange);
+        if (!updated) {
+          setError("Failed to update date range");
+          return null;
+        }
+        setDateRanges((prev) =>
+          prev.map((dr) => (getId(dr) === id ? updated : dr)),
+        );
+        return updated;
+      } catch (e) {
+        console.error("Error updating date range:", e);
+        setError("Failed to update date range");
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  const updateDateRangeStatus = useCallback(
+    async (id: string, status: string): Promise<DateRangeType | null> => {
+      const translatedStatus =
+        status === "Completado"
+          ? "completed"
+          : status === "Cancelado"
+            ? "cancelled"
+            : status;
+
+      setLoading(true);
+      setError(null);
+      try {
+        const updated = await updateDateRangeRequest(id, {
+          state: translatedStatus,
+        } as Partial<DateRangeType>);
+        if (!updated) {
+          setError("Failed to update date range status");
+          return null;
+        }
+        setDateRanges((prev) =>
+          prev.map((dr) => (getId(dr) === id ? updated : dr)),
+        );
+        return updated;
+      } catch (e) {
+        console.error("Error updating date range status:", e);
+        setError("Failed to update date range status");
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  return (
     <DateRangeContext.Provider
       value={{
         dateRanges,
+        dateRangesByTP,
+        loading,
+        error,
+        fetchDateRanges,
         getDateRangeById,
+        getDateRangeInfoById,
         fillDateRangesByIds,
         findDateRangesByTourPackage,
-        dateRangesByTP,
-        getDateRangeInfoById,
         addDateRange,
         filterDateRangesByTourGuideId,
-        updateDateRangeStatus,
         createDateRange,
         updateDateRange,
+        updateDateRangeStatus,
       }}
     >
       {children}
     </DateRangeContext.Provider>
   );
-};
-
-export const useDateRangeContext = (): DateRangeContextType => {
-  const context = useContext(DateRangeContext);
-  if (!context) {
-    throw new Error(
-      "useDateRangeContext must be used within a DateRangeProvider"
-    );
-  }
-  return context;
 };

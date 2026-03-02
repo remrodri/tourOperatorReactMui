@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import TouristList from "./TouristList";
 import {
-  CustomDateRangeType,
   Group,
   TouristWithStatus,
   useGuideContext,
@@ -12,7 +11,7 @@ import { useBookingContext } from "../../../booking/context/BookingContext";
 import { useNewSnackbar } from "../../../../context/SnackbarContext";
 import { jwtDecode } from "jwt-decode";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import { BookingType } from "../../../booking/types/BookingType";
 
 const TouristListContainer: React.FC = () => {
@@ -35,9 +34,9 @@ const TouristListContainer: React.FC = () => {
   const { showSnackbar } = useNewSnackbar();
   const { tourPackages } = useTourPackageContext();
   const [dateRangeBookings, setDateRangeBookings] = useState<BookingType[]>([]);
-  const [guideDateRanges, setGuideDateRanges] = useState<CustomDateRangeType[]>(
-    [],
-  );
+  // const [guideDateRanges, setGuideDateRanges] = useState<CustomDateRangeType[]>(
+  //   [],
+  // );
   // const { getBookingsByDateRangeId } = useBookingContext();
 
   const saveAttendance = async () => {
@@ -55,6 +54,7 @@ const TouristListContainer: React.FC = () => {
       await updateAttendance(bookingsPayload);
       showSnackbar("Asistencia guardada exitosamente", "success");
     } catch (error) {
+      console.error("Error al guardar la asistencia:", error);
       showSnackbar("Error al guardar la asistencia", "error");
     } finally {
       setLoading(false);
@@ -117,7 +117,7 @@ const TouristListContainer: React.FC = () => {
       // console.log("🔑 No hay token disponible");
       return;
     }
-    const currentUser: User = jwtDecode(token);
+    const currentUser: UserType = jwtDecode(token);
     if (!currentUser?.id) {
       // console.log("⏳ Esperando información del guía...");
       return;
@@ -126,20 +126,20 @@ const TouristListContainer: React.FC = () => {
     setLoading(true);
     // console.log("🗓️ Obteniendo dateRanges para guía:", guideInfo.id);
 
-    const dateRanges = tourPackages.flatMap((tourPackage) => {
-      return tourPackage.dateRanges.filter((dr) => dr.state === "pending");
-    });
+    // const dateRanges = tourPackages.flatMap((tourPackage) => {
+    //   return tourPackage.dateRanges.filter((dr) => dr.state === "pending");
+    // });
 
-    const filteredDateRanges = dateRanges
-      .filter((dr) => dr.guides?.includes(currentUser.id))
-      .map((dr) => ({
-        ...dr,
-        tpName:
-          tourPackages.find((tp) => tp.id === dr.tourPackageId)?.name || "",
-      }));
+    // const filteredDateRanges = dateRanges
+    //   .filter((dr) => dr.guides?.includes(currentUser.id))
+    //   .map((dr) => ({
+    //     ...dr,
+    //     tpName:
+    //       tourPackages.find((tp) => tp.id === dr.tourPackageId)?.name || "",
+    //   }));
 
     // console.log("✅ DateRanges del guía:", filteredDateRanges);
-    setGuideDateRanges(filteredDateRanges);
+    // setGuideDateRanges(filteredDateRanges);
     setLoading(false);
   };
 

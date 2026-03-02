@@ -16,9 +16,7 @@ const BookingShowcaseContainer: React.FC = () => {
   const [openBookingProof, setOpenBookingProof] = useState<boolean>(false);
   const [bookingProof, setBookingProof] = useState<BookingType | null>(null);
 
-  const handleOpenBookingProof = () => {
-    setOpenBookingProof(true);
-  };
+
 
   const handleCloseBookingProof = () => {
     setOpenBookingProof(false);

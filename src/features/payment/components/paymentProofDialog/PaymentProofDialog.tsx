@@ -40,7 +40,7 @@ const PaymentProofDialog: React.FC<PaymentProofDialogProps> = ({
       <DialogContent dividers>
         <Grid container spacing={2}>
           {/* Información del Pago */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Detalle del pago
             </Typography>
@@ -61,7 +61,7 @@ const PaymentProofDialog: React.FC<PaymentProofDialogProps> = ({
 
           {/* Turista */}
           {tourist && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Turista
               </Typography>

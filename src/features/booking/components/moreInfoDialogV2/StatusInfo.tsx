@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import { User } from "../../../userManagement/types/UserType";
 
 interface StatusInfoProps {
   status: string;

@@ -7,14 +7,13 @@
 // import { jwtDecode } from "jwt-decode";
 // import { User } from "../../../userManagement/types/User";
 
-import { Box } from "@mui/material";
 import TourPackage from "./TourPackage";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useEffect, useState } from "react";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { useUserContext } from "../../../userManagement/context/UserContext";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
 import { useGuideContext } from "../../context/GuideContext";
 
@@ -22,10 +21,10 @@ const TourPackageContainer: React.FC = () => {
   const { getTourPackageInfoById } = useTourPackageContext();
   const [tourPackage, setTourPackage] = useState<TourPackageType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { guides, getUserById } = useUserContext();
+  const { guides} = useUserContext();
   const { getDateRangeById } = useDateRangeContext();
-  const [asignedGuides, setAsignedGuides] = useState<User[]>([]);
-  const { currentDateRange, currentTourPackage } = useGuideContext();
+  const [asignedGuides, setAsignedGuides] = useState<UserType[]>([]);
+  const { currentTourPackage } = useGuideContext();
 
   const getTourPackage = () => {
     setLoading(true);
@@ -39,12 +38,12 @@ const TourPackageContainer: React.FC = () => {
     setLoading(false);
   };
 
-  const getAsignedGuides = (tourPackage: TourPackageType) => {
+  const getAsignedGuides = () => {
     const userToken = localStorage.getItem("token");
     if (!userToken) {
       return;
     }
-    const currentUser: User = jwtDecode(userToken);
+    const currentUser: UserType = jwtDecode(userToken);
     // console.log('user::: ', user);
 
     const token = localStorage.getItem("currentDateRange");
@@ -73,7 +72,7 @@ const TourPackageContainer: React.FC = () => {
 
   useEffect(() => {
     if (tourPackage) {
-      getAsignedGuides(tourPackage);
+      getAsignedGuides();
     }
   }, [tourPackage]);
   return (

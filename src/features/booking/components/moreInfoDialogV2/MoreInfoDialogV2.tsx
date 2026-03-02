@@ -22,7 +22,7 @@ import { TourType } from "../../../userManagement/types/TourType";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import { PaymentType } from "../../types/PaymentType";
 import { TouristType } from "../../types/TouristType";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import TourTypeInfo from "./TourTypeInfo";
 import TouristDestinationInfo from "./TouristDestinationInfo";
 import SellerInfo from "./SellerInfo";
@@ -47,8 +47,8 @@ interface MoreInfoDialogProps {
   payments: PaymentType[] | null;
   tourists: TouristType[] | null;
   dateRange: DateRangeType | null;
-  guides: User[] | null;
-  sellerInfo: User | null;
+  guides: UserType[] | null;
+  sellerInfo: UserType | null;
 }
 
 const Transition = forwardRef(function Transition(
@@ -157,7 +157,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
           }
           fileName={`RESERVA-${booking.bookingCode}.pdf`}
         >
-          {({ blob, loading, error }) => (
+          {({ loading }) => (
             <Button variant="contained">
               {loading ? "Generando PDF..." : "Generar PDF"}
             </Button>

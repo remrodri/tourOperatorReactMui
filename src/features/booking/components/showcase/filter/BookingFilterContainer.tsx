@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import { BookingType } from "../../../types/BookingType";
 import BookingFilter from "./BookingFilter";
 import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";

@@ -28,6 +28,7 @@ const MoreInfoDialogContainer: React.FC<MoreInfoDialogContainerProps> = ({
   booking,
   balance,
 }) => {
+  console.log("balance::: ", balance);
   const { getDateRangeInfoById } = useDateRangeContext();
   const { getTourPackageInfoById } = useTourPackageContext();
   const { getTourTypeInfoById } = useTourTypeContext();

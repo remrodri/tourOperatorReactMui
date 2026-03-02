@@ -1,4 +1,3 @@
-import { BookingType } from "../types/BookingType";
 
 export const getAllBookingsResponse:any = [
     {

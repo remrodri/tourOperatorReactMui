@@ -3,7 +3,6 @@ import {
   Button,
   InputAdornment,
   TextField,
-  IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -11,13 +10,13 @@ interface BookingSearchByCodeProps {
   searchValue: string;
   onChange: (value: string) => void;
   onSearch: () => void;
-  onClear: () => void;
+  // onClear: () => void;
 }
 const BookingSearchByCode: React.FC<BookingSearchByCodeProps> = ({
   searchValue,
   onChange,
   onSearch,
-  onClear,
+  // onClear,
 }: BookingSearchByCodeProps) => {
   return (
     <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>

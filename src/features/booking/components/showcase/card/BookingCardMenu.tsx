@@ -2,7 +2,7 @@ import { MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 
-const options = ["Ver detalles", "Editar", "Registrar pago", "Cancelar"];
+// const options = ["Ver detalles", "Editar", "Registrar pago", "Cancelar"];
 
 interface BookingCardMenuProps {
   onOptionSelect: (option: string) => void;

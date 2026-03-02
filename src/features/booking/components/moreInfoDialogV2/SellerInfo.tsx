@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 
 interface SellerInfoProps {
-  seller: User | null;
+  seller: UserType | null;
 }
 const SellerInfo: React.FC<SellerInfoProps> = ({ seller }) => {
   // console.log("seller::: ", seller);

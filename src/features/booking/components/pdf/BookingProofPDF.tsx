@@ -4,9 +4,7 @@ import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../types/TouristType";
 import { PaymentType } from "../../types/PaymentType";
 import { DateRangeType } from "../../../tourPackage/types/DateRangeType";
-import { TourType } from "../../../userManagement/types/TourType";
-import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import dayjs from "dayjs";
 // import utc from "dayjs-plugin-utc";
 import timezone from "dayjs/plugin/timezone";
@@ -111,7 +109,7 @@ interface BookingProofPDFProps {
   tourists: TouristType[] | null;
   dateRange: DateRangeType | null;
   // guides: User[] | null;
-  sellerInfo: User | null;
+  sellerInfo: UserType | null;
 }
 // dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -124,9 +122,9 @@ export const ComprobanteReservaPDF: React.FC<BookingProofPDFProps> = ({
   // touristDestination,
   payments,
   tourists,
-  dateRange,
+  // dateRange,
   // guides,
-  sellerInfo,
+  // sellerInfo,
 }) => {
   // const { code, createdAt, packageInfo, tourists, payments } = booking;
 
