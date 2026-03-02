@@ -1,20 +1,20 @@
 import { useFormik } from "formik";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+
 import { useUserContext } from "../../context/UserContext";
-import { User } from "../../types/UserType";
+import { useRoleContext } from "../../../Role/context/RoleContext";
+
+import { UserType } from "../../types/UserType";
 import UserForm from "./UserForm";
 import { userSchema } from "./validation/userSchema";
-import { useRoleContext } from "../../../Role/context/RoleContext";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useNewSnackbar } from "../../../../context/SnackbarContext";
-// import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface UserFormContainerProps {
   open: boolean;
   handleClick: () => void;
-  user?: User;
+  user?: UserType;
 }
 
-interface UserFormValues {
+export interface UserFormValues {
   id?: string;
   firstName: string;
   lastName: string;
@@ -34,87 +34,23 @@ const UserFormContainer: React.FC<UserFormContainerProps> = ({
 }) => {
   const { updateUser, registerUser } = useUserContext();
   const { roles } = useRoleContext();
-  const { showSnackbar } = useNewSnackbar();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Initialize preview if user has an image
+  // Preview inicial si el usuario ya tiene imagen (url remota)
   useEffect(() => {
-    if (user?.imageUrl) {
-      setPreview(user.imageUrl);
-    } else {
-      setPreview(null);
-    }
+    setPreview(user?.imageUrl ?? null);
   }, [user]);
 
+  // Cleanup seguro: revocar SOLO si es blob:
   useEffect(() => {
     return () => {
-      if (preview) {
+      if (preview?.startsWith("blob:")) {
         URL.revokeObjectURL(preview);
       }
     };
   }, [preview]);
-
-  const onSubmit = async (values: UserFormValues) => {
-    console.log("values::: ", values);
-    console.log("user::: ", user);
-    setIsSubmitting(true);
-
-    try {
-      // Create FormData object
-      const formData = new FormData();
-
-      // Add all text fields
-      Object.entries(values).forEach(([key, value]) => {
-        if (key !== "image" && value !== null && value !== undefined) {
-          formData.append(key, String(value));
-        }
-      });
-
-      // Add image file if selected
-      if (selectedFile) {
-        formData.append("image", selectedFile);
-      }
-      // If user has an existing image and no new file is selected
-      else if (user?.imageUrl && !selectedFile) {
-        formData.append("imageUrl", user.imageUrl);
-      }
-
-      let result;
-
-      if (user?.id) {
-        // Update existing user
-        result = await updateUser(formData, user.id);
-      } else {
-        // Create new user
-        result = await registerUser(formData);
-      }
-
-      if (result) {
-        showSnackbar("Usuario guardado exitosamente", "success");
-        handleClick(); // Close form on success
-      } else {
-        showSnackbar("Error al guardar usuario", "error");
-      }
-    } catch (error) {
-      console.error("Error processing form:", error);
-      showSnackbar("Error al procesar el formulario", "error");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      formik.setFieldValue("image", file);
-      // Create preview URL
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
-    }
-  };
 
   const formik = useFormik<UserFormValues>({
     initialValues: {
@@ -130,9 +66,67 @@ const UserFormContainer: React.FC<UserFormContainerProps> = ({
       image: null,
     },
     enableReinitialize: true,
-    validationSchema: userSchema(!!user), //  pasa el booleano directamente
-    onSubmit,
+    validationSchema: userSchema(!!user),
+    onSubmit: async (values) => {
+      setIsSubmitting(true);
+
+      // Construir FormData limpio
+      const formData = new FormData();
+      formData.append("firstName", values.firstName.trim());
+      formData.append("lastName", values.lastName.trim());
+      formData.append("email", values.email.trim().toLowerCase());
+      formData.append("ci", values.ci.trim().toUpperCase()); // ✅ Bolivia: complemento alfanumérico
+      formData.append("phone", values.phone.trim());
+      formData.append("role", values.role);
+      formData.append("address", values.address.trim());
+
+      // Imagen:
+      // - si hay nueva -> manda file
+      // - si edit y no cambió -> conserva imageUrl
+      if (values.image) {
+        formData.append("image", values.image);
+      } else if (user?.imageUrl) {
+        formData.append("imageUrl", user.imageUrl);
+      }
+
+      // Llamada (service ya muestra sileo.success/error y retorna UserType | null)
+      let result: UserType | null = null;
+
+      if (user?.id) {
+        result = await updateUser(formData, user.id);
+      } else {
+        result = await registerUser(formData);
+      }
+
+      // ✅ Cerrar SOLO si fue exitoso
+      if (result) {
+        handleClick();
+        formik.resetForm();
+        setPreview(result.imageUrl ?? null);
+      }
+      // ❌ Si falla (null) NO cerramos. Sileo ya mostró el motivo.
+
+      setIsSubmitting(false);
+    },
   });
+
+  const handleFileChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      // Marcar touched para que Yup muestre error si aplica
+      formik.setFieldTouched("image", true, true);
+      formik.setFieldValue("image", file, true);
+
+      // Preview blob + cleanup del anterior blob
+      setPreview((prev) => {
+        if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(file);
+      });
+    },
+    [formik],
+  );
 
   return (
     <UserForm
@@ -141,8 +135,8 @@ const UserFormContainer: React.FC<UserFormContainerProps> = ({
       user={user}
       roles={roles}
       preview={preview}
-      formik={formik}
       setPreview={setPreview}
+      formik={formik}
       handleFileChange={handleFileChange}
       isSubmitting={isSubmitting}
     />

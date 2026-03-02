@@ -1,14 +1,26 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 import SectionCardContainer from "./card/SectionCardContainer";
 import destinationBackground from "../../../../assets/images/tourist.webp";
 
+// interface TouristDestinationSectionProps {
+//   touristDestinations: TouristDestinationType[];
+// }
+
 interface TouristDestinationSectionProps {
-  touristDestinations: TouristDestinationType[];
+  data: TouristDestinationType[]|null|undefined;
+  isLoading: boolean;
+  isError: boolean;
 }
+
 const TouristDestinationSection: React.FC<TouristDestinationSectionProps> = ({
-  touristDestinations,
+  data,
+  isLoading,
+  isError,
 }) => {
+// const TouristDestinationSection: React.FC<TouristDestinationSectionProps> = ({
+//   touristDestinations,
+  // }) => {
   return (
     <Box
       // id="destinos"
@@ -59,14 +71,15 @@ const TouristDestinationSection: React.FC<TouristDestinationSectionProps> = ({
             // p: "1rem 0 1rem 0"
           }}
         >
-          {touristDestinations
-            ? touristDestinations.map((touristDestination) => (
+          {isLoading && <CircularProgress />}
+          {isError && <p>Error al cargar los destinos</p>}
+          {data ? data.map((touristDestination) => (
                 <SectionCardContainer
                   key={touristDestination.id}
                   touristDestination={touristDestination}
                 />
-              ))
-            : null}
+          ))
+          : <p>No hay destinos</p>}
         </Box>
       </Box>
     </Box>

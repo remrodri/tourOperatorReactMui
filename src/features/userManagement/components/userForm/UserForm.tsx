@@ -14,10 +14,11 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { User } from "../../types/UserType";
-import { Role } from "../../types/RoleType";
+import { Close, CloudUpload } from "@mui/icons-material";
 import { FormikProps } from "formik";
-import { CloudUpload, Close } from "@mui/icons-material";
+
+import { UserType } from "../../types/UserType";
+import { RoleType } from "../../types/RoleType";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface UserFormValues {
@@ -36,12 +37,12 @@ interface UserFormValues {
 interface UserFormProps {
   open: boolean;
   handleClick: () => void;
-  user?: User;
-  roles: Role[];
+  user?: UserType;
+  roles: RoleType[];
   preview: string | null;
   setPreview: (url: string | null) => void;
   formik: FormikProps<UserFormValues>;
-  handleFileChange: any;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isSubmitting?: boolean;
 }
 
@@ -64,106 +65,116 @@ const UserForm: React.FC<UserFormProps> = ({
   roles,
   preview,
   formik,
-  setPreview,
   handleFileChange,
   isSubmitting = false,
 }) => {
   return (
     <Dialog
-      onClose={isSubmitting ? undefined : handleClick}
       open={open}
+      onClose={(event, reason) => {
+        if (isSubmitting) return;
+        if (reason === "backdropClick") return;
+        handleClick();
+      }}
       disableEscapeKeyDown={isSubmitting}
+      fullWidth
+      maxWidth="sm"
     >
-      {/* <DialogTitle>{user ? "Editar usuario" : "Nuevo usuario"}</DialogTitle> */}
       <TextType
         text={user ? "Editar usuario" : "Nuevo usuario"}
         as={DialogTitle}
-        typingSpeed={50}
-        pauseDuration={1000}
-        showCursor={true}
+        typingSpeed={40}
+        showCursor
         cursorCharacter="_"
-        deletingSpeed={50}
       />
+
+      {/* Botón cerrar */}
       <IconButton
-        autoFocus
         aria-label="close"
         onClick={handleClick}
-        sx={{
-          position: "absolute",
-          right: 12,
-          top: 12,
-        }}
+        disabled={isSubmitting}
+        sx={{ position: "absolute", right: 12, top: 12 }}
       >
         <Close />
       </IconButton>
+
       <DialogContent dividers>
-        <form
-          onSubmit={formik.handleSubmit}
-          style={{
-            padding: "0.3rem 0 0 0",
-          }}
-        >
+        <form onSubmit={formik.handleSubmit}>
+          {/* Nombre */}
           <TextField
-            sx={{ height: "70px" }}
-            size="small"
             fullWidth
+            size="small"
             label="Nombre(s)"
             {...formik.getFieldProps("firstName")}
             error={formik.touched.firstName && Boolean(formik.errors.firstName)}
             helperText={formik.touched.firstName && formik.errors.firstName}
             disabled={isSubmitting}
+            sx={{ mb: 2 }}
           />
+
+          {/* Apellido */}
           <TextField
-            sx={{ height: "70px" }}
-            size="small"
             fullWidth
+            size="small"
             label="Apellidos"
             {...formik.getFieldProps("lastName")}
             error={formik.touched.lastName && Boolean(formik.errors.lastName)}
             helperText={formik.touched.lastName && formik.errors.lastName}
             disabled={isSubmitting}
+            sx={{ mb: 2 }}
           />
+
+          {/* Email */}
           <TextField
-            sx={{ height: "70px" }}
-            size="small"
             fullWidth
-            label="Correo electronico"
+            size="small"
+            label="Correo electrónico"
             {...formik.getFieldProps("email")}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
             disabled={isSubmitting}
+            sx={{ mb: 2 }}
           />
+
+          {/* CI */}
           <TextField
-            sx={{ height: "70px" }}
-            size="small"
             fullWidth
-            label="Ci"
+            size="small"
+            label="CI"
             {...formik.getFieldProps("ci")}
             error={formik.touched.ci && Boolean(formik.errors.ci)}
             helperText={formik.touched.ci && formik.errors.ci}
             disabled={isSubmitting}
+            sx={{ mb: 2 }}
           />
+
+          {/* Teléfono */}
           <TextField
-            sx={{ height: "70px" }}
-            size="small"
             fullWidth
-            label="Telefono"
+            size="small"
+            label="Teléfono"
             {...formik.getFieldProps("phone")}
             error={formik.touched.phone && Boolean(formik.errors.phone)}
             helperText={formik.touched.phone && formik.errors.phone}
             disabled={isSubmitting}
+            sx={{ mb: 2 }}
           />
+
+          {/* Rol */}
           <FormControl
-            sx={{ height: "70px" }}
-            size="small"
             fullWidth
+            size="small"
+            sx={{ mb: 2 }}
             disabled={isSubmitting}
+            error={formik.touched.role && Boolean(formik.errors.role)}
           >
-            <InputLabel id="role">Rol</InputLabel>
+            <InputLabel>Rol</InputLabel>
             <Select
+              name="role"
               label="Rol"
-              {...formik.getFieldProps("role")}
-              error={formik.touched.role && Boolean(formik.errors.role)}
+              value={formik.values.role}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             >
               {roles.map((role) => (
                 <MenuItem key={role.id} value={role.id}>
@@ -171,77 +182,73 @@ const UserForm: React.FC<UserFormProps> = ({
                 </MenuItem>
               ))}
             </Select>
+            {formik.touched.role && formik.errors.role && (
+              <Typography color="error" fontSize={12} mt={0.5}>
+                {formik.errors.role}
+              </Typography>
+            )}
           </FormControl>
+
+          {/* Dirección */}
           <TextField
-            sx={{
-              height: "70px",
-            }}
-            size="small"
             fullWidth
-            label="Direccion"
+            size="small"
+            label="Dirección"
             {...formik.getFieldProps("address")}
             error={formik.touched.address && Boolean(formik.errors.address)}
             helperText={formik.touched.address && formik.errors.address}
             disabled={isSubmitting}
+            sx={{ mb: 2 }}
           />
-          <Box sx={{ height: "70px", display: "flex" }}>
-            <Box sx={{ height: "100%", width: "50%" }}>
+
+          {/* Imagen */}
+          <Box display="flex" alignItems="center" gap={2} mb={2}>
+            <label htmlFor="image">
               <VisuallyHiddenInput
-                type="file"
                 id="image"
-                name="image"
+                type="file"
                 accept="image/*"
                 onChange={handleFileChange}
                 disabled={isSubmitting}
               />
-              <label htmlFor="image">
-                <Button
-                  variant="contained"
-                  component="span"
-                  startIcon={<CloudUpload />}
-                  disabled={isSubmitting}
-                >
-                  Subir imagen
-                </Button>
-              </label>
-              {formik.touched.image && formik.errors.image && (
-                <Typography
-                  color="error"
-                  sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
-                >
-                  {String(formik.errors.image)}
-                </Typography>
-              )}
-            </Box>
-            {preview && (
-              <Box
-                sx={{
-                  width: "50%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
+              <Button
+                variant="contained"
+                component="span"
+                startIcon={<CloudUpload />}
+                disabled={isSubmitting}
               >
-                <img
-                  src={preview}
-                  alt="Vista previa"
-                  style={{
-                    width: "65px",
-                    height: "65px",
-                    objectFit: "cover",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc",
-                  }}
-                />
-              </Box>
+                Subir imagen
+              </Button>
+            </label>
+
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                style={{
+                  width: 64,
+                  height: 64,
+                  objectFit: "cover",
+                  borderRadius: 8,
+                  border: "1px solid #ccc",
+                }}
+              />
             )}
           </Box>
-          <Box sx={{ pt: "2rem", display: "flex", gap: "1rem" }}>
+
+          {formik.touched.image && formik.errors.image && (
+            <Typography color="error" fontSize={12} mb={2}>
+              {String(formik.errors.image)}
+            </Typography>
+          )}
+
+          {/* Botones */}
+          <Box display="flex" gap={2} mt={3}>
             <Button
-              variant="contained"
-              color="success"
               type="submit"
               fullWidth
+              variant="contained"
+              color="success"
               disabled={isSubmitting}
               startIcon={
                 isSubmitting ? (
@@ -255,10 +262,11 @@ const UserForm: React.FC<UserFormProps> = ({
                   ? "Actualizar"
                   : "Registrar"}
             </Button>
+
             <Button
+              fullWidth
               variant="contained"
               color="error"
-              fullWidth
               onClick={handleClick}
               disabled={isSubmitting}
             >

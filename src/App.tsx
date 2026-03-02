@@ -16,6 +16,9 @@ import "@fontsource/montserrat/800.css";
 import "video.js/dist/video-js.css";
 
 import { Toaster } from "sileo";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const darkTheme = createTheme({
   palette: {
@@ -47,7 +50,9 @@ function App() {
         />
         {/* RouterProvider debe ir ANTES que AppProviders */}
         {/* <AppProviders> */}
+        <QueryClientProvider client={queryClient}>
         <RouterProvider router={AppRouter} />
+        </QueryClientProvider>
         {/* Ahora todos los providers pueden usar hooks de React Router */}
         {/* <AppProviders> */}
         {/* El contenido se renderiza a través de las rutas */}
