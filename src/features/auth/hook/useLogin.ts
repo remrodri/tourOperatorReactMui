@@ -3,7 +3,7 @@ import { authService } from "../service/authService";
 import axios from "axios";
 import { TokenService } from "../../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../../userManagement/types/UserType";
+import { UserType } from "../../userManagement/types/UserType";
 import { useRoleContext } from "../../Role/context/RoleContext";
 import { sileo } from "sileo";
 
@@ -33,7 +33,7 @@ export const useLogin = () => {
       }
 
       TokenService.saveToken(token);
-      const user: User = jwtDecode(token);
+      const user: UserType = jwtDecode(token);
 
       if (user.firstLogin) {
         navigate("configuracion-de-seguridad/actualizar-contraseña");

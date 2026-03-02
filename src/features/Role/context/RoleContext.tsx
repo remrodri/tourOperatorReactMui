@@ -5,15 +5,15 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Role } from "../../userManagement/types/RoleType";
+import { RoleType } from "../../userManagement/types/RoleType";
 import { roleService } from "../service/roleService";
 import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface RoleContextType {
-  roles: Role[];
+  roles: RoleType[];
   loading: boolean;
   // error: string | null;
-  getRoleById: (id: string) => Role;
+  getRoleById: (id: string) => RoleType;
 }
 
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
@@ -21,9 +21,9 @@ const RoleContext = createContext<RoleContextType | undefined>(undefined);
 export const RoleProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [roles, setRoles] = useState<Role[]>([]);
+  const [roles, setRoles] = useState<RoleType[]>([]);
   const { showSnackbar } = useNewSnackbar();
-  const DEFAULT_ROLE: Role = {
+  const DEFAULT_ROLE: RoleType = {
     id: "default",
     name: "Sin Rol",
   };
