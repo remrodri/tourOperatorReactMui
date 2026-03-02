@@ -50,7 +50,7 @@ const BookingSearchByCodeContainer: React.FC<
       searchValue={searchValue}
       onChange={setSearchValue}
       onSearch={handleSearch}
-      onClear={handleClear}
+      // onClear={handleClear}
     />
   );
 };

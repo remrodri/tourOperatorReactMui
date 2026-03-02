@@ -51,7 +51,6 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   // const [loading, setLoading] = useState(false);
   const { showSnackbar } = useNewSnackbar();
 
-  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
 
   // const openMenu = Boolean(anchor);
 
@@ -79,9 +78,9 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   const handleClickConfirmation = () => {
     // console.log("booking::: ", booking);
     cancelBooking(
-      currentBooking?.id!,
-      currentBooking?.cancellationFee!,
-      currentBooking?.refundAmount!,
+      currentBooking!.id!,
+      currentBooking!.cancellationFee!,
+      currentBooking!.refundAmount!,
       new Date()
     );
     setOpenConfirmation(false);
