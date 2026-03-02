@@ -6,7 +6,6 @@ import {
   Box,
   Stack,
   Divider,
-  Chip,
   Grid,
   Button,
 } from "@mui/material";
@@ -14,12 +13,11 @@ import { BookingType } from "../../../types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import { DateRangeType } from "../../../../tourPackage/types/DateRangeType";
 import { TouristType } from "../../../types/TouristType";
-import { PaymentType } from "../../../types/PaymentType";
-import { User } from "../../../../userManagement/types/UserType";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import BookingProofPDF from "../../pdf/BookingProofPDF";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
+import { UserType } from "../../../../userManagement/types/UserType";
 
 dayjs.extend(timezone);
 
@@ -30,7 +28,7 @@ interface BookingProofDialogProps {
   tourPackage: TourPackageType | null;
   tourists: TouristType[];
   dateRange: DateRangeType | null;
-  seller: User | null;
+  seller: UserType | null;
 }
 const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
   open,
@@ -56,12 +54,12 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
             </Typography>
 
             <Grid container spacing={1}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <Typography fontWeight="bold">Código:</Typography>
                 <Typography>{booking?.bookingCode}</Typography>
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <Typography fontWeight="bold">Fecha de creación:</Typography>
                 <Typography>
                   {dayjs(booking!.createdAt)
@@ -85,22 +83,22 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
             </Typography>
 
             <Grid container spacing={1}>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Typography fontWeight="bold">Nombre:</Typography>
                 <Typography>{tourPackage?.name}</Typography>
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <Typography fontWeight="bold">Fecha inicio:</Typography>
                 <Typography>{dateRange?.dates?.[0]}</Typography>
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <Typography fontWeight="bold">Fecha fin:</Typography>
                 <Typography>{dateRange?.dates?.at(-1)}</Typography>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Typography fontWeight="bold">Precio total:</Typography>
                 <Typography>{booking?.totalPrice.toFixed(2)} Bs</Typography>
               </Grid>
@@ -167,19 +165,19 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
               </Typography>
 
               <Grid container spacing={1}>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography fontWeight="bold">Monto:</Typography>
                   <Typography>
                     {booking!.payments[0].amount.toFixed(2)} Bs
                   </Typography>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography fontWeight="bold">Fecha:</Typography>
                   <Typography>{booking!.payments[0].paymentDate}</Typography>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography fontWeight="bold">Método:</Typography>
                   <Typography>
                     {booking!.payments[0].paymentMethod === "cash"
@@ -188,7 +186,7 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
                   </Typography>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography fontWeight="bold">Saldo restante:</Typography>
                   <Typography>
                     {(
@@ -228,7 +226,7 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
                   // cancellationPolicy={cancellationPolicy}
                   // tourType={tourType}
                   // touristDestination={touristDestination!}
-                  payments={booking?.payments!}
+                  payments={booking?.payments || []}
                   tourists={tourists}
                   dateRange={dateRange}
                   // guides={guides}
@@ -237,7 +235,7 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
               }
               fileName={`RESERVA-${booking!.bookingCode}.pdf`}
             >
-              {({ blob, loading, error }) => (
+              {({ loading }) => (
                 <Button variant="contained">
                   {loading ? "Generando PDF..." : "Generar PDF"}
                 </Button>

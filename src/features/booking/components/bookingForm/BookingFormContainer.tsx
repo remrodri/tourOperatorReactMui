@@ -3,7 +3,7 @@ import { BookingType } from "../../types/BookingType";
 import { TouristType } from "../../types/TouristType";
 import BookingForm from "./BookingForm";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
-import { ChangeEvent, useEffect, useState, useCallback, useRef } from "react";
+import { ChangeEvent, useEffect, useState, useRef } from "react";
 import { TourPackageType } from "../../../tourPackage/types/TourPackageType";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
@@ -66,7 +66,7 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
   booking,
   setBookingProof,
 }) => {
-  console.log("booking::: ", booking);
+  // console.log("booking::: ", booking);
   const { getTouristInfoByIds, tourists } = useTouristContext();
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
@@ -203,6 +203,8 @@ const BookingFormContainer: React.FC<BookingFormProps> = ({
     formik.values.additionalTourists,
     formik.values.mainTourist,
     tourPackageSelected,
+    // calculateTotalPrice,
+    // formik,
   ]);
 
   const handleTourPackageChange = (value: string) => {

@@ -86,7 +86,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   handleTourPackageChange,
   tourPackages,
   dateRanges,
-  selectedTourPackage,
+  // selectedTourPackage,
   handleDateRangeChange,
   handlePaymentChange,
   handleFileChange,

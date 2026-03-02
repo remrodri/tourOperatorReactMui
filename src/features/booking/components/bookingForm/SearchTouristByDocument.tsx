@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Document } from "@react-pdf/renderer";
 
 interface SearchTouristByDocumentProps {
   open: boolean;
