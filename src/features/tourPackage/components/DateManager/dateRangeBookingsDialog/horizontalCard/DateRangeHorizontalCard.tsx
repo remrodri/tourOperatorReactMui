@@ -1,4 +1,4 @@
-import { Box, Card, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { TouristType } from "../../../../../booking/types/TouristType";
 import { SettingsOverscan } from "@mui/icons-material";
 

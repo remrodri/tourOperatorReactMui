@@ -16,7 +16,7 @@ const EditTouristFormContainer: React.FC<EditTouristFormContainerProps> = ({
   handleClose,
   tourist,
 }) => {
-  const { updateTourist, updateOnlyTourist } = useTouristContext();
+  const { updateOnlyTourist } = useTouristContext();
 
   const onSubmit = (values: TouristType) => {
     console.log("values::: ", values);

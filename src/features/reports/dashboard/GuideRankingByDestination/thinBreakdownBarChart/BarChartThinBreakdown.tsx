@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import { GuideStatsType } from "../../../context/DashboardContext";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { Avatar, Box } from "@mui/material";
@@ -18,28 +18,34 @@ const colorPalette = [
 
 interface BarChartThinBreakdownProps {
   data: GuideStatsType;
-  maxValue: number;
 }
+
+type ThinBarItem = {
+  key: string;
+  value: number;
+  color: string;
+  img: string;
+};
 
 const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
   data,
-  maxValue,
 }) => {
-  const [newData, setNewData] = useState<any[]>([]);
+  const [newData, setNewData] = useState<ThinBarItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const addColorToData = (data: GuideStatsType) => {
-    const updatedData: any[] = [];
-    data.destinations.forEach((destination, index) => {
-      const color = colorPalette[index % colorPalette.length]; // asigna color por índice
-      updatedData.push({
-        key: destination.destinationName,
-        value: destination.count,
-        color,
-        img: data.guideImage,
-      });
-    });
-    setNewData(updatedData);
+  const addColorToData = (incoming: GuideStatsType) => {
+    const updated: ThinBarItem[] = incoming.destinations.map(
+      (destination, index) => {
+        const color = colorPalette[index % colorPalette.length];
+        return {
+          key: destination.destinationName,
+          value: destination.count,
+          color,
+          img: incoming.guideImage,
+        };
+      },
+    );
+    setNewData(updated);
   };
 
   useEffect(() => {
@@ -51,15 +57,30 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
     addColorToData(data);
   }, [data]);
 
-  const gap = 0.3;
-  const totalValue = newData.reduce((acc: any, d: any) => acc + d.value, 0);
   const barHeight = 12;
-  let cumulativeWidth = 0;
   const cornerRadius = 4;
 
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
+  const totalValue = useMemo(
+    () => newData.reduce((acc, d) => acc + d.value, 0),
+    [newData],
+  );
+
+  // ✅ Precalculamos width y x sin mutar variables durante el render
+  const bars = useMemo(() => {
+    if (totalValue <= 0) return [];
+
+    type BarComputed = ThinBarItem & { width: number; x: number };
+
+    return newData.reduce<BarComputed[]>((acc, d) => {
+      const width = (d.value / totalValue) * 100;
+      const prev = acc[acc.length - 1];
+      const x = prev ? prev.x + prev.width : 0;
+      acc.push({ ...d, width, x });
+      return acc;
+    }, []);
+  }, [newData, totalValue]);
+
+  if (loading) return <div>Cargando...</div>;
 
   return (
     <div
@@ -83,61 +104,54 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
           overflow-visible
         "
       >
-        {newData.map((d: any, index: number) => {
-          const barWidth = (d.value / totalValue) * 100;
-          const xPosition = cumulativeWidth;
-          cumulativeWidth += barWidth;
-
-          return (
-            <Box key={index}>
-              <ClientTooltip>
-                <TooltipTrigger>
+        {bars.map((d, index) => (
+          <Box key={d.key ?? index}>
+            <ClientTooltip>
+              <TooltipTrigger>
+                <div
+                  className="relative"
+                  style={{
+                    width: `calc(${d.width}% - ${index < bars.length - 1 ? 1 : 0}px)`,
+                    height: `${barHeight}px`,
+                    left: `${d.x}%`,
+                    position: "absolute",
+                  }}
+                >
                   <div
-                    className="relative"
+                    className={`bg-gradient-to-b ${d.color}`}
                     style={{
-                      width: `calc(${barWidth}% - ${
-                        index < newData.length - 1 ? 1 : 0
-                      }px)`,
-                      height: `${barHeight}px`,
-                      left: `${xPosition}%`,
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: `${cornerRadius}px`,
+                      marginRight: "4px",
+                    }}
+                  />
+                  <div
+                    className="text-xs text-white text-center"
+                    style={{
+                      left: "50%",
+                      top: `${barHeight + 5}px`,
+                      transform: "translateX(-50%)",
                       position: "absolute",
                     }}
                   >
-                    <div
-                      className={`bg-gradient-to-b ${d.color}`}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: `${cornerRadius}px`,
-                        marginRight: "4px",
-                      }}
-                    />
-                    <div
-                      className="text-xs text-white text-center"
-                      style={{
-                        left: "50%",
-                        top: `${barHeight + 5}px`,
-                        transform: "translateX(-50%)",
-                        position: "absolute",
-                      }}
-                    >
-                      {d.key}
-                    </div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="flex items-center gap-2">
-                    <Avatar src={d.img} />
                     {d.key}
                   </div>
-                  <div className="text-gray-500 dark:text-zinc-400 text-sm">
-                    Cantidad de viajes: {d.value}
-                  </div>
-                </TooltipContent>
-              </ClientTooltip>
-            </Box>
-          );
-        })}
+                </div>
+              </TooltipTrigger>
+
+              <TooltipContent>
+                <div className="flex items-center gap-2">
+                  <Avatar src={d.img} />
+                  {d.key}
+                </div>
+                <div className="text-gray-500 dark:text-zinc-400 text-sm">
+                  Cantidad de viajes: {d.value}
+                </div>
+              </TooltipContent>
+            </ClientTooltip>
+          </Box>
+        ))}
       </div>
     </div>
   );

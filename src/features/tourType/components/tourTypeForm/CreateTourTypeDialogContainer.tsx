@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CreateTourTypeDialog from "./CreateTourTypeDialog";
 import { useTourTypeContext } from "../../context/TourTypeContext";
 import { useFormik } from "formik";
 import { tourTypeSchema } from "./validation/tourTypeSchema";
-import NewSnackbar from "../../../../utils/snackbar/GlobalSnackbar";
+// import NewSnackbar from "../../../../utils/snackbar/GlobalSnackbar";
 
 interface CreateTourTypeDialogContainerProps {
   open: boolean;
@@ -35,7 +36,7 @@ const CreateTourTypeDialogContainer: React.FC<
         handleClick={handleClick}
         formik={formik}
       />
-      <NewSnackbar />
+      {/* <NewSnackbar /> */}
     </>
   );
 };

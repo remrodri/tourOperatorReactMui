@@ -15,7 +15,7 @@ const TourTypeShowcase: React.FC<TourTypeShowcaseProps> = ({
   // styles,
 }) => {
   // const { openDialog, handleClick, tourTypes } = useTourTypeContext();
-  const { openDialog, tourTypes } = useTourTypeContext();
+  const {tourTypes } = useTourTypeContext();
 
   return (
     // <Fade in={true} timeout={1000}>

@@ -13,14 +13,14 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Tooltip, useMediaQuery } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ExploreIcon from "@mui/icons-material/Explore";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import { TokenService } from "../../utils/tokenService";
 import { jwtDecode } from "jwt-decode";
 import { useRoleContext } from "../../features/Role/context/RoleContext";
-import { User } from "../../features/userManagement/types/UserType";
+import { UserType } from "../../features/userManagement/types/UserType";
 import MainAppBar from "./MainAppBar";
 // import { AppBarStyle } from "./MainLayout";
 import TextType from "../../TextAnimations/TextType/TextType";
@@ -97,19 +97,19 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const matches = useMediaQuery(theme.breakpoints.down("sm"));
-  const [showOutlet, setShowOutlet] = useState(false);
+  // const matches = useMediaQuery(theme.breakpoints.down("sm"));
+  // const [showOutlet, setShowOutlet] = useState(false);
   const location = useLocation();
 
-  useEffect(() => {
-    setShowOutlet(false);
-    const timer = setTimeout(() => {
-      setShowOutlet(true);
-    }, 200);
+  // useEffect(() => {
+  //   setShowOutlet(false);
+  //   const timer = setTimeout(() => {
+  //     setShowOutlet(true);
+  //   }, 200);
 
-    // Limpieza del timer cuando el componente se desmonte
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
+  //   // Limpieza del timer cuando el componente se desmonte
+  //   return () => clearTimeout(timer);
+  // }, [location.pathname]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -159,7 +159,7 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
         navigate("*");
         break;
     }
-    matches && setOpen(false);
+    // matches && setOpen(false);
   }
 
   useEffect(() => {
@@ -178,7 +178,7 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
 
   const [roleName, setRoleName] = useState<string>("");
   const token = TokenService.getToken();
-  const user: User = jwtDecode(token as string);
+  const user: UserType = jwtDecode(token as string);
   const { getRoleById } = useRoleContext();
   const getRoleName = () => {
     const role = getRoleById(user.role);

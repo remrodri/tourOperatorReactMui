@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createContext,
   ReactNode,
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
-import { TouristType } from "../../booking/types/TouristType";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
+
+import type { TouristType } from "../../booking/types/TouristType";
 import {
   getAllTouristsRequest,
   updateTouristRequest,
@@ -16,191 +18,148 @@ type TouristContextType = {
   tourists: TouristType[];
   loading: boolean;
   error: string | null;
-  touristFound: TouristType | null;
+
   fetchTourists: () => Promise<void>;
-  // getTouristById: (id: string) => TouristType | null;
-  getTouristInfoByIds: (id: string[]) => TouristType[];
-  addTouristFromBooking: (tourist: any) => TouristType;
-  updateTourist: (tourist: TouristType) => void;
-  handleTouristBookingIds: (tourist: TouristType, bookingId: string) => void;
+
   getTouristInfoById: (id: string) => TouristType | null;
-  updateOnlyTourist: (touristValues: TouristType) => void;
+  getTouristInfoByIds: (ids: string[]) => TouristType[];
+
+  addTouristFromBooking: (tourist: TouristType) => TouristType;
+  updateOnlyTourist: (
+    touristValues: TouristType,
+  ) => Promise<TouristType | null>;
 };
 
-const TouristContext = createContext<TouristContextType | null>(null);
+const TouristContext = createContext<TouristContextType | undefined>(undefined);
 
 export const useTouristContext = () => {
   const context = useContext(TouristContext);
-  if (!context) {
-    throw new Error("useTouristContext must be used within a touristProvider");
+  if (context === undefined) {
+    throw new Error(
+      "useTouristContext debe ser usado dentro de TouristProvider",
+    );
   }
   return context;
 };
 
-type TouristProviderProps = {
-  children: ReactNode;
-};
-
-export const TouristProvider: React.FC<TouristProviderProps> = ({
+export const TouristProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [tourists, setTourists] = useState<TouristType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { showSnackbar } = useNewSnackbar();
-  const [touristFound, setTouristFound] = useState<TouristType | null>(null);
 
-  const getTouristInfoById = (id: string): TouristType | null => {
-    // console.log('id::: ', id);
-    const touristFound = tourists.find((tourist) => tourist.id === id);
-    if (!touristFound) {
-      return null;
-    }
-    return touristFound;
-  };
+  // ✅ helper por si viene _id
+  const getId = (t: any) => t?.id ?? t?._id;
 
-  const handleTouristBookingIds = (tourist: TouristType, bookingId: string) => {
-    // console.log('tourist::: ', tourist);
-    // console.log('bookingId::: ', bookingId);
-    //   if (!tourist.bookingIds) {
-    //     tourist.bookingIds=[];
-    //   }
-    //   const updatedTourist={...tourist,bookingIds:[...tourist.bookingIds!,bookingId]}
-    //   updateTourist(updatedTourist);
-    //   return updatedTourist
-  };
+  const transformApiTourist = useCallback(
+    (t: any): TouristType => ({
+      id: getId(t),
+      firstName: t.firstName,
+      lastName: t.lastName,
+      email: t.email,
+      phone: t.phone,
+      ci: t.ci,
+      nationality: t.nationality,
+      dateOfBirth: t.dateOfBirth,
+      passportNumber: t.passportNumber,
+      documentType: t.documentType,
+      bookingIds: t.bookingIds ?? [],
+    }),
+    [],
+  );
 
-  const updateTourist = (tourist: TouristType) => {
-    if (!tourists.find((prevTourist) => prevTourist.id === tourist.id)) {
-      setTourists((prevTourists) => [...prevTourists, tourist]);
-      // showSnackbar("Turista actualizado exitosamente", "success");
-    } else {
-      setTourists((prevTourists) =>
-        prevTourists
-          .map((prevTourist) => {
-            return prevTourist.id === tourist?.id
-              ? {
-                  ...prevTourist,
-                  tourPackageId: tourist.id,
-                  bookingIds: tourist.bookingIds,
-                  documentType: tourist.documentType,
-                  firstName: tourist.firstName,
-                  lastName: tourist.lastName,
-                  phone: tourist.phone,
-                  ci: tourist.ci,
-                  nationality: tourist.nationality,
-                  dateOfBirth: tourist.dateOfBirth,
-                  passportNumber: tourist.passportNumber,
-                }
-              : prevTourist;
-          })
-          .filter((tourist) => tourist !== null)
-      );
-    }
-    showSnackbar("Turista actualizado exitosamente", "success");
-  };
-
-  const updateOnlyTourist = async (touristValues: TouristType) => {
-    const touristToUpdate = transformApiTourist(touristValues);
-    const response = await updateTouristRequest(touristToUpdate);
-    if (!response) {
-      showSnackbar("Error al actualizar turista", "error");
-      return;
-    }
-    setTourists((prevTourists) =>
-      prevTourists.map((prevTourist) =>
-        prevTourist.id === touristToUpdate.id ? response : prevTourist
-      )
-    );
-    showSnackbar("Turista actualizado exitosamente", "success");
-
-    return response;
-  };
-
-  const addTouristFromBooking = (tourist: any) => {
-    if (!tourists.find((prevTourist) => prevTourist.id === tourist.id)) {
-      const touristData = transformApiTourist(tourist);
-      setTourists((prevTourists) => [...prevTourists, touristData]);
-      return touristData;
-    }
-    const touristData = transformApiTourist(tourist);
-    setTourists((prevTourists) =>
-      prevTourists
-        .map((prevTourist) => {
-          return prevTourist.id === tourist?.id
-            ? {
-                ...prevTourist,
-                id: tourist.id,
-                bookingIds: tourist.bookingIds,
-                documentType: tourist.documentType,
-                firstName: tourist.firstName,
-                lastName: tourist.lastName,
-                phone: tourist.phone,
-                ci: tourist.ci,
-                nationality: tourist.nationality,
-                dateOfBirth: tourist.dateOfBirth,
-                passportNumber: tourist.passportNumber,
-              }
-            : prevTourist;
-        })
-        .filter((tourist) => tourist !== null)
-    );
-    return touristData;
-  };
-
-  const getTouristInfoByIds = (ids: string[]): TouristType[] => {
-    return ids && ids.length > 0
-      ? tourists.filter((tourist) => ids.includes(tourist.id!))
-      : [];
-  };
-
-  // const getTouristById = (id: string): TouristType | null => {
-  //   const touristFound = tourists.find((tourist) => tourist.id === id);
-  //   if (!touristFound) {
-  //     showSnackbar("No se encontro al turista", "error");
-  //     return null;
-  //   }
-  //   // setTouristFound(touristFound || null);
-  //   return touristFound;
-  // };
-
-  const fetchTourists = async (): Promise<void> => {
+  const fetchTourists = useCallback(async (): Promise<void> => {
     setLoading(true);
     try {
-      const response = await getAllTouristsRequest();
-      const touristData = response.data ? response.data : response;
-      // console.log('touristData::: ', touristData);
-      const transformedTourists = touristData.map(transformApiTourist);
-      // console.log('transformedTourists::: ', transformedTourists);
-      setTourists(transformedTourists);
+      const list = await getAllTouristsRequest();
+
+      if (!list) {
+        setTourists([]);
+        setError("No se pudieron cargar los turistas");
+        return;
+      }
+
+      setTourists(list.map(transformApiTourist));
       setError(null);
-    } catch (error) {
-      console.error("Error fetching tourists", error);
-      setError("Failed to fetch tourists");
-      showSnackbar("Error al cargar turistas", "error");
+    } catch (err) {
+      console.error("Error fetching tourists:", err);
+      setError("Error al cargar turistas");
     } finally {
       setLoading(false);
     }
-  };
-  const transformApiTourist = (touristData: any): TouristType => {
-    return {
-      id: touristData.id,
-      firstName: touristData.firstName,
-      lastName: touristData.lastName,
-      email: touristData.email,
-      phone: touristData.phone,
-      ci: touristData.ci,
-      nationality: touristData.nationality,
-      dateOfBirth: touristData.dateOfBirth,
-      passportNumber: touristData.passportNumber,
-      documentType: touristData.documentType,
-      bookingIds: touristData.bookingIds,
-    };
-  };
+  }, [transformApiTourist]);
+
   useEffect(() => {
     fetchTourists();
-    // console.log('::: ', );
-  }, []);
+  }, [fetchTourists]);
+
+  const getTouristInfoById = useCallback(
+    (id: string): TouristType | null => {
+      if (!id) return null;
+      return tourists.find((t) => t.id === id) ?? null;
+    },
+    [tourists],
+  );
+
+  const getTouristInfoByIds = useCallback(
+    (ids: string[]): TouristType[] => {
+      if (!ids?.length) return [];
+      return tourists.filter((t) => ids.includes(t.id!));
+    },
+    [tourists],
+  );
+
+  /**
+   * ✅ Se usa cuando el backend devuelve turistas al crear una booking
+   * - agrega si no existe
+   * - actualiza si ya existe
+   */
+  const addTouristFromBooking = useCallback(
+    (tourist: TouristType): TouristType => {
+      const touristData = transformApiTourist(tourist);
+
+      setTourists((prev) => {
+        const exists = prev.find((t) => t.id === touristData.id);
+        if (!exists) return [...prev, touristData];
+
+        return prev.map((t) => (t.id === touristData.id ? touristData : t));
+      });
+
+      return touristData;
+    },
+    [transformApiTourist],
+  );
+
+  /**
+   * ✅ Actualiza turista en backend
+   * El service ya maneja sileo
+   */
+  const updateOnlyTourist = useCallback(
+    async (touristValues: TouristType): Promise<TouristType | null> => {
+      const payload = transformApiTourist(touristValues);
+
+      try {
+        const updated = await updateTouristRequest(payload);
+        if (!updated) {
+          setError("No se pudo actualizar el turista");
+          return null;
+        }
+
+        setTourists((prev) =>
+          prev.map((t) => (t.id === payload.id ? updated : t)),
+        );
+
+        setError(null);
+        return updated;
+      } catch (err) {
+        console.error("Error updating tourist:", err);
+        setError("Error al actualizar turista");
+        return null;
+      }
+    },
+    [transformApiTourist],
+  );
 
   return (
     <TouristContext.Provider
@@ -208,14 +167,10 @@ export const TouristProvider: React.FC<TouristProviderProps> = ({
         tourists,
         loading,
         error,
-        // getTouristById,
-        touristFound,
-        getTouristInfoByIds,
         fetchTourists,
-        addTouristFromBooking,
-        updateTourist,
-        handleTouristBookingIds,
         getTouristInfoById,
+        getTouristInfoByIds,
+        addTouristFromBooking,
         updateOnlyTourist,
       }}
     >

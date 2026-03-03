@@ -1,12 +1,12 @@
-import { Role } from "../../types/RoleType";
-import { User } from "../../types/UserType";
+import { RoleType } from "../../types/RoleType";
+import { UserType } from "../../types/UserType";
 import MoreInfoModal from "./MoreInfoModal";
 
 interface MoreInfoModalContainerProps {
   open: boolean;
   handleMoreInfoClick: () => void;
-  user: User;
-  userRole: Role;
+  user: UserType;
+  userRole: RoleType;
 }
 
 const MoreInfoModalContainer: React.FC<MoreInfoModalContainerProps> = ({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -18,12 +19,12 @@ import DayItineraryManager from "../itineraryManager/DayItineraryManager";
 import { TourItineraryType } from "../../types/DayItineraryType";
 import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
 import { DateRangeType } from "../../types/DateRangeType";
-import { User } from "../../../userManagement/types/UserType";
+import { UserType } from "../../../userManagement/types/UserType";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { Close } from "@mui/icons-material";
 
 interface TourPackageFormProps {
-  guides: User[];
+  guides: UserType[];
   open: boolean;
   handleClick: () => void;
   formik: FormikProps<{
@@ -270,7 +271,7 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
             <DateSelectorContainer
               guides={guides}
               duration={formik.values.duration}
-              dateRanges={formik.values.dateRanges}
+              // dateRanges={formik.values.dateRanges}
               // blockedDates={formik.values.blockedDates}
               onDateChange={(dates: any) =>
                 formik.setFieldValue("dateRanges", dates)

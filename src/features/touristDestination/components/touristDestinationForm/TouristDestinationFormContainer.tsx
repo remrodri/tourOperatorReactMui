@@ -23,19 +23,21 @@ const TouristDestinationFormContainer: React.FC<
   TouristDestinationFormContainerProps
   > = ({ open, handleClick, touristDestination }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [existingImages, setExistingImages] = useState<string[]>(
-    touristDestination?.images.filter(
-      (img): img is string => typeof img === "string"
-    ) || []
-  );
+  // const [existingImages, setExistingImages] = useState<string[]>(
+  //   touristDestination?.images.filter(
+  //     (img): img is string => typeof img === "string"
+  //   ) || []
+  // );
   const { createTouristDestination, updateTouristDestination } =
     useTouristDestinationContext();
 
   const onSubmit = (values: TouristDestinationFormValues) => {
     // console.log("values::: ", values);
-    touristDestination
-      ? updateTouristDestination(values)
-      : createTouristDestination(values);
+    if (touristDestination) {
+      updateTouristDestination(values);
+    } else {
+      createTouristDestination(values);
+    }
     handleClick();
   };
 

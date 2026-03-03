@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TokenService } from "../../../../../utils/tokenService";
+// import { TokenService } from "../../../../../utils/tokenService";
 import { securitySetupService } from "../../../service/securitySetupService";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,7 @@ export const useResetPassword = () => {
       navigate(`../respuesta-de-seguridad/${userId}`);
       // console.log("response::: ", response);
     } catch (error) {
+      console.error(error);
       setError("Error al obtener la pregunta de seguridad");
     }
   };
@@ -50,6 +51,7 @@ export const useResetPassword = () => {
       }
       setQuestion(response.data);
     } catch (error) {
+      console.error(error);
       setError("Error al obtener la pregunta de seguridad");
     }
   };
@@ -73,6 +75,7 @@ export const useResetPassword = () => {
       }
       navigate(`../actualizar-contraseña/${answer.userId}`);
     } catch (error) {
+      console.error(error);
       setError("Error al revisar la respuesta de seguridad");
     }
   };

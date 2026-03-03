@@ -6,7 +6,7 @@ import type { ApiResponse } from "../../../types/api";
 
 import type { DateRangeType } from "../../tourPackage/types/DateRangeType";
 
-const url = "/date-ranges"; // <-- AJUSTA si tu backend usa otro endpoint
+const url = "/date-range"; // <-- AJUSTA si tu backend usa otro endpoint
 
 /**
  * Extrae un mensaje "humano" desde cualquier payload del backend

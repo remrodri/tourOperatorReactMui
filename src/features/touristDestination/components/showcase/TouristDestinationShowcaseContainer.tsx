@@ -2,7 +2,7 @@ import { useState } from "react";
 import TouristDestinationShowcase from "./TouristDestinationShowcase";
 import TouristDestinationFormContainer from "../touristDestinationForm/TouristDestinationFormContainer";
 import { useTouristDestinationContext } from "../../context/TouristDestinationContext";
-import { Box, Fade } from "@mui/material";
+import { Box } from "@mui/material";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 
 const TouristDestinationShowcaseContainer: React.FC = () => {

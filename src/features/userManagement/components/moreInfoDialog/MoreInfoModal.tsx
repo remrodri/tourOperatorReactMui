@@ -4,21 +4,20 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
   Typography,
 } from "@mui/material";
-import { User } from "../../types/UserType";
-import { Role } from "../../types/RoleType";
+import { UserType } from "../../types/UserType";
+import { RoleType } from "../../types/RoleType";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { Close } from "@mui/icons-material";
 
 interface MoreInfoModalProps {
   open: boolean;
   handleMoreInfoClick: () => void;
-  user: User;
-  userRole: Role;
+  user: UserType;
+  userRole: RoleType;
 }
 
 const MoreInfoModal: React.FC<MoreInfoModalProps> = ({

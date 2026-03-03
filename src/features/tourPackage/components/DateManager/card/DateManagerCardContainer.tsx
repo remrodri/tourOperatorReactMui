@@ -2,7 +2,7 @@ import DateManagerCard from "./DateManagerCard";
 import { DateRangeType } from "../../../types/DateRangeType";
 // import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 import { useUserContext } from "../../../../userManagement/context/UserContext";
-import { User } from "../../../../userManagement/types/UserType";
+import { UserType } from "../../../../userManagement/types/UserType";
 import { useEffect, useState } from "react";
 import { useBookingContext } from "../../../../booking/context/BookingContext";
 import ConfirmationModal from "./ConfirmationModal";
@@ -25,7 +25,7 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
 }) => {
   const { getUserById } = useUserContext();
   const { getTouristCounterByDateRangeId } = useBookingContext();
-  const [guides, setGuides] = useState<User[]>([]);
+  const [guides, setGuides] = useState<UserType[]>([]);
   const [touristCounter, setTouristCounter] = useState<number>(0);
 
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
@@ -93,7 +93,7 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
     if (dateRange) {
       const guides = dateRange.guides
         ?.map((guideId) => getUserById(guideId))
-        .filter((guide): guide is User => !!guide);
+        .filter((guide): guide is UserType => !!guide);
 
       setGuides(guides || []);
       setTouristCounter(getTouristCounterByDateRangeId(dateRange.id ?? ""));

@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
+// import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
 import CountUp from "../../../../TextAnimations/CountUp/CountUp";
 import BookingOnlineIcon from '@mui/icons-material/BookOnline';
-import { AttachMoney, Groups, Groups2 } from "@mui/icons-material";
+import { AttachMoney, Groups2 } from "@mui/icons-material";
 interface GlobalStatsProps {
   bookingsCont: number;
   revenue: number;

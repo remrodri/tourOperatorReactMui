@@ -4,22 +4,23 @@ import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or
 import { useDashboardContext } from "../../../context/DashboardContext";
 
 type Item = { name: string; value: number };
-const data: Item[] = [
-  { name: "INCACHACA", value: 23 },
-  { name: "SALAR DE UYUNI", value: 18 },
-  { name: "GOLD", value: 11 },
-  { name: "PLTR", value: 9 },
-  { name: "ADA", value: 7 },
-  { name: "MSFT", value: 3 },
-];
+// const data: Item[] = [
+//   { name: "INCACHACA", value: 23 },
+//   { name: "SALAR DE UYUNI", value: 18 },
+//   { name: "GOLD", value: 11 },
+//   { name: "PLTR", value: 9 },
+//   { name: "ADA", value: 7 },
+//   { name: "MSFT", value: 3 },
+// ];
 
 interface AnimatedDonutChartProps {
     singleColor?: "purple" | "blue" | "fuchsia" | "yellow";
-    countedBookings: any[];
+    // countedBookings: any[];
 }
 
 const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
-  singleColor,countedBookings
+  singleColor
+  // countedBookings
 }) => {
   const {bookingsByTouristDestination}=useDashboardContext();
   // console.log('bookingsByTouristDestination::: ', bookingsByTouristDestination);
@@ -41,11 +42,11 @@ const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
     .cornerRadius(lightStrokeEffect + 2); // Apply rounded corners
 
   // Create an arc generator for the clip path that matches the outer path of the arc
-  const arcClip =
-    arc<PieArcDatum<Item>>()
-      .innerRadius(innerRadius + lightStrokeEffect / 2)
-      .outerRadius(radius)
-      .cornerRadius(lightStrokeEffect + 2) || undefined;
+  // const arcClip =
+  //   arc<PieArcDatum<Item>>()
+  //     .innerRadius(innerRadius + lightStrokeEffect / 2)
+  //     .outerRadius(radius)
+  //     .cornerRadius(lightStrokeEffect + 2) || undefined;
 
   const labelRadius = radius * 0.825;
   const arcLabel = arc<PieArcDatum<Item>>().innerRadius(labelRadius).outerRadius(labelRadius);
@@ -82,7 +83,7 @@ const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
         {arcs.map((d, i) => {
           // console.log(d, "d");
           const angle = computeAngle(d);
-          let centroid = arcLabel.centroid(d);
+          const centroid = arcLabel.centroid(d);
           if (d.endAngle > Math.PI) {
             centroid[0] += 10;
             centroid[1] += 10;

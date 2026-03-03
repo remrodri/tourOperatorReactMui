@@ -1,11 +1,5 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-} from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import dayjs from "dayjs";
 
 import { useBookingContext } from "../../booking/context/BookingContext";
@@ -14,42 +8,13 @@ import { useTourPackageContext } from "../../tourPackage/context/TourPackageCont
 import { useUserContext } from "../../userManagement/context/UserContext";
 import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
 
-import { BookingType } from "../../booking/types/BookingType";
-import { TourPackageType } from "../../tourPackage/types/TourPackageType";
-import { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
-import { User } from "../../userManagement/types/UserType";
-import { DateRangeType } from "../../tourPackage/types/DateRangeType";
+import type { BookingType } from "../../booking/types/BookingType";
+import type { TourPackageType } from "../../tourPackage/types/TourPackageType";
+import type { TouristDestinationType } from "../../touristDestination/types/TouristDestinationType";
+import type { DateRangeType } from "../../tourPackage/types/DateRangeType";
 
-interface DashboardContextType {
-  loading: boolean;
-  error: string | null;
-  bookings: BookingType[];
-  touristDestinations: TouristDestinationType[];
-  tourPackages: TourPackageType[];
-  touristDestinationWithBookings: any[];
-  totalBookings: number;
-  countedBookings: any[];
-  yearSelected: string;
-
-  getBokingsByYear: (year: string) => void;
-  getBookingsByMonth: () => void;
-  getBookingsByTouristDestination: () => void;
-
-  bookingsByTouristDestination: { name: string; value: number }[];
-
-  packagesSoldBySeller: {
-    name: string;
-    value: number;
-    img: string;
-    bookings: BookingType[];
-  }[];
-
-  getPackagesSoldBySeller: () => void;
-
-  cumulativeBookings: any[];
-  getCumulativeBookings: () => void;
-
-  guidesStats: GuideStatsType[];
+export interface TouristDestinationWithBookings extends TouristDestinationType {
+  filteredBookings: BookingType[];
 }
 
 export interface GuideStatsType {
@@ -62,70 +27,96 @@ export interface GuideStatsType {
   }[];
 }
 
-const DashboardContext = createContext<DashboardContextType | null>(null);
+interface DashboardContextType {
+  loading: boolean;
+  error: string | null;
+
+  bookings: BookingType[];
+  touristDestinations: TouristDestinationType[];
+  tourPackages: TourPackageType[];
+
+  touristDestinationWithBookings: TouristDestinationWithBookings[];
+
+  yearSelected: string;
+  setYearSelected: (year: string) => void;
+
+  totalBookings: number;
+  bookingsByMonth: { name: string; counts: number[] }[];
+  bookingsByTouristDestination: { name: string; value: number }[];
+  packagesSoldBySeller: {
+    name: string;
+    value: number;
+    img: string;
+    bookings: BookingType[];
+  }[];
+  cumulativeBookings: { date: string; value: number }[];
+  guidesStats: GuideStatsType[];
+
+}
+
+const DashboardContext = createContext<DashboardContextType | undefined>(
+  undefined,
+);
 
 export const useDashboardContext = () => {
   const ctx = useContext(DashboardContext);
-  if (!ctx)
+  if (ctx === undefined) {
     throw new Error(
-      "useDashboardContext must be used within a DashboardProvider",
+      "useDashboardContext debe ser usado dentro de DashboardProvider",
     );
+  }
   return ctx;
 };
 
-interface DashboardProviderProps {
-  children: ReactNode;
-}
+// helper id
+const getId = (x: any) => x?.id ?? x?._id;
 
-export const DashboardProvider = ({ children }: DashboardProviderProps) => {
+export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const { bookings } = useBookingContext();
   const { touristDestinations } = useTouristDestinationContext();
   const { tourPackages } = useTourPackageContext();
-  const { users, guides, fetchGuides } = useUserContext();
+  const { users, guides } = useUserContext();
   const { dateRanges } = useDateRangeContext();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [yearSelected, setYearSelected] = useState(
     new Date().getFullYear().toString(),
   );
 
-  const [touristDestinationWithBookings, setTDWithBookings] = useState<any[]>(
-    [],
-  );
-  const [totalBookings, setTotalBookings] = useState(0);
-
-  const [countedBookings, setCountedBookings] = useState<any[]>([]);
-  const [bookingsByTouristDestination, setBookingsByTD] = useState<any[]>([]);
-
-  const [packagesSoldBySeller, setPackagesSoldBySeller] = useState<any[]>([]);
-  const [cumulativeBookings, setCumulativeBookings] = useState<any[]>([]);
-  const [guidesStats, setGuidesStats] = useState<GuideStatsType[]>([]);
+  const loading = false;
+  const error = null;
 
   // ---------------------------------------
-  // HELPERS
+  // DERIVADOS
   // ---------------------------------------
 
-  const buildTDWithBookings = () => {
+  const touristDestinationWithBookings = useMemo(() => {
     return touristDestinations.map((td) => {
       const filtered = bookings.filter((b) => {
-        const pkg = tourPackages.find((tp) => tp.id === b.tourPackageId);
+        const pkg = tourPackages.find((tp) => getId(tp) === b.tourPackageId);
         return pkg?.touristDestination === td.id;
       });
-
       return { ...td, filteredBookings: filtered };
     });
-  };
+  }, [bookings, tourPackages, touristDestinations]);
 
-  const buildMonthlyBookings = (data: any[]) => {
+  const totalBookings = useMemo(
+    () =>
+      touristDestinationWithBookings.reduce(
+        (acc, td) => acc + td.filteredBookings.length,
+        0,
+      ),
+    [touristDestinationWithBookings],
+  );
+
+  const bookingsByMonth = useMemo(() => {
     const template = Array.from({ length: 12 }, (_, i) => ({
       name: dayjs().month(i).format("MMM"),
-      counts: [] as number[], // <-- TIPADO CORRECTO
+      counts: [] as number[],
     }));
 
-    data.forEach((dest: any) => {
+    touristDestinationWithBookings.forEach((dest) => {
       const monthly = Array(12).fill(0);
+
       dest.filteredBookings.forEach((b: BookingType) => {
         const d = dayjs(b.createdAt);
         if (d.year() === Number(yearSelected)) {
@@ -133,21 +124,24 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
         }
       });
 
-      monthly.forEach((count, index) => {
-        (template[index].counts as number[]).push(count); // <-- FIX
+      monthly.forEach((count, idx) => {
+        template[idx].counts.push(count);
       });
     });
 
     return template;
-  };
+  }, [touristDestinationWithBookings, yearSelected]);
 
-  const buildBookingsByTD = (data: any[]) =>
-    data.map((td) => ({
-      name: td.name,
-      value: td.filteredBookings.length,
-    }));
+  const bookingsByTouristDestination = useMemo(
+    () =>
+      touristDestinationWithBookings.map((td) => ({
+        name: td.name,
+        value: td.filteredBookings.length,
+      })),
+    [touristDestinationWithBookings],
+  );
 
-  const buildPackagesSoldBySeller = () => {
+  const packagesSoldBySeller = useMemo(() => {
     const sellerMap: Record<string, BookingType[]> = {};
 
     bookings.forEach((b) => {
@@ -164,9 +158,9 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
         bookings: arr,
       };
     });
-  };
+  }, [bookings, users]);
 
-  const buildCumulativeBookings = () => {
+  const cumulativeBookings = useMemo(() => {
     const filtered = bookings.filter(
       (b) => dayjs(b.createdAt).year() === Number(yearSelected),
     );
@@ -181,9 +175,9 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
       date,
       value,
     }));
-  };
+  }, [bookings, yearSelected]);
 
-  const buildGuidesStats = () => {
+  const guidesStats = useMemo<GuideStatsType[]>(() => {
     const dateRangeMap = new Map<string, DateRangeType>();
     dateRanges.forEach((dr) => dr.id && dateRangeMap.set(dr.id, dr));
 
@@ -218,48 +212,10 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
           .filter((d) => d.count > 0),
       };
     });
-  };
+  }, [dateRanges, tourPackages, guides, touristDestinations]);
 
   // ---------------------------------------
-  // EFFECTS
-  // ---------------------------------------
-
-  useEffect(() => {
-    console.log(":::1 ");
-    const tdWB = buildTDWithBookings();
-    setTDWithBookings(tdWB);
-    setTotalBookings(
-      tdWB.reduce((acc, td) => acc + td.filteredBookings.length, 0),
-    );
-  }, [bookings, tourPackages, touristDestinations]);
-
-  useEffect(() => {
-    // console.log(":::2 ");
-    setCountedBookings(buildMonthlyBookings(touristDestinationWithBookings));
-  }, [touristDestinationWithBookings, yearSelected]);
-
-  useEffect(() => {
-    // console.log(":::3 ");
-    setBookingsByTD(buildBookingsByTD(touristDestinationWithBookings));
-  }, [touristDestinationWithBookings]);
-
-  useEffect(() => {
-    // console.log(":::4 ");
-    setPackagesSoldBySeller(buildPackagesSoldBySeller());
-  }, [bookings, users]);
-
-  useEffect(() => {
-    // console.log(":::5 ");
-    fetchGuides();
-    setGuidesStats(buildGuidesStats());
-  }, [dateRanges, users, touristDestinations, tourPackages]);
-
-  useEffect(() => {
-    setCumulativeBookings(buildCumulativeBookings());
-  }, [bookings, yearSelected]);
-
-  // ---------------------------------------
-  // RETURN
+  // PROVIDER
   // ---------------------------------------
 
   return (
@@ -271,30 +227,13 @@ export const DashboardProvider = ({ children }: DashboardProviderProps) => {
         touristDestinations,
         tourPackages,
         touristDestinationWithBookings,
-        totalBookings,
         yearSelected,
-        countedBookings,
-        getBokingsByYear: setYearSelected,
-
-        getBookingsByMonth: () =>
-          setCountedBookings(
-            buildMonthlyBookings(touristDestinationWithBookings),
-          ),
-
-        getBookingsByTouristDestination: () =>
-          setBookingsByTD(buildBookingsByTD(touristDestinationWithBookings)),
-
+        setYearSelected,
+        totalBookings,
+        bookingsByMonth,
         bookingsByTouristDestination,
-
-        getPackagesSoldBySeller: () =>
-          setPackagesSoldBySeller(buildPackagesSoldBySeller()),
-
         packagesSoldBySeller,
-
         cumulativeBookings,
-        getCumulativeBookings: () =>
-          setCumulativeBookings(buildCumulativeBookings()),
-
         guidesStats,
       }}
     >

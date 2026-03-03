@@ -1,9 +1,6 @@
 import {
   Box,
   Card,
-  CardContent,
-  CardHeader,
-  IconButton,
   Typography,
 } from "@mui/material";
 import { TouristType } from "../../../../booking/types/TouristType";

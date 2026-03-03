@@ -1,16 +1,14 @@
 import { Avatar, Box, Card, CardHeader, Typography } from "@mui/material";
-import { User } from "../../../types/UserType";
-import { Role } from "../../../types/RoleType";
+import { UserType } from "../../../types/UserType";
+import { RoleType } from "../../../types/RoleType";
 import { useEffect, useState } from "react";
 import { ContactPhone } from "@mui/icons-material";
 import UserCardMenu from "./UserCardMenu";
-import FadeContent from "../../../../../Animations/FadeContent/FadeContent";
-import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 
 interface UserCardProps {
-  user: User;
-  userRole: Role;
-  roles: Role[];
+  user: UserType;
+  userRole: RoleType;
+  roles: RoleType[];
   handleMenuOption: (option: string) => void;
   role: string;
 }
@@ -25,8 +23,8 @@ const UserCard: React.FC<UserCardProps> = ({
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
   // Add state to track image loading
-  const [imgKey, setImgKey] = useState(Date.now());
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgKey, setImgKey] = useState(() => Date.now());
+  // const [imgLoaded, setImgLoaded] = useState(false);
 
   // Force reload of image when user or imageUrl changes
   useEffect(() => {
@@ -35,8 +33,8 @@ const UserCard: React.FC<UserCardProps> = ({
       // Preload image
       const img = new Image();
       img.src = `${user.imageUrl}?t=${imgKey}`;
-      img.onload = () => setImgLoaded(true);
-      img.onerror = () => setImgLoaded(false);
+      // img.onload = () => setImgLoaded(true);
+      // img.onerror = () => setImgLoaded(false);
     }
   }, [user.id, user.imageUrl]);
 
@@ -108,9 +106,9 @@ const UserCard: React.FC<UserCardProps> = ({
             imgProps={{
               onError: () => {
                 console.log("Image failed to load:", user.imageUrl);
-                setImgLoaded(false);
+                // setImgLoaded(false);
               },
-              onLoad: () => setImgLoaded(true),
+              // onLoad: () => setImgLoaded(true),
             }}
           >
             {roleChar}

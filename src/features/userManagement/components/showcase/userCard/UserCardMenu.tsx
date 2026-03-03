@@ -1,9 +1,7 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { MouseEvent, useState } from "react";
-import { TokenService } from "../../../../../utils/tokenService";
-import { User } from "../../../types/UserType";
-import { jwtDecode } from "jwt-decode";
+import { UserType } from "../../../types/UserType";
 
 const options = [
   "Ver mas",
@@ -20,7 +18,7 @@ const options = [
 interface UserCardMenuProps {
   onOptionSelect: (option: string) => void;
   role: string;
-  user: User;
+  user: UserType;
 }
 
 const UserCardMenu: React.FC<UserCardMenuProps> = ({

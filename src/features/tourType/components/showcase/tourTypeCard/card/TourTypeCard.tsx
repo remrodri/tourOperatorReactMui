@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardHeader } from "@mui/material";
 import CardMenu from "./TourTypeCardMenu";
 import { useState } from "react";
-import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
+// import DeleteDialogContainer from "./deleteDialog/DeleteDialogContainer";
 import UpdateTourTypeDialogContainer from "../../../tourTypeForm/UpdateTourTypeDialogContainer";
-import AnimatedContent from "../../../../../../Animations/AnimatedContent/AnimatedContent";
 import { truncateText } from "../../../../../../utils/truncateText";
-import MoreInfoModalContainer from "./modal/MoreInfoModalContainer";
+import MoreInfoModalContainer from "./dialog/MoreInfoModalContainer";
 
 interface TourTypeCardProps {
   tourType: any;
@@ -89,13 +89,13 @@ const TourTypeCard: React.FC<TourTypeCardProps> = ({ tourType, role }) => {
           tourType={tourType}
         />
       )}
-      {open && (
+      {/* {open && (
         <DeleteDialogContainer
           open={open}
           handleClose={handleOpenDialog}
           id={tourType.id}
         />
-      )}
+      )} */}
       {openMoreInfo && (
         <MoreInfoModalContainer
           open={openMoreInfo}

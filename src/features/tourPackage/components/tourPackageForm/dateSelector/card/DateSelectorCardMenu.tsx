@@ -4,15 +4,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const options = ["Completado", "Cancelado"];
 
-interface DateSelectorCardMenuProps {
-  onOptionSelect: (option: string) => void;
-  // handleClickInfo: () => void;
-}
+// interface DateSelectorCardMenuProps {
+//   // onOptionSelect: (option: string) => void;
+//   // handleClickInfo: () => void;
+// }
 
-const DateSelectorCardMenu: React.FC<DateSelectorCardMenuProps> = ({
-  onOptionSelect,
-  // handleClickInfo
-}) => {
+const DateSelectorCardMenu: React.FC= () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -24,10 +21,10 @@ const DateSelectorCardMenu: React.FC<DateSelectorCardMenuProps> = ({
     setAnchorEl(null);
   };
 
-  const handleOptionClick = (option: string) => {
-    onOptionSelect(option);
-    handleClose();
-  };
+  // const handleOptionClick = (option: string) => {
+  //   // onOptionSelect(option);
+  //   handleClose();
+  // };
 
   return (
     <>
@@ -54,7 +51,7 @@ const DateSelectorCardMenu: React.FC<DateSelectorCardMenuProps> = ({
         // }
       >
         {options.map((option) => (
-          <MenuItem key={option} onClick={() => handleOptionClick(option)}>
+          <MenuItem key={option} onClick={() => {}}>
             {option}
           </MenuItem>
         ))}

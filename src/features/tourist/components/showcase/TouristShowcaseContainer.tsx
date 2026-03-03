@@ -1,4 +1,3 @@
-import { Box, Fade } from "@mui/material";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 
 import { useTouristContext } from "../../context/TouristContext";

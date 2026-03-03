@@ -6,7 +6,7 @@ export function AnimatedSlice({
   index = 0,
   children,
 }: {
-  index?: number;
+  index: number;
   children: React.ReactNode;
 }) {
   return (

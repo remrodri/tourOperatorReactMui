@@ -1,11 +1,7 @@
-import { Box, Typography } from "@mui/material";
-import TourType from "./TourTypeShowcase";
 import { useState } from "react";
-import { useTourTypeContext } from "../../context/TourTypeContext";
 import TourTypeShowcase from "./TourTypeShowcase";
 import CreateTourTypeDialogContainer from "../tourTypeForm/CreateTourTypeDialogContainer";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
-import { useOutletContext } from "react-router-dom";
 
 const TourTypeShowcaseContainer = () => {
   // const { tourTypes } = useTourTypeContext();

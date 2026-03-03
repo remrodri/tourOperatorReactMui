@@ -31,7 +31,7 @@
 
 import * as Yup from "yup";
 
-export const dateRangeSchema = (isEditMode: boolean) => {
+export const dateRangeSchema = () => {
   return Yup.object().shape({
     id: Yup.string().optional(),
     dates: Yup.array()

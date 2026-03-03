@@ -1,6 +1,5 @@
 import {
   Box,
-  Chip,
   Dialog,
   DialogContent,
   DialogTitle,

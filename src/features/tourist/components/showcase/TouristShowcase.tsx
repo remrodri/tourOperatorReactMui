@@ -1,4 +1,4 @@
-import { Box, Container, Fade, Grow, Typography } from "@mui/material";
+import { Box, Grow, Typography } from "@mui/material";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { TouristType } from "../../../booking/types/TouristType";
 import TouristCardContainer from "./card/TouristCardContainer";

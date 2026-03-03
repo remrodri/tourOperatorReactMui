@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { useTouristContext } from "../../../context/TouristContext";
-import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
+import { useState } from "react";
+// import { useTouristContext } from "../../../context/TouristContext";
+// import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
 // import { useBookingContext } from "../../../context/BookingContext";
 // import { BookingType } from "../../../types/BookingType";
-import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
+// import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 // import { TouristType } from "../../../types/TouristType";
 // import BookingFormContainer from "../../bookingForm/BookingFormContainer";
-import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
+// import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
 // import MoreInfoDialogContainer from "../../moreInfoDialogV2/MoreInfoDialogContainerV2";
-import ConfirmationModal from "./ConfirmationModal";
-import { useCancellationConditionContext } from "../../../../cancellationPolicy/context/CancellationPolicyContext";
-import { useNewSnackbar } from "../../../../../context/SnackbarContext";
-import BookingCardV2 from "./TouristCard";
+// import ConfirmationModal from "./ConfirmationModal";
+// import { useCancellationConditionContext } from "../../../../cancellationPolicy/context/CancellationPolicyContext";
+// import { useNewSnackbar } from "../../../../../context/SnackbarContext";
+// import BookingCardV2 from "./TouristCard";
 // import { CancellationPolicy } from "../../../../cancellationPolicy/types/CancellationPolicy";
-import PaymentProofDialogContainer from "../../../../payment/components/paymentProofDialog/PaymentProofDialogContainer";
+// import PaymentProofDialogContainer from "../../../../payment/components/paymentProofDialog/PaymentProofDialogContainer";
 import TouristCard from "./TouristCard";
 import { TouristType } from "../../../../booking/types/TouristType";
 // import MoreInfoDialogContainer from "../../../moreInfoDialog/MoreInfoDialogContainer";
@@ -45,9 +45,9 @@ const TouristCardContainer: React.FC<TouristCardContainerProps> = ({
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
 
-  const handleCloseEditForm = () => {
-    setOpenEditForm(false);
-  };
+  // const handleCloseEditForm = () => {
+  //   setOpenEditForm(false);
+  // };
   // const [openPaymentForm, setOpenPaymentForm] = useState(false);
 
   // const [currentBooking, setCurrentBooking] = useState<BookingType | null>(

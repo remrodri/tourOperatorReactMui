@@ -34,14 +34,14 @@ export function AnimatedDonutChart({
     .cornerRadius(lightStrokeEffect + 2); // Apply rounded corners
 
   // Create an arc generator for the clip path that matches the outer path of the arc
-  const arcClip =
-    arc<PieArcDatum<Item>>()
-      .innerRadius(innerRadius + lightStrokeEffect / 2)
-      .outerRadius(radius)
-      .cornerRadius(lightStrokeEffect + 2) || undefined;
+  // const arcClip =
+  //   arc<PieArcDatum<Item>>()
+  //     .innerRadius(innerRadius + lightStrokeEffect / 2)
+  //     .outerRadius(radius)
+  //     .cornerRadius(lightStrokeEffect + 2) || undefined;
 
-  const labelRadius = radius * 0.825;
-  const arcLabel = arc<PieArcDatum<Item>>().innerRadius(labelRadius).outerRadius(labelRadius);
+  // const labelRadius = radius * 0.825;
+  // const arcLabel = arc<PieArcDatum<Item>>().innerRadius(labelRadius).outerRadius(labelRadius);
 
   const arcs = pieLayout(data);
 
@@ -72,14 +72,14 @@ export function AnimatedDonutChart({
         {arcs.map((d, i) => {
           // console.log(d, "d");
           const angle = computeAngle(d);
-          let centroid = arcLabel.centroid(d);
-          if (d.endAngle > Math.PI) {
-            centroid[0] += 10;
-            centroid[1] += 10;
-          } else {
-            centroid[0] -= 10;
-            centroid[1] -= 0;
-          }
+          // let centroid = arcLabel.centroid(d);
+          // if (d.endAngle > Math.PI) {
+          //   centroid[0] += 10;
+          //   centroid[1] += 10;
+          // } else {
+          //   centroid[0] -= 10;
+          //   centroid[1] -= 0;
+          // }
           return (
             <ClientTooltip key={i}>
             <TooltipTrigger>
@@ -92,7 +92,7 @@ export function AnimatedDonutChart({
               />
               {/* Labels with conditional rendering */}
               <g opacity={angle > minAngle ? 1 : 0}>
-                <text transform={`translate(${centroid})`} textAnchor="middle" fontSize={38}>
+                <text transform={`translate(${[0, 0]})`} textAnchor="middle" fontSize={38}>
                   <tspan
                     y="-0.4em"
                     fontWeight="600"

@@ -1,16 +1,16 @@
 import DateSelectorForm from "./DateSelectorForm";
 import { useEffect, useState } from "react";
-import { Dayjs } from "dayjs";
-import { User } from "../../../../userManagement/types/UserType";
+// import { Dayjs } from "dayjs";
+// import { UserType } from "../../../../userManagement/types/UserType";
 import { DateRangeType } from "../../../types/DateRangeType";
 import { useUserContext } from "../../../../userManagement/context/UserContext";
 import { dateRangeSchema } from "./validation/dateRangeSchema";
 import { useFormik } from "formik";
-import {
-  updateDateRangeRequest,
-  createDateRangeRequest,
-} from "../../../../dateRange/service/DateRangeService";
-import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
+// import {
+//   updateDateRangeRequest,
+//   createDateRangeRequest,
+// } from "../../../../dateRange/service/DateRangeService";
+// import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 
 interface DateSelectorFormContainerProps {
@@ -40,12 +40,12 @@ const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
   tourPackageId,
   currentDateRange,
 }: DateSelectorFormContainerProps) => {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [selectedGuides, setSelectedGuides] = useState<User[]>([]);
+  // const [openDialog, setOpenDialog] = useState(false);
+  // const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  // const [selectedGuides, setSelectedGuides] = useState<User[]>([]);
   // const [guides, setGuides] = useState<User[]>([]);
-  const [handleOpenDateSelector, setHandleOpenDateSelector] = useState(false);
-  const [handleCloseDateSelector, setHandleCloseDateSelector] = useState(false);
+  // const [handleOpenDateSelector, setHandleOpenDateSelector] = useState(false);
+  // const [handleCloseDateSelector, setHandleCloseDateSelector] = useState(false);
   // const [localDateRanges, setLocalDateRanges] = useState<DateRangeType[]>([]);
   // const [currentDateRange, setCurrentDateRange] = useState<DateRangeType | null>(null);
   const [blockedDates, setBlockedDates] = useState<string[]>([]);

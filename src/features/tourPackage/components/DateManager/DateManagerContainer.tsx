@@ -1,15 +1,15 @@
 import { useState } from "react";
 // import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
-import { DateRangeType } from "../../types/DateRangeType";
+// import { DateRangeType } from "../../types/DateRangeType";
 import DateManager from "./DateManager";
 import DateSelectorFormContainer from "./DateSelectorForm/DateSelectorFormContainer";
-import { TourPackageProvider } from "../../context/TourPackageContext";
+// import { TourPackageProvider } from "../../context/TourPackageContext";
 import { TourPackageType } from "../../types/TourPackageType";
 
 interface DateManagerContainerProps {
   open: boolean;
   onClose: () => void;
-  dateRangeIds: DateRangeType[];
+  // dateRangeIds: DateRangeType[];
   duration: number;
   tourPackageId: string;
   tourPackage: TourPackageType;
@@ -18,7 +18,7 @@ interface DateManagerContainerProps {
 const DateManagerContainer: React.FC<DateManagerContainerProps> = ({
   open,
   onClose,
-  dateRangeIds,
+  // dateRangeIds,
   duration,
   tourPackageId,
   tourPackage,

@@ -1,5 +1,5 @@
 import { Box, Grow, Typography } from "@mui/material";
-import TotalSalesByDateContainer from "./totalSalesbyDate/TotalSalesByDateContainer";
+// import TotalSalesByDateContainer from "./totalSalesbyDate/TotalSalesByDateContainer";
 import TotalSalesByYearContainer from "./totalSalesByYear/TotalSalesByYearContainer";
 import PackagesSoldBySellerContainer from "./packagesSoldBySeller/PackagesSoldBySellerContainer";
 import CumulativeBookingTrendContainer from "./cumulativeBookingTrend/CumulativeBookingTrendContainer";
@@ -7,15 +7,9 @@ import GuideRankingByDestinationContainer from "./GuideRankingByDestination/Guid
 import GlobalStatsContainer from "./globalStats/GlobalStatsContainer";
 import TextType from "../../../TextAnimations/TextType/TextType";
 
-interface DashboardProps {
-  // bookings: BookingType[];
-  // touristDestinationWithBookings: any[];
-}
-const Dashboard: React.FC<DashboardProps> = (
-  {
-    // bookings,
-    // touristDestinationWithBookings
-  }
+
+const Dashboard: React.FC = (
+  
 ) => {
   return (
     // <Fade in={true} timeout={1000}>
@@ -145,7 +139,7 @@ const Dashboard: React.FC<DashboardProps> = (
                 threshold={0.2}
                 delay={0.3}
               > */}
-              <TotalSalesByDateContainer />
+              {/* <TotalSalesByDateContainer /> */}
               {/* </AnimatedContent> */}
             </Box>
           </Grow>

@@ -5,7 +5,7 @@
  */
 
 import { Components, Theme } from "@mui/material";
-import { amber, lightBlue, pink, purple, teal } from "@mui/material/colors";
+import { lightBlue, pink, purple, teal } from "@mui/material/colors";
 import { ColorMode } from "./types";
 import { darkPalette, lightPalette } from "./palettes";
 

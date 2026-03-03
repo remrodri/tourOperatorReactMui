@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
 import { useDashboardContext } from "../../../context/DashboardContext";
 import { Box, Typography } from "@mui/material";
@@ -6,13 +7,13 @@ import { useTourPackageContext } from "../../../../tourPackage/context/TourPacka
 import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
 import { BookingType } from "../../../../booking/types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
-import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
-const data = [
-  { key: "Model 0", value: 85.8 },
-  { key: "Model A", value: 34.3 },
-  { key: "Model B", value: 27.1 },
-  { key: "Model C", value: 22.5 },
-];
+// import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
+// const data = [
+//   { key: "Model 0", value: 85.8 },
+//   { key: "Model A", value: 34.3 },
+//   { key: "Model B", value: 27.1 },
+//   { key: "Model C", value: 22.5 },
+// ];
 
 export function BarChartBenchmark() {
   const [data,setData]=useState<any>([])
@@ -20,7 +21,7 @@ export function BarChartBenchmark() {
   const {packagesSoldBySeller}=useDashboardContext();
   const {getTourPackageInfoById}=useTourPackageContext();
   const {getTouristDestinationInfoById}=useTouristDestinationContext();
-  const [packagesSoldBySellerWithDestinations,setPackagesSoldBySellerWithDestinations]=useState<any>([])
+  // const [packagesSoldBySellerWithDestinations,setPackagesSoldBySellerWithDestinations]=useState<any>([])
 
   const getBookingInfoById = () => {
     const touristDestinationInfos = packagesSoldBySeller.map((d)=>{

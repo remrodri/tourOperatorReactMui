@@ -11,11 +11,10 @@ import {
   Stack,
   Autocomplete,
   TextField,
-  Card,
 } from "@mui/material";
-import { User } from "../../../../userManagement/types/UserType";
+import { UserType } from "../../../../userManagement/types/UserType";
 import { DateRangeType } from "../../../types/DateRangeType";
-import TextType from "../../../../../TextAnimations/TextType/TextType";
+// import TextType from "../../../../../TextAnimations/TextType/TextType";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
@@ -25,7 +24,7 @@ import dayjs, { Dayjs } from "dayjs";
 import DateSelectorCard from "./card/DateSelectorCard";
 
 interface DateSelectorProps {
-  guides: User[];
+  guides: UserType[];
   duration: number;
   dateRangesAux: DateRangeType[];
   handleAddDateRange: () => void;
@@ -36,8 +35,8 @@ interface DateSelectorProps {
   handleCloseDialog: () => void;
   selectedDate: Dayjs | null;
   setSelectedDate: (date: Dayjs | null) => void;
-  selectedGuides: User[];
-  setSelectedGuides: (guides: User[]) => void;
+  selectedGuides: UserType[];
+  setSelectedGuides: (guides: UserType[]) => void;
   handleOpenDialog: () => void;
   isEditing: boolean;
 }
@@ -167,7 +166,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               id="tags-guide"
               options={guides}
               value={selectedGuides}
-              onChange={(event, newValue) => {
+              onChange={(_, newValue) => {
                 setSelectedGuides(newValue);
               }}
               getOptionLabel={(guide) => `${guide.firstName} ${guide.lastName}`}

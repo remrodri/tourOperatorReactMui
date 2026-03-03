@@ -4,10 +4,10 @@ import GlobalStats from "./GlobalStats";
 import { useTouristContext } from "../../../tourist/context/TouristContext";
 import { useUserContext } from "../../../userManagement/context/UserContext";
 
-const GlobalStatsContainer: React.FC<{}> = () => {
+const GlobalStatsContainer: React.FC = () => {
   const [bookingsCont, setBookingsCont] = useState<number>(0);
   const [touristCont, setTouristCont] = useState<number>(0);
-  const [guidesCont, setGuidesCont] = useState<number>(0);
+  // const [guidesCont, setGuidesCont] = useState<number>(0);
   const [revenue, setRevenue] = useState<number>(0);
   const { bookings } = useBookingContext();
   const { tourists } = useTouristContext();

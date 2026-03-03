@@ -71,7 +71,7 @@ const UserForm: React.FC<UserFormProps> = ({
   return (
     <Dialog
       open={open}
-      onClose={(event, reason) => {
+      onClose={(_, reason) => {
         if (isSubmitting) return;
         if (reason === "backdropClick") return;
         handleClick();

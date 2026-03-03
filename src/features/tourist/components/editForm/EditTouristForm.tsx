@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import { FormikProps } from "formik";
 import { TouristFormValues } from "./TouristFormValues";
-import { TouristType } from "../../../booking/types/TouristType";
+// import { TouristType } from "../../../booking/types/TouristType";
 import Close from "@mui/icons-material/Close";
 import TextType from "../../../../TextAnimations/TextType/TextType";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

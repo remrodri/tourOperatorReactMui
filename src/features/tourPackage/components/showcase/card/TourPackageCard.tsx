@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { TourPackageType } from "../../../types/TourPackageType";
 import TourPackageCardMenu from "./TourPackageCardMenu";
-import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
+// import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 
 interface TourPackageCardProps {

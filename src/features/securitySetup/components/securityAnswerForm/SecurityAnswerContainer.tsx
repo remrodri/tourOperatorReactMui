@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import SecurityAnswerForm from "./SecurityAnswerForm";
 import { useSecurityQuestions } from "./hook/useSecurityQuestions";
 

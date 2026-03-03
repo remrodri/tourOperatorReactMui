@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FormikProps } from "formik";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { CloudUpload } from "@mui/icons-material";
 
@@ -80,7 +80,9 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
       <DialogTitle>
         <TextType
           className="text-lg"
-          text={isEditing ? "Editar destino turístico" : "Nuevo destino turístico"}
+          text={
+            isEditing ? "Editar destino turístico" : "Nuevo destino turístico"
+          }
           typingSpeed={50}
           pauseDuration={1000}
           showCursor={true}

@@ -76,7 +76,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
     }
   }, [duration, itinerary, onChange]);
 
-  const handleDayChange = (event: React.SyntheticEvent, newDay: number) => {
+  const handleDayChange = (newDay: number) => {
     setCurrentDay(newDay);
   };
 
@@ -104,7 +104,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
         return {
           ...day,
           activities: day.activities.filter(
-            (_, index) => index !== activityIndex
+            (_, index) => index !== activityIndex,
           ),
         };
       }
@@ -117,14 +117,16 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
     dayNumber: number,
     activityIndex: number,
     field: keyof ActivityType,
-    value: string
+    value: string,
   ) => {
     const updatedDays = itinerary.days.map((day) => {
       if (day.dayNumber === dayNumber) {
         return {
           ...day,
           activities: day.activities.map((activity, index) =>
-            index === activityIndex ? { ...activity, [field]: value } : activity
+            index === activityIndex
+              ? { ...activity, [field]: value }
+              : activity,
           ),
         };
       }
@@ -165,7 +167,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
         <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
           <Tabs
             value={currentDay}
-            onChange={handleDayChange}
+            onChange={(_, newDay) => handleDayChange(newDay)}
             variant="scrollable"
             scrollButtons="auto"
           >
@@ -232,12 +234,12 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                     sx={{ p: 2, mb: 2, bgcolor: "background.default" }}
                   >
                     <Grid container spacing={2} alignItems="center">
-                      <Grid item xs={12} sm={1}>
+                      <Grid size={{ xs: 12, sm: 1 }}>
                         <Typography variant="body2" fontWeight="bold">
                           #{index + 1}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} sm={6}>
+                      <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
                           fullWidth
                           label="Descripción de la actividad"
@@ -248,12 +250,12 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                               day.dayNumber,
                               index,
                               "description",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid size={{ xs: 12, sm: 3 }}>
                         {/* <TextField
                         fullWidth
                         label="Hora"
@@ -293,7 +295,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                               day.dayNumber,
                               index,
                               "time",
-                              newValue ? newValue.format("HH:mm") : ""
+                              newValue ? newValue.format("HH:mm") : "",
                             )
                           }
                           slotProps={{
@@ -305,9 +307,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                         />
                       </Grid>
                       <Grid
-                        item
-                        xs={12}
-                        sm={2}
+                        size={{ xs: 12, sm: 2 }}
                         sx={{ display: "flex", justifyContent: "flex-end" }}
                       >
                         <IconButton
@@ -378,12 +378,12 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                     >
                       {/* Same grid content as in the tabs view */}
                       <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} sm={1}>
+                        <Grid size={{ xs: 12, sm: 1 }}>
                           <Typography variant="body2" fontWeight="bold">
                             #{index + 1}
                           </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                           <TextField
                             fullWidth
                             label="Descripción de la actividad"
@@ -394,12 +394,12 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                                 day.dayNumber,
                                 index,
                                 "description",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid size={{ xs: 12, sm: 3 }}>
                           <TextField
                             fullWidth
                             label="Hora"
@@ -411,7 +411,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                                 day.dayNumber,
                                 index,
                                 "time",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                             InputLabelProps={{
@@ -423,9 +423,7 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                           />
                         </Grid>
                         <Grid
-                          item
-                          xs={12}
-                          sm={2}
+                          size={{ xs: 12, sm: 2 }}
                           sx={{ display: "flex", justifyContent: "flex-end" }}
                         >
                           <IconButton

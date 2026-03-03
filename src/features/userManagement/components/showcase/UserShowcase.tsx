@@ -1,11 +1,11 @@
 import { Box, Button, Grow, Typography } from "@mui/material";
-import { User } from "../../types/UserType";
+import { UserType } from "../../types/UserType";
 import UserCardContainer from "./userCard/UserCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 
 interface UserShowcaseProps {
   handleClick: () => void;
-  users: User[];
+  users: UserType[];
   role: string;
 }
 

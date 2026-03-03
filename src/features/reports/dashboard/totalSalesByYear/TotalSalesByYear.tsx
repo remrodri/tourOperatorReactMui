@@ -1,28 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from "@mui/material";
 import AnimatedDonutChart from "./pieChart/AnimatedDonutChart";
 import { Typography } from "@mui/material";
-import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
-interface TotalSalesByYearProps {
-  loading: boolean;
-  error: string | null;
-  countedBookings: any[];
-  yearSelected: string;
-  setYearSelected: (year: string) => void;
-  touristDestinationWithBookings: any[];
-  totalBookings: number;
-  // setTouristDestinationWithBookings: (bookings: any[]) => void;
-}
+// import AnimatedContent from "../../../../Animations/AnimatedContent/AnimatedContent";
 
-const TotalSalesByYear: React.FC<TotalSalesByYearProps> = ({
-  loading,
-  error,
-  countedBookings,
-  yearSelected,
-  setYearSelected,
-  touristDestinationWithBookings,
-  totalBookings,
-  // setTouristDestinationWithBookings
-}) => {
+
+const TotalSalesByYear: React.FC = () => {
   // console.log('totalBookings::: ', totalBookings);
   // console.log('countedBookings::: ', countedBookings);
   return (
@@ -46,11 +29,11 @@ const TotalSalesByYear: React.FC<TotalSalesByYearProps> = ({
           <div className="text-center">
             <p className={`text-lg text-white`}>Total</p>
             <p className={`text-4xl transition-colors duration-300 font-bold`}>
-              {totalBookings}
+              {/* {totalBookings} */}
             </p>
           </div>
         </div>
-        <AnimatedDonutChart countedBookings={countedBookings} />
+        <AnimatedDonutChart />
       </Box>
     </Box>
   );

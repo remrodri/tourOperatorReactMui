@@ -1,4 +1,5 @@
-import { Box, Button, Fade, Grow, Typography } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Box, Button, Grow, Typography } from "@mui/material";
 import TouristDestinationCardContainer from "./card/TouristDestinationCardContainer";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { TourPackageType } from "../../../types/TourPackageType";
 import TourPackageCard from "./TourPackageCard";
 import TourPackageformContainer from "../../tourPackageForm/TourPackageFormContainer";
-import MoreInfoModalContainer from "../../modal/MoreInfoModalContainer";
+import MoreInfoModalContainer from "../../dialog/MoreInfoModalContainer";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 import ConfirmationModal from "./ConfirmationModal";
 import DateManagerContainer from "../../DateManager/DateManagerContainer";

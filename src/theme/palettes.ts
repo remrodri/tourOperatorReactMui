@@ -6,11 +6,11 @@
 
 import {
   amber,
-  deepOrange,
+  // deepOrange,
   lightBlue,
   teal,
   purple,
-  pink,
+  // pink,
   grey,
 } from "@mui/material/colors";
 import { CustomPalette } from "./types";

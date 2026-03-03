@@ -3,12 +3,12 @@ import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TourPackageType } from "../../../types/TourPackageType";
 
-const options = [
-  "Ver mas",
-  "Editar",
-  "Gestion de fechas",
-  // "Inhabilitar"
-];
+// const options = [
+//   "Ver mas",
+//   "Editar",
+//   "Gestion de fechas",
+//   // "Inhabilitar"
+// ];
 
 interface TourPackageCardMenuProps {
   onOptionSelect: (option: string) => void;

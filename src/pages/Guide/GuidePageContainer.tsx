@@ -1,4 +1,3 @@
-import { SnackbarProvider } from "../../context/SnackbarContext";
 import { BookingProvider } from "../../features/booking/context/BookingContext";
 import { GuideProvider } from "../../features/guide/context/GuideContext";
 import { TouristProvider } from "../../features/tourist/context/TouristContext";

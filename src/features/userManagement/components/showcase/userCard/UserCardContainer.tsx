@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRoleContext } from "../../../../Role/context/RoleContext";
-import { User } from "../../../types/UserType";
+import { UserType } from "../../../types/UserType";
 import UserCard from "./UserCard";
-import { Role } from "../../../types/RoleType";
-import MoreInfoModalContainer from "../../moreInfoModal/MoreInfoModalContainer";
+import { RoleType } from "../../../types/RoleType";
+import MoreInfoModalContainer from "../../moreInfoDialog/MoreInfoModalContainer";
 import UserFormContainer from "../../userForm/UserFormContainer";
 import { useUserContext } from "../../../context/UserContext";
 
 interface UserCardContainerProps {
-  user: User;
+  user: UserType;
   role: string;
 }
 const UserCardContainer: React.FC<UserCardContainerProps> = ({
@@ -19,7 +19,7 @@ const UserCardContainer: React.FC<UserCardContainerProps> = ({
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const { getRoleById, loading, roles } = useRoleContext();
   const { enableUser, disableUser } = useUserContext();
-  const [userRole, setUserRole] = useState<Role>({
+  const [userRole, setUserRole] = useState<RoleType>({
     id: "default",
     name: "sin rol",
   });

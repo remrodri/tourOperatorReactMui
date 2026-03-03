@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 // import { useDateRangeContext } from "../../../dateRange/context/DateRangeContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 import { useTourTypeContext } from "../../../tourType/context/TourTypeContext";

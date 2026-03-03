@@ -81,7 +81,6 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
         <p>Precio: {tourPackage.price}</p>
         <p>Duracion: {tourPackage.duration} dias</p>
         <p>tipo de tour: {tourPackage.tourType}</p>
-        <p>Politica de cancelacion: {tourPackage.cancellationPolicy}</p>
         <p>Fechas:</p>
         <Box
           sx={{

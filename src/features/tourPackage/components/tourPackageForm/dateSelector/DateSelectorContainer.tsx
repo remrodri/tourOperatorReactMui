@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 // import {
 //   Box,
 //   Button,
@@ -20,17 +20,17 @@ import dayjs, { Dayjs } from "dayjs";
 // import DeleteIcon from "@mui/icons-material/Delete";
 // import CloseIcon from "@mui/icons-material/Close";
 import { DateRangeType } from "../../../types/DateRangeType";
-import { User } from "../../../../userManagement/types/UserType";
+import { UserType } from "../../../../userManagement/types/UserType";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
 // import TextType from "../../../../../TextAnimations/TextType/TextType";
 import DateSelector from "./DateSelector";
 // import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 
 interface SimpleDateSelectorProps {
-  guides: User[];
+  guides: UserType[];
   duration: number;
   // dateRanges: DateRangeType[];
-  dateRanges: DateRangeType[];
+  // dateRanges: DateRangeType[];
   onDateChange: (dates: DateRangeType[]) => void;
   isEditing: boolean;
 }
@@ -38,7 +38,7 @@ interface SimpleDateSelectorProps {
 const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
   guides,
   duration,
-  dateRanges,
+  // dateRanges,
   onDateChange,
   isEditing,
 }) => {
@@ -70,7 +70,7 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [selectedGuides, setSelectedGuides] = useState<User[]>([]);
+  const [selectedGuides, setSelectedGuides] = useState<UserType[]>([]);
   const { showSnackbar } = useNewSnackbar();
 
   const handleOpenDialog = () => {

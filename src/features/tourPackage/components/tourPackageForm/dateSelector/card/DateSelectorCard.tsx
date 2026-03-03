@@ -1,23 +1,20 @@
 import {
   Box,
-  Button,
   Card,
-  CardActions,
-  CardHeader,
   Chip,
   IconButton,
   Typography,
 } from "@mui/material";
 import { DateRangeType } from "../../../../types/DateRangeType";
-import { User } from "../../../../../userManagement/types/UserType";
+import { UserType } from "../../../../../userManagement/types/UserType";
 import DeleteIcon from "@mui/icons-material/Delete";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useState, MouseEvent } from "react";
+// import MoreVertIcon from "@mui/icons-material/MoreVert";
+// import { useState } from "react";
 import DateSelectorCardMenu from "./DateSelectorCardMenu";
 // import { useDateRangeContext } from "../../../../../dateRange/context/DateRangeContext";
 interface DateSelectorCardProps {
   range: DateRangeType;
-  guides: User[];
+  guides: UserType[];
   index: number;
   handleRemoveRange: (index: number) => void;
   isEditing: boolean;
@@ -30,26 +27,26 @@ const DateSelectorCard: React.FC<DateSelectorCardProps> = ({
   handleRemoveRange,
   isEditing,
 }) => {
-  const [openMenu, setOpenMenu] = useState(false);
+  // const [openMenu, setOpenMenu] = useState(false);
   // const { updateDateRangeStatus } = useDateRangeContext();
-  const handleClick = (option: string) => {
-    // setAnchorEl(anchorEl);
-    // console.log(option);
-    if (range.id) {
-      let status: string = "";
-      if (option === "Completado") {
-        status = "completed";
-      } else if (option === "Cancelado") {
-        status = "cancelled";
-      }
-      // console.log('option::: ', status);
-      // updateDateRangeStatus(range.id, status);
-    }
-    setOpenMenu(false);
-  };
-  const handleClose = () => {
-    setOpenMenu(false);
-  };
+  // const handleClick = (option: string) => {
+  //   // setAnchorEl(anchorEl);
+  //   // console.log(option);
+  //   if (range.id) {
+  //     let status: string = "";
+  //     if (option === "Completado") {
+  //       status = "completed";
+  //     } else if (option === "Cancelado") {
+  //       status = "cancelled";
+  //     }
+  //     // console.log('option::: ', status);
+  //     // updateDateRangeStatus(range.id, status);
+  //   }
+  //   // setOpenMenu(false);
+  // };
+  // const handleClose = () => {
+  //   setOpenMenu(false);
+  // };
   return (
     <Card
       key={index}
@@ -122,7 +119,9 @@ const DateSelectorCard: React.FC<DateSelectorCardProps> = ({
         )}
       </Box>
       {isEditing ? (
-        <DateSelectorCardMenu onOptionSelect={handleClick} />
+        <DateSelectorCardMenu
+          // onOptionSelect={handleClick}
+        />
       ) : (
         <IconButton
           color="error"
