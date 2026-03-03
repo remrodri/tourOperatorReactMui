@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import { CSSProperties } from "react";
 import { scaleBand, scaleLinear, max } from "d3";
 import { AnimatedBar } from "./AnimatedBar";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";

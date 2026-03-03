@@ -3,10 +3,11 @@ import { TourPackageType } from "../../../types/TourPackageType";
 import TourPackageCardMenu from "./TourPackageCardMenu";
 // import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
+import { ENV } from "../../../../../config/env";
 
 interface TourPackageCardProps {
   tourPackage: TourPackageType;
-  BASE_URL: string;
+  // BASE_URL: string;
   handleOption: (option: string) => void;
   // handleClickInfo: () => void;
   touristDestination: TouristDestinationType | null;
@@ -15,17 +16,17 @@ interface TourPackageCardProps {
 
 const TourPackageCard: React.FC<TourPackageCardProps> = ({
   tourPackage,
-  BASE_URL,
+  // BASE_URL,
   handleOption,
   // handleClickInfo,
   touristDestination,
   role,
 }) => {
-  
+  const BASE_URL = ENV.API_BASE_URL;
   // console.log('touristDestination::: ', touristDestination);
   const destinationImage = `${BASE_URL}${touristDestination?.images[0]}`;
   // console.log('destinationImage::: ', destinationImage);
-  
+
   return (
     // <AnimatedContent
     //   distance={100}
@@ -39,63 +40,64 @@ const TourPackageCard: React.FC<TourPackageCardProps> = ({
     //   threshold={0.2}
     //   delay={0.3}
     // >
-      <Card
-        sx={{
-          // backgroundImage: `url(${destinationImage})`,
-          // backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`,
-        backgroundImage: tourPackage.status === "active"
-          ? `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`
-          : `linear-gradient(rgba(73, 17, 17, 0.93), rgba(73,17,17,0.52)), url(${destinationImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          // maxWidth: 345,
-          // minWidth: 300,
-          width: 300,
-          // height: "100%",
-          // rgb(70, 120, 253)
-          borderRadius: "10px",
-          // background: "rgba(10,10,10,0.52)",
+    <Card
+      sx={{
+        // backgroundImage: `url(${destinationImage})`,
+        // backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`,
+        backgroundImage:
+          tourPackage.status === "active"
+            ? `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`
+            : `linear-gradient(rgba(73, 17, 17, 0.93), rgba(73,17,17,0.52)), url(${destinationImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        // maxWidth: 345,
+        // minWidth: 300,
+        width: 300,
+        // height: "100%",
+        // rgb(70, 120, 253)
+        borderRadius: "10px",
+        // background: "rgba(10,10,10,0.52)",
 
-          // background:
-          //   tourPackage.status === "active"
-          //     ? "rgba(10,10,10,0.52)"
-          //     : "rgba(73, 17, 17, 0.52)",
-          // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-          boxShadow:
-            tourPackage.status === "active"
-              ? "0 4px 10px rgba(10,10,10,0.6)"
-              : "0 4px 10px rgba(73,17,17,0.6)",
-          // backdropFilter: "blur(10px)",
-          // border: "1px solid rgba(10,10,10,0.6)",
-          // border:
-          //   tourPackage.status === "active"
-          //     ? "1px solid rgba(10,10,10,0.6)"
-          //     : "1px solid rgba(73, 17, 17, 0.6)",
-          height: "12rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <CardHeader
-          title={tourPackage.name}
-          action={
-            <TourPackageCardMenu
-              onOptionSelect={handleOption}
-              tourPackage={tourPackage}
-              role={role}
-              // handleClickInfo={handleClickInfo}
-            />
-          }
-        />
-        <CardContent>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            Duracion (dias): {tourPackage.duration} <br />
-            Precio (Bs.): {tourPackage.price}
-          </Typography>
-        </CardContent>
-      </Card>
+        // background:
+        //   tourPackage.status === "active"
+        //     ? "rgba(10,10,10,0.52)"
+        //     : "rgba(73, 17, 17, 0.52)",
+        // boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        boxShadow:
+          tourPackage.status === "active"
+            ? "0 4px 10px rgba(10,10,10,0.6)"
+            : "0 4px 10px rgba(73,17,17,0.6)",
+        // backdropFilter: "blur(10px)",
+        // border: "1px solid rgba(10,10,10,0.6)",
+        // border:
+        //   tourPackage.status === "active"
+        //     ? "1px solid rgba(10,10,10,0.6)"
+        //     : "1px solid rgba(73, 17, 17, 0.6)",
+        height: "12rem",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <CardHeader
+        title={tourPackage.name}
+        action={
+          <TourPackageCardMenu
+            onOptionSelect={handleOption}
+            tourPackage={tourPackage}
+            role={role}
+            // handleClickInfo={handleClickInfo}
+          />
+        }
+      />
+      <CardContent>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          Duracion (dias): {tourPackage.duration} <br />
+          Precio (Bs.): {tourPackage.price}
+        </Typography>
+      </CardContent>
+    </Card>
     // </AnimatedContent>
   );
 };

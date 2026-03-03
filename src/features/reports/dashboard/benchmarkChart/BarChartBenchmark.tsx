@@ -1,4 +1,3 @@
-import React from "react";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
 
 const data = [

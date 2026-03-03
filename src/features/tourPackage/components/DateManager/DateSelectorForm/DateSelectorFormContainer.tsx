@@ -86,7 +86,7 @@ const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
       // tourPackageId: "",
       guides: currentDateRange?.guides || [],
     },
-    validationSchema: dateRangeSchema(isEditing ?? false),
+    validationSchema: dateRangeSchema(),
     enableReinitialize: true,
     onSubmit,
   });

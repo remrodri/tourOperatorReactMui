@@ -1,4 +1,4 @@
-import { Box, Fade, Typography } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { RoleProvider } from "../../features/Role/context/RoleContext";
@@ -114,8 +114,8 @@ const MainLayout: React.FC = () => {
     ["/destinos-turisticos"]: touristDestination,
   };
 
-  const [open, setOpen] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  // const [open, setOpen] = useState<boolean>(false);
+  // const [selectedOption, setSelectedOption] = useState<string>("");
   const [currentStyles, setCurrentStyles] = useState<AppBarStyle>({
     background: "rgba(87, 87, 87, 1)",
     borderRadius: "16px",
@@ -127,14 +127,14 @@ const MainLayout: React.FC = () => {
     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   });
 
-  const handleSelectedOption = (option: string) => {
-    setSelectedOption(option);
-    setOpen(!open);
-  };
+  // const handleSelectedOption = (option: string) => {
+  //   setSelectedOption(option);
+  //   setOpen(!open);
+  // };
 
   useEffect(() => {
     // Fade out
-    setShowBackground(false);
+    // setShowBackground(false);
 
     // Esperar a que termine el fade out antes de cambiar la imagen
     const timer = setTimeout(() => {

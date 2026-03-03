@@ -16,7 +16,8 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
   tourPackage,
   role,
 }) => {
-  const BASE_URL = "http://localhost:3000";
+  // const BASE_URL = "http://localhost:3000";
+  // const BASE_URL = 
   const [open, setOpen] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
   const { updateTourPackageStatus } = useTourPackageContext();
@@ -84,7 +85,7 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
     <>
       <TourPackageCard
         tourPackage={tourPackage}
-        BASE_URL={BASE_URL}
+        // BASE_URL={BASE_URL}
         handleOption={handleOption}
         touristDestination={touristDestination || null}
         role={role}
@@ -116,7 +117,7 @@ const TourPackageCardContainer: React.FC<TourPackageCardContainerProps> = ({
         <DateManagerContainer
           open={openDateManager}
           onClose={handleClickDateManager}
-          dateRangeIds={tourPackage.dateRanges}
+          // dateRangeIds={tourPackage.dateRanges}
           duration={tourPackage.duration}
           tourPackageId={tourPackage.id}
           tourPackage={tourPackage}

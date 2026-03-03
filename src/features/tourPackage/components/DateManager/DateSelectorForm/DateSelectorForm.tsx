@@ -16,11 +16,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
 import Chip from "@mui/material/Chip";
-import { User } from "../../../../userManagement/types/UserType";
 import { FormikProps } from "formik";
 import { DateRangeFormValues } from "./DateSelectorFormContainer";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import TextType from "../../../../../TextAnimations/TextType/TextType";
+import { UserType } from "../../../../userManagement/types/UserType";
 
 dayjs.extend(customParseFormat);
 
@@ -28,7 +28,7 @@ interface DateSelectorFormProps {
   openDialog: boolean;
   handleCloseDialog: () => void;
   duration: number;
-  guides: User[];
+  guides: UserType[];
   formik: FormikProps<DateRangeFormValues>;
   blockedDates: string[];
 }
@@ -134,7 +134,7 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
               id="tags-guide"
               options={guides}
               value={selectedGuides}
-              onChange={(event, newValue) => {
+              onChange={(_, newValue) => {
                 const guideIds = newValue.map((g) => g.id);
                 formik.setFieldValue("guides", guideIds);
               }}
