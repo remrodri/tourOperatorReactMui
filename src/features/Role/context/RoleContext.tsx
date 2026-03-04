@@ -4,83 +4,82 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
-import { RoleType } from "../../userManagement/types/RoleType";
+
+import type { RoleType } from "../../userManagement/types/RoleType";
 import { roleService } from "../service/roleService";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
 
 interface RoleContextType {
   roles: RoleType[];
   loading: boolean;
-  // error: string | null;
+  fetchRoles: () => Promise<void>;
   getRoleById: (id: string) => RoleType;
 }
 
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
+export const useRoleContext = () => {
+  const context = useContext(RoleContext);
+  if (context === undefined) {
+    throw new Error("useRoleContext debe ser usado dentro de RoleProvider");
+  }
+  return context;
+};
+
+const DEFAULT_ROLE: RoleType = {
+  id: "default",
+  name: "Sin Rol",
+};
+
 export const RoleProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [roles, setRoles] = useState<RoleType[]>([]);
-  const { showSnackbar } = useNewSnackbar();
-  const DEFAULT_ROLE: RoleType = {
-    id: "default",
-    name: "Sin Rol",
-  };
-
   const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
-  const getRoleById = (id: string) => {
-    // console.log('id::: ', id);
-    if (!roles || roles.length === 0) {
-      return DEFAULT_ROLE;
-    }
 
-    const role = roles.find((role) => role.id === id);
-    if (!role) {
-      return DEFAULT_ROLE;
-    }
-    return role;
-  };
-
-  const fetchRoles = async () => {
+  const fetchRoles = useCallback(async (): Promise<void> => {
+    setLoading(true);
     try {
-      const response = await roleService.getRoles();
-      // console.log("roleList::: ", response);
-      if (!response) {
-        showSnackbar("Error al cargar los roles", "error");
+      const list = await roleService.getRoles();
+
+      // ❌ si es null, el service ya mostró sileo.error
+      if (!list) {
+        setRoles([]);
+        return;
       }
-      setRoles(response.data);
-    } catch (error) {
-      console.error("Error al obtener los roles", error);
-      // setError("Error al obtener los roles");
+
+      setRoles(list);
+    } catch (err) {
+      console.error("Error fetching roles:", err);
+      setRoles([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchRoles();
-    // console.log('::: ', );
-  }, []);
+  }, [fetchRoles]);
+
+  const getRoleById = useCallback(
+    (id: string): RoleType => {
+      if (!id || !roles.length) return DEFAULT_ROLE;
+      return roles.find((r) => r.id === id) ?? DEFAULT_ROLE;
+    },
+    [roles],
+  );
 
   return (
     <RoleContext.Provider
       value={{
         roles,
         loading,
-        // error
+        fetchRoles,
         getRoleById,
       }}
     >
       {children}
     </RoleContext.Provider>
   );
-};
-export const useRoleContext = () => {
-  const context = useContext(RoleContext);
-  if (context === undefined) {
-    throw new Error("useRoleContext debe ser usado con un roleProvider");
-  }
-  return context;
 };
