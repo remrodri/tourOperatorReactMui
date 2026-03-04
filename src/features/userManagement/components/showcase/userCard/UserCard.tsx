@@ -1,5 +1,5 @@
 import { Avatar, Box, Card, CardHeader, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ContactPhone } from "@mui/icons-material";
 
 import { UserType } from "../../../types/UserType";
@@ -24,39 +24,28 @@ const UserCard: React.FC<UserCardProps> = ({
 }) => {
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
-
-  // Para cache-busting (y forzar refresh si cambia user/image)
   const [imgKey, setImgKey] = useState(() => Date.now());
 
-  const BASE_URL = ENV.API_BASE_URL; // ej: http://localhost:3000  (ideal sin "/" al final)
+  const BASE_URL = ENV.API_BASE_URL; // ej: http://localhost:3000
 
-  // Convierte "/uploads/..." -> "http://tu-api/uploads/..."
   const buildUrl = (path: string) => {
-    // Si ya es absoluto, no tocar
     if (/^https?:\/\//i.test(path)) return path;
 
-    // Normaliza a "/..."
     const normalized = path.startsWith("/") ? path : `/${path}`;
-
-    // Evita doble slash si BASE_URL termina en "/"
     const base = BASE_URL.endsWith("/") ? BASE_URL.slice(0, -1) : BASE_URL;
 
     return `${base}${normalized}`;
   };
 
-  // URL final del avatar (absoluto)
-  const avatarUrl = useMemo(() => {
-    return user?.imageUrl ? buildUrl(user.imageUrl) : undefined;
-  }, [user?.imageUrl]);
+  const avatarUrl = user?.imageUrl ? buildUrl(user.imageUrl) : undefined;
 
-  // Fuerza recarga cuando cambia el user o la imageUrl
   useEffect(() => {
     if (!avatarUrl) return;
 
     const key = Date.now();
     setImgKey(key);
 
-    // (Opcional) precarga para reducir "flicker"
+    // Precarga opcional
     const img = new Image();
     img.src = `${avatarUrl}?t=${key}`;
   }, [user?.id, avatarUrl]);
@@ -66,23 +55,23 @@ const UserCard: React.FC<UserCardProps> = ({
     return `${name.substring(0, 24)}...`;
   };
 
-  // Colores según rol (tu lógica original)
   useEffect(() => {
     if (roles && roles.length > 0) {
       if (user.role === roles[0]?.id) {
         setRoleColor("#e06860");
         setRoleChar("A");
-      }
-      if (user.role === roles[1]?.id) {
+      } else if (user.role === roles[1]?.id) {
         setRoleColor("#7abe74");
         setRoleChar("O");
-      }
-      if (user.role === roles[2]?.id) {
+      } else if (user.role === roles[2]?.id) {
         setRoleColor("#61afef");
         setRoleChar("G");
+      } else {
+        setRoleColor("#cccccc");
+        setRoleChar("SR");
       }
     }
-  }, [roles, user.role, userRole]);
+  }, [roles, user.role]);
 
   return (
     <Card
@@ -94,9 +83,7 @@ const UserCard: React.FC<UserCardProps> = ({
         borderBottomLeftRadius: "4rem",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         border: "1px solid rgba(53, 53, 53, 0.6)",
-        ".MuiCardHeader-root": {
-          p: "10px",
-        },
+        ".MuiCardHeader-root": { p: "10px" },
         ".MuiCardContent-root": {
           p: "0 15px 10px 0",
           display: "flex",
@@ -111,9 +98,7 @@ const UserCard: React.FC<UserCardProps> = ({
             aria-label="user"
             src={avatarUrl ? `${avatarUrl}?t=${imgKey}` : undefined}
             imgProps={{
-              onError: () => {
-                console.log("Image failed to load:", avatarUrl);
-              },
+              onError: () => console.log("Image failed to load:", avatarUrl),
             }}
           >
             {roleChar}
