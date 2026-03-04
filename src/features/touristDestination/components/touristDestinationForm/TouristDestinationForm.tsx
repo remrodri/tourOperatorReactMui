@@ -13,6 +13,8 @@ import { useState } from "react";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { CloudUpload } from "@mui/icons-material";
 
+const URL_BASE = import.meta.env.VITE_API_URL;
+
 interface TouristDestinationFormProps {
   open: boolean;
   handleClick: () => void;
@@ -44,7 +46,7 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
   formik,
   isEditing,
 }) => {
-  const BASE_URL = "http://localhost:3000";
+  // const BASE_URL = "http://localhost:3000";
   // const [preview, setPreview] = useState<string | null>(null);
   // const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
   //   if (event.target.files) {
@@ -134,7 +136,7 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
                 {formik.values.existingImages.map((image, index) => (
                   <img
                     key={index}
-                    src={`${BASE_URL}${image}`}
+                    src={`${URL_BASE}${image}`}
                     alt={`image ${index + 1}`}
                     style={{
                       width: "80px",
