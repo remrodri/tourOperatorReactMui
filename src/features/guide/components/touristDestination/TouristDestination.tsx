@@ -1,7 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+
+const URL_BASE = import.meta.env.VITE_API_URL;
 
 export interface TouristDestinationProps {
   loading: boolean;
@@ -88,7 +90,7 @@ const TouristDestination: React.FC<TouristDestinationProps> = ({
                 }}
               >
                 <img
-                  src={`${BASE_URL}${image}`}
+                  src={`${URL_BASE}${image}`}
                   alt={`image-${index}`}
                   style={{
                     width: "100%",

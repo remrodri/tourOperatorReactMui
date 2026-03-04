@@ -36,6 +36,8 @@ import TextType from "../../../../TextAnimations/TextType/TextType";
 import { TouristType } from "../../types/TouristType";
 import TouristCard from "./TouristCard";
 
+const URL_BASE = import.meta.env.VITE_API_URL;
+
 interface BookingFormProps {
   open: boolean;
   handleClose: () => void;
@@ -69,7 +71,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: ReactElement<any, any>;
   },
-  ref: Ref<unknown>
+  ref: Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -103,7 +105,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   // console.log('formik::: ', formik.values);
   // console.log('selectedTourPackage::: ', selectedTourPackage);
   const [isOpen, setIsOpen] = useState(false);
-console.log('isEditing::: ', isEditing);
+  console.log("isEditing::: ", isEditing);
   useEffect(() => {
     setIsOpen(open);
   }, [open]);
@@ -498,7 +500,7 @@ console.log('isEditing::: ', isEditing);
                     destinationImages?.map((image, index) => (
                       <Box key={index}>
                         <img
-                          src={`http://localhost:3000${image}`}
+                          src={`${URL_BASE}/${image}`}
                           alt=""
                           style={{
                             display: "flex",

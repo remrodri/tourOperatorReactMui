@@ -15,7 +15,9 @@ import { Avatar, Tooltip } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+
+const URL_BASE = import.meta.env.VITE_API_URL;
 
 interface Props {
     toggleDrawer: (newOpen: boolean) => () => void;
@@ -36,7 +38,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const user:any = jwtDecode(token)
-    setImageUrl(`${BASE_URL}${user.imagePath}`)
+    setImageUrl(`${URL_BASE}${user.imagePath}`)
   }
 
   // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

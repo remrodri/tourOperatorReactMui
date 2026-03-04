@@ -22,7 +22,8 @@ import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
 import { AppBarStyle } from "./style/MainStyles";
 // import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const URL_BASE = import.meta.env.VITE_API_URL;
 
 interface Props {
   currentStyles: AppBarStyle;
@@ -43,7 +44,7 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
       return;
     }
     const user: any = jwtDecode(token);
-    setImageUrl(`${BASE_URL}${user.imagePath}`);
+    setImageUrl(`${URL_BASE}${user.imagePath}`);
     setUserName((`${user.firstName} ${user.lastName}`).toUpperCase());
   };
 

@@ -7,6 +7,8 @@ import {
 import TouristDestinationCardMenu from "./TouristDestinationCardMenu";
 // import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 
+const URL_BASE = import.meta.env.VITE_API_URL;
+
 interface TouristDestinationCardProps {
   touristDestination: any;
   handleOption: (option: string) => void;
@@ -19,7 +21,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   role,
 }) => {
   // console.log("touristDestination::: ", touristDestination);
-  const BASE_URL = "http://localhost:3000";
+  // const BASE_URL = "http://localhost:3000";
   // console.log(`${BASE_URL}/${touristDestination.images.[0]}`)
   const shortenDescription = (description: string) => {
     if (description.length < 38) {
@@ -52,7 +54,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
           // backdropFilter: "blur(10px)",
           // border: "1px solid rgba(10,10,10,0.6)",
           height: "260px",
-          backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
+          backgroundImage: `url(${URL_BASE}${touristDestination.images[0]})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -84,7 +86,7 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
             // ".MuiCardMedia-img": {
             // }
           }}
-          // image={`${BASE_URL}${touristDestination.images[0]}`}
+          // image={`${URL_BASE}${touristDestination.images[0]}`}
         /> */}
         <CardContent
           sx={{
