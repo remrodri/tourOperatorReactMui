@@ -1,9 +1,11 @@
 import { Avatar, Box, Card, CardHeader, Typography } from "@mui/material";
-import { UserType } from "../../../types/UserType";
-import { RoleType } from "../../../types/RoleType";
 import { useEffect, useState } from "react";
 import { ContactPhone } from "@mui/icons-material";
+
+import { UserType } from "../../../types/UserType";
+import { RoleType } from "../../../types/RoleType";
 import UserCardMenu from "./UserCardMenu";
+import { ENV } from "../../../../../config/env";
 
 interface UserCardProps {
   user: UserType;
@@ -22,60 +24,56 @@ const UserCard: React.FC<UserCardProps> = ({
 }) => {
   const [roleColor, setRoleColor] = useState("#cccccc");
   const [roleChar, setRoleChar] = useState("SR");
-  // Add state to track image loading
   const [imgKey, setImgKey] = useState(() => Date.now());
-  // const [imgLoaded, setImgLoaded] = useState(false);
 
-  // Force reload of image when user or imageUrl changes
+  const BASE_URL = ENV.API_BASE_URL; // ej: http://localhost:3000
+
+  const buildUrl = (path: string) => {
+    if (/^https?:\/\//i.test(path)) return path;
+
+    const normalized = path.startsWith("/") ? path : `/${path}`;
+    const base = BASE_URL.endsWith("/") ? BASE_URL.slice(0, -1) : BASE_URL;
+
+    return `${base}${normalized}`;
+  };
+
+  const avatarUrl = user?.imageUrl ? buildUrl(user.imageUrl) : undefined;
+
   useEffect(() => {
-    if (user?.imageUrl) {
-      setImgKey(Date.now());
-      // Preload image
-      const img = new Image();
-      img.src = `${user.imageUrl}?t=${imgKey}`;
-      // img.onload = () => setImgLoaded(true);
-      // img.onerror = () => setImgLoaded(false);
-    }
-  }, [user.id, user.imageUrl]);
+    if (!avatarUrl) return;
+
+    const key = Date.now();
+    setImgKey(key);
+
+    // Precarga opcional
+    const img = new Image();
+    img.src = `${avatarUrl}?t=${key}`;
+  }, [user?.id, avatarUrl]);
 
   const shortenUserName = (name: string) => {
-    if (name.length < 27) {
-      return name;
-    }
-    const shortenName = name.substring(0, 24);
-    return `${shortenName}...`;
+    if (name.length < 27) return name;
+    return `${name.substring(0, 24)}...`;
   };
 
   useEffect(() => {
     if (roles && roles.length > 0) {
-      if (user.role === roles[0].id) {
+      if (user.role === roles[0]?.id) {
         setRoleColor("#e06860");
         setRoleChar("A");
-      }
-      if (user.role === roles[1].id) {
+      } else if (user.role === roles[1]?.id) {
         setRoleColor("#7abe74");
         setRoleChar("O");
-      }
-      if (user.role === roles[2].id) {
+      } else if (user.role === roles[2]?.id) {
         setRoleColor("#61afef");
         setRoleChar("G");
+      } else {
+        setRoleColor("#cccccc");
+        setRoleChar("SR");
       }
     }
-  }, [roles, user.role, userRole]);
+  }, [roles, user.role]);
 
   return (
-    // <AnimatedContent
-    //   distance={100}
-    //   direction="vertical"
-    //   reverse={true}
-    //   duration={1.2}
-    //   ease="power3.out"
-    //   initialOpacity={0.2}
-    //   animateOpacity
-    //   scale={1.1}
-    //   threshold={0.2}
-    //   delay={0.3}
-    // >
     <Card
       sx={{
         width: 400,
@@ -85,9 +83,7 @@ const UserCard: React.FC<UserCardProps> = ({
         borderBottomLeftRadius: "4rem",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         border: "1px solid rgba(53, 53, 53, 0.6)",
-        ".MuiCardHeader-root": {
-          p: "10px",
-        },
+        ".MuiCardHeader-root": { p: "10px" },
         ".MuiCardContent-root": {
           p: "0 15px 10px 0",
           display: "flex",
@@ -100,15 +96,9 @@ const UserCard: React.FC<UserCardProps> = ({
           <Avatar
             sx={{ height: 100, width: 100, border: `4px solid ${roleColor}` }}
             aria-label="user"
-            // Add timestamp parameter to prevent caching
-            src={user.imageUrl ? `${user.imageUrl}?t=${imgKey}` : undefined}
-            // Handle image loading errors
+            src={avatarUrl ? `${avatarUrl}?t=${imgKey}` : undefined}
             imgProps={{
-              onError: () => {
-                console.log("Image failed to load:", user.imageUrl);
-                // setImgLoaded(false);
-              },
-              // onLoad: () => setImgLoaded(true),
+              onError: () => console.log("Image failed to load:", avatarUrl),
             }}
           >
             {roleChar}
@@ -127,6 +117,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <Typography sx={{ fontSize: "16px" }}>
               {shortenUserName(`${user.firstName} ${user.lastName}`)}
             </Typography>
+
             <Typography
               sx={{
                 pt: "11px",
@@ -137,14 +128,12 @@ const UserCard: React.FC<UserCardProps> = ({
               }}
             >
               <ContactPhone />
-              {/* <br /> */}
               {user.phone}
             </Typography>
           </Box>
         }
       />
     </Card>
-    // </AnimatedContent>
   );
 };
 

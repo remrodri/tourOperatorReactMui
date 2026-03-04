@@ -14,6 +14,8 @@ import TextType from "../../../../TextAnimations/TextType/TextType";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
 import { useTouristDestinationContext } from "../../../touristDestination/context/TouristDestinationContext";
 
+const URL_BASE = import.meta.env.VITE_API_URL;
+
 interface TourPackageSectionProps {
   isEditing: boolean;
   onTourPackageChange: (id: string) => void;
@@ -198,7 +200,7 @@ const TourPackageSection: React.FC<TourPackageSectionProps> = ({
               (image: string | File, index: number) => {
                 const imageSrc =
                   typeof image === "string"
-                    ? `http://localhost:3000${image}`
+                    ? `${URL_BASE}${image}`
                     : URL.createObjectURL(image);
 
                 return (
