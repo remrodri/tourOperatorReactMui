@@ -26,19 +26,34 @@ const UserCard: React.FC<UserCardProps> = ({
   const [roleChar, setRoleChar] = useState("SR");
   const [imgKey, setImgKey] = useState(() => Date.now());
 
-  const BASE_URL = ENV.API_BASE_URL; // ej: http://localhost:3000
+  /**
+   * Convierte una ruta del backend ("/uploads/...") a URL absoluto del backend.
+   * IMPORTANTÍSIMO: ENV.API_BASE_URL debe incluir protocolo: https://...
+   */
 
-  const buildUrl = (path: string) => {
+  console.log("ENV.API_BASE_URL =", ENV.API_BASE_URL);
+  console.log("user.imageUrl =", user.imageUrl);
+  console.log("user::: ", user);
+  // console.log("avatarUrl FINAL =", avatarUrl);
+
+  const buildAssetUrl = (path: string) => {
+    // console.log('ENV::: ', ENV);
+    if (!path) return "";
+    // Si ya es URL absoluto, no tocar:
     if (/^https?:\/\//i.test(path)) return path;
 
+    // Normaliza el base sin "/" al final
+    const base = (ENV.API_BASE_URL || "").replace(/\/$/, "");
+    // Normaliza el path con "/" al inicio
     const normalized = path.startsWith("/") ? path : `/${path}`;
-    const base = BASE_URL.endsWith("/") ? BASE_URL.slice(0, -1) : BASE_URL;
-
+    // console.log("`${base}${normalized}`::: ", `${base}${normalized}`);
     return `${base}${normalized}`;
   };
 
-  const avatarUrl = user?.imageUrl ? buildUrl(user.imageUrl) : undefined;
+  // URL final para el Avatar (NO pasa por axios)
+  const avatarUrl = user?.imageUrl ? buildAssetUrl(user.imageUrl) : "";
 
+  // Si cambia el usuario o su imagen, fuerza un nuevo cache-bust param
   useEffect(() => {
     if (!avatarUrl) return;
 
@@ -55,6 +70,7 @@ const UserCard: React.FC<UserCardProps> = ({
     return `${name.substring(0, 24)}...`;
   };
 
+  // Colores según rol (tu lógica original)
   useEffect(() => {
     if (roles && roles.length > 0) {
       if (user.role === roles[0]?.id) {
@@ -83,7 +99,9 @@ const UserCard: React.FC<UserCardProps> = ({
         borderBottomLeftRadius: "4rem",
         boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
         border: "1px solid rgba(53, 53, 53, 0.6)",
-        ".MuiCardHeader-root": { p: "10px" },
+        ".MuiCardHeader-root": {
+          p: "10px",
+        },
         ".MuiCardContent-root": {
           p: "0 15px 10px 0",
           display: "flex",
@@ -98,7 +116,12 @@ const UserCard: React.FC<UserCardProps> = ({
             aria-label="user"
             src={avatarUrl ? `${avatarUrl}?t=${imgKey}` : undefined}
             imgProps={{
-              onError: () => console.log("Image failed to load:", avatarUrl),
+              onError: () => {
+                console.log("❌ Avatar no cargó:", avatarUrl);
+              },
+              onLoad: () => {
+                // console.log("✅ Avatar cargó:", avatarUrl);
+              },
             }}
           >
             {roleChar}
