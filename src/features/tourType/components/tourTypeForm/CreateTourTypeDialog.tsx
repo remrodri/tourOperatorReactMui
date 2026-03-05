@@ -5,104 +5,136 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Alert,
+  IconButton,
 } from "@mui/material";
+import { FormikProps } from "formik";
 import TextType from "../../../../TextAnimations/TextType/TextType";
+import { Close } from "@mui/icons-material";
+
+interface TourTypeFormValues {
+  name: string;
+  description: string;
+}
 
 interface CreateTourTypeDialogProps {
   open: boolean;
   handleClick: () => void;
-  formik: any;
+  formik: FormikProps<TourTypeFormValues>;
   isEdit?: boolean;
+}
+
+/**
+ * Helpers UX consistentes
+ */
+const fieldGuides: Record<keyof TourTypeFormValues, string> = {
+  name: "Ej: Aventura, Cultural, Ecológico",
+  description:
+    "Describe brevemente el tipo de experiencia (mín. 10 caracteres)",
+};
+
+function hasError(
+  formik: FormikProps<TourTypeFormValues>,
+  field: keyof TourTypeFormValues,
+) {
+  return Boolean(formik.touched[field] && formik.errors[field]);
+}
+
+function helperText(
+  formik: FormikProps<TourTypeFormValues>,
+  field: keyof TourTypeFormValues,
+) {
+  if (formik.touched[field] && formik.errors[field]) {
+    return formik.errors[field];
+  }
+  return fieldGuides[field];
 }
 
 const CreateTourTypeDialog: React.FC<CreateTourTypeDialogProps> = ({
   open,
   handleClick,
   formik,
-  isEdit,
+  isEdit = false,
 }) => {
   return (
-    <Dialog open={open} onClose={handleClick}>
-      {/* <DialogTitle>Crear Tour Type</DialogTitle> */}
+    <Dialog
+      open={open}
+      onClose={(_, reason) => {
+        if (reason === "backdropClick") return;
+        handleClick();
+      }}
+      fullWidth
+      maxWidth="xs"
+    >
       <DialogTitle>
         <TextType
           className="text-lg"
-          text={isEdit === true ? "Editar tipo de tour" : "Nuevo tipo de tour"}
+          text={isEdit ? "Editar tipo de tour" : "Nuevo tipo de tour"}
           typingSpeed={50}
-          pauseDuration={1000}
-          showCursor={true}
+          pauseDuration={800}
+          showCursor
           cursorCharacter="_"
-          deletingSpeed={50}
         />
       </DialogTitle>
-      <DialogContent>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "15rem",
-            pt: "0.5rem",
-          }}
-        >
-          <form onSubmit={formik.handleSubmit}>
-            <TextField
-              sx={{ height: "70px" }}
-              size="small"
+
+      <IconButton
+        aria-label="close"
+        onClick={handleClick}
+        disabled={formik.isSubmitting}
+        sx={{ position: "absolute", right: 12, top: 12 }}
+      >
+        <Close />
+      </IconButton>
+      <DialogContent dividers>
+        {/* Bloque informativo (muy útil en demo) */}
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Define el nombre y una breve descripción del tipo de tour.
+        </Alert>
+
+        <form onSubmit={formik.handleSubmit} noValidate>
+          {/* Nombre */}
+          <TextField
+            fullWidth
+            size="small"
+            label="Nombre"
+            {...formik.getFieldProps("name")}
+            error={hasError(formik, "name")}
+            helperText={helperText(formik, "name")}
+            sx={{ mb: 2 }}
+          />
+
+          {/* Descripción */}
+          <TextField
+            fullWidth
+            size="small"
+            label="Descripción"
+            multiline
+            rows={4}
+            {...formik.getFieldProps("description")}
+            error={hasError(formik, "description")}
+            helperText={helperText(formik, "description")}
+            sx={{ mb: 3 }}
+          />
+
+          {/* Botones */}
+          <Box display="flex" justifyContent="space-between" gap={2}>
+            <Button type="submit" variant="contained" color="success" fullWidth>
+              {isEdit ? "Actualizar" : "Registrar"}
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
               fullWidth
-              id="name"
-              label="Nombre"
-              variant="outlined"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
-            />
-            <TextField
-              sx={{ height: "135px" }}
-              size="small"
-              fullWidth
-              multiline
-              rows={4}
-              id="description"
-              label="Descripción"
-              variant="outlined"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.description && Boolean(formik.errors.description)
-              }
-              helperText={
-                formik.touched.description && formik.errors.description
-              }
-            />
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-between",
-              }}
+              onClick={handleClick}
             >
-              <Button
-                variant="contained"
-                color="success"
-                sx={{ width: "45%" }}
-                type="submit"
-              >
-                {isEdit ? "Editar" : "Registrar"}
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                sx={{ width: "45%" }}
-                onClick={handleClick}
-              >
-                Cancelar
-              </Button>
-            </Box>
-          </form>
-        </Box>
+              Cancelar
+            </Button>
+          </Box>
+        </form>
       </DialogContent>
     </Dialog>
   );
 };
+
 export default CreateTourTypeDialog;

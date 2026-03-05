@@ -104,7 +104,7 @@ const UserCard: React.FC<UserCardProps> = ({
         borderRadius: "10px",
         borderTopLeftRadius: "4rem",
         borderBottomLeftRadius: "4rem",
-        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        boxShadow: `0 4px 10px ${user.deleted ? "rgba(73, 17, 17, 0.6)" : "rgba(10,10,10,0.6)"}`,
         border: "1px solid rgba(53, 53, 53, 0.6)",
         ".MuiCardHeader-root": {
           p: "10px",
