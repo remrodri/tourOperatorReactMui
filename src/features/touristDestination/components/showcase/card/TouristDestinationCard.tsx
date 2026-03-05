@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import TouristDestinationCardMenu from "./TouristDestinationCardMenu";
 // import AnimatedContent from "../../../../../Animations/AnimatedContent/AnimatedContent";
 
-const URL_BASE = import.meta.env.VITE_API_URL;
+// const URL_BASE = import.meta.env.VITE_API_URL;
 
 interface TouristDestinationCardProps {
   touristDestination: any;
@@ -21,87 +16,64 @@ const TouristDestinationCard: React.FC<TouristDestinationCardProps> = ({
   handleOption,
   role,
 }) => {
-  // console.log("touristDestination::: ", touristDestination);
-  // const BASE_URL = "http://localhost:3000";
-  // console.log(`${BASE_URL}/${touristDestination.images.[0]}`)
   const shortenDescription = (description: string) => {
-    if (description.length < 38) {
-      return description;
-    }
-    const shortenDescription = description.substring(0, 37);
-    return `${shortenDescription}...`;
+    if (description.length < 38) return description;
+    return `${description.substring(0, 37)}...`;
   };
+
+  const buildImageUrl = (path?: string) => {
+    if (!path) return "";
+
+    // si ya es absoluta, no tocar
+    if (/^https?:\/\//i.test(path)) return path;
+
+    const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+    return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+  };
+
+  const backgroundImg = buildImageUrl(touristDestination.images?.[0]);
+
   return (
-    // <AnimatedContent
-    //   distance={100}
-    //   direction="vertical"
-    //   reverse={true}
-    //   duration={1.2}
-    //   ease="power3.out"
-    //   initialOpacity={0.2}
-    //   animateOpacity
-    //   scale={1.1}
-    //   threshold={0.2}
-    //   delay={0.3}
-    // >
-      <Card
+    <Card
+      sx={{
+        width: 300,
+        height: "260px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
+        backgroundImage: `url("${backgroundImg}")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <CardHeader
+        title={touristDestination.name}
+        action={
+          <TouristDestinationCardMenu
+            onOptionSelect={handleOption}
+            role={role}
+          />
+        }
         sx={{
-          // maxWidth: 345,
-          // minWidth: 300,
-          width: 300,
-          borderRadius: "10px",
-          // background: "rgba(10,10,10,0.52)",
-          boxShadow: "0 4px 10px rgba(10,10,10,0.6)",
-          // backdropFilter: "blur(10px)",
-          // border: "1px solid rgba(10,10,10,0.6)",
-          height: "260px",
-          backgroundImage: `url(${URL_BASE}${touristDestination.images[0]})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          // backgroundAttachment: "fixed",
-          // backgroundClip: "content-box",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%)",
+        }}
+      />
+
+      <CardContent
+        sx={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%)",
         }}
       >
-        <CardHeader
-          title={touristDestination.name}
-          action={<TouristDestinationCardMenu onOptionSelect={handleOption} role={role} />}
-          sx={{
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
-              "rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%)",
-          }}
-        />
-        {/* <CardMedia
-          component="img"
-          // height="150"
-          sx={{
-            height: "194px",
-            // width: 300,
-            objectFit: "cover",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            // ".MuiCardMedia-img": {
-            // }
-          }}
-          // image={`${URL_BASE}${touristDestination.images[0]}`}
-        /> */}
-        <CardContent
-          sx={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.7) 0%, " +
-              "rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%)",
-          }}
-        >
-          <Typography variant="body2" sx={{ color: "white" }}>
-            {shortenDescription(touristDestination.description)}
-          </Typography>
-        </CardContent>
-      </Card>
-    // </AnimatedContent>
+        <Typography variant="body2" sx={{ color: "white" }}>
+          {shortenDescription(touristDestination.description)}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 export default TouristDestinationCard;
