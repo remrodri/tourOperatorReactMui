@@ -31,9 +31,9 @@ const UserCard: React.FC<UserCardProps> = ({
    * IMPORTANTÍSIMO: ENV.API_BASE_URL debe incluir protocolo: https://...
    */
 
-  console.log("ENV.API_BASE_URL =", ENV.API_BASE_URL);
-  console.log("user.imageUrl =", user.imageUrl);
-  console.log("user::: ", user);
+  // console.log("ENV.API_BASE_URL =", ENV.API_BASE_URL);
+  // console.log("user.imageUrl =", user.imageUrl);
+  // console.log("user::: ", user);
   // console.log("avatarUrl FINAL =", avatarUrl);
 
   const buildAssetUrl = (path: string) => {
