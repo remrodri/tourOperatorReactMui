@@ -69,13 +69,17 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
     description:
       "Describe el destino, atractivos y características principales (mín. 10 caracteres)",
     newImages: "Máx. 5 imágenes · JPG/PNG/WEBP · 2 MB c/u · 10 MB en total",
-  };
+  } as const;
 
-  const hasError = (formik: FormikProps<any>, field: string) =>
+  type FieldKey = keyof typeof fieldGuides;
+
+  const hasError = (formik: FormikProps<any>, field: FieldKey) =>
     Boolean(formik.touched[field] && formik.errors[field]);
 
-  const helperText = (formik: FormikProps<any>, field: string) =>
-    hasError(formik, field) ? formik.errors[field] : fieldGuides[field];
+  const helperText = (formik: FormikProps<any>, field: FieldKey) =>
+    hasError(formik, field)
+      ? String(formik.errors[field] ?? "")
+      : fieldGuides[field];
 
   return (
     <Dialog open={open} onClose={handleClick} fullWidth maxWidth="sm">
