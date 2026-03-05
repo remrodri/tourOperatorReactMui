@@ -232,11 +232,13 @@ const UserForm: React.FC<UserFormProps> = ({
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             >
-              {roles.map((role) => (
-                <MenuItem key={role.id} value={role.id}>
-                  {role.name}
-                </MenuItem>
-              ))}
+              {roles.map((role) =>
+                role.name.toLowerCase() !== "administrador" ? (
+                  <MenuItem key={role.id} value={role.id}>
+                    {role.name}
+                  </MenuItem>
+                ) : null,
+              )}
             </Select>
           </FormControl>
 
