@@ -104,7 +104,7 @@ const isLogicalErrorResponse = (responseData: any): boolean => {
 export const getUsersRequest = async (): Promise<UserType[] | null> => {
   try {
     const response = await axiosPublic.get<ApiResponse<UserType[]>>(url);
-
+    console.log("response.data::: ", response.data);
     // Soporta 200 con error lógico
     const dataAny: any = response.data;
     if (isLogicalErrorResponse(dataAny)) {
