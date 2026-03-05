@@ -1,62 +1,41 @@
 import { Dialog, DialogContent } from "@mui/material";
 import { EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-// @ts-ignore
 import "swiper/css";
-// @ts-ignore
 import "swiper/css/navigation";
-// @ts-ignore
 import "swiper/css/pagination";
-// @ts-ignore
 import "swiper/css/effect-fade";
 
 interface GalleryProps {
   open: boolean;
   handleClick: () => void;
-  images: string[];
-  url: string;
+  images: string[]; // ✅ URLs finales
 }
 
-const Gallery: React.FC<GalleryProps> = ({
-  open,
-  handleClick,
-  images,
-  url,
-}) => {
+const Gallery: React.FC<GalleryProps> = ({ open, handleClick, images }) => {
   return (
-    <Dialog
-      open={open}
-      onClose={handleClick}
-      maxWidth={false}
-    >
-      <DialogContent
-        sx={{
-          // height:"70vh"
-        }}
-      >
+    <Dialog open={open} onClose={handleClick} maxWidth={false}>
+      <DialogContent>
         <Swiper
           spaceBetween={30}
           loop
           modules={[Navigation, Pagination, EffectFade]}
           navigation
           pagination
-          effect={"fade"}
-          style={{ width: "100%", height: "80vh", overflow:"hidden" }}
+          effect="fade"
+          style={{ width: "100%", height: "80vh", overflow: "hidden" }}
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
               <img
-                src={`${url}${image}`}
+                src={image}
                 alt="tourist destination"
                 style={{
                   width: "100%",
-                  height: "100% ",
+                  height: "100%",
                   objectFit: "contain",
-                  // backgroundSize: "cover",
-                  // backgroundPosition: "center",
-                  // borderRadius: "10px",
                   backgroundColor: "black",
-                  display:"block"
+                  display: "block",
                 }}
               />
             </SwiperSlide>
@@ -66,4 +45,5 @@ const Gallery: React.FC<GalleryProps> = ({
     </Dialog>
   );
 };
+
 export default Gallery;

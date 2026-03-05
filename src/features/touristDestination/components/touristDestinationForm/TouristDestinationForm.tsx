@@ -1,32 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
-  styled,
   TextField,
   Typography,
+  Alert,
+  styled,
 } from "@mui/material";
-import { FormikProps } from "formik";
-import { useState } from "react";
-import TextType from "../../../../TextAnimations/TextType/TextType";
 import { CloudUpload } from "@mui/icons-material";
+import TextType from "../../../../TextAnimations/TextType/TextType";
+import { FormikProps } from "formik";
+import { useEffect, useState } from "react";
+import { buildImageUrl } from "../../../../utils/helpers/buildImage";
 
-const URL_BASE = import.meta.env.VITE_API_URL;
+// ✅ helper normalizador
+// const buildImageUrl = (path?: string) => {
+//   if (!path) return "";
+//   if (/^https?:\/\//i.test(path)) return path;
 
-interface TouristDestinationFormProps {
-  open: boolean;
-  handleClick: () => void;
-  formik: FormikProps<{
-    id?: string;
-    name: string;
-    description: string;
-    newImages: File[];
-    existingImages: string[];
-  }>;
-  isEditing: boolean;
-}
+//   const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+//   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+// };
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -34,11 +31,15 @@ const VisuallyHiddenInput = styled("input")({
   height: 1,
   overflow: "hidden",
   position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
   width: 1,
 });
+
+interface TouristDestinationFormProps {
+  open: boolean;
+  handleClick: () => void;
+  formik: FormikProps<any>;
+  isEditing: boolean;
+}
 
 const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
   open,
@@ -46,225 +47,150 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
   formik,
   isEditing,
 }) => {
-  // const BASE_URL = "http://localhost:3000";
-  // const [preview, setPreview] = useState<string | null>(null);
-  // const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files) {
-  //     const filesArray = Array.from(event.target.files);
-  //     formik.setFieldValue("newImages", [
-  //       ...formik.values.newImages,
-  //       ...filesArray,
-  //     ]);
-  //     const objectUrl = URL.createObjectURL(filesArray[0]);
-  //     setPreview(objectUrl);
-  //   }
-  // };
-  // Estado para múltiples previews
   const [previews, setPreviews] = useState<string[]>([]);
 
-  // Manejar múltiples archivos
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
     if (!files) return;
 
-    const selectedFiles = Array.from(files);
+    const list = Array.from(files);
+    formik.setFieldTouched("newImages", true, true);
+    formik.setFieldValue("newImages", list, true);
 
-    // Crear URLs para previews
-    const newPreviews = selectedFiles.map((file) => URL.createObjectURL(file));
-    setPreviews(newPreviews);
-
-    // Si usás Formik, actualizá también los valores
-    formik.setFieldValue("newImages", selectedFiles);
+    setPreviews(list.map((f) => URL.createObjectURL(f)));
   };
+
+  useEffect(() => {
+    return () => previews.forEach((p) => URL.revokeObjectURL(p));
+  }, [previews]);
+
+  const fieldGuides = {
+    name: "Ej: Parque Nacional Carrasco",
+    description:
+      "Describe el destino, atractivos y características principales (mín. 10 caracteres)",
+    newImages: "Máx. 5 imágenes · JPG/PNG/WEBP · 2 MB c/u · 10 MB en total",
+  };
+
+  const hasError = (formik: FormikProps<any>, field: string) =>
+    Boolean(formik.touched[field] && formik.errors[field]);
+
+  const helperText = (formik: FormikProps<any>, field: string) =>
+    hasError(formik, field) ? formik.errors[field] : fieldGuides[field];
+
   return (
-    <Dialog open={open} onClose={handleClick}>
-      {/* <DialogTitle>Nuevo destino turistico</DialogTitle> */}
+    <Dialog open={open} onClose={handleClick} fullWidth maxWidth="sm">
       <DialogTitle>
         <TextType
-          className="text-lg"
           text={
             isEditing ? "Editar destino turístico" : "Nuevo destino turístico"
           }
-          typingSpeed={50}
-          pauseDuration={1000}
-          showCursor={true}
+          typingSpeed={40}
+          showCursor
           cursorCharacter="_"
-          deletingSpeed={50}
         />
       </DialogTitle>
-      <DialogContent
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          width: "350px",
-        }}
-      >
-        <form
-          onSubmit={formik.handleSubmit}
-          style={{
-            padding: "0.5rem 0 0 0",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+
+      <DialogContent dividers>
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Registra la información del destino turístico y agrega imágenes
+          representativas.
+        </Alert>
+
+        <form onSubmit={formik.handleSubmit} noValidate>
           <TextField
-            sx={{ height: "70px" }}
-            label="Nombre"
-            size="small"
-            {...formik.getFieldProps("name")}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
-          />
-          <TextField
-            // sx={{ height: "130px" }}
-            label="Descripcion"
             fullWidth
+            size="small"
+            label="Nombre"
+            {...formik.getFieldProps("name")}
+            error={hasError(formik, "name")}
+            helperText={helperText(formik, "name")}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            size="small"
+            label="Descripción"
             multiline
             rows={4}
             {...formik.getFieldProps("description")}
-            error={
-              formik.touched.description && Boolean(formik.errors.description)
-            }
-            helperText={formik.touched.description && formik.errors.description}
+            error={hasError(formik, "description")}
+            helperText={helperText(formik, "description")}
+            sx={{ mb: 3 }}
           />
-          {/* imagenes existentes */}
-          {formik.values.existingImages.length > 0 && (
-            <div>
-              <Typography variant="subtitle1">Imagenes existentes:</Typography>
-              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                {formik.values.existingImages.map((image, index) => (
+
+          {/* ✅ IMÁGENES EXISTENTES NORMALIZADAS */}
+          {formik.values.existingImages?.length > 0 && (
+            <Box mb={2}>
+              <Typography variant="subtitle2" mb={1}>
+                Imágenes existentes
+              </Typography>
+              <Box display="flex" gap={1} flexWrap="wrap">
+                {formik.values.existingImages.map((img: string, i: number) => (
                   <img
-                    key={index}
-                    src={`${URL_BASE}${image}`}
-                    alt={`image ${index + 1}`}
+                    key={i}
+                    src={buildImageUrl(img) || ""}
                     style={{
-                      width: "80px",
-                      height: "80px",
+                      width: 80,
+                      height: 80,
                       objectFit: "cover",
-                      borderRadius: "5px",
+                      borderRadius: 6,
+                      border: "1px solid #ccc",
                     }}
                   />
                 ))}
-              </div>
-            </div>
+              </Box>
+            </Box>
           )}
-          {/* cargar nuevas imagenes */}
-          {/* <Box
-            sx={{
-              height: "70px",
-              pt:"1.5rem"
-            }}
-          >
-            <Typography variant="subtitle1">
-              Agregar imágenes:
-            </Typography>
-            <input
+
+          <Box mb={1}>
+            <VisuallyHiddenInput
+              id="newImages"
               type="file"
               multiple
               accept="image/jpeg,image/png,image/webp"
               onChange={handleImageChange}
             />
-            {formik.errors.newImages &&
-              typeof formik.errors.newImages === "string" && (
-                <Typography color="error" sx={{fontSize:"12px",pt:"4px"}}>{formik.errors.newImages}</Typography>
-              )}
-          </Box> */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: "1rem",
-              flexDirection: "column",
-              width: "100%",
-              mt: "1rem",
-            }}
-          >
-            <Box sx={{ height: "100%", width: "100%" }}>
-              {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                Agregar imágenes:
-              </Typography> */}
+            <label htmlFor="newImages">
+              <Button
+                fullWidth
+                variant="contained"
+                component="span"
+                startIcon={<CloudUpload />}
+              >
+                Subir imágenes
+              </Button>
+            </label>
 
-              <VisuallyHiddenInput
-                id="newImages"
-                name="newImages"
-                type="file"
-                multiple
-                accept="image/jpeg,image/png,image/webp"
-                onChange={handleImageChange}
-              />
+            <Typography
+              variant="caption"
+              color={hasError(formik, "newImages") ? "error" : "text.secondary"}
+            >
+              {helperText(formik, "newImages")}
+            </Typography>
+          </Box>
 
-              <label htmlFor="newImages">
-                <Button
-                  sx={{ width: "100%" }}
-                  variant="contained"
-                  component="span"
-                  startIcon={<CloudUpload />}
-                >
-                  Subir imágenes
-                </Button>
-              </label>
-
-              {formik.touched.newImages && formik.errors.newImages && (
-                <Typography
-                  color="error"
-                  sx={{ fontSize: "12px", p: "4px 0 0 14px" }}
-                >
-                  {String(formik.errors.newImages)}
-                </Typography>
-              )}
-            </Box>
-
-            <Box>
-              {previews.length > 0 && (
-                <Box
-                  sx={{
-                    // width: "50%",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {/* <img
-                  src={previews[0]}
-                  alt="Vista previa"
+          {previews.length > 0 && (
+            <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+              {previews.map((p, i) => (
+                <img
+                  key={i}
+                  src={p}
                   style={{
-                    width: "65px",
-                    height: "65px",
+                    width: 65,
+                    height: 65,
                     objectFit: "cover",
-                    borderRadius: "8px",
+                    borderRadius: 6,
                     border: "1px solid #ccc",
                   }}
-                /> */}
-                  {previews.map((preview, index) => (
-                    <img
-                      key={index}
-                      src={preview}
-                      alt={`preview-${index}`}
-                      style={{
-                        width: "65px",
-                        height: "65px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                        border: "1px solid #ccc",
-                      }}
-                    />
-                  ))}
-                </Box>
-              )}
+                />
+              ))}
             </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              pt: "2rem",
-              gap: "1rem",
-            }}
-          >
-            <Button variant="contained" color="success" type="submit" fullWidth>
-              Enviar
+          )}
+
+          <Box display="flex" gap={2} mt={4}>
+            <Button type="submit" variant="contained" color="success" fullWidth>
+              {isEditing ? "Actualizar" : "Registrar"}
             </Button>
             <Button
               variant="contained"
@@ -280,4 +206,5 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
     </Dialog>
   );
 };
+
 export default TouristDestinationForm;

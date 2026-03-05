@@ -1,6 +1,13 @@
+import { buildImageUrl } from "../../utils/helpers/buildImage";
 import Gallery from "./Gallery";
 
-const URL_BASE = import.meta.env.VITE_API_URL;
+// const buildImageUrl = (path?: string) => {
+//   if (!path) return "";
+//   if (/^https?:\/\//i.test(path)) return path;
+
+//   const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+//   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+// };
 
 interface GalleryContainerProps {
   open: boolean;
@@ -9,10 +16,16 @@ interface GalleryContainerProps {
 }
 
 const GalleryContainer: React.FC<GalleryContainerProps> = ({
-  open,handleClick,images
+  open,
+  handleClick,
+  images,
 }) => {
-  // const BASE_URL = "http://localhost:3000";
-  // console.log('images::: ', images);
-  return <Gallery open={open} handleClick={ handleClick} images={images} url={URL_BASE} />;
+  // ✅ Normaliza TODAS las imágenes antes de pasar al Gallery
+  const normalizedImages = images.map(buildImageUrl);
+
+  return (
+    <Gallery open={open} handleClick={handleClick} images={normalizedImages} />
+  );
 };
+
 export default GalleryContainer;
