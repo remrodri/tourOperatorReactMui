@@ -21,7 +21,9 @@ const GalleryContainer: React.FC<GalleryContainerProps> = ({
   images,
 }) => {
   // ✅ Normaliza TODAS las imágenes antes de pasar al Gallery
-  const normalizedImages = images.map(buildImageUrl);
+  const normalizedImages = images
+    .map(buildImageUrl)
+    .filter((img) => img !== null) as string[];
 
   return (
     <Gallery open={open} handleClick={handleClick} images={normalizedImages} />
