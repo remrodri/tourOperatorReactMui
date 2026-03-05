@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import {
   Box,
   Button,
@@ -13,6 +15,7 @@ import {
   Typography,
   CircularProgress,
   IconButton,
+  Alert,
 } from "@mui/material";
 import { Close, CloudUpload } from "@mui/icons-material";
 import { FormikProps } from "formik";
@@ -58,6 +61,46 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+/**
+ * Helpers UX:
+ * - Si hay error (touched + errors) => mostrar error
+ * - Si no hay error => mostrar guía
+ */
+function useFieldHelpers<T extends Record<string, any>>(
+  formik: FormikProps<T>,
+  helpers: Partial<Record<keyof T, string>>,
+) {
+  const isFieldTouched = (name: keyof T) =>
+    Boolean((formik.touched as any)[name]);
+  const getFieldError = (name: keyof T) =>
+    (formik.errors as any)[name] as string | undefined;
+
+  const hasError = (name: keyof T) =>
+    isFieldTouched(name) && Boolean(getFieldError(name));
+
+  const helperText = (name: keyof T) => {
+    if (hasError(name)) return getFieldError(name);
+    return helpers[name] ?? " ";
+  };
+
+  return { hasError, helperText };
+}
+
+/**
+ * Guías (microcopy) por campo: visibles antes de fallar
+ * Puedes ajustar textos a tu negocio.
+ */
+const fieldGuides: Partial<Record<keyof UserFormValues, string>> = {
+  firstName: "Mínimo 3 caracteres. Ej: Juan",
+  lastName: "Mínimo 3 caracteres. Ej: Pérez",
+  email: "Ej: usuario@gmail.com (será el usuario de acceso)",
+  ci: "Ej: 6543210 o 6543210-1A",
+  phone: "Solo números, mínimo 7 dígitos",
+  role: "Define permisos y accesos dentro del sistema",
+  address: "Mínimo 5 caracteres. Ej: Av. Blanco Galindo km 10",
+  image: "Formatos: JPG/PNG/WEBP · Máx. 2 MB",
+};
+
 const UserForm: React.FC<UserFormProps> = ({
   open,
   handleClick,
@@ -68,6 +111,13 @@ const UserForm: React.FC<UserFormProps> = ({
   handleFileChange,
   isSubmitting = false,
 }) => {
+  const { hasError, helperText } = useFieldHelpers<UserFormValues>(
+    formik,
+    fieldGuides,
+  );
+
+  const isEditMode = Boolean(user);
+
   return (
     <Dialog
       open={open}
@@ -81,14 +131,13 @@ const UserForm: React.FC<UserFormProps> = ({
       maxWidth="sm"
     >
       <TextType
-        text={user ? "Editar usuario" : "Nuevo usuario"}
+        text={isEditMode ? "Editar usuario" : "Nuevo usuario"}
         as={DialogTitle}
         typingSpeed={40}
         showCursor
         cursorCharacter="_"
       />
 
-      {/* Botón cerrar */}
       <IconButton
         aria-label="close"
         onClick={handleClick}
@@ -99,15 +148,22 @@ const UserForm: React.FC<UserFormProps> = ({
       </IconButton>
 
       <DialogContent dividers>
-        <form onSubmit={formik.handleSubmit}>
+        {/* Bloque informativo (muy útil en demos) */}
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {isEditMode
+            ? "Actualiza los datos del usuario. El rol define sus permisos."
+            : "Crea un usuario para el sistema. El correo será su usuario de acceso y el rol define permisos."}
+        </Alert>
+
+        <form onSubmit={formik.handleSubmit} noValidate>
           {/* Nombre */}
           <TextField
             fullWidth
             size="small"
             label="Nombre(s)"
             {...formik.getFieldProps("firstName")}
-            error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-            helperText={formik.touched.firstName && formik.errors.firstName}
+            error={hasError("firstName")}
+            helperText={helperText("firstName")}
             disabled={isSubmitting}
             sx={{ mb: 2 }}
           />
@@ -118,8 +174,8 @@ const UserForm: React.FC<UserFormProps> = ({
             size="small"
             label="Apellidos"
             {...formik.getFieldProps("lastName")}
-            error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-            helperText={formik.touched.lastName && formik.errors.lastName}
+            error={hasError("lastName")}
+            helperText={helperText("lastName")}
             disabled={isSubmitting}
             sx={{ mb: 2 }}
           />
@@ -130,8 +186,8 @@ const UserForm: React.FC<UserFormProps> = ({
             size="small"
             label="Correo electrónico"
             {...formik.getFieldProps("email")}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
+            error={hasError("email")}
+            helperText={helperText("email")}
             disabled={isSubmitting}
             sx={{ mb: 2 }}
           />
@@ -142,8 +198,8 @@ const UserForm: React.FC<UserFormProps> = ({
             size="small"
             label="CI"
             {...formik.getFieldProps("ci")}
-            error={formik.touched.ci && Boolean(formik.errors.ci)}
-            helperText={formik.touched.ci && formik.errors.ci}
+            error={hasError("ci")}
+            helperText={helperText("ci")}
             disabled={isSubmitting}
             sx={{ mb: 2 }}
           />
@@ -154,8 +210,8 @@ const UserForm: React.FC<UserFormProps> = ({
             size="small"
             label="Teléfono"
             {...formik.getFieldProps("phone")}
-            error={formik.touched.phone && Boolean(formik.errors.phone)}
-            helperText={formik.touched.phone && formik.errors.phone}
+            error={hasError("phone")}
+            helperText={helperText("phone")}
             disabled={isSubmitting}
             sx={{ mb: 2 }}
           />
@@ -164,9 +220,9 @@ const UserForm: React.FC<UserFormProps> = ({
           <FormControl
             fullWidth
             size="small"
-            sx={{ mb: 2 }}
+            sx={{ mb: 0.5 }}
             disabled={isSubmitting}
-            error={formik.touched.role && Boolean(formik.errors.role)}
+            error={hasError("role")}
           >
             <InputLabel>Rol</InputLabel>
             <Select
@@ -182,12 +238,16 @@ const UserForm: React.FC<UserFormProps> = ({
                 </MenuItem>
               ))}
             </Select>
-            {formik.touched.role && formik.errors.role && (
-              <Typography color="error" fontSize={12} mt={0.5}>
-                {formik.errors.role}
-              </Typography>
-            )}
           </FormControl>
+
+          {/* helper consistente también para Select */}
+          <Typography
+            variant="caption"
+            color={hasError("role") ? "error" : "text.secondary"}
+            sx={{ display: "block", mb: 2 }}
+          >
+            {helperText("role")}
+          </Typography>
 
           {/* Dirección */}
           <TextField
@@ -195,14 +255,14 @@ const UserForm: React.FC<UserFormProps> = ({
             size="small"
             label="Dirección"
             {...formik.getFieldProps("address")}
-            error={formik.touched.address && Boolean(formik.errors.address)}
-            helperText={formik.touched.address && formik.errors.address}
+            error={hasError("address")}
+            helperText={helperText("address")}
             disabled={isSubmitting}
             sx={{ mb: 2 }}
           />
 
           {/* Imagen */}
-          <Box display="flex" alignItems="center" gap={2} mb={2}>
+          <Box display="flex" alignItems="center" gap={2} mb={0.5}>
             <label htmlFor="image">
               <VisuallyHiddenInput
                 id="image"
@@ -236,11 +296,14 @@ const UserForm: React.FC<UserFormProps> = ({
             )}
           </Box>
 
-          {formik.touched.image && formik.errors.image && (
-            <Typography color="error" fontSize={12} mb={2}>
-              {String(formik.errors.image)}
-            </Typography>
-          )}
+          {/* helper consistente para imagen (guía o error) */}
+          <Typography
+            variant="caption"
+            color={hasError("image") ? "error" : "text.secondary"}
+            sx={{ display: "block", mb: 2 }}
+          >
+            {helperText("image")}
+          </Typography>
 
           {/* Botones */}
           <Box display="flex" gap={2} mt={3}>
@@ -258,7 +321,7 @@ const UserForm: React.FC<UserFormProps> = ({
             >
               {isSubmitting
                 ? "Procesando..."
-                : user
+                : isEditMode
                   ? "Actualizar"
                   : "Registrar"}
             </Button>
