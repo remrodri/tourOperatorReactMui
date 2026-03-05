@@ -93,7 +93,14 @@ const UserCard: React.FC<UserCardProps> = ({
     <Card
       sx={{
         width: 400,
-        background: "rgba(10, 10, 10, 0.52)",
+        // background: "rgba(10, 10, 10, 0.52)",
+        background: user.deleted
+          ? "rgba(73, 17, 17, 0.52)"
+          : "rgba(10, 10, 10, 0.52)",
+        // backgroundImage:
+        // tourPackage.status === "active"
+        //   ? `linear-gradient(rgba(10, 10, 10, 0.93), rgba(10,10,10,0.52)), url(${destinationImage})`
+        //   : `linear-gradient(rgba(73, 17, 17, 0.93), rgba(73,17,17,0.52)), url(${destinationImage})`,
         borderRadius: "10px",
         borderTopLeftRadius: "4rem",
         borderBottomLeftRadius: "4rem",
