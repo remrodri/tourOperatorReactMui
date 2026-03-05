@@ -20,10 +20,6 @@ import { useNavigate } from "react-router-dom";
 // import AnimatedContent from "../../Animations/AnimatedContent/AnimatedContent";
 import DecryptedText from "../../TextAnimations/DecryptedText/DecryptedText";
 import { AppBarStyle } from "./style/MainStyles";
-// import ShinyText from "../../TextAnimations/ShinyText/ShinyText";
-
-// const BASE_URL = "http://localhost:3000";
-const URL_BASE = import.meta.env.VITE_API_URL;
 
 interface Props {
   currentStyles: AppBarStyle;
@@ -38,28 +34,32 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
 
   const navigate = useNavigate();
 
-  const getImage = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return;
-    }
-    const user: any = jwtDecode(token);
-    setImageUrl(`${URL_BASE}${user.imagePath}`);
-    setUserName((`${user.firstName} ${user.lastName}`).toUpperCase());
+  const buildImageUrl = (path?: string) => {
+    if (!path) return "";
+
+    // Si ya es absoluta, no tocar
+    if (/^https?:\/\//i.test(path)) return path;
+
+    const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+    return `${base}${path.startsWith("/") ? path : `/${path}`}`;
   };
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setAuth(event.target.checked);
-  // };
+  const getImage = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const user: any = jwtDecode(token);
+
+    // ✅ NORMALIZADO
+    setImageUrl(buildImageUrl(user.imagePath));
+    setUserName(`${user.firstName} ${user.lastName}`.toUpperCase());
+  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    // console.log('handleMenu::: ', event);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -67,34 +67,12 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
     navigate("/");
   };
 
-  // const handlePerfil = () => {
-  //   navigate("/guia-de-turismo/perfil");
-  //   handleClose();
-  // };
-
   React.useEffect(() => {
     getImage();
   }, []);
 
   return (
-    <Box
-      sx={{
-        // flexGrow: 1,
-        p: "10px 10px 10px 10px",
-      }}
-    >
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? 'Logout' : 'Login'}
-        />
-      </FormGroup> */}
+    <Box sx={{ p: "10px" }}>
       <AppBar
         position="static"
         sx={{
@@ -106,45 +84,19 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* <Tooltip title="Abrir menu" disableInteractive>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              // onClick={toggleDrawer(true)}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Tooltip> */}
-          {/* <TextType
-          text={userName}
-          typingSpeed={75}
-          pauseDuration={1000}
-          showCursor={true}
-          cursorCharacter="_"
-          deletingSpeed={50}
-        /> */}
           <DecryptedText
             text={userName}
             speed={50}
             maxIterations={20}
-            sequential={true}
+            sequential
             characters="ABCD1234!?@"
-            className="revealed"
-            parentClassName="all-letters"
-            encryptedClassName="encrypted"
             animateOn="view"
           />
-          {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {userName}
-          </Typography> */}
+
           {auth && (
             <div>
               <IconButton
                 size="large"
-                aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
@@ -156,24 +108,14 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
                   <AccountCircle fontSize="large" />
                 )}
               </IconButton>
+
               <Menu
                 sx={{ mt: "50px" }}
-                id="menu-appbar"
                 anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {/* <MenuItem onClick={handlePerfil}>Perfil</MenuItem> */}
-                <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+                <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </div>
           )}
