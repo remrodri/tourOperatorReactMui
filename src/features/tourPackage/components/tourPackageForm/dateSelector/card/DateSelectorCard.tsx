@@ -1,17 +1,15 @@
-import {
-  Box,
-  Card,
-  Chip,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import React, { useMemo } from "react";
+import { Box, Card, Chip, IconButton, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import { DateRangeType } from "../../../../types/DateRangeType";
 import { UserType } from "../../../../../userManagement/types/UserType";
-import DeleteIcon from "@mui/icons-material/Delete";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
-// import { useState } from "react";
-import DateSelectorCardMenu from "./DateSelectorCardMenu";
+
+import DateSelectorCardMenu, { DateRangeStatus } from "./DateSelectorCardMenu";
+
+// Si luego reactivas tu context:
 // import { useDateRangeContext } from "../../../../../dateRange/context/DateRangeContext";
+
 interface DateSelectorCardProps {
   range: DateRangeType;
   guides: UserType[];
@@ -27,107 +25,131 @@ const DateSelectorCard: React.FC<DateSelectorCardProps> = ({
   handleRemoveRange,
   isEditing,
 }) => {
-  // const [openMenu, setOpenMenu] = useState(false);
-  // const { updateDateRangeStatus } = useDateRangeContext();
-  // const handleClick = (option: string) => {
-  //   // setAnchorEl(anchorEl);
-  //   // console.log(option);
-  //   if (range.id) {
-  //     let status: string = "";
-  //     if (option === "Completado") {
-  //       status = "completed";
-  //     } else if (option === "Cancelado") {
-  //       status = "cancelled";
-  //     }
-  //     // console.log('option::: ', status);
-  //     // updateDateRangeStatus(range.id, status);
-  //   }
-  //   // setOpenMenu(false);
-  // };
-  // const handleClose = () => {
-  //   setOpenMenu(false);
-  // };
+  const dates = range.dates ?? [];
+  const guideIds = range.guides ?? [];
+
+  const guideMap = useMemo(
+    () => new Map(guides.map((g) => [g.id, g])),
+    [guides],
+  );
+
+  const startDate = dates[0];
+  const endDate = dates.length > 1 ? dates[dates.length - 1] : undefined;
+
+  const handleStatusChange = (status: DateRangeStatus) => {
+    // ✅ Aquí conectas tu backend cuando quieras:
+    // if (range.id) updateDateRangeStatus(range.id, status);
+
+    // Por ahora, al menos puedes loguearlo:
+    console.log("DateRange status change:", { rangeId: range.id, status });
+  };
+
   return (
     <Card
-      key={index}
       sx={{
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: "flex-start",
+        gap: 2,
         p: 2,
         bgcolor: "#5f5f5f",
         borderRadius: 1,
       }}
     >
-      <Box>
-        <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
-          {range.dates?.[0] ? (
-            // `${range.dates[0]} al ${
-            //     range.dates[range.dates.length - 1]
-            //   }`
-            range.dates.length === 1 ? (
-              <Chip label={range.dates[0]} size="small" />
-            ) : (
-              // `${range.dates[0]} al ${range.dates[range.dates.length - 1]}`
-              <>
-                <Chip label={range.dates[0]} size="small" />
-                {" al "}
-                <Chip
-                  label={range.dates[range.dates.length - 1]}
-                  size="small"
-                />
-              </>
-            )
-          ) : (
-            "Fechas no disponibles"
-          )}
-        </Typography>
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        {/* Fechas */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+            Rango:
+          </Typography>
 
-        {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                          {range.dates?.map((date, index) => (
-                            <Chip key={index} label={date} size="small" />
-                          )) || []}
-                        </Box> */}
-        {/* Display assigned guides */}
-        {range.guides && range.guides.length > 0 && (
-          <Box>
-            <Typography variant="caption" sx={{ fontWeight: "bold" }}>
-              Guia(s) asignado(s):
+          {startDate ? (
+            <>
+              <Chip label={startDate} size="small" />
+              {endDate && (
+                <>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "rgba(255,255,255,0.85)" }}
+                  >
+                    al
+                  </Typography>
+                  <Chip label={endDate} size="small" />
+                </>
+              )}
+              <Chip
+                label={`${dates.length} día(s)`}
+                size="small"
+                variant="outlined"
+                sx={{ ml: 0.5 }}
+              />
+            </>
+          ) : (
+            <Typography variant="caption" color="error">
+              Fechas no disponibles
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 0.5,
-                mt: 0.5,
-              }}
-            >
-              {range.guides.map((guideId) => {
-                const guide = guides.find((g) => g.id === guideId);
+          )}
+        </Box>
+
+        {/* Guías */}
+        <Box sx={{ mt: 1 }}>
+          <Typography variant="caption" sx={{ fontWeight: "bold" }}>
+            Guía(s) asignado(s):
+          </Typography>
+
+          {guideIds.length > 0 ? (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 0.5 }}>
+              {guideIds.map((guideId) => {
+                const guide = guideMap.get(guideId);
                 return guide ? (
                   <Chip
                     key={guide.id}
                     label={`${guide.firstName} ${guide.lastName}`}
                     size="small"
-                    variant="filled"
                     color="primary"
                   />
-                ) : null;
+                ) : (
+                  <Chip
+                    key={guideId}
+                    label={`Guía desconocida (${guideId})`}
+                    size="small"
+                    color="warning"
+                    variant="outlined"
+                  />
+                );
               })}
             </Box>
-          </Box>
-        )}
+          ) : (
+            <Typography
+              variant="caption"
+              color="error"
+              sx={{ display: "block", mt: 0.5 }}
+            >
+              Sin guías asignados
+            </Typography>
+          )}
+        </Box>
       </Box>
+
+      {/* Acciones */}
       {isEditing ? (
         <DateSelectorCardMenu
-          // onOptionSelect={handleClick}
+          disabled={!range.id} // ✅ sin id no puedes actualizar estado en backend
+          onStatusChange={handleStatusChange} // ✅ callback real
         />
       ) : (
         <IconButton
           color="error"
-          // onClick={() => handleRemoveRange(range.id)}
           onClick={() => handleRemoveRange(index)}
           size="small"
+          aria-label="Eliminar rango"
         >
           <DeleteIcon />
         </IconButton>
@@ -136,4 +158,4 @@ const DateSelectorCard: React.FC<DateSelectorCardProps> = ({
   );
 };
 
-export default DateSelectorCard;
+export default React.memo(DateSelectorCard);

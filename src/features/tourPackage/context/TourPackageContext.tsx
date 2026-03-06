@@ -1,253 +1,250 @@
-import React, {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
   createContext,
-  useState,
-  useEffect,
-  useContext,
   ReactNode,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
 } from "react";
-import { TourPackageType } from "../types/TourPackageType";
+
+import type { TourPackageType } from "../types/TourPackageType";
+import type { DateRangeType } from "../types/DateRangeType";
+
 import * as TourPackageService from "../service/TourPackageService";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
-// import { useDateRangeContext } from "../../dateRange/context/DateRangeContext";
-import { DateRangeType } from "../types/DateRangeType";
 import {
   createDateRangeRequest,
   updateDateRangeRequest,
 } from "../service/DateRangeService";
 
-type TourPackageContextType = {
-  tpFound: TourPackageType | null;
-  findTourPackageById: (id: string) => Promise<void>;
+interface TourPackageContextType {
   tourPackages: TourPackageType[];
   loading: boolean;
   error: string | null;
-  getTourPackages: () => Promise<void>;
+
+  fetchTourPackages: () => Promise<void>;
+
   createTourPackage: (
-    tourPackage: Omit<TourPackageType, "id">
-  ) => Promise<void>;
+    tourPackage: Omit<TourPackageType, "id">,
+  ) => Promise<TourPackageType | null>;
+
   updateTourPackage: (
     id: string,
-    tourPackage: Partial<TourPackageType>
-  ) => Promise<void>;
+    tourPackage: Partial<TourPackageType>,
+  ) => Promise<TourPackageType | null>;
+
   updateTourPackageStatus: (id: string, status: string) => Promise<void>;
+
   getTourPackageInfoById: (id: string) => TourPackageType | null;
+
+  createDateRange: (dateRange: DateRangeType) => Promise<DateRangeType | null>;
+  updateDateRange: (
+    dateRange: Partial<DateRangeType>,
+  ) => Promise<DateRangeType | null>;
+
   setTourPackages: (tourPackages: TourPackageType[]) => void;
-  updateDateRange: (dateRange: Partial<DateRangeType>) => Promise<void>;
-  createDateRange: (dateRange: DateRangeType) => Promise<void>;
+}
+
+const TourPackageContext = createContext<TourPackageContextType | undefined>(
+  undefined,
+);
+
+export const useTourPackageContext = (): TourPackageContextType => {
+  const context = useContext(TourPackageContext);
+  if (context === undefined) {
+    throw new Error(
+      "useTourPackageContext debe ser usado dentro de TourPackageProvider",
+    );
+  }
+  return context;
 };
 
-const TourPackageContext = createContext<TourPackageContextType | null>(null);
+// helper id
+const getId = (x: any) => x?.id ?? x?._id;
 
-type TourPackageProviderProps = {
-  children: ReactNode;
-};
-
-export const TourPackageProvider: React.FC<TourPackageProviderProps> = ({
+export const TourPackageProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [tpFound, setTpFound] = useState<TourPackageType | null>(null);
   const [tourPackages, setTourPackages] = useState<TourPackageType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { showSnackbar } = useNewSnackbar();
-  // const {addDateRange}=useDateRangeContext();
 
-  const createDateRange = async (dateRange: DateRangeType) => {
-    // console.log("dateRange::: ", dateRange);
-    const response: DateRangeType = await createDateRangeRequest(dateRange);
-    if (!response) {
-      showSnackbar("Error al crear la fecha", "error");
-    }
-    const tpFound = tourPackages.find((tp) => tp.id === response.tourPackageId);
-    if (tpFound) {
-      const updatedTp = {
-        ...tpFound,
-        dateRanges: [...tpFound.dateRanges, response],
-      };
-      setTourPackages((prev: TourPackageType[]) =>
-        prev.map((tp: TourPackageType) =>
-          tp.id === response.tourPackageId ? updatedTp : tp
-        )
-      );
-    }
-    // console.log("response::: ", response);
-  };
-
-  const updateDateRange = async (dateRange: Partial<DateRangeType>) => {
-    // console.log("dateRange::: ", dateRange);
-    const response: DateRangeType = await updateDateRangeRequest(
-      dateRange.id!,
-      dateRange
-    );
-    if (!response) {
-      showSnackbar("Error al actualizar la fecha", "error");
-    }
-    const tpFound = tourPackages.find((tp) => tp.id === response.tourPackageId);
-    if (tpFound) {
-      const updatedTp = {
-        ...tpFound,
-        dateRanges: tpFound.dateRanges.map((dr) =>
-          dr.id === dateRange.id ? response : dr
-        ),
-      };
-      setTourPackages((prev: TourPackageType[]) =>
-        prev.map((tp: TourPackageType) =>
-          tp.id === response.tourPackageId ? updatedTp : tp
-        )
-      );
-    }
-    console.log("response::: ", response);
-  };
-
-  const getTourPackageInfoById = (id: string): TourPackageType | null => {
-    if (!id) {
-      console.warn("tourPackage called without id");
-      return null;
-    }
-    const tpFound = tourPackages.find((tp) => tp.id === id);
-    return tpFound || null;
-  };
-
-  const findTourPackageById = async (id: string): Promise<void> => {
-    const tpFound = tourPackages.find((tp) => tp.id === id);
-    if (tpFound) {
-      // console.log('tpFound::: ', tpFound);
-      setTpFound(tpFound);
-    }
-  };
-
-  const getTourPackages = async (): Promise<void> => {
+  const fetchTourPackages = useCallback(async (): Promise<void> => {
     setLoading(true);
     try {
-      const response = await TourPackageService.getAllTourPackagesRequest();
-      // const tps = response.data.filter(
-      //   (tp: TourPackageType) => tp.status !== "inactive"
-      // );
-      // // console.log('response::: ', response.data);
-      // // setTourPackages(response.data);
-      // setTourPackages(tps);
-      setTourPackages(response.data);
+      const list = await TourPackageService.getAllTourPackagesRequest();
+
+      // ❌ si es null, el service ya mostró sileo.error
+      if (!list) {
+        setTourPackages([]);
+        setError("No se pudieron cargar los paquetes");
+        return;
+      }
+
+      setTourPackages(list);
       setError(null);
     } catch (err) {
       console.error("Error fetching tour packages:", err);
-      setError("Failed to fetch tour packages");
-      showSnackbar("Failed to fetch tour packages", "error");
+      setError("Error al cargar paquetes");
     } finally {
       setLoading(false);
     }
-  };
-
-  const createTourPackage = async (
-    tourPackage: Omit<TourPackageType, "id">
-  ): Promise<void> => {
-    // console.log("tourPackage::: ", tourPackage);
-    setLoading(true);
-    try {
-      const newTourPackage = await TourPackageService.createTourPackageRequest(
-        tourPackage
-      );
-      // newTourPackage.data.dateRanges.forEach((dr:DateRangeType)=>addDateRange(dr));
-      // const formatedTourPackage = {
-      //   ...newTourPackage.data,
-      //   dateRanges:newTourPackage.data.dateRanges.map((dr:any)=>{return {id:dr.id}})
-      // }
-      // setTourPackages((prev) => [...prev, formatedTourPackage]);
-      setTourPackages((prev) => [...prev, newTourPackage.data]);
-      setError(null);
-      showSnackbar("Tour package created successfully!", "success");
-    } catch (err) {
-      console.error("Error creating tour package:", err);
-      setError("Failed to create tour package");
-      showSnackbar("Failed to create tour package", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateTourPackage = async (
-    id: string,
-    tourPackage: Partial<TourPackageType>
-  ): Promise<void> => {
-    setLoading(true);
-    try {
-      // Create a complete tour package object with the id for the service call
-      // console.log('tourPackage::: ', tourPackage);
-      const tourPackageWithId = { ...tourPackage, id };
-      // console.log('tourPackageWithId::: ', tourPackageWithId);
-      const updatedTourPackage = (
-        await TourPackageService.updateTourPackageRequest(tourPackageWithId)
-      ).data;
-      setTourPackages((prev) =>
-        prev.map((pkg) => (pkg.id === id ? updatedTourPackage : pkg))
-      );
-      setError(null);
-      showSnackbar("Tour package updated successfully!", "success");
-    } catch (err) {
-      console.error("Error updating tour package:", err);
-      setError("Failed to update tour package");
-      showSnackbar("Failed to update tour package", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateTourPackageStatus = async (
-    id: string,
-    status: string
-  ): Promise<void> => {
-    setLoading(true);
-    try {
-      await TourPackageService.updateTourPackageStatusRequest(id, status);
-      // setTourPackages((prev) => prev.filter((pkg) => pkg.id !== id));
-      setTourPackages((prev) =>
-        prev.map((pkg) => (pkg.id === id ? { ...pkg, status } : pkg))
-      );
-      setError(null);
-      showSnackbar("Tour package status updated successfully!", "success");
-    } catch (err) {
-      console.error("Error updating tour package status:", err);
-      setError("Failed to update tour package status");
-      showSnackbar("Failed to update tour package status", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, []);
 
   useEffect(() => {
-    getTourPackages();
-    // console.log('tourPackages::: ', tourPackages);
-  }, []);
+    fetchTourPackages();
+  }, [fetchTourPackages]);
+
+  const getTourPackageInfoById = useCallback(
+    (id: string): TourPackageType | null => {
+      if (!id) return null;
+      return tourPackages.find((tp) => getId(tp) === id) ?? null;
+    },
+    [tourPackages],
+  );
+
+  const createTourPackage = useCallback(
+    async (
+      tourPackage: Omit<TourPackageType, "id">,
+    ): Promise<TourPackageType | null> => {
+      try {
+        const created =
+          await TourPackageService.createTourPackageRequest(tourPackage);
+
+        if (!created) return null;
+
+        setTourPackages((prev) => [...prev, created]);
+        return created;
+      } catch (err) {
+        console.error("Error creating tour package:", err);
+        setError("Error al crear paquete");
+        return null;
+      }
+    },
+    [],
+  );
+
+  const updateTourPackage = useCallback(
+    async (
+      id: string,
+      tourPackage: Partial<TourPackageType>,
+    ): Promise<TourPackageType | null> => {
+      try {
+        const updated = await TourPackageService.updateTourPackageRequest({
+          ...tourPackage,
+          id,
+        });
+
+        if (!updated) return null;
+
+        setTourPackages((prev) =>
+          prev.map((tp) => (getId(tp) === id ? updated : tp)),
+        );
+
+        return updated;
+      } catch (err) {
+        console.error("Error updating tour package:", err);
+        setError("Error al actualizar paquete");
+        return null;
+      }
+    },
+    [],
+  );
+
+  const updateTourPackageStatus = useCallback(
+    async (id: string, status: string): Promise<void> => {
+      try {
+        const updated = await TourPackageService.updateTourPackageStatusRequest(
+          id,
+          status,
+        );
+
+        if (!updated) return;
+
+        setTourPackages((prev) =>
+          prev.map((tp) => (getId(tp) === id ? { ...tp, status } : tp)),
+        );
+      } catch (err) {
+        console.error("Error updating tour package status:", err);
+        setError("Error al actualizar estado");
+      }
+    },
+    [],
+  );
+
+  const createDateRange = useCallback(
+    async (dateRange: DateRangeType): Promise<DateRangeType | null> => {
+      try {
+        const created = await createDateRangeRequest(dateRange);
+        if (!created) return null;
+
+        setTourPackages((prev) =>
+          prev.map((tp) =>
+            getId(tp) === created.tourPackageId
+              ? { ...tp, dateRanges: [...tp.dateRanges, created] }
+              : tp,
+          ),
+        );
+
+        return created;
+      } catch (err) {
+        console.error("Error creating date range:", err);
+        return null;
+      }
+    },
+    [],
+  );
+
+  const updateDateRange = useCallback(
+    async (
+      dateRange: Partial<DateRangeType>,
+    ): Promise<DateRangeType | null> => {
+      if (!dateRange.id) return null;
+
+      try {
+        const updated = await updateDateRangeRequest(dateRange.id, dateRange);
+
+        if (!updated) return null;
+
+        setTourPackages((prev) =>
+          prev.map((tp) =>
+            getId(tp) === updated.tourPackageId
+              ? {
+                  ...tp,
+                  dateRanges: tp.dateRanges.map((dr) =>
+                    dr.id === updated.id ? updated : dr,
+                  ),
+                }
+              : tp,
+          ),
+        );
+
+        return updated;
+      } catch (err) {
+        console.error("Error updating date range:", err);
+        return null;
+      }
+    },
+    [],
+  );
 
   return (
     <TourPackageContext.Provider
       value={{
-        tpFound,
-        findTourPackageById,
         tourPackages,
         loading,
         error,
-        getTourPackages,
+        fetchTourPackages,
         createTourPackage,
         updateTourPackage,
         updateTourPackageStatus,
         getTourPackageInfoById,
-        setTourPackages,
-        updateDateRange,
         createDateRange,
+        updateDateRange,
+        setTourPackages,
       }}
     >
       {children}
     </TourPackageContext.Provider>
   );
-};
-
-export const useTourPackageContext = (): TourPackageContextType => {
-  const context = useContext(TourPackageContext);
-  if (!context) {
-    throw new Error(
-      "useTourPackageContext must be used within a TourPackageProvider"
-    );
-  }
-
-  return context;
 };

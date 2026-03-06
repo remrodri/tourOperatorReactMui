@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createContext,
   ReactNode,
@@ -71,7 +72,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [userInfo, setUserInfo] = useState<UserType | null>(null);
 
   const guides = useMemo(
-    () => users.filter((u) => u.role === ROLES.GUIDE),
+    () => users.filter((u) => u.role === ROLES.GUIDE && !u.deleted),
     [users],
   );
 

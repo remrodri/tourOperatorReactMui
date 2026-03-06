@@ -5,25 +5,16 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
+
 import {
   createTourType,
   getAllTourTypes,
   updateTourTypeRequest,
 } from "../service/tourTypeService";
-import { TourType } from "../../userManagement/types/TourType";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
 
-interface TourTypeContextType {
-  tourTypes: TourType[];
-  openDialog: boolean;
-  handleClick: () => void;
-  registerTourType: (tourTypeData: any) => void;
-  updateTourType: (values: UpdateTourTypeValues, id: string) => void;
-  getTourTypeNameById: (id: string) => string;
-  getTourTypeInfoById: (id: string) => TourType | null;
-  // handleUpdate: (data: UpdateTourTypeValues) => void;
-}
+import type { TourType } from "../../userManagement/types/TourType";
 
 interface UpdateTourTypeValues {
   id: string;
@@ -31,145 +22,149 @@ interface UpdateTourTypeValues {
   description: string;
 }
 
-// interface DeleteTourTypeValues {
-//   id: string;
-// }
+interface TourTypeContextType {
+  tourTypes: TourType[];
+  loading: boolean;
+
+  openDialog: boolean;
+  toggleDialog: () => void;
+
+  fetchTourTypes: () => Promise<void>;
+  registerTourType: (tourTypeData: TourType) => Promise<TourType | null>;
+  updateTourType: (
+    values: UpdateTourTypeValues,
+    id: string,
+  ) => Promise<TourType | null>;
+
+  getTourTypeNameById: (id: string) => string;
+  getTourTypeInfoById: (id: string) => TourType | null;
+}
 
 const TourTypeContext = createContext<TourTypeContextType | undefined>(
   undefined,
 );
 
+export const useTourTypeContext = () => {
+  const context = useContext(TourTypeContext);
+  if (context === undefined) {
+    throw new Error(
+      "useTourTypeContext debe ser usado dentro de TourTypeProvider",
+    );
+  }
+  return context;
+};
+
 export const TourTypeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [tourTypes, setTourTypes] = useState<TourType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const { showSnackbar } = useNewSnackbar();
 
-  const getTourTypeInfoById = (id: string): TourType | null => {
-    if (!id) {
-      console.warn("tourType called without id");
-      return null;
-    }
- 
-    const ttFound = (tourTypes as TourType[]).find(
-      (tt: TourType) => tt.id === id,
-    );
-    if (!ttFound) {
-      console.warn("tourType not found");
-      return null;
-    }
-    return ttFound;
-  };
+  // helper id por si algún día viene _id
+  const getId = (t: any) => t?.id ?? t?._id;
 
-  const getTourTypeNameById = (id: string) => {
-    const tt = tourTypes.find((tt: TourType) => tt.id === id);
-    if (!tt) {
-      return "tipo de tour no encontrado";
-    }
-    return tt.name;
-  };
+  const toggleDialog = useCallback(() => {
+    setOpenDialog((prev) => !prev);
+  }, []);
 
-
-  const handleClick = () => {
-    console.log("click::: ");
-    setOpenDialog(!openDialog);
-  };
-
-  // const handleUpdate = (data: UpdateTourTypeValues) => {
-  //   console.log("data::: ", data);
-  //   setOpenDialog(!openDialog);
-  // };
-
-  const updateTourType = async (values: UpdateTourTypeValues, id: string) => {
+  const fetchTourTypes = useCallback(async (): Promise<void> => {
+    setLoading(true);
     try {
-      const response = await updateTourTypeRequest(values, id);
-      if (!response) {
-        showSnackbar("El tipo de tour no se actualizo", "error");
+      const list = await getAllTourTypes();
+
+      // ❌ si es null, el service ya mostró sileo.error
+      if (!list) {
+        setTourTypes([]);
         return;
       }
-      setTourTypes((prevTourTypes: TourType[]) =>
-        prevTourTypes.map((tourType: TourType) =>
-          tourType.id === id ? { ...tourType, ...response } : tourType,
-        ),
-      );
-      showSnackbar("El tipo de tour se actualizo", "success");
-    } catch (error) {
-      console.log(error);
-      showSnackbar("Error al actualizar", "error");
-    }
-  };
-  // const deleteTourType = async (deleteTourType: DeleteTourTypeValues) => {
-  //   try {
-  //     const response = await deleteTourTypeRequest(deleteTourType.id);
-  //     if (!response) {
-  //       showSnackbar("Error al eliminar un tipo de tour", "error");
-  //       return;
-  //     }
-  //     setTourTypes((prevTourTypes: TourType[]) =>
-  //       prevTourTypes.filter(
-  //         (tourType: TourType) => tourType.id !== response.id,
-  //       ),
-  //     );
-  //     showSnackbar("Eliminado con exito", "success");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
-  const registerTourType = async (tourTypeData: TourType) => {
-    try {
-      const response = await createTourType(tourTypeData);
-      if (!response) {
-        showSnackbar("Error al registrar tourType", "error");
-        return;
-      }
-      setTourTypes([...tourTypes, response]);
-      // setOpenDialog(false);
-      // handleClick();
-      showSnackbar("Registrado con exito", "success");
-    } catch (error) {
-      console.log(error);
+      setTourTypes(list);
+    } catch (err) {
+      console.error("Error fetching tour types:", err);
+      setTourTypes([]);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const fetchTourTypes = async () => {
-    try {
-      const tourTypeList = await getAllTourTypes();
-      setTourTypes(tourTypeList || []);
-    } catch (error) {
-      console.log("Error al obtener los tipos de tour::: ", error);
-    }
-  };
+  }, []);
 
   useEffect(() => {
-    // console.log("::: ");
     fetchTourTypes();
-  }, []);
+  }, [fetchTourTypes]);
+
+  const getTourTypeInfoById = useCallback(
+    (id: string): TourType | null => {
+      if (!id) return null;
+      return tourTypes.find((tt) => getId(tt) === id) ?? null;
+    },
+    [tourTypes],
+  );
+
+  const getTourTypeNameById = useCallback(
+    (id: string): string => {
+      const tt = tourTypes.find((t) => getId(t) === id);
+      return tt?.name ?? "tipo de tour no encontrado";
+    },
+    [tourTypes],
+  );
+
+  const registerTourType = useCallback(
+    async (tourTypeData: TourType): Promise<TourType | null> => {
+      try {
+        const created = await createTourType(tourTypeData);
+
+        // ❌ si es null, el service ya mostró sileo.error
+        if (!created) return null;
+
+        setTourTypes((prev) => [...prev, created]);
+        return created;
+      } catch (err) {
+        console.error("Error creating tour type:", err);
+        return null;
+      }
+    },
+    [],
+  );
+
+  const updateTourType = useCallback(
+    async (
+      values: UpdateTourTypeValues,
+      id: string,
+    ): Promise<TourType | null> => {
+      try {
+        const updated = await updateTourTypeRequest(values, id);
+
+        // ❌ si es null, el service ya mostró sileo.error
+        if (!updated) return null;
+
+        setTourTypes((prev) =>
+          prev.map((tt) => (getId(tt) === id ? updated : tt)),
+        );
+
+        return updated;
+      } catch (err) {
+        console.error("Error updating tour type:", err);
+        return null;
+      }
+    },
+    [],
+  );
 
   return (
     <TourTypeContext.Provider
       value={{
         tourTypes,
+        loading,
         openDialog,
-        handleClick,
+        toggleDialog,
+        fetchTourTypes,
         registerTourType,
         updateTourType,
         getTourTypeNameById,
         getTourTypeInfoById,
-        // handleUpdate,
       }}
     >
       {children}
     </TourTypeContext.Provider>
   );
-};
-export const useTourTypeContext = () => {
-  const context = useContext(TourTypeContext);
-  if (context === undefined) {
-    throw new Error(
-      "useTourTypeContext must be used within a TourTypeProvider",
-    );
-  }
-  return context;
 };

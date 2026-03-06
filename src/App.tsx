@@ -3,6 +3,7 @@ import { AppRouter } from "./router/AppRouter";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { SnackbarProvider } from "./context/SnackbarContext";
 import GlobalSnackbar from "./utils/snackbar/GlobalSnackbar";
+import "./dayjs";
 
 import "@fontsource/roboto/400.css"; // carga Roboto 400 por defecto
 import "@fontsource/poppins/400.css"; // carga por defecto 400

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import {
   Box,
   Button,
@@ -6,311 +7,270 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  IconButton,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   TextField,
   Typography,
+  IconButton,
+  Alert,
+  InputAdornment,
 } from "@mui/material";
-import { FormikProps } from "formik";
-import DayItineraryManager from "../itineraryManager/DayItineraryManager";
-import { TourItineraryType } from "../../types/DayItineraryType";
-import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
-import { DateRangeType } from "../../types/DateRangeType";
-import { UserType } from "../../../userManagement/types/UserType";
-import TextType from "../../../../TextAnimations/TextType/TextType";
 import { Close } from "@mui/icons-material";
+import { FormikProps } from "formik";
 
-interface TourPackageFormProps {
-  guides: UserType[];
+import TextType from "../../../../TextAnimations/TextType/TextType";
+import DayItineraryManager from "../itineraryManager/DayItineraryManager";
+import DateSelectorContainer from "./dateSelector/DateSelectorContainer";
+import { TourPackageFormValues } from "./TourPackageFormContainer";
+import { UserType } from "../../../userManagement/types/UserType";
+
+const TOUR_PACKAGE_MAX_PRICE = 100_000;
+/* ============================
+   Helpers UX (MISMO PATRÓN)
+============================ */
+function useFieldHelpers<T extends Record<string, any>>(
+  formik: FormikProps<T>,
+  helpers: Partial<Record<keyof T, string>>,
+) {
+  const isFieldTouched = (name: keyof T) =>
+    Boolean((formik.touched as any)[name]);
+  const getFieldError = (name: keyof T) =>
+    (formik.errors as any)[name] as string | undefined;
+
+  const hasError = (name: keyof T) =>
+    isFieldTouched(name) && Boolean(getFieldError(name));
+
+  const helperText = (name: keyof T) => {
+    if (hasError(name)) return getFieldError(name);
+    return helpers[name] ?? " ";
+  };
+
+  return { hasError, helperText };
+}
+
+/* ============================
+   Microcopy por campo
+============================ */
+
+const fieldGuides: Partial<Record<keyof TourPackageFormValues, string>> = {
+  name: "Ej: Tour Aventura Carrasco (mín. 3 caracteres)",
+  tourType: "Selecciona la categoría del tour",
+  touristDestination: "Selecciona el destino principal",
+  duration: "Cantidad de días del tour (mín. 1)",
+  price: `Precio total del paquete. Máximo permitido: Bs. ${TOUR_PACKAGE_MAX_PRICE.toLocaleString()}`,
+};
+
+
+/* ============================
+   Props
+============================ */
+interface Props {
   open: boolean;
   handleClick: () => void;
-  formik: FormikProps<{
-    id?: string;
-    name: string;
-    tourType: string;
-    // cancellationPolicy: string;
-    touristDestination: string;
-    duration: number;
-    dateRanges: DateRangeType[];
-    itinerary: TourItineraryType;
-    price: number;
-  }>;
-  tourTypes: any[];
-  // cancellationPolicy: any[];
-  touristDestinations: any[];
+  formik: FormikProps<TourPackageFormValues>;
+  tourTypes: Array<{ id: string; name: string }>;
+  touristDestinations: Array<{ id: string; name: string }>;
+  guides: UserType[];
   isEditing: boolean;
 }
 
-const TourPackageForm: React.FC<TourPackageFormProps> = ({
-  guides,
+/* ============================
+   Component
+============================ */
+const TourPackageForm: React.FC<Props> = ({
   open,
   handleClick,
   formik,
   tourTypes,
-  // cancellationPolicy,
   touristDestinations,
+  guides,
   isEditing,
 }) => {
+  const { hasError, helperText } = useFieldHelpers(formik, fieldGuides);
+
+  const duration =
+    formik.values.duration === "" ? 1 : Number(formik.values.duration);
+
   return (
-    <Dialog open={open} onClose={handleClick} maxWidth={false}>
-      {/* <DialogTitle>Nuevo Paquete turistico</DialogTitle> */}
+    <Dialog
+      open={open}
+      onClose={(_, reason) => {
+        if (reason === "backdropClick") return;
+        handleClick();
+      }}
+      fullWidth
+      maxWidth="md"
+    >
       <TextType
         text={
           isEditing ? "Editar paquete turístico" : "Nuevo paquete turístico"
         }
         as={DialogTitle}
-        typingSpeed={50}
-        pauseDuration={1000}
-        showCursor={true}
+        typingSpeed={40}
+        showCursor
         cursorCharacter="_"
-        deletingSpeed={50}
       />
+
       <IconButton
-        autoFocus
         aria-label="close"
         onClick={handleClick}
-        sx={{
-          position: "absolute",
-          right: 12,
-          top: 12,
-        }}
+        sx={{ position: "absolute", right: 12, top: 12 }}
       >
         <Close />
       </IconButton>
-      <DialogContent
-        sx={{
-          width: {
-            xs: "20rem",
-            sm: "25rem",
-            md: "45rem",
-            lg: "65rem",
-          },
-        }}
-      >
-        <form
-          onSubmit={(e) => {
-            // e.preventDefault();
-            // console.log("Valores antes de validar:", formik.values);
-            // console.log("Errores actuales:", formik.errors);
-            formik.handleSubmit(e);
-          }}
-          // onSubmit={(e) => {
-          //   formik.handleSubmit(e);
-          // }}
-          style={{
-            padding: "0.3rem 0 0 0",
-          }}
-        >
+
+      <DialogContent dividers>
+        {/* Bloque informativo (MISMO ESTILO QUE USER) */}
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {isEditing
+            ? "Edita la información del paquete turístico. La duración no puede modificarse."
+            : "Crea un nuevo paquete turístico. Primero define fechas y luego el itinerario."}
+        </Alert>
+
+        <form onSubmit={formik.handleSubmit} noValidate>
+          {/* Nombre */}
           <TextField
-            sx={{ height: "70px" }}
-            label="Nombre"
-            size="small"
             fullWidth
+            size="small"
+            label="Nombre del paquete"
             {...formik.getFieldProps("name")}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
+            error={hasError("name")}
+            helperText={helperText("name")}
+            sx={{ mb: 2 }}
           />
-          <Box
-            sx={{
-              height: "70px",
-            }}
+
+          {/* Tipo de tour */}
+          <FormControl
+            fullWidth
+            size="small"
+            error={hasError("tourType")}
+            sx={{ mb: 0.5 }}
           >
-            <FormControl size="small" fullWidth>
-              <InputLabel id="tourType">Tipo de tour</InputLabel>
-              <Select
-                labelId="tourType"
-                id="tourType"
-                label="Tipo de tour"
-                {...formik.getFieldProps("tourType")}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.tourType && Boolean(formik.errors.tourType)
-                }
-              >
-                {tourTypes.map((tourType) => (
-                  <MenuItem key={tourType.id} value={tourType.id}>
-                    {tourType.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {formik.errors.tourType && (
-              <Typography
-                color="error"
-                sx={{ fontSize: "12px", pt: "4px", pl: "12px" }}
-              >
-                {formik.errors.tourType}
-              </Typography>
-            )}
-          </Box>
-          {/* <Box sx={{ height: "70px" }}>
-            <FormControl size="small" fullWidth>
-              <InputLabel id="cancellationPolicy">
-                Politica de cancelacion
-              </InputLabel>
-              <Select
-                labelId="cancellationPolicy"
-                id="cancellationPolicy"
-                label="Politica de cancelacion"
-                {...formik.getFieldProps("cancellationPolicy")}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.cancellationPolicy &&
-                  Boolean(formik.errors.cancellationPolicy)
-                }
-              >
-                {cancellationPolicy.map((cp) => (
-                  <MenuItem key={cp.id} value={cp.id}>
-                    {cp.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {formik.errors.cancellationPolicy && (
-              <Typography
-                color="error"
-                sx={{ fontSize: "12px", p: "4px 0 0 12px" }}
-              >
-                {formik.errors.cancellationPolicy}
-              </Typography>
-            )}
-          </Box> */}
-          <Box sx={{ height: "70px" }}>
-            <FormControl size="small" fullWidth>
-              <InputLabel id="touristDestination">Destino turistico</InputLabel>
-              <Select
-                labelId="touristDestination"
-                id="touristDestination"
-                label="Destino turistico"
-                {...formik.getFieldProps("touristDestination")}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.touristDestination &&
-                  Boolean(formik.errors.touristDestination)
-                }
-              >
-                {touristDestinations.map((td) => (
-                  <MenuItem key={td.id} value={td.id}>
-                    {td.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {formik.errors.touristDestination && (
-              <Typography
-                color="error"
-                sx={{ fontSize: "12px", p: "4px 0 0 12px" }}
-              >
-                {formik.errors.touristDestination}
-              </Typography>
-            )}
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "space-between",
-            }}
+            <InputLabel>Tipo de tour</InputLabel>
+            <Select label="Tipo de tour" {...formik.getFieldProps("tourType")}>
+              {tourTypes.map((t) => (
+                <MenuItem key={t.id} value={t.id}>
+                  {t.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography
+            variant="caption"
+            color={hasError("tourType") ? "error" : "text.secondary"}
+            sx={{ display: "block", mb: 2 }}
           >
+            {helperText("tourType")}
+          </Typography>
+
+          {/* Destino */}
+          <FormControl
+            fullWidth
+            size="small"
+            error={hasError("touristDestination")}
+            sx={{ mb: 0.5 }}
+          >
+            <InputLabel>Destino turístico</InputLabel>
+            <Select
+              label="Destino turístico"
+              {...formik.getFieldProps("touristDestination")}
+            >
+              {touristDestinations.map((d) => (
+                <MenuItem key={d.id} value={d.id}>
+                  {d.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography
+            variant="caption"
+            color={hasError("touristDestination") ? "error" : "text.secondary"}
+            sx={{ display: "block", mb: 2 }}
+          >
+            {helperText("touristDestination")}
+          </Typography>
+
+          {/* Duración / Precio */}
+          <Box display="flex" gap={2} mb={2}>
             <TextField
-              sx={{ height: "70px", width: "40%" }}
-              disabled={formik.values.id ? true : false}
-              label="Duracion (dias)"
+              fullWidth
               size="small"
+              label="Duración"
               type="number"
-              {...formik.getFieldProps("duration")}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">Dia(s)</InputAdornment>
-                  ),
-                },
+              value={formik.values.duration}
+              onChange={(e) =>
+                formik.setFieldValue(
+                  "duration",
+                  e.target.value === "" ? "" : Number(e.target.value),
+                )
+              }
+              error={hasError("duration")}
+              helperText={helperText("duration")}
+              disabled={isEditing}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">día(s)</InputAdornment>
+                ),
               }}
-              onChange={(e) => {
-                // const value = Number(e.target.value);
-                // if (value > 0) {
-                //   formik.setFieldValue("duration", value);
-                // }
-                const value =
-                  e.target.value === "" ? "" : Number(e.target.value);
-                formik.setFieldValue("duration", value);
-              }}
-              // error={formik.touched.duration && Boolean(formik.errors.duration)}
-              // helperText={formik.touched.duration && formik.errors.duration}
             />
+
             <TextField
-              sx={{ height: "70px", width: "40%" }}
+              fullWidth
+              size="small"
               label="Precio"
-              size="small"
               type="number"
-              // fullWidth
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">Bs.</InputAdornment>
-                  ),
-                },
+              value={formik.values.price}
+              onChange={(e) =>
+                formik.setFieldValue(
+                  "price",
+                  e.target.value === "" ? "" : Number(e.target.value),
+                )
+              }
+              error={hasError("price")}
+              helperText={helperText("price")}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">Bs.</InputAdornment>
+                ),
               }}
-              {...formik.getFieldProps("price")}
-              onChange={(e) => {
-                const value =
-                  e.target.value === "" ? "" : Number(e.target.value);
-                formik.setFieldValue("price", value);
-              }}
-              error={formik.touched.price && Boolean(formik.errors.price)}
-              helperText={formik.touched.price && formik.errors.price}
             />
           </Box>
-          {/* {formik.values.id ? (
-            <Box>bloqueado</Box>
-          ) : ( */}
+
+          {/* Fechas */}
           {!isEditing && (
             <DateSelectorContainer
               guides={guides}
-              duration={formik.values.duration}
-              // dateRanges={formik.values.dateRanges}
-              // blockedDates={formik.values.blockedDates}
-              onDateChange={(dates: any) =>
-                formik.setFieldValue("dateRanges", dates)
-              }
+              duration={duration}
               isEditing={isEditing}
+              formik={formik}
             />
           )}
-          <DayItineraryManager
-            duration={formik.values.duration}
-            itinerary={formik.values.itinerary || { days: [] }}
-            onChange={(itinerary) =>
-              formik.setFieldValue("itinerary", itinerary)
-            }
-          />
 
-          <Box
-            sx={{
-              pt: "2rem",
-              display: "flex",
-              gap: "1rem",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="success"
-              type="submit"
-              fullWidth
-              // onClick={() => {
-              //   console.log("Submit button clicked", { formData: formik.values });
-              // }}
-              // disabled={formik.isSubmitting}
-            >
-              Enviar
+          {/* Itinerario */}
+          <Box mt={3}>
+            <Typography variant="subtitle1" gutterBottom>
+              Itinerario
+            </Typography>
+            <DayItineraryManager
+              duration={duration}
+              itinerary={formik.values.itinerary}
+              onChange={(itinerary) =>
+                formik.setFieldValue("itinerary", itinerary)
+              }
+            />
+          </Box>
+
+          {/* Botones (MISMO LAYOUT QUE USER) */}
+          <Box display="flex" gap={2} mt={3}>
+            <Button type="submit" fullWidth variant="contained" color="success">
+              {isEditing ? "Actualizar" : "Registrar"}
             </Button>
+
             <Button
+              fullWidth
               variant="contained"
               color="error"
-              fullWidth
-              disabled={formik.isSubmitting}
               onClick={handleClick}
             >
               Cancelar
@@ -321,4 +281,5 @@ const TourPackageForm: React.FC<TourPackageFormProps> = ({
     </Dialog>
   );
 };
+
 export default TourPackageForm;

@@ -1,62 +1,88 @@
-import { IconButton, Menu, MenuItem } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { MouseEvent, useMemo, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
-const options = ["Completado", "Cancelado"];
+export type DateRangeStatus = "completed" | "cancelled";
 
-// interface DateSelectorCardMenuProps {
-//   // onOptionSelect: (option: string) => void;
-//   // handleClickInfo: () => void;
-// }
+interface DateSelectorCardMenuProps {
+  disabled?: boolean;
+  onStatusChange: (status: DateRangeStatus) => void;
+}
 
-const DateSelectorCardMenu: React.FC= () => {
+const DateSelectorCardMenu: React.FC<DateSelectorCardMenuProps> = ({
+  disabled = false,
+  onStatusChange,
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (disabled) return;
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = () => setAnchorEl(null);
+
+  const handleSelect = (status: DateRangeStatus) => {
+    onStatusChange(status);
+    handleClose();
   };
 
-  // const handleOptionClick = (option: string) => {
-  //   // onOptionSelect(option);
-  //   handleClose();
-  // };
+  const options = useMemo(
+    () => [
+      {
+        label: "Completado",
+        value: "completed" as const,
+        icon: <CheckCircleIcon fontSize="small" />,
+      },
+      {
+        label: "Cancelado",
+        value: "cancelled" as const,
+        icon: <CancelIcon fontSize="small" />,
+      },
+    ],
+    [],
+  );
 
   return (
     <>
       <IconButton
         aria-label="more"
-        id="long-button"
-        aria-controls={open ? "long-menu" : undefined}
+        id="date-range-menu-button"
+        aria-controls={open ? "date-range-menu" : undefined}
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
+        disabled={disabled}
+        size="small"
       >
-        <MoreVertIcon />
+        <MoreVertIcon fontSize="small" />
       </IconButton>
+
       <Menu
-        id="long-menu"
-        MenuListProps={{
-          "aria-labelledby": "long-button",
-        }}
+        id="date-range-menu"
+        MenuListProps={{ "aria-labelledby": "date-range-menu-button" }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        // slotProps={
-        //   { paper: { style: { width: "20ch" } } }
-        // }
       >
-        {options.map((option) => (
-          <MenuItem key={option} onClick={() => {}}>
-            {option}
+        {options.map((opt) => (
+          <MenuItem key={opt.value} onClick={() => handleSelect(opt.value)}>
+            <ListItemIcon>{opt.icon}</ListItemIcon>
+            <ListItemText>{opt.label}</ListItemText>
           </MenuItem>
         ))}
       </Menu>
     </>
   );
 };
+
 export default DateSelectorCardMenu;

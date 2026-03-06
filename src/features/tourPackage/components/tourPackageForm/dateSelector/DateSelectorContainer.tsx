@@ -1,77 +1,51 @@
-import React, { useState } from "react";
-// import {
-//   Box,
-//   Button,
-//   Typography,
-//   Chip,
-//   IconButton,
-//   Dialog,
-//   DialogTitle,
-//   DialogContent,
-//   DialogActions,
-//   Stack,
-//   Autocomplete,
-//   TextField,
-// } from "@mui/material";
-// import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import React, { useMemo, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-// import AddIcon from "@mui/icons-material/Add";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import CloseIcon from "@mui/icons-material/Close";
+import { FormikProps } from "formik";
+
+import DateSelector from "./DateSelector";
 import { DateRangeType } from "../../../types/DateRangeType";
 import { UserType } from "../../../../userManagement/types/UserType";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
-// import TextType from "../../../../../TextAnimations/TextType/TextType";
-import DateSelector from "./DateSelector";
-// import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 
-interface SimpleDateSelectorProps {
+// Ajusta esta ruta a donde tengas tu type
+import { TourPackageFormValues } from "../TourPackageFormContainer";
+
+interface DateSelectorContainerProps {
   guides: UserType[];
-  duration: number;
-  // dateRanges: DateRangeType[];
-  // dateRanges: DateRangeType[];
-  onDateChange: (dates: DateRangeType[]) => void;
+  duration: number; // SIEMPRE number
   isEditing: boolean;
+  formik: FormikProps<TourPackageFormValues>;
 }
 
-const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
+const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
   guides,
   duration,
-  // dateRanges,
-  onDateChange,
   isEditing,
+  formik,
 }) => {
-  // console.log("dateRanges::: ", dateRanges);
-  const [dateRangesAux, setDateRangesAux] = useState<DateRangeType[]>([]);
-  // const { getDateRangeInfoById } = useDateRangeContext();
+  const { showSnackbar } = useNewSnackbar();
 
-  // const getDateRangesInfo = (dateRanges: DateRangeType[]) => {
-  //   const dateRangesInfo = dateRanges
-  //     .map((dateRange) => {
-  //       if (!dateRange.id) {
-  //         // Si no tiene id, es nuevo, lo devolvemos tal cual
-  //         return dateRange;
-  //       }
-  //       // Si tiene id, tratamos de buscarlo en el contexto
-  //       return getDateRangeInfoById(dateRange.id) || dateRange;
-  //     })
-  //     .filter((dr): dr is DateRangeType => !!dr);
+  // Fuente de verdad: Formik
+  const dateRanges = useMemo<DateRangeType[]>(
+    () =>
+      (formik.values.dateRanges ?? []).map((r) => ({
+        ...r,
+        dates: r.dates ?? [],
+        guides: r.guides ?? [],
+      })),
+    [formik.values.dateRanges],
+  );
 
-  //   setDateRangesAux(dateRangesInfo);
-  // };
-
-  // Cargar fechas cuando entra en modo edición
-  // useEffect(() => {
-  //   if (isEditing && dateRanges?.length) {
-  //     getDateRangesInfo(dateRanges);
-  //   }
-  // }, [dateRanges, isEditing]);
-
+  // UI state del dialog (esto sí es local)
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedGuides, setSelectedGuides] = useState<UserType[]>([]);
-  const { showSnackbar } = useNewSnackbar();
+
+  const setFormikRanges = (ranges: DateRangeType[]) => {
+    // ✅ clave para que Yup muestre errores si corresponde
+    formik.setFieldTouched("dateRanges", true, true);
+    formik.setFieldValue("dateRanges", ranges, true);
+  };
 
   const handleOpenDialog = () => {
     setSelectedDate(null);
@@ -79,90 +53,74 @@ const SimpleDateSelector: React.FC<SimpleDateSelectorProps> = ({
     setOpenDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+  const handleCloseDialog = () => setOpenDialog(false);
 
-  //  Agregar un nuevo rango de fechas
   const handleAddDateRange = () => {
     if (!selectedDate) return;
+
+    if (duration <= 0) {
+      showSnackbar("La duración debe ser mayor a 0", "error");
+      return;
+    }
+
+    if (selectedGuides.length === 0) {
+      showSnackbar("Debes asignar al menos un guía", "error");
+      return;
+    }
 
     const newDates = Array.from({ length: duration }, (_, i) =>
       dayjs(selectedDate).add(i, "day").format("DD-MM-YYYY"),
     );
 
-    // Verificar si alguna fecha ya está seleccionada
-    const allExistingDates = dateRangesAux.flatMap((range) => range.dates);
-    const overlappingDates = newDates.filter((date) =>
-      allExistingDates.includes(date),
-    );
+    // Validar solapamientos con rangos existentes
+    const allExistingDates = dateRanges.flatMap((r) => r.dates ?? []);
+    const overlapping = newDates.filter((d) => allExistingDates.includes(d));
 
-    if (overlappingDates.length > 0) {
-      // alert(
-      //   `Las siguientes fechas ya están seleccionadas: ${overlappingDates.join(
-      //     ", "
-      //   )}`
-      // );
-      showSnackbar(`${overlappingDates.join(", ")} ya seleccionado`, "error");
-
+    if (overlapping.length > 0) {
+      showSnackbar(`${overlapping.join(", ")} ya seleccionado`, "error");
       return;
     }
 
-    //  Crear un nuevo objeto `DateRangeType`
     const newRange: DateRangeType = {
-      // id: `range-${Date.now()}`,
-      // state: "available", // Estado por defecto (ajustable)
       dates: newDates,
-      guides: selectedGuides.map((guide) => guide.id || ""),
+      guides: selectedGuides.map((g) => g.id || ""),
     };
 
-    const updatedRanges = [...dateRangesAux, newRange];
-    setDateRangesAux(updatedRanges);
-    onDateChange(updatedRanges);
+    setFormikRanges([...dateRanges, newRange]);
 
-    //Reset selected guides
+    // reset
     setSelectedGuides([]);
     handleCloseDialog();
   };
 
-  //  Eliminar un rango de fechas
-  // const handleRemoveRange = (rangeId: string | undefined) => {
-  //   if (rangeId === undefined) return;
-  //   // const updatedRanges = dateRangesAux.filter((range) => range.id !== rangeId);
-  //   // setDateRangesAux(updatedRanges);
-  //   // onDateChange(updatedRanges);
-  // };
   const handleRemoveRange = (index: number) => {
-    const updatedRanges = [...dateRangesAux];
-    updatedRanges.splice(index, 1);
-    setDateRangesAux(updatedRanges);
-    onDateChange(updatedRanges);
+    const next = [...dateRanges];
+    next.splice(index, 1);
+    setFormikRanges(next);
   };
 
-  //  Eliminar todos los rangos
   const handleClearAllRanges = () => {
-    setDateRangesAux([]);
-    onDateChange([]);
+    setFormikRanges([]);
   };
 
   return (
     <DateSelector
       guides={guides}
       duration={duration}
-      dateRangesAux={dateRangesAux}
-      handleAddDateRange={handleAddDateRange}
-      handleRemoveRange={handleRemoveRange}
-      handleClearAllRanges={handleClearAllRanges}
+      dateRanges={dateRanges}
       openDialog={openDialog}
+      handleOpenDialog={handleOpenDialog}
       handleCloseDialog={handleCloseDialog}
       selectedDate={selectedDate}
       setSelectedDate={setSelectedDate}
       selectedGuides={selectedGuides}
       setSelectedGuides={setSelectedGuides}
-      handleOpenDialog={handleOpenDialog}
+      handleAddDateRange={handleAddDateRange}
+      handleRemoveRange={handleRemoveRange}
+      handleClearAllRanges={handleClearAllRanges}
       isEditing={isEditing}
     />
   );
 };
 
-export default SimpleDateSelector;
+export default DateSelectorContainer;
