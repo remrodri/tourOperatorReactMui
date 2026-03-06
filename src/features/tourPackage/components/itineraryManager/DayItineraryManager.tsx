@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Box,
   Typography,
@@ -8,30 +8,20 @@ import {
   Paper,
   Tabs,
   Tab,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Grid,
 } from "@mui/material";
-import {
-  Add as AddIcon,
-  Delete as DeleteIcon,
-  ExpandMore as ExpandMoreIcon,
-} from "@mui/icons-material";
-import Grid from "@mui/material/Grid";
+// import Grid from "@mui/material/Grid2"; // ✅ Grid2 (para usar size={{xs,sm}})
+import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
+
+import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+
 import { ActivityType } from "../../types/ActivityType";
 import {
   DayItineraryType,
   TourItineraryType,
 } from "../../types/DayItineraryType";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-// import TextType from "../../../../TextAnimations/TextType/TextType";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 interface DayItineraryManagerProps {
   duration: number;
@@ -39,7 +29,11 @@ interface DayItineraryManagerProps {
   onChange: (itinerary: TourItineraryType) => void;
 }
 
-// Using array indices instead of IDs for activities
+const emptyActivity = (): ActivityType => ({ description: "", time: "" });
+
+const isCompleteActivity = (a: ActivityType) =>
+  a.description.trim().length > 0 && a.time.trim().length > 0;
+
 const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
   duration,
   itinerary,
@@ -47,70 +41,74 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
 }) => {
   const [currentDay, setCurrentDay] = useState<number>(1);
 
-  // Initialize or update days based on duration
+  // Normaliza days (si por alguna razón llega vacío)
+  // const days: DayItineraryType[] = useMemo(() => {
+  //   return itinerary?.days ?? [];
+  // }, [itinerary]);
+
+  /**
+   * ✅ Ajusta el número de días SOLO cuando cambia duration.
+   * Evita depender de itinerary completo para no provocar loops.
+   */
   useEffect(() => {
     if (!duration || duration < 1) return;
 
-    // If the current itinerary doesn't have the right number of days, initialize it
-    if (!itinerary.days || itinerary.days.length !== duration) {
-      const newDays: DayItineraryType[] = [];
-
-      // Keep existing days where possible
-      for (let i = 0; i < duration; i++) {
-        if (itinerary.days && itinerary.days[i]) {
-          newDays.push(itinerary.days[i]);
-        } else {
-          newDays.push({
-            dayNumber: i + 1,
-            activities: [],
-          });
-        }
-      }
-
-      onChange({ days: newDays });
-
-      // Ensure selected day is valid
-      if (currentDay > duration) {
-        setCurrentDay(1);
-      }
+    const current = itinerary?.days ?? [];
+    if (current.length === duration) {
+      // Asegura que currentDay no se salga
+      if (currentDay > duration) setCurrentDay(1);
+      return;
     }
-  }, [duration, itinerary, onChange]);
 
-  const handleDayChange = (newDay: number) => {
-    setCurrentDay(newDay);
-  };
+    const newDays: DayItineraryType[] = Array.from(
+      { length: duration },
+      (_, i) => {
+        const existing = current[i];
+        return existing
+          ? { ...existing, dayNumber: i + 1 } // re-numera por si acaso
+          : { dayNumber: i + 1, activities: [] };
+      },
+    );
+
+    onChange({ days: newDays });
+
+    if (currentDay > duration) setCurrentDay(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration]); // ✅ SOLO duration
+
+  const handleDayChange = (_: unknown, newDay: number) => setCurrentDay(newDay);
+
+  const updateDay = useCallback(
+    (
+      dayNumber: number,
+      updater: (day: DayItineraryType) => DayItineraryType,
+    ) => {
+      const updatedDays = (itinerary.days ?? []).map((day) =>
+        day.dayNumber === dayNumber ? updater(day) : day,
+      );
+      onChange({ days: updatedDays });
+    },
+    [itinerary.days, onChange],
+  );
 
   const handleAddActivity = (dayNumber: number) => {
-    const newActivity: ActivityType = {
-      description: "",
-      time: "",
-    };
-    const updatedDays = itinerary.days.map((day) => {
-      if (day.dayNumber === dayNumber) {
-        return {
-          ...day,
-          activities: [...day.activities, newActivity],
-        };
-      }
-      return day;
-    });
+    const day = itinerary.days.find((d) => d.dayNumber === dayNumber);
+    const last = day?.activities?.[day.activities.length - 1];
 
-    onChange({ days: updatedDays });
+    // ✅ No permitir agregar si la última actividad está incompleta
+    if (last && !isCompleteActivity(last)) return;
+
+    updateDay(dayNumber, (d) => ({
+      ...d,
+      activities: [...d.activities, emptyActivity()],
+    }));
   };
 
   const handleDeleteActivity = (dayNumber: number, activityIndex: number) => {
-    const updatedDays = itinerary.days.map((day) => {
-      if (day.dayNumber === dayNumber) {
-        return {
-          ...day,
-          activities: day.activities.filter(
-            (_, index) => index !== activityIndex,
-          ),
-        };
-      }
-      return day;
-    });
-    onChange({ days: updatedDays });
+    updateDay(dayNumber, (d) => ({
+      ...d,
+      activities: d.activities.filter((_, idx) => idx !== activityIndex),
+    }));
   };
 
   const handleActivityChange = (
@@ -119,34 +117,27 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
     field: keyof ActivityType,
     value: string,
   ) => {
-    const updatedDays = itinerary.days.map((day) => {
-      if (day.dayNumber === dayNumber) {
-        return {
-          ...day,
-          activities: day.activities.map((activity, index) =>
-            index === activityIndex
-              ? { ...activity, [field]: value }
-              : activity,
-          ),
-        };
-      }
-      return day;
-    });
-
-    onChange({ days: updatedDays });
+    updateDay(dayNumber, (d) => ({
+      ...d,
+      activities: d.activities.map((a, idx) =>
+        idx === activityIndex ? { ...a, [field]: value } : a,
+      ),
+    }));
   };
 
-  // Early return if no duration is set or it's invalid
-  if (!duration || duration < 1 || !itinerary.days) {
+  // Early return si duration inválida
+  if (!duration || duration < 1 || !itinerary?.days) {
     return (
       <Box sx={{ mt: 2 }}>
         <Typography color="text.secondary">
-          Por favor, establezca una duración válida para el tour antes de
-          configurar el itinerario.
+          Por favor, establezca una duración válida antes de configurar el
+          itinerario.
         </Typography>
       </Box>
     );
   }
+
+  const currentDayObj = itinerary.days.find((d) => d.dayNumber === currentDay);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -154,20 +145,11 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
         <Typography variant="h6" sx={{ mb: 2 }}>
           Itinerario de actividades por día
         </Typography>
-        {/* <TextType
-        className="text-lg"
-        text="Itinerario de actividades por día"
-        typingSpeed={50}
-        pauseDuration={1000}
-        showCursor={true}
-        cursorCharacter="_"
-        deletingSpeed={50}
-      /> */}
 
         <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
           <Tabs
             value={currentDay}
-            onChange={(_, newDay) => handleDayChange(newDay)}
+            onChange={handleDayChange}
             variant="scrollable"
             scrollButtons="auto"
           >
@@ -181,217 +163,79 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
           </Tabs>
         </Box>
 
-        {itinerary.days.map((day) => (
-          <Box
-            key={day.dayNumber}
-            sx={{ display: currentDay === day.dayNumber ? "block" : "none" }}
-          >
+        {currentDayObj && (
+          <Box>
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 mb: 2,
+                gap: 2,
               }}
             >
               <Typography variant="subtitle1">
-                Actividades para el Día {day.dayNumber}
+                Actividades para el Día {currentDayObj.dayNumber}
               </Typography>
-              {/* <TextType
-              className="text-lg"
-              text={`Actividades para el día ${day.dayNumber}`}
-              typingSpeed={50}
-              pauseDuration={1000}
-              showCursor={true}
-              cursorCharacter="_"
-              deletingSpeed={50}
-            /> */}
+
+              {/* ✅ Si la última actividad está incompleta, no dejar agregar otra */}
               <Button
                 startIcon={<AddIcon />}
                 variant="contained"
                 color="primary"
-                onClick={() => handleAddActivity(day.dayNumber)}
+                onClick={() => handleAddActivity(currentDayObj.dayNumber)}
                 size="small"
+                disabled={
+                  currentDayObj.activities.length > 0 &&
+                  !isCompleteActivity(
+                    currentDayObj.activities[
+                      currentDayObj.activities.length - 1
+                    ],
+                  )
+                }
               >
                 Agregar Actividad
               </Button>
             </Box>
 
-            {day.activities.length === 0 ? (
+            {currentDayObj.activities.length === 0 ? (
               <Typography
                 color="text.secondary"
                 sx={{ fontStyle: "italic", textAlign: "center", my: 2 }}
               >
-                No hay actividades agregadas para este día. Haz clic en "Agregar
-                Actividad" para comenzar.
+                No hay actividades agregadas para este día.
               </Typography>
             ) : (
-              <Box sx={{ maxHeight: "400px", overflowY: "auto" }}>
-                {day.activities.map((activity, index) => (
-                  <Paper
-                    key={index}
-                    elevation={1}
-                    sx={{ p: 2, mb: 2, bgcolor: "background.default" }}
-                  >
-                    <Grid container spacing={2} alignItems="center">
-                      <Grid size={{ xs: 12, sm: 1 }}>
-                        <Typography variant="body2" fontWeight="bold">
-                          #{index + 1}
-                        </Typography>
-                      </Grid>
-                      <Grid size={{ xs: 12, sm: 6 }}>
-                        <TextField
-                          fullWidth
-                          label="Descripción de la actividad"
-                          size="small"
-                          value={activity.description}
-                          onChange={(e) =>
-                            handleActivityChange(
-                              day.dayNumber,
-                              index,
-                              "description",
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </Grid>
-                      <Grid size={{ xs: 12, sm: 3 }}>
-                        {/* <TextField
-                        fullWidth
-                        label="Hora"
-                        size="small"
-                        type="time"
-                        value={activity.time}
-                        onChange={(e) => {
-                          handleActivityChange(
-                            day.dayNumber,
-                            index,
-                            "time",
-                            e.target.value
-                          );
-                          // e.target.blur();
-                        }}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        inputProps={{
-                          step: 300, // 5 min
-                        }}
-                        sx={{
-                          '& input[type="time"]::-webkit-calendar-picker-indicator':
-                            {
-                              filter: "invert(1)",
-                            },
-                        }}
-                      /> */}
+              <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
+                {currentDayObj.activities.map((activity, index) => {
+                  const descError = activity.description.trim().length === 0;
+                  const timeError = activity.time.trim().length === 0;
 
-                        <TimePicker
-                          label="Hora"
-                          value={
-                            activity.time ? dayjs(activity.time, "HH:mm") : null
-                          }
-                          onChange={(newValue) =>
-                            handleActivityChange(
-                              day.dayNumber,
-                              index,
-                              "time",
-                              newValue ? newValue.format("HH:mm") : "",
-                            )
-                          }
-                          slotProps={{
-                            textField: {
-                              fullWidth: true,
-                              size: "small",
-                            },
-                          }}
-                        />
-                      </Grid>
-                      <Grid
-                        size={{ xs: 12, sm: 2 }}
-                        sx={{ display: "flex", justifyContent: "flex-end" }}
-                      >
-                        <IconButton
-                          color="error"
-                          onClick={() =>
-                            handleDeleteActivity(day.dayNumber, index)
-                          }
-                          size="small"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ))}
-              </Box>
-            )}
-          </Box>
-        ))}
-
-        {/* Alternative Accordion View */}
-        <Box sx={{ display: "none" }}>
-          {" "}
-          {/* This is hidden by default */}
-          {itinerary.days.map((day) => (
-            <Accordion key={day.dayNumber}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`day${day.dayNumber}-content`}
-                id={`day${day.dayNumber}-header`}
-              >
-                <Typography>
-                  Día {day.dayNumber} ({day.activities.length} actividades)
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    mb: 2,
-                  }}
-                >
-                  <Button
-                    startIcon={<AddIcon />}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleAddActivity(day.dayNumber)}
-                    size="small"
-                  >
-                    Agregar Actividad
-                  </Button>
-                </Box>
-
-                {day.activities.length === 0 ? (
-                  <Typography
-                    color="text.secondary"
-                    sx={{ fontStyle: "italic", textAlign: "center", my: 2 }}
-                  >
-                    No hay actividades para este día.
-                  </Typography>
-                ) : (
-                  day.activities.map((activity, index) => (
+                  return (
                     <Paper
                       key={index}
                       elevation={1}
                       sx={{ p: 2, mb: 2, bgcolor: "background.default" }}
                     >
-                      {/* Same grid content as in the tabs view */}
                       <Grid container spacing={2} alignItems="center">
                         <Grid size={{ xs: 12, sm: 1 }}>
                           <Typography variant="body2" fontWeight="bold">
                             #{index + 1}
                           </Typography>
                         </Grid>
+
                         <Grid size={{ xs: 12, sm: 6 }}>
                           <TextField
                             fullWidth
+                            required
                             label="Descripción de la actividad"
                             size="small"
                             value={activity.description}
+                            error={descError}
+                            helperText={descError ? "Requerido" : " "}
                             onChange={(e) =>
                               handleActivityChange(
-                                day.dayNumber,
+                                currentDayObj.dayNumber,
                                 index,
                                 "description",
                                 e.target.value,
@@ -399,29 +243,35 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                             }
                           />
                         </Grid>
+
                         <Grid size={{ xs: 12, sm: 3 }}>
-                          <TextField
-                            fullWidth
+                          <TimePicker
                             label="Hora"
-                            size="small"
-                            type="time"
-                            value={activity.time}
-                            onChange={(e) =>
+                            value={
+                              activity.time
+                                ? dayjs(activity.time, "HH:mm")
+                                : null
+                            }
+                            onChange={(newValue: Dayjs | null) =>
                               handleActivityChange(
-                                day.dayNumber,
+                                currentDayObj.dayNumber,
                                 index,
                                 "time",
-                                e.target.value,
+                                newValue ? newValue.format("HH:mm") : "",
                               )
                             }
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            inputProps={{
-                              step: 300, // 5 min
+                            slotProps={{
+                              textField: {
+                                fullWidth: true,
+                                size: "small",
+                                required: true,
+                                error: timeError,
+                                helperText: timeError ? "Requerido" : " ",
+                              },
                             }}
                           />
                         </Grid>
+
                         <Grid
                           size={{ xs: 12, sm: 2 }}
                           sx={{ display: "flex", justifyContent: "flex-end" }}
@@ -429,21 +279,36 @@ const DayItineraryManager: React.FC<DayItineraryManagerProps> = ({
                           <IconButton
                             color="error"
                             onClick={() =>
-                              handleDeleteActivity(day.dayNumber, index)
+                              handleDeleteActivity(
+                                currentDayObj.dayNumber,
+                                index,
+                              )
                             }
                             size="small"
+                            aria-label="Eliminar actividad"
                           >
                             <DeleteIcon />
                           </IconButton>
                         </Grid>
                       </Grid>
                     </Paper>
-                  ))
-                )}
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Box>
+                  );
+                })}
+              </Box>
+            )}
+
+            {/* ✅ Mensaje UX si no deja agregar otra por incompleta */}
+            {currentDayObj.activities.length > 0 &&
+              !isCompleteActivity(
+                currentDayObj.activities[currentDayObj.activities.length - 1],
+              ) && (
+                <Typography variant="caption" color="error">
+                  Completa la última actividad (descripción y hora) antes de
+                  agregar otra.
+                </Typography>
+              )}
+          </Box>
+        )}
       </Box>
     </LocalizationProvider>
   );

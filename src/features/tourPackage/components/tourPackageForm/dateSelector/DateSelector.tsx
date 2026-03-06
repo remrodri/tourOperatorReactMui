@@ -11,57 +11,80 @@ import {
   Stack,
   Autocomplete,
   TextField,
+  Alert,
 } from "@mui/material";
-import { UserType } from "../../../../userManagement/types/UserType";
-import { DateRangeType } from "../../../types/DateRangeType";
-// import TextType from "../../../../../TextAnimations/TextType/TextType";
+
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
+
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+
+import { UserType } from "../../../../userManagement/types/UserType";
+import { DateRangeType } from "../../../types/DateRangeType";
 import DateSelectorCard from "./card/DateSelectorCard";
+
+/* ============================
+   Microcopy / Guides
+============================ */
+const dateSelectorGuides = {
+  empty: "Agrega al menos un rango de fechas y asigna un guía.",
+  duration: "El rango se generará automáticamente según la duración del tour.",
+  guides: "Debes asignar al menos un guía por rango de fechas.",
+};
 
 interface DateSelectorProps {
   guides: UserType[];
   duration: number;
-  dateRangesAux: DateRangeType[];
-  handleAddDateRange: () => void;
-  // handleRemoveRange: (rangeId: string | undefined) => void;
-  handleRemoveRange: (index: number) => void;
-  handleClearAllRanges: () => void;
+
+  // ✅ fuente de verdad
+  dateRanges: DateRangeType[];
+
+  // UI state
   openDialog: boolean;
+  handleOpenDialog: () => void;
   handleCloseDialog: () => void;
+
   selectedDate: Dayjs | null;
   setSelectedDate: (date: Dayjs | null) => void;
+
   selectedGuides: UserType[];
   setSelectedGuides: (guides: UserType[]) => void;
-  handleOpenDialog: () => void;
+
+  // Actions
+  handleAddDateRange: () => void;
+  handleRemoveRange: (index: number) => void;
+  handleClearAllRanges: () => void;
+
   isEditing: boolean;
 }
 
 const DateSelector: React.FC<DateSelectorProps> = ({
   guides,
   duration,
-  dateRangesAux,
-  handleAddDateRange,
-  handleRemoveRange,
-  handleClearAllRanges,
+  dateRanges,
   openDialog,
+  handleOpenDialog,
   handleCloseDialog,
   selectedDate,
   setSelectedDate,
   selectedGuides,
   setSelectedGuides,
-  handleOpenDialog,
+  handleAddDateRange,
+  handleRemoveRange,
+  handleClearAllRanges,
   isEditing,
 }) => {
-  // console.log("guides", guides);
+  const canAdd = Boolean(selectedDate) && selectedGuides.length > 0;
+  const hasRanges = dateRanges.length > 0;
+
   return (
     <Box sx={{ mt: 2, width: "100%" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="subtitle1">Fechas Disponibles</Typography>
+      {/* Header */}
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
+        <Typography variant="subtitle1">Fechas disponibles</Typography>
 
         <Button
           variant="contained"
@@ -69,16 +92,26 @@ const DateSelector: React.FC<DateSelectorProps> = ({
           startIcon={<AddIcon />}
           onClick={handleOpenDialog}
           size="small"
+          disabled={isEditing}
         >
-          Agregar Fecha
+          Agregar fecha
         </Button>
       </Box>
 
-      {/*  Lista de rangos de fechas */}
+      {/* Helper / Error (MISMO PATRÓN QUE UserForm) */}
+      <Typography
+        variant="caption"
+        color={hasRanges ? "text.secondary" : "error"}
+        sx={{ display: "block", mb: 2 }}
+      >
+        {hasRanges ? dateSelectorGuides.duration : dateSelectorGuides.empty}
+      </Typography>
+
+      {/* Lista de rangos */}
       <Box sx={{ mb: 2, display: "flex", flexDirection: "column", gap: 1 }}>
-        {dateRangesAux.length > 0 ? (
+        {hasRanges && (
           <>
-            {dateRangesAux.map((range, index) => (
+            {dateRanges.map((range, index) => (
               <DateSelectorCard
                 key={index}
                 range={range}
@@ -89,7 +122,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               />
             ))}
 
-            {dateRangesAux.length > 1 && (
+            {dateRanges.length > 1 && !isEditing && (
               <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
                 <Button
                   variant="outlined"
@@ -103,12 +136,10 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               </Box>
             )}
           </>
-        ) : (
-          <Typography color="error">No hay fechas seleccionadas</Typography>
         )}
       </Box>
 
-      {/*  Diálogo para seleccionar fechas */}
+      {/* Dialog */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -126,10 +157,10 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         </DialogTitle>
 
         <DialogContent>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Se generará el rango de {duration} dia(s) a partir de la fecha
-            seleccionada.
-          </Typography>
+          {/* Guide visible */}
+          <Alert severity="info">
+            {dateSelectorGuides.duration} ({duration} día(s)).
+          </Alert>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
@@ -160,28 +191,34 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               </Box>
             </Box>
           )}
-          <Stack spacing={3} sx={{ mt: 2 }}>
+
+          <Stack spacing={1} sx={{ mt: 2 }}>
             <Autocomplete
               multiple
-              id="tags-guide"
               options={guides}
               value={selectedGuides}
-              onChange={(_, newValue) => {
-                setSelectedGuides(newValue);
-              }}
-              getOptionLabel={(guide) => `${guide.firstName} ${guide.lastName}`}
+              onChange={(_, newValue) => setSelectedGuides(newValue)}
+              getOptionLabel={(g) => `${g.firstName} ${g.lastName}`}
               filterSelectedOptions
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  variant="outlined"
                   label="Asignar guía"
                   placeholder="Agregar guía"
                 />
               )}
             />
+
+            {/* Helper / Error consistente */}
+            <Typography
+              variant="caption"
+              color={selectedGuides.length === 0 ? "error" : "text.secondary"}
+            >
+              {selectedGuides.length === 0 ? dateSelectorGuides.guides : " "}
+            </Typography>
           </Stack>
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleCloseDialog} variant="contained" color="error">
             Cancelar
@@ -190,7 +227,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
             onClick={handleAddDateRange}
             variant="contained"
             color="primary"
-            disabled={!selectedDate}
+            disabled={!canAdd}
           >
             Agregar
           </Button>

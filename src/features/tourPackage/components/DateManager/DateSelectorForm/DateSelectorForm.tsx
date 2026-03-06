@@ -10,6 +10,7 @@ import {
   Stack,
   Autocomplete,
   TextField,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -85,10 +86,12 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
         </DialogTitle>
 
         <DialogContent>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Se generará el rango de {duration} día(s) a partir de la fecha
-            seleccionada.
-          </Typography>
+          <Alert severity="info">
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Se generará el rango de {duration} día(s) a partir de la fecha
+              seleccionada.
+            </Typography>
+          </Alert>
 
           {/* DatePicker */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>

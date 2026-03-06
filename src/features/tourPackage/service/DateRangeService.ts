@@ -8,6 +8,7 @@ import { axiosPrivate, axiosPublic } from "../../../config/axiosConfig";
 export const getAllDateRangesRequest = async () => {
   const response =
     await axiosPublic.get<ApiResponse<DateRangeType[]>>("/date-range");
+  console.log("response.data::: ", response.data);
   return response.data; // { statusCode, message, data: DateRangeType[] }
   // Si quieres solo la data: return response.data.data;
 };
@@ -21,6 +22,7 @@ export const updateDateRangeRequest = async (
     `/date-range/${id}`,
     data,
   );
+  console.log("response.data.data::: ", response.data.data);
   return response.data.data; // DateRangeType
 };
 
