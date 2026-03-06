@@ -2,7 +2,6 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TourPackageType } from "../../../types/TourPackageType";
-import TourPackage from '../../../../guide/components/tourPackage/TourPackage';
 
 // const options = [
 //   "Ver mas",
