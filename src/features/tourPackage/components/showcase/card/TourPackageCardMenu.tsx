@@ -2,6 +2,7 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TourPackageType } from "../../../types/TourPackageType";
+import TourPackage from '../../../../guide/components/tourPackage/TourPackage';
 
 // const options = [
 //   "Ver mas",
@@ -24,6 +25,9 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const tourPackageStatus = () => {
+    return tourPackage.status==="active" ? true : false;
+  };
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -37,7 +41,7 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
     onOptionSelect(option);
     handleClose();
   };
-
+  // console.log("tourPackage::: ", tourPackage);
   return (
     <>
       <IconButton
@@ -72,12 +76,20 @@ const TourPackageCardMenu: React.FC<TourPackageCardMenuProps> = ({
           <MenuItem key="editar" onClick={() => handleOptionClick("Editar")}>
             Editar
           </MenuItem>,
-          <MenuItem
-            key="gestion"
-            onClick={() => handleOptionClick("Gestion de fechas")}
-          >
-            Gestion de fechas
-          </MenuItem>,
+          tourPackageStatus() && (
+            <MenuItem
+              key="gestion"
+              onClick={() => handleOptionClick("Gestion de fechas")}
+            >
+              Gestion de fechas
+            </MenuItem>
+          ),
+          // <MenuItem
+          //   key="gestion"
+          //   onClick={() => handleOptionClick("Gestion de fechas")}
+          // >
+          //   Gestion de fechas
+          // </MenuItem>,
         ]}
         {role === "690cbf7c64756dcc541d8a19" && (
           <MenuItem
