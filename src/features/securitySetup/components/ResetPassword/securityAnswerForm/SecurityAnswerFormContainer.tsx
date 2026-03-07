@@ -1,38 +1,38 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useResetPassword } from "../hook/useResetPassword";
 import SecurityAnswerForm from "./SecurityAnswerForm";
-import { useParams } from "react-router-dom";
 
 const SecurityAnswerFormContainer: React.FC = () => {
-  const { question, getRandomQuestion, checkSecurityAnswer } =
+  const { question, getRandomQuestion, checkSecurityAnswer, isLoading, error } =
     useResetPassword();
-  const params = useParams();
-  // console.log("question::: ", question);
+
+  const { userId } = useParams<{ userId: string }>();
+
   useEffect(() => {
-    if (!params.userId) {
-      console.log("No se encuantra el id del usuario");
-      return;
+    if (userId) {
+      getRandomQuestion(userId);
     }
-    getRandomQuestion(params.userId);
-  }, []);
+  }, [userId, getRandomQuestion]);
 
-  // console.log('question::: ', question);
-  const onSubmit = async (answer: { answerText: string }) => {
-    // console.log("answer::: ", answer);
+  const onSubmit = async (values: { answerText: string }) => {
+    if (!userId || !question) return;
 
-    if (!question) {
-      console.log("No se encuentra la pregunta");
-      return;
-    }
-    const securityAnswer = {
-      userId: params.userId,
+    await checkSecurityAnswer({
+      userId,
       questionId: question.questionId,
-      answerText: answer.answerText,
-    };
-    // console.log("securityAnswer::: ", securityAnswer);
-    // console.log("answer::: ", answer);
-    await checkSecurityAnswer(securityAnswer);
+      answerText: values.answerText,
+    });
   };
-  return <SecurityAnswerForm onSubmit={onSubmit} question={question} />;
+
+  return (
+    <SecurityAnswerForm
+      onSubmit={onSubmit}
+      questionText={question?.questionText ?? ""}
+      isSubmitting={isLoading}
+      errorMessage={error}
+    />
+  );
 };
+
 export default SecurityAnswerFormContainer;

@@ -1,116 +1,66 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { securityAnswerSchema } from "../../../validation/securityAnswerSchema";
-import { useEffect, useState } from "react";
 
-interface SecurityAnswerFormcontainerProps {
-  onSubmit: (answerText: any) => void;
-  question: any;
+interface Props {
+  onSubmit: (values: { answerText: string }) => void;
+  questionText: string;
+  isSubmitting: boolean;
+  errorMessage: string | null;
 }
 
-const SecurityAnswerForm: React.FC<SecurityAnswerFormcontainerProps> = ({
+const SecurityAnswerForm: React.FC<Props> = ({
   onSubmit,
-  question,
+  questionText,
+  isSubmitting,
+  errorMessage,
 }) => {
-  const [questionText, setQuestionText] = useState("");
-  useEffect(() => {
-    if (question) {
-      setQuestionText(question.questionText);
-    }
-  }, [question]);
-
-  // console.log("question::: ", questionText);
-  const formik = useFormik({
-    initialValues: {
-      answerText: "",
-    },
+  const formik = useFormik<{ answerText: string }>({
+    initialValues: { answerText: "" },
     validationSchema: securityAnswerSchema,
     onSubmit,
+    validateOnBlur: true,
+    validateOnChange: false,
   });
+
   return (
-    <Box
-      sx={{
-        width: "20rem",
-        background: "rgba(0,0,0,0.5)",
-        borderRadius: "10px",
-        boxShadow: "0,4px,30px,rgba(0,0,0,0.1)",
-        backdropFilter: "blur(5px)",
-        border: "1px solid rgba(0,0,0,0.6)",
-      }}
-    >
-      <Typography
-        variant="h5"
-        component="h1"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80px",
-        }}
-      >
+    <Box sx={{ width: "20rem", background: "rgba(0,0,0,0.5)", p: 3 }}>
+      <Typography variant="h5" align="center">
         Restablecer contraseña
       </Typography>
-      <Typography
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "40px",
-        }}
-      >
-        Responde la pregunta
-        <br />
-        {/* {questionText} */}
+
+      <Typography align="center" sx={{ my: 2 }}>
+        {questionText || "Cargando..."}
       </Typography>
-      <Typography
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "40px",
-        }}
-      >
-        {questionText || "Cargando"}
-      </Typography>
-      <form
-        onSubmit={formik.handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          alignItems: "center",
-        }}
-      >
+
+      <form onSubmit={formik.handleSubmit}>
         <TextField
-          sx={{
-            width: "90%",
-          }}
-          margin="normal"
           size="small"
-          id="answerText"
+          fullWidth
           name="answerText"
-          label="respuesta"
-          variant="outlined"
-          defaultValue=""
+          label="Respuesta"
+          value={formik.values.answerText}
           onChange={formik.handleChange}
-          error={formik.touched.answerText && Boolean(formik.errors.answerText)}
-          helperText={formik.touched.answerText && (formik.errors.answerText as string)}
+          onBlur={formik.handleBlur}
+          error={Boolean(formik.touched.answerText && formik.errors.answerText)}
+          helperText={formik.touched.answerText && formik.errors.answerText}
+          disabled={isSubmitting}
         />
+
+        {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+
         <Button
-          sx={{
-            width: "90%",
-            margin: "1rem 0 1rem 0",
-          }}
+          fullWidth
           variant="contained"
-          color="primary"
           type="submit"
+          disabled={isSubmitting}
+          sx={{ mt: 2 }}
         >
-          Enviar
+          {isSubmitting ? "Verificando..." : "Enviar"}
         </Button>
       </form>
     </Box>
   );
 };
+
 export default SecurityAnswerForm;
