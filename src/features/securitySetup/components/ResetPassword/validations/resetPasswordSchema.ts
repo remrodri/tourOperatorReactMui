@@ -1,7 +1,8 @@
 import * as Yup from "yup";
 
-export const resetPasswordSchema = Yup.object().shape({
+export const resetPasswordSchema = Yup.object({
   email: Yup.string()
-    .email("debe ser un formato valido")
-    .required("El campo es requerido"),
+    .transform((v) => (typeof v === "string" ? v.trim() : v))
+    .email("Debe ser un correo válido")
+    .required("El correo es obligatorio"),
 });

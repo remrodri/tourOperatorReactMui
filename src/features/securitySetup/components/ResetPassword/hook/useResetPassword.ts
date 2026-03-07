@@ -1,89 +1,127 @@
-import { useState } from "react";
-// import { TokenService } from "../../../../../utils/tokenService";
-import { securitySetupService } from "../../../service/securitySetupService";
-import { useNewSnackbar } from "../../../../../context/SnackbarContext";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRoleContext } from "../../../../Role/context/RoleContext";
 
+import { securitySetupService } from "../../../service/securitySetupService";
+
+/* ============================
+   Types
+============================ */
+export type SecurityQuestion = {
+  questionId: string;
+  questionText: string;
+};
+
+export type CheckAnswerPayload = {
+  userId: string;
+  questionId: string;
+  answerText: string;
+};
+
+/* ============================
+   Hook
+============================ */
 export const useResetPassword = () => {
   const [error, setError] = useState<string | null>(null);
-  const {showSnackbar} = useNewSnackbar();
-  // const token = TokenService.getToken();
-  const [question, setQuestion] = useState<{
-    questionId: string;
-    questionText: string;
-  }>({ questionId: "", questionText: "" });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [question, setQuestion] = useState<SecurityQuestion | null>(null);
+
   const navigate = useNavigate();
-  const { getRoleById } = useRoleContext();
-  const findUserByEmail = async (email: string) => {
-    // console.log('password::: ', password);
-    // if (!token) {
-    //   setError("No hay token");
-    //   return;
-    // }
-    try {
-      const response = await securitySetupService.findUserByEmail(
-        // token,
-        email
-      );
-      // console.log("response::: ", response);
-      if (response.statusCode !== 200) {
-        showSnackbar(response.message,"error");
-        return;
-      }
-      const userId = response.data.userId;
-      // setQuestion(response.data.questionText);
-      navigate(`../respuesta-de-seguridad/${userId}`);
-      // console.log("response::: ", response);
-    } catch (error) {
-      console.error(error);
-      setError("Error al obtener la pregunta de seguridad");
-    }
-  };
 
-  const getRandomQuestion = async (userId: string) => {
-    try {
-      const response = await securitySetupService.getRandomQuestion(userId);
-      // console.log("response::: ", response);
-      if (response.statusCode !== 200) {
-        showSnackbar(response.message,"error");
-        return;
-      }
-      setQuestion(response.data);
-    } catch (error) {
-      console.error(error);
-      setError("Error al obtener la pregunta de seguridad");
-    }
-  };
+  /* ============================
+     Step 1: find user by email
+  ============================ */
+  const findUserByEmail = useCallback(
+    async (email: string): Promise<void> => {
+      setIsLoading(true);
+      try {
+        const data = await securitySetupService.findUserByEmail(email);
 
-  const checkSecurityAnswer = async (answer: {
-    userId: string | undefined;
-    questionId: string;
-    answerText: string;
-  }) => {
-    try {
-      const response = await securitySetupService.checkSecurityAnswer(answer);
-      console.log("response::: ", response);
-      if (response.statusCode !== 200) {
-        showSnackbar(response.message,"error");
-        return;
-      }
-      showSnackbar("Respuesta correcta","success");
-      if(getRoleById(answer.userId as string).name==="guia de turismo"){
-        navigate("guia-de-turismo");
-        return;
-      }
-      navigate(`../actualizar-contraseña/${answer.userId}`);
-    } catch (error) {
-      console.error(error);
-      setError("Error al revisar la respuesta de seguridad");
-    }
-  };
+        // ❌ null => service ya mostró sileo.error
+        if (!data) {
+          setError("No se encontró el usuario");
+          return;
+        }
 
+        setError(null);
+        navigate(`../respuesta-de-seguridad/${data.userId}`);
+      } catch (err) {
+        console.error("Error buscando usuario:", err);
+        setError("Error al buscar el usuario");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [navigate],
+  );
+
+  /* ============================
+     Step 2: get random question
+  ============================ */
+  const getRandomQuestion = useCallback(
+    async (userId: string): Promise<void> => {
+      setIsLoading(true);
+      try {
+        const data = await securitySetupService.getRandomQuestion(userId);
+
+        if (!data) {
+          setError("No se pudo obtener la pregunta de seguridad");
+          return;
+        }
+
+        setQuestion(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error obteniendo pregunta:", err);
+        setError("Error al obtener la pregunta de seguridad");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
+  /* ============================
+     Step 3: check answer
+  ============================ */
+  const checkSecurityAnswer = useCallback(
+    async (payload: {
+      userId: string;
+      questionId: string;
+      answerText: string;
+    }): Promise<void> => {
+      setIsLoading(true);
+      try {
+        const ok = await securitySetupService.checkSecurityAnswer(payload);
+
+        // ❌ false => service ya mostró sileo.error
+        if (!ok) {
+          setError("La respuesta es incorrecta");
+          return;
+        }
+
+        setError(null);
+        navigate(`../actualizar-contraseña/${payload.userId}`);
+      } catch (err) {
+        console.error("Error verificando respuesta:", err);
+        setError("Error al verificar la respuesta");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [navigate],
+  );
+
+  /* ============================
+     API
+  ============================ */
   return {
-    findUserByEmail,
+    // state
     error,
+    isLoading,
     question,
+
+    // actions
+    findUserByEmail,
     getRandomQuestion,
     checkSecurityAnswer,
   };

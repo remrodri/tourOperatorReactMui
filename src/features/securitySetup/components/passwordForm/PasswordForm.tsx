@@ -1,13 +1,65 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
+import { FormikProps, useFormik } from "formik";
 import { passwordSchema } from "./validation/passwordSchema";
 
-interface PasswordFormContainerProps {
-  onSubmit: (passwords: any) => void;
+/* ============================
+   Types
+============================ */
+export interface PasswordFormValues {
+  password: string;
+  confirmPassword: string;
 }
 
-const PasswordForm: React.FC<PasswordFormContainerProps> = ({ onSubmit }) => {
-  const formik = useFormik({
+interface PasswordFormProps {
+  onSubmit: (values: PasswordFormValues) => void;
+  isSubmitting?: boolean;
+  errorMessage?: string | null;
+}
+
+/* ============================
+   Microcopy / Guides
+============================ */
+const fieldGuides: Partial<Record<keyof PasswordFormValues, string>> = {
+  password: "Mínimo 6 caracteres. Usa una contraseña segura.",
+  confirmPassword: "Debe coincidir exactamente con la contraseña.",
+};
+
+/* ============================
+   Helpers UX (MISMO patrón que UserForm)
+============================ */
+function useFieldHelpers<T extends Record<string, any>>(
+  formik: FormikProps<T>,
+  helpers: Partial<Record<keyof T, string>>,
+) {
+  const hasError = (name: keyof T) =>
+    Boolean((formik.touched as any)[name] && (formik.errors as any)[name]);
+
+  const helperText = (name: keyof T) => {
+    if (hasError(name)) return (formik.errors as any)[name];
+    return helpers[name] ?? " ";
+  };
+
+  return { hasError, helperText };
+}
+
+/* ============================
+   Component
+============================ */
+const PasswordForm: React.FC<PasswordFormProps> = ({
+  onSubmit,
+  isSubmitting = false,
+  errorMessage = null,
+}) => {
+  const formik = useFormik<PasswordFormValues>({
     initialValues: {
       password: "",
       confirmPassword: "",
@@ -16,110 +68,79 @@ const PasswordForm: React.FC<PasswordFormContainerProps> = ({ onSubmit }) => {
     onSubmit,
   });
 
+  const { hasError, helperText } = useFieldHelpers(formik, fieldGuides);
+
   return (
     <Box
       sx={{
-        width: "20rem",
+        width: "22rem",
         background: "rgba(0,0,0,0.7)",
-        borderRadius: "10px",
-        boxShadow: "0 4px 30px rgba(0,0,0,0.1)",
-        backdropFilter: "blur(5px)",
-        border: "1px solid rgba(0,0,0,0.8)",
+        borderRadius: 2,
+        boxShadow: "0 4px 30px rgba(0,0,0,0.2)",
+        backdropFilter: "blur(6px)",
+        p: 2,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          height: "80px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            // fontSize: "2rem",
-            fontWeight: "500",
-          }}
+      {/* Título */}
+      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 500 }}>
+        Actualizar contraseña
+      </Typography>
+
+      {/* Info guide (MISMO patrón que UserForm) */}
+      <Alert severity="info" sx={{ mb: 2 }}>
+        La contraseña debe tener al menos 6 caracteres.
+      </Alert>
+
+      {/* Error de backend */}
+      {errorMessage && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {errorMessage}
+        </Alert>
+      )}
+
+      <form onSubmit={formik.handleSubmit} noValidate>
+        {/* Password */}
+        <TextField
+          fullWidth
+          size="small"
+          label="Contraseña"
+          type="password"
+          {...formik.getFieldProps("password")}
+          error={hasError("password")}
+          helperText={helperText("password")}
+          disabled={isSubmitting}
+          sx={{ mb: 2 }}
+        />
+
+        {/* Confirm password */}
+        <TextField
+          fullWidth
+          size="small"
+          label="Confirmar contraseña"
+          type="password"
+          {...formik.getFieldProps("confirmPassword")}
+          error={hasError("confirmPassword")}
+          helperText={helperText("confirmPassword")}
+          disabled={isSubmitting}
+          sx={{ mb: 3 }}
+        />
+
+        {/* Botón */}
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={isSubmitting}
+          startIcon={
+            isSubmitting ? <CircularProgress size={20} color="inherit" /> : null
+          }
         >
-          Actualizar contraseña
-        </Typography>
-      </Box>
-      <form onSubmit={formik.handleSubmit}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              height: "5.5rem",
-            }}
-          >
-            <TextField
-              sx={{
-                width: "90%",
-              }}
-              margin="normal"
-              size="small"
-              label="Contraseña"
-              variant="outlined"
-              id="password"
-              name="password"
-              type="password"
-              onChange={formik.handleChange}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={
-                formik.touched.password && (formik.errors.password as string)
-              }
-            />
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              height: "5.5rem",
-            }}
-          >
-            <TextField
-              sx={{
-                width: "90%",
-              }}
-              margin="normal"
-              size="small"
-              label="Confirma la contraseña"
-              variant="outlined"
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.confirmPassword &&
-                Boolean(formik.errors.confirmPassword)
-              }
-              helperText={
-                formik.touched.confirmPassword &&
-                (formik.errors.confirmPassword as string)
-              }
-            />
-          </Box>
-          <Button
-            sx={{ width: "90%", margin: "3rem 0 1rem 0" }}
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Enviar
-          </Button>
-        </Box>
+          {isSubmitting ? "Procesando..." : "Guardar contraseña"}
+        </Button>
       </form>
     </Box>
   );
 };
+
 export default PasswordForm;

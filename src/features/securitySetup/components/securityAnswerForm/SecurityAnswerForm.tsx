@@ -3,27 +3,39 @@ import { useFormik } from "formik";
 import { answerSchema } from "../../validation/answerSchema";
 import { useEffect, useState } from "react";
 
-interface SecurityAnswerContainerProps {
-  onSubmit: (answersValues: any) => void;
-  questionsAnswers: any;
+import type {
+  QuestionAnswer,
+  SecurityAnswersFormValues,
+} from "./hook/useSecurityQuestions";
+
+interface Props {
+  onSubmit: (values: SecurityAnswersFormValues) => void;
+  questionsAnswers: QuestionAnswer[];
+  isSubmitting: boolean;
+  errorMessage: string | null;
 }
 
-const SecurityAnswerForm: React.FC<SecurityAnswerContainerProps> = ({
+const ANSWER_FIELDS: Array<keyof SecurityAnswersFormValues> = [
+  "answer1",
+  "answer2",
+  "answer3",
+];
+
+const SecurityAnswerForm: React.FC<Props> = ({
   onSubmit,
   questionsAnswers,
+  isSubmitting,
+  errorMessage,
 }) => {
-  const [questionsText, setQuestionsText] = useState([]);
-  // console.log("questionsAnswers::: ", questionsAnswers);
+  const [questionsText, setQuestionsText] = useState<string[]>([]);
+
   useEffect(() => {
-    // console.log('::: ', );
-    if (questionsAnswers && questionsAnswers.length > 0) {
-      const questions = questionsAnswers.map((questionAnswer: any) => {
-        return questionAnswer.question.questionText;
-      });
-      setQuestionsText(questions);
+    if (questionsAnswers.length > 0) {
+      setQuestionsText(questionsAnswers.map((qa) => qa.question.questionText));
     }
   }, [questionsAnswers]);
-  const formik = useFormik({
+
+  const formik = useFormik<SecurityAnswersFormValues>({
     initialValues: {
       answer1: "",
       answer2: "",
@@ -31,102 +43,62 @@ const SecurityAnswerForm: React.FC<SecurityAnswerContainerProps> = ({
     },
     validationSchema: answerSchema,
     onSubmit,
+    validateOnBlur: true,
+    validateOnChange: false, // ✅ mejor UX (valida al salir)
   });
 
   return (
-    <Box
-      sx={{
-        // display: "flex",
-        width: {
-          sm: "25rem",
-        },
-        // flexWrap: "wrap",
-        background: "rgba(0,0,0,0.6)",
-        backdropFilter: "blur(5px)",
-        borderRadius: "16px",
-        p: "20px",
-        border: "1px solid rgba(0,0,0,0.7)",
-      }}
-    >
-      <Typography
-        variant="h6"
-        component="h1"
-        gutterBottom
-        sx={{ textAlign: "center", witdth: "100%", height: "3rem" }}
-      >
+    <Box sx={{ width: "25rem", background: "rgba(0,0,0,0.6)", p: 3 }}>
+      <Typography variant="h6" align="center" gutterBottom>
         Formulario de respuestas de seguridad
       </Typography>
-      <form onSubmit={formik.handleSubmit}>
-        <Typography
-          // variant="h6"
-          component="h2"
-          gutterBottom
-          // sx={{ textAlign: "center" }}
-        >
-          {questionsText[0] || "cargando"}
-          {/* {questions.questionsAnswers[0].questions.questionsText} */}
-          {/* { questionsAnswers? questionsAnswers[0].question.questionText : "pregunta 1"} */}
-        </Typography>
-        <TextField
-          sx={{ height: "70px" }}
-          size="small"
+
+      <form onSubmit={formik.handleSubmit} noValidate>
+        {ANSWER_FIELDS.map((field, index) => (
+          <Box key={field} mb={2}>
+            <Typography gutterBottom>
+              {questionsText[index] || "Cargando..."}
+            </Typography>
+
+            <TextField
+              variant="outlined"
+              size="small"
+              fullWidth
+              required
+              disabled={isSubmitting}
+              autoComplete="off"
+              name={field}
+              label="Respuesta"
+              value={formik.values[field]}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={Boolean(formik.touched[field] && formik.errors[field])}
+              helperText={
+                formik.touched[field] && formik.errors[field]
+                  ? formik.errors[field]
+                  : " "
+              }
+            />
+          </Box>
+        ))}
+
+        {errorMessage && (
+          <Typography color="error" sx={{ mb: 1 }}>
+            {errorMessage}
+          </Typography>
+        )}
+
+        <Button
+          type="submit"
           fullWidth
-          id="answer1"
-          label="Respuesta"
-          name="answer1"
-          variant="outlined"
-          value={formik.values.answer1}
-          onChange={formik.handleChange}
-          error={formik.touched.answer1 && Boolean(formik.errors.answer1)}
-          helperText={formik.touched.answer1 && formik.errors.answer1}
-        />
-        <Typography
-          // variant="h6"
-          component="h2"
-          gutterBottom
-          // sx={{ textAlign: "center" }}
+          variant="contained"
+          disabled={isSubmitting}
         >
-          {questionsText[1] || "cargando"}
-        </Typography>
-        <TextField
-          sx={{ height: "70px" }}
-          size="small"
-          fullWidth
-          id="answer2"
-          label="Respuesta"
-          name="answer2"
-          variant="outlined"
-          value={formik.values.answer2}
-          onChange={formik.handleChange}
-          error={formik.touched.answer2 && Boolean(formik.errors.answer2)}
-          helperText={formik.touched.answer2 && formik.errors.answer2}
-        />
-        <Typography
-          // variant="h6"
-          component="h2"
-          gutterBottom
-          // sx={{ textAlign: "center" }}
-        >
-          {questionsText[0] || "cargando"}
-        </Typography>
-        <TextField
-          sx={{ height: "70px" }}
-          size="small"
-          fullWidth
-          id="answer3"
-          label="Respuesta"
-          name="answer3"
-          variant="outlined"
-          value={formik.values.answer3}
-          onChange={formik.handleChange}
-          error={formik.touched.answer3 && Boolean(formik.errors.answer3)}
-          helperText={formik.touched.answer3 && formik.errors.answer3}
-        />
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Registrar
+          {isSubmitting ? "Enviando..." : "Registrar"}
         </Button>
       </form>
     </Box>
   );
 };
+
 export default SecurityAnswerForm;

@@ -57,16 +57,31 @@ const getApiErrorMessage = (error: unknown, fallback: string): string => {
 };
 
 const isLogicalErrorResponse = (responseData: any): boolean => {
-  const hasMsg = Boolean(extractBackendMessage(responseData));
+  if (!responseData) return true;
 
-  const data = responseData?.data;
-  const hasData = data !== null && data !== undefined;
+  // ✅ Si hay statusCode y es 2xx, NO lo trates como error,
+  // aunque data sea null. (caso updatePassword)
+  const code = responseData.statusCode;
+  if (typeof code === "number" && code >= 200 && code < 300) {
+    // pero si el backend explícitamente dice que falló, sí es error
+    if (responseData.success === false) return true;
+    if (responseData.ok === false) return true;
+    if (responseData.status === "error") return true;
+    return false;
+  }
+
+  // Si hay statusCode y no es 2xx => error lógico
+  if (typeof code === "number" && (code < 200 || code >= 300)) return true;
+
+  // fallback a tus reglas anteriores
+  const hasMsg = Boolean(extractBackendMessage(responseData));
+  const hasData = responseData.data !== null && responseData.data !== undefined;
 
   if (!hasData && hasMsg) return true;
 
-  if (responseData?.success === false) return true;
-  if (responseData?.ok === false) return true;
-  if (responseData?.status === "error") return true;
+  if (responseData.success === false) return true;
+  if (responseData.ok === false) return true;
+  if (responseData.status === "error") return true;
 
   return false;
 };
@@ -86,7 +101,7 @@ export const securitySetupService = {
   updatePasswordWithoutToken: async (
     password: string,
     userId: string,
-  ): Promise<UpdatePasswordResult | null> => {
+  ): Promise<boolean> => {
     try {
       const response = await axiosPublic.patch<ApiResponse<any>>(
         "/security-setup-password",
@@ -95,6 +110,7 @@ export const securitySetupService = {
       );
 
       const dataAny: any = response.data;
+
       if (isLogicalErrorResponse(dataAny)) {
         sileo.error({
           title: "Error",
@@ -102,24 +118,24 @@ export const securitySetupService = {
             extractBackendMessage(dataAny) ??
             "No se pudo actualizar la contraseña",
         });
-        return null;
+        return false;
       }
 
       sileo.success({
         title: "Éxito",
         description:
-          extractBackendMessage(response.data) ??
+          extractBackendMessage(dataAny) ??
           "Contraseña actualizada correctamente",
       });
 
-      return response.data.data;
+      return true; // ✅ éxito aunque data sea null
     } catch (error) {
       const msg = getApiErrorMessage(
         error,
         "No se pudo actualizar la contraseña",
       );
       sileo.error({ title: "Error", description: msg });
-      return null;
+      return false;
     }
   },
 
@@ -127,45 +143,40 @@ export const securitySetupService = {
    * ✅ SIN TOKEN -> axiosPublic
    * POST /security-setup-answer
    */
-  checkSecurityAnswer: async (answer: {
+  checkSecurityAnswer: async (payload: {
     userId: string | undefined;
     questionId: string;
     answerText: string;
-  }): Promise<SecurityAnswerCheckResult | null> => {
+  }): Promise<boolean> => {
     try {
       const response = await axiosPublic.post<ApiResponse<any>>(
         "/security-setup-answer",
-        answer,
+        payload,
         { headers: { "Content-Type": "application/json" } },
       );
 
       const dataAny: any = response.data;
+
+      // ❌ solo error si REALMENTE es error
       if (isLogicalErrorResponse(dataAny)) {
         sileo.error({
           title: "Error",
-          description:
-            extractBackendMessage(dataAny) ??
-            "Respuesta de seguridad incorrecta",
+          description: extractBackendMessage(dataAny) ?? "Respuesta incorrecta",
         });
-        return null;
+        return false;
       }
 
-      // Aquí puedes decidir si mostrar success o no (a veces es mejor no spamear).
+      // ✅ éxito aunque data sea null
       sileo.success({
-        title: "Éxito",
-        description:
-          extractBackendMessage(response.data) ??
-          "Respuesta verificada correctamente",
+        title: "Correcto",
+        description: extractBackendMessage(dataAny) ?? "Respuesta correcta",
       });
 
-      return response.data.data;
+      return true;
     } catch (error) {
-      const msg = getApiErrorMessage(
-        error,
-        "No se pudo verificar la respuesta",
-      );
+      const msg = getApiErrorMessage(error, "Error al verificar la respuesta");
       sileo.error({ title: "Error", description: msg });
-      return null;
+      return false;
     }
   },
 
@@ -236,7 +247,7 @@ export const securitySetupService = {
   updatePassword: async (
     password: string,
     userId: string,
-  ): Promise<UpdatePasswordResult | null> => {
+  ): Promise<boolean> => {
     try {
       const response = await axiosPrivate.patch<ApiResponse<any>>(
         "/security-setup",
@@ -245,6 +256,8 @@ export const securitySetupService = {
       );
 
       const dataAny: any = response.data;
+
+      // ✅ si NO es error lógico, fue éxito aunque data sea null
       if (isLogicalErrorResponse(dataAny)) {
         sileo.error({
           title: "Error",
@@ -252,24 +265,24 @@ export const securitySetupService = {
             extractBackendMessage(dataAny) ??
             "No se pudo actualizar la contraseña",
         });
-        return null;
+        return false;
       }
 
       sileo.success({
         title: "Éxito",
         description:
-          extractBackendMessage(response.data) ??
+          extractBackendMessage(dataAny) ??
           "Contraseña actualizada correctamente",
       });
 
-      return response.data.data;
+      return true;
     } catch (error) {
       const msg = getApiErrorMessage(
         error,
         "No se pudo actualizar la contraseña",
       );
       sileo.error({ title: "Error", description: msg });
-      return null;
+      return false;
     }
   },
 
@@ -314,7 +327,7 @@ export const securitySetupService = {
   updateSecurityAnswers: async (
     answers: { answerId: string; answerText: string }[],
     userId: string,
-  ): Promise<any | null> => {
+  ): Promise<boolean> => {
     try {
       const response = await axiosPrivate.patch<ApiResponse<any>>(
         "/security-setup-answers",
@@ -323,6 +336,8 @@ export const securitySetupService = {
       );
 
       const dataAny: any = response.data;
+
+      // ✅ IMPORTANTE: aquí tu isLogicalErrorResponse NO debe marcar error si statusCode es 200
       if (isLogicalErrorResponse(dataAny)) {
         sileo.error({
           title: "Error",
@@ -330,24 +345,24 @@ export const securitySetupService = {
             extractBackendMessage(dataAny) ??
             "No se pudieron actualizar las respuestas",
         });
-        return null;
+        return false;
       }
 
       sileo.success({
         title: "Éxito",
         description:
-          extractBackendMessage(response.data) ??
+          extractBackendMessage(dataAny) ??
           "Respuestas actualizadas correctamente",
       });
 
-      return response.data.data;
+      return true; // ✅ éxito aunque data sea null
     } catch (error) {
       const msg = getApiErrorMessage(
         error,
         "No se pudieron actualizar las respuestas",
       );
       sileo.error({ title: "Error", description: msg });
-      return null;
+      return false;
     }
   },
 };

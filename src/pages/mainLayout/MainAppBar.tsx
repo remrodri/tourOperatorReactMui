@@ -110,7 +110,7 @@ const MainAppBar: React.FC<Props> = ({ currentStyles }) => {
               </IconButton>
 
               <Menu
-                sx={{ mt: "50px" }}
+                // sx={{ mt: "50px" }}
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}

@@ -1,36 +1,26 @@
-// import { useParams } from "react-router-dom";
-import { useUpdatePassword } from "./hook/useUpdatePassword";
+import React from "react";
+import { useParams } from "react-router-dom";
 import PasswordForm from "./PasswordForm";
-// import { jwtDecode } from "jwt-decode";
-// import { User } from "../../../userManagement/types/UserType";
+import { useUpdatePassword } from "./hook/useUpdatePassword";
 
 const PasswordFormContainer: React.FC = () => {
-  const {
-    updatePassword,
-    // error: useUpdatePasswordError,
-    // updatePasswordWithoutToken,
-  } = useUpdatePassword();
-  // const params = useParams();
-  // console.log("params::: ", params);
+  const { updatePassword, isLoading, error } = useUpdatePassword();
+  const { userId } = useParams<{ userId: string }>();
 
-  // const token = localStorage.getItem("token");
-  // console.log('token::: ', token);
-  // const user = jwtDecode(token as string);
-  // console.log('user::: ', user);
-  const onSubmit = async (passwords: {
+  const handleSubmit = async (values: {
     password: string;
     confirmPassword: string;
   }) => {
-    // console.log("passwords::: ", passwords);
-    // try {
-    //   if (!params.userId) {
-    updatePassword(passwords.password);
-    //   }
-    //   updatePasswordWithoutToken(passwords.password, params.userId);
-    // } catch (error) {
-    //   console.error(useUpdatePasswordError);
-    // }
+    await updatePassword(values.password, userId);
   };
-  return <PasswordForm onSubmit={onSubmit} />;
+
+  return (
+    <PasswordForm
+      onSubmit={handleSubmit}
+      isSubmitting={isLoading}
+      errorMessage={error}
+    />
+  );
 };
+
 export default PasswordFormContainer;
