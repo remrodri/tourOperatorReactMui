@@ -10,6 +10,7 @@ import ReviewSectionContainer from "../../features/landingPage/components/review
 import HomeAppBar from "../../features/landingPage/components/appBar/HomeAppBar";
 import TourPackageSectionContainer from "../../features/landingPage/components/tourPackageSection/TourPackageSectionContainer";
 import ContactSection from "../../features/landingPage/components/contactSection/ContactSection";
+import { WelcomeDialog } from "../../features/welcomeDialog/WelcomeDialog";
 
 interface LandingPageProps {
   anchorElNav: null | HTMLElement;
@@ -41,6 +42,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
   handleCloseLoginDialog,
 }) => {
   return (
+    <>
     <Box
       id="inicio"
       sx={{
@@ -197,7 +199,9 @@ const LandingPage: React.FC<LandingPageProps> = ({
       <ContactSection />
       <Box sx={{ height: "4.5rem" }}></Box>
       <Footer />
-    </Box>
+      </Box>
+      <WelcomeDialog />
+    </>
   );
 };
 export default LandingPage;
