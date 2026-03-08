@@ -18,7 +18,7 @@ import type { UserType } from "../../userManagement/types/UserType";
 import type { BookingType } from "../types/BookingType";
 import type { TouristType } from "../types/TouristType";
 import type { PaymentType } from "../types/PaymentType";
-import type { UpdateBookingType } from "../types/UpdateBookingType";
+// import type { UpdateBookingType } from "../types/UpdateBookingType";
 import type { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
 import type { Group } from "../../guide/context/GuideContext";
 
@@ -27,7 +27,7 @@ import {
   createBookingRequest,
   getAllBookingsRequest,
   updateAttendanceRequest,
-  updateBookingRequest,
+  // updateBookingRequest,
 } from "../service/bookingService";
 
 /* ============================
@@ -46,7 +46,7 @@ interface BookingContextType {
     touristsBySearch: TouristType[],
   ) => Promise<BookingType | null>;
 
-  updateBooking: (booking: any) => Promise<BookingType | null>;
+  // updateBooking: (booking: any) => Promise<BookingType | null>;
 
   cancelBooking: (
     bookingId: string,
@@ -352,52 +352,52 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
   /* ============================
      Update / Cancel
   ============================ */
-  const updateBooking = useCallback(
-    async (booking: any): Promise<BookingType | null> => {
-      setLoading(true);
-      try {
-        const tourists = [
-          booking.mainTourist,
-          ...(booking.additionalTourists ?? []),
-        ].filter(isValidTourist);
+  // const updateBooking = useCallback(
+  //   async (booking: any): Promise<BookingType | null> => {
+  //     setLoading(true);
+  //     try {
+  //       const tourists = [
+  //         booking.mainTourist,
+  //         ...(booking.additionalTourists ?? []),
+  //       ].filter(isValidTourist);
 
-        const bookingToUpdate: UpdateBookingType = {
-          totalPrice: booking.totalPrice,
-          notes: booking.notes,
-          status: booking.status ?? "pending",
-          tourists,
-        };
+  //       const bookingToUpdate: UpdateBookingType = {
+  //         totalPrice: booking.totalPrice,
+  //         notes: booking.notes,
+  //         status: booking.status ?? "pending",
+  //         tourists,
+  //       };
 
-        const response = await updateBookingRequest(
-          getBookingId(booking),
-          bookingToUpdate,
-        );
+  //       const response = await updateBookingRequest(
+  //         getBookingId(booking),
+  //         bookingToUpdate,
+  //       );
 
-        if (!response) return null;
+  //       if (!response) return null;
 
-        const updated = transformApiBooking({
-          ...response,
-          touristIds:
-            response.tourists
-              ?.filter(isValidTourist)
-              .map((t: any) => addTouristFromBooking(t).id) ?? [],
-        });
+  //       const updated = transformApiBooking({
+  //         ...response,
+  //         touristIds:
+  //           response.tourists
+  //             ?.filter(isValidTourist)
+  //             .map((t: any) => addTouristFromBooking(t).id) ?? [],
+  //       });
 
-        setBookings((prev) =>
-          prev.map((b) => (getBookingId(b) === updated.id ? updated : b)),
-        );
+  //       setBookings((prev) =>
+  //         prev.map((b) => (getBookingId(b) === updated.id ? updated : b)),
+  //       );
 
-        return updated;
-      } catch (e) {
-        console.error(e);
-        setError("Error al actualizar la reserva");
-        return null;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [addTouristFromBooking, transformApiBooking],
-  );
+  //       return updated;
+  //     } catch (e) {
+  //       console.error(e);
+  //       setError("Error al actualizar la reserva");
+  //       return null;
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   },
+  //   [addTouristFromBooking, transformApiBooking],
+  // );
 
   const cancelBooking = useCallback(
     async (
@@ -444,7 +444,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
         fetchBookings,
         getBookingById,
         createBooking,
-        updateBooking,
+        // updateBooking,
         cancelBooking,
         updateAttendance,
         addPaymentToBooking,

@@ -108,7 +108,7 @@ export const updateBookingRequest = async (
       `${url}/${id}`,
       data,
     );
-
+    console.log(":::bookingUpdated ", response.data);
     if (isLogicalErrorResponse(response.data)) {
       sileo.error({
         title: "Error",

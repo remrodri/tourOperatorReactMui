@@ -30,7 +30,7 @@ const BookingSearchByCodeContainer: React.FC<
       return;
     }
     const bookingFound = bookings.find((booking) =>
-      booking.bookingCode.toUpperCase().includes(searchValue.toUpperCase())
+      booking.bookingCode?.toUpperCase().includes(searchValue.toUpperCase())
     );
     console.log("bookingFound::: ", bookingFound);
     if (!bookingFound) {

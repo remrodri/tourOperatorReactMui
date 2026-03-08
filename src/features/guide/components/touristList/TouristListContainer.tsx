@@ -90,8 +90,7 @@ const TouristListContainer: React.FC = () => {
       return [];
     }
     const attendance = dateRangeBookings.map((booking) => {
-      const group = booking.attendance
-        .map((att) => {
+      const group = booking.attendance?.map((att) => {
           const tourist = getTouristInfoById(att.touristId);
           if (!tourist) {
             console.warn("Turista no encontrado:", att.touristId);

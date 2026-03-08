@@ -85,13 +85,13 @@ const BookingCardMenu: React.FC<BookingCardMenuProps> = ({
         >
           Ver detalles
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           key="Editar"
           onClick={() => handleOptionClick("Editar")}
           // disabled={status !== "pending"}
         >
           Editar
-        </MenuItem>
+        </MenuItem> */}
         {/* {balance !== 0 && (
           <MenuItem
             key="Registrar pago"
