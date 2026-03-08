@@ -103,7 +103,7 @@ const BookingFormContainer: React.FC<BookingFormContainerProps> = ({
   const { getTourPackageInfoById, tourPackages } = useTourPackageContext();
   const { getTouristDestinationInfoById } = useTouristDestinationContext();
   const { dateRanges } = useDateRangeContext();
-  const { createBooking, updateBooking } = useBookingContext();
+  const { createBooking } = useBookingContext();
 
   const isEditing = Boolean(booking?.id);
 
@@ -158,9 +158,7 @@ const buildImageSrc = (img: string | File): string => {
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const res = isEditing
-        ? await updateBooking(values)
-        : await createBooking(values, []); // ya no hay touristsBySearch
+      const res = await createBooking(values, []); // ya no hay touristsBySearch
 
       if (res) {
         setBookingProof(res);

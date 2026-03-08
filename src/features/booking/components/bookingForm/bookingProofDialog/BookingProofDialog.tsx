@@ -158,7 +158,7 @@ const BookingProofDialog: React.FC<BookingProofDialogProps> = ({
           <Divider />
 
           {/* PAGO INICIAL */}
-          {booking!.payments?.length > 0 && (
+          {booking!.payments && booking!.payments.length > 0 && (
             <Box>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Pago inicial
