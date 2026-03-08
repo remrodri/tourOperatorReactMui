@@ -80,11 +80,11 @@ export function WelcomeDialog({ storageKey = "welcome_dialog_seen" }: Props) {
             ))}
           </Stack>
 
-          <Typography color="text.secondary">
+          {/* <Typography color="text.secondary">
             *Observación: mejore las validaciones de los formularios excepto el
             de creacion de reserva, que funciona pero aun me falta mejorar su
             validacion...
-          </Typography>
+          </Typography> */}
         </Stack>
       </DialogContent>
 
