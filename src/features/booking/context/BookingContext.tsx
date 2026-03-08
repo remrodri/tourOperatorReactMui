@@ -19,7 +19,7 @@ import type { BookingType } from "../types/BookingType";
 import type { TouristType } from "../types/TouristType";
 import type { PaymentType } from "../types/PaymentType";
 // import type { UpdateBookingType } from "../types/UpdateBookingType";
-import type { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
+// import type { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
 import type { Group } from "../../guide/context/GuideContext";
 
 import {
@@ -29,6 +29,7 @@ import {
   updateAttendanceRequest,
   // updateBookingRequest,
 } from "../service/bookingService";
+import { BookingFormValues } from "../components/bookingForm3/BookingFormContainer";
 
 /* ============================
    Types
