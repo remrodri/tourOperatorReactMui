@@ -5,7 +5,6 @@ import {
   useContext,
   useEffect,
   useCallback,
-  // useMemo,
   useState,
 } from "react";
 
@@ -13,7 +12,6 @@ import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 
 import { TokenService } from "../../../utils/tokenService";
-import { useNewSnackbar } from "../../../context/SnackbarContext";
 import { useTouristContext } from "../../tourist/context/TouristContext";
 
 import type { UserType } from "../../userManagement/types/UserType";
@@ -22,6 +20,7 @@ import type { TouristType } from "../types/TouristType";
 import type { PaymentType } from "../types/PaymentType";
 import type { UpdateBookingType } from "../types/UpdateBookingType";
 import type { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
+import type { Group } from "../../guide/context/GuideContext";
 
 import {
   cancelBookingRequest,
@@ -31,16 +30,15 @@ import {
   updateBookingRequest,
 } from "../service/bookingService";
 
-import type { Group } from "../../guide/context/GuideContext";
-
+/* ============================
+   Types
+============================ */
 interface BookingContextType {
   bookings: BookingType[];
   loading: boolean;
   error: string | null;
 
-  // (Opcional pero útil, estilo UserContext)
   fetchBookings: () => void;
-
   getBookingById: (id: string) => BookingType | null;
 
   createBooking: (
@@ -72,21 +70,55 @@ interface BookingContextType {
   ) => BookingType[];
 }
 
-type AttendanceItem = { touristId: string; status: "present" | "absent" };
-
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 export const useBookingContext = () => {
   const ctx = useContext(BookingContext);
-  if (ctx === undefined) {
-    throw new Error("useBookingContext debe ser usado con un BookingProvider");
+  if (!ctx) {
+    throw new Error(
+      "useBookingContext debe ser usado dentro de BookingProvider",
+    );
   }
   return ctx;
 };
 
-// ✅ Helper por si API devuelve _id en vez de id
+/* ============================
+   Helpers
+============================ */
 const getBookingId = (b: any) => b?.id ?? b?._id;
 
+/** ✅ FILTRO REAL DE TURISTAS VÁLIDOS */
+const isValidTourist = (t?: Partial<TouristType> | null): t is TouristType => {
+  if (!t) return false;
+
+  return Boolean(
+    t.firstName?.trim() ||
+    t.lastName?.trim() ||
+    t.ci?.trim() ||
+    t.passportNumber?.trim(),
+  );
+};
+
+type AttendanceItem = {
+  touristId: string;
+  status: "present" | "absent";
+};
+
+const toAttendance = (group: any[]): AttendanceItem[] =>
+  (group ?? [])
+    .map((t) => ({
+      touristId: t.touristId ?? t.id ?? t._id,
+      status: t.status,
+    }))
+    .filter(
+      (x) =>
+        Boolean(x.touristId) &&
+        (x.status === "present" || x.status === "absent"),
+    );
+
+/* ============================
+   Provider
+============================ */
 export const BookingProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
@@ -94,22 +126,11 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { showSnackbar } = useNewSnackbar();
   const { addTouristFromBooking } = useTouristContext();
 
-  
-// si TouristWithStatus tiene { id | _id } y status
-const toAttendance = (group: any[]): AttendanceItem[] => {
-  return (group ?? [])
-    .map((t) => ({
-      touristId: t.touristId ?? t.id ?? t._id,  // <-- aquí está la clave
-      status: t.status,                          // "present" | "absent"
-    }))
-    .filter((x) => Boolean(x.touristId) && (x.status === "present" || x.status === "absent"));
-};
-
-
-  // ✅ Transform robusto
+  /* ============================
+     Transform
+  ============================ */
   const transformApiBooking = useCallback(
     (apiBooking: any): BookingType => ({
       id: getBookingId(apiBooking),
@@ -132,21 +153,24 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
     [],
   );
 
+  /* ============================
+     Fetch
+  ============================ */
   const fetchBookings = useCallback(async () => {
     setLoading(true);
     try {
       const response = await getAllBookingsRequest();
       if (!response) {
-        setError("No se pudieron cargar las reservas");
         setBookings([]);
+        setError("No se pudieron cargar las reservas");
         return;
       }
-      const transformed = response.map((b: any) => transformApiBooking(b));
-      setBookings(transformed);
+
+      setBookings(response.map(transformApiBooking));
       setError(null);
     } catch (e) {
-      console.error("Error fetching bookings", e);
-      setError("Failed to fetch bookings");
+      console.error(e);
+      setError("Error al cargar reservas");
     } finally {
       setLoading(false);
     }
@@ -156,15 +180,13 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
     fetchBookings();
   }, [fetchBookings]);
 
+  /* ============================
+     Selectors
+  ============================ */
   const getBookingById = useCallback(
-    (id: string): BookingType | null => {
-      const found = bookings.find((b) => getBookingId(b) === id) ?? null;
-      if (!found) {
-        showSnackbar("No se encontró la reserva", "error");
-      }
-      return found;
-    },
-    [bookings, showSnackbar],
+    (id: string): BookingType | null =>
+      bookings.find((b) => getBookingId(b) === id) ?? null,
+    [bookings],
   );
 
   const getBookingsByDateRangeId = useCallback(
@@ -177,74 +199,71 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
   );
 
   const getTouristCounterByDateRangeId = useCallback(
-    (dateRangeId: string): number => {
-      if (!dateRangeId) return 0;
-      return bookings.reduce((counter, b) => {
-        if (b.dateRangeId === dateRangeId) {
-          return counter + (b.touristIds?.length ?? 0);
-        }
-        return counter;
-      }, 0);
-    },
+    (dateRangeId: string): number =>
+      bookings.reduce(
+        (count, b) =>
+          b.dateRangeId === dateRangeId
+            ? count + (b.touristIds?.length ?? 0)
+            : count,
+        0,
+      ),
     [bookings],
   );
 
+  /* ============================
+     Payments
+  ============================ */
   const addPaymentToBooking = useCallback((payment: PaymentType) => {
     setBookings((prev) =>
-      prev.map((b) => {
-        if (getBookingId(b) !== payment.bookingId) return b;
-
-        const payments = b.payments ?? [];
-        const alreadyExists = payments.some((p) => p.id === payment.id);
-        if (alreadyExists) return b;
-
-        return { ...b, payments: [...payments, payment] };
-      }),
+      prev.map((b) =>
+        getBookingId(b) === payment.bookingId
+          ? {
+              ...b,
+              payments: b.payments?.some((p) => p.id === payment.id)
+                ? b.payments
+                : [...(b.payments || []), payment],
+            }
+          : b,
+      ),
     );
   }, []);
 
+  /* ============================
+     Attendance
+  ============================ */
   const updateAttendance = useCallback(
     async (data: any): Promise<Group[] | null> => {
       setLoading(true);
       try {
         const attendanceList = await updateAttendanceRequest(data);
-        if (!attendanceList) {
-          setError("Failed to update attendance");
-          showSnackbar("Error al actualizar la asistencia", "error");
-          return null;
-        }
+        if (!attendanceList) return null;
 
-        // Se asume que attendanceList es Group[]
         setBookings((prev) =>
           prev.map((b) => {
-            const a = (attendanceList as Group[]).find(
-              (x) => x.bookingId === getBookingId(b),
+            const found = attendanceList.find(
+              (x: Group) => x.bookingId === getBookingId(b),
             );
-
-            if (!a) return b;
-
-            return {
-              ...b,
-              attendance: toAttendance(a.group as any[]),
-            };
+            return found
+              ? { ...b, attendance: toAttendance(found.group as any[]) }
+              : b;
           }),
         );
 
-        showSnackbar("Asistencia actualizada exitosamente", "success");
-        setError(null);
-        return attendanceList as Group[];
+        return attendanceList;
       } catch (e) {
-        console.error("Error updating attendance", e);
-        setError("Failed to update attendance");
-        showSnackbar("Error al actualizar la asistencia", "error");
+        console.error(e);
+        setError("Error al actualizar asistencia");
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [showSnackbar],
+    [],
   );
 
+  /* ============================
+     Create Booking (FIX CLAVE)
+  ============================ */
   const createBooking = useCallback(
     async (
       booking: BookingFormValues,
@@ -255,32 +274,29 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
 
       const token = TokenService.getToken();
       if (!token) {
-        setError("Error al crear la reserva (sin token)");
-        showSnackbar("Error al crear la reserva", "error");
+        setError("No hay token");
         setLoading(false);
         return null;
       }
 
-      let seller: UserType;
-      try {
-        seller = jwtDecode<UserType>(token);
-      } catch {
-        setError("Token inválido");
-        showSnackbar("Error al crear la reserva", "error");
+      const seller = jwtDecode<UserType>(token);
+
+      /** ✅ CONSTRUCCIÓN SEGURA */
+      const tourists: TouristType[] = [
+        booking.mainTourist,
+        ...(booking.additionalTourists ?? []),
+        ...(touristsBySearch ?? []),
+      ].filter(isValidTourist);
+
+      if (tourists.length === 0) {
+        setError("La reserva debe tener al menos un turista válido");
         setLoading(false);
         return null;
       }
-
-      // Construimos turistas
-      const tourists: TouristType[] = [];
-      if (booking.mainTourist) tourists.push(booking.mainTourist);
-      if (booking.additionalTourists?.length)
-        tourists.push(...booking.additionalTourists);
-      if (touristsBySearch?.length) tourists.push(...touristsBySearch);
 
       const paymentProofFolder = uuidv4();
-
       const formData = new FormData();
+
       formData.append("tourPackageId", booking.tourPackageId);
       formData.append("dateRangeId", booking.dateRangeId);
       formData.append("sellerId", seller.id);
@@ -290,7 +306,6 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
       formData.append("tourists", JSON.stringify(tourists));
       formData.append("paymentProofFolder", paymentProofFolder);
 
-      // Imagen
       if (booking.firstPayment?.paymentProofImage) {
         formData.append(
           "paymentProofImage",
@@ -298,7 +313,6 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
         );
       }
 
-      // Primer pago
       formData.append(
         "firstPayment",
         JSON.stringify({
@@ -311,97 +325,78 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
 
       try {
         const response = await createBookingRequest(formData);
-        if (!response) {
-          setError("Error creating booking");
-          showSnackbar("Error al crear la reserva", "error");
-          return null;
-        }
+        if (!response) return null;
 
-        // El backend te devuelve tourists => los agregamos/normalizamos y guardamos ids
-        const newTourists =
-          (response as any).tourists?.map((t: any) =>
-            addTouristFromBooking(t),
-          ) ?? [];
-        const touristIds = newTourists.map((t: TouristType) => t.id);
+        // ✅ agregar turistas reales
+        response.tourists.forEach(addTouristFromBooking);
 
+        // ✅ construir booking usando touristIds reales
         const newBooking = transformApiBooking({
           ...response,
-          touristIds,
+          touristIds: response.tourists.map((t) => t.id),
         });
 
         setBookings((prev) => [...prev, newBooking]);
-        showSnackbar("Reserva creada exitosamente", "success");
         return newBooking;
       } catch (e) {
-        console.error("Error creating booking", e);
-        setError("Failed to create booking");
-        showSnackbar("Error al crear la reserva", "error");
+        console.error(e);
+        setError("Error al crear la reserva");
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [addTouristFromBooking, showSnackbar, transformApiBooking],
+    [addTouristFromBooking, transformApiBooking],
   );
 
+  /* ============================
+     Update / Cancel
+  ============================ */
   const updateBooking = useCallback(
     async (booking: any): Promise<BookingType | null> => {
       setLoading(true);
-      setError(null);
-
-      // Ojo: booking.additionalTourists puede ser undefined
-      const tourists = [
-        ...(booking.additionalTourists ?? []),
-        booking.mainTourist,
-      ].filter(Boolean);
-
-      const bookingToUpdate: UpdateBookingType = {
-        totalPrice: booking.totalPrice,
-        notes: booking.notes,
-        status: booking.status ?? "pending",
-        tourists,
-      };
-
       try {
+        const tourists = [
+          booking.mainTourist,
+          ...(booking.additionalTourists ?? []),
+        ].filter(isValidTourist);
+
+        const bookingToUpdate: UpdateBookingType = {
+          totalPrice: booking.totalPrice,
+          notes: booking.notes,
+          status: booking.status ?? "pending",
+          tourists,
+        };
+
         const response = await updateBookingRequest(
           getBookingId(booking),
           bookingToUpdate,
         );
-        if (!response || (response as any).error) {
-          const msg = (response as any)?.error || "Error updating booking";
-          setError(msg);
-          showSnackbar("Error al actualizar la reserva", "error");
-          return null;
-        }
 
-        const updatedTouristIds =
-          (response as any).tourists?.map(
-            (t: any) => addTouristFromBooking(t).id,
-          ) ?? [];
+        if (!response) return null;
 
         const updated = transformApiBooking({
           ...response,
-          touristIds: updatedTouristIds,
+          touristIds:
+            response.tourists
+              ?.filter(isValidTourist)
+              .map((t: any) => addTouristFromBooking(t).id) ?? [],
         });
 
         setBookings((prev) =>
-          prev.map((b) =>
-            getBookingId(b) === getBookingId(response) ? updated : b,
-          ),
+          prev.map((b) => (getBookingId(b) === updated.id ? updated : b)),
         );
 
-        showSnackbar("Reserva actualizada exitosamente", "success");
         return updated;
       } catch (e) {
-        console.error("Error updating booking", e);
-        setError("Failed to update booking");
-        showSnackbar("Error al actualizar la reserva", "error");
+        console.error(e);
+        setError("Error al actualizar la reserva");
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [addTouristFromBooking, showSnackbar, transformApiBooking],
+    [addTouristFromBooking, transformApiBooking],
   );
 
   const cancelBooking = useCallback(
@@ -412,8 +407,6 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
       refundedAt: Date,
     ): Promise<BookingType | null> => {
       setLoading(true);
-      setError(null);
-
       try {
         const response = await cancelBookingRequest(
           bookingId,
@@ -422,39 +415,25 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
           refundedAt,
         );
 
-        if (!response) {
-          setError("Error canceling booking");
-          showSnackbar("Error al cancelar la reserva", "error");
-          return null;
-        }
+        if (!response) return null;
 
         const updated = transformApiBooking(response);
 
         setBookings((prev) =>
-          prev.map((b) =>
-            getBookingId(b) === getBookingId(response) ? updated : b,
-          ),
+          prev.map((b) => (getBookingId(b) === updated.id ? updated : b)),
         );
 
-        showSnackbar("Reserva cancelada exitosamente", "success");
         return updated;
       } catch (e) {
-        console.error("Error canceling booking", e);
-        setError("Failed to cancel booking");
-        showSnackbar("Error al cancelar la reserva", "error");
+        console.error(e);
+        setError("Error al cancelar la reserva");
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [showSnackbar, transformApiBooking],
+    [transformApiBooking],
   );
-
-  // Ejemplo de derivado (opcional, estilo useMemo como en UserProvider)
-  // const pendingBookings = useMemo(
-  //   () => bookings.filter((b) => b.status === "pending"),
-  //   [bookings],
-  // );
 
   return (
     <BookingContext.Provider
@@ -472,8 +451,6 @@ const toAttendance = (group: any[]): AttendanceItem[] => {
         setBookings,
         getTouristCounterByDateRangeId,
         getBookingsByDateRangeId,
-        // si quieres exponer pendingBookings también, lo agregas al tipo y aquí:
-        // pendingBookings,
       }}
     >
       {children}

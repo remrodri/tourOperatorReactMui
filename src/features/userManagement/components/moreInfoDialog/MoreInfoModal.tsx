@@ -20,6 +20,17 @@ interface MoreInfoModalProps {
   userRole: RoleType;
 }
 
+const buildImageUrl = (path?: string): string => {
+  if (!path) return "";
+
+  // Si ya es URL absoluta
+  if (/^https?:\/\//i.test(path)) return path;
+
+  const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${normalized}`;
+};
+
 const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
   open,
   handleMoreInfoClick,
@@ -72,7 +83,7 @@ const MoreInfoModal: React.FC<MoreInfoModalProps> = ({
           <Avatar
             variant="rounded"
             sx={{ height: "150px", width: "150px" }}
-            src={user.imageUrl}
+            src={buildImageUrl(user.imageUrl)}
           />
         </Box>
         <Box>

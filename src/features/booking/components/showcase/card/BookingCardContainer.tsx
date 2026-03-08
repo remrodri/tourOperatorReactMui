@@ -5,7 +5,7 @@ import { useBookingContext } from "../../../context/BookingContext";
 import { BookingType } from "../../../types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import { TouristType } from "../../../types/TouristType";
-import BookingFormContainer from "../../bookingForm/BookingFormContainer";
+import BookingFormContainer from "../../bookingForm3/BookingFormContainer";
 import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
 import MoreInfoDialogContainer from "../../moreInfoDialogV2/MoreInfoDialogContainerV2";
 import ConfirmationModal from "./ConfirmationModal";
@@ -36,12 +36,12 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   const [openPaymentForm, setOpenPaymentForm] = useState(false);
 
   const [currentBooking, setCurrentBooking] = useState<BookingType | null>(
-    null
+    null,
   );
 
   const [tpInfo, setTpInfo] = useState<TourPackageType | null>(null);
   const [mainTouristInfo, setMainTouristInfo] = useState<TouristType | null>(
-    null
+    null,
   );
   const [balance, setBalance] = useState(0);
   const [localBooking, setLocalBooking] = useState<BookingType | null>(null);
@@ -51,12 +51,11 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   // const [loading, setLoading] = useState(false);
   const { showSnackbar } = useNewSnackbar();
 
-
   // const openMenu = Boolean(anchor);
 
   const [openPaymentProof, setOpenPaymentProof] = useState(false);
   const [createdPayment, setCreatedPayment] = useState<PaymentType | null>(
-    null
+    null,
   );
 
   const handleOpenPaymentProof = () => {
@@ -81,7 +80,7 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
       currentBooking!.id!,
       currentBooking!.cancellationFee!,
       currentBooking!.refundAmount!,
-      new Date()
+      new Date(),
     );
     setOpenConfirmation(false);
     try {
@@ -136,10 +135,8 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   };
 
   const calculateBalance = (booking: BookingType) => {
-    const totalPaid = booking.payments.reduce(
-      (acc, payment) => acc + payment.amount,
-      0
-    );
+    const totalPaid =
+      booking.payments?.reduce((acc, payment) => acc + payment.amount, 0) || 0;
     setBalance(booking.totalPrice - totalPaid);
   };
 

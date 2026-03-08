@@ -36,7 +36,7 @@ import TextType from "../../../../TextAnimations/TextType/TextType";
 import { TouristType } from "../../types/TouristType";
 import TouristCard from "./TouristCard";
 
-const URL_BASE = import.meta.env.VITE_API_URL;
+// const URL_BASE = import.meta.env.VITE_API_URL;
 
 interface BookingFormProps {
   open: boolean;
@@ -75,6 +75,21 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const buildImageSrc = (img: string | File): string => {
+  // ✅ Preview local (File)
+  if (img instanceof File) {
+    return URL.createObjectURL(img);
+  }
+
+  // ✅ URL absoluta
+  if (/^https?:\/\//i.test(img)) return img;
+
+  // ✅ Ruta del backend
+  const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
+  const normalized = img.startsWith("/") ? img : `/${img}`;
+  return `${base}${normalized}`;
+};
 
 const BookingForm: React.FC<BookingFormProps> = ({
   open,
@@ -496,23 +511,20 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     ...(isEditing ? { justifyContent: "center" } : {}),
                   }}
                 >
-                  {destinationImages?.length > 0 &&
-                    destinationImages?.map((image, index) => (
-                      <Box key={index}>
-                        <img
-                          src={`${URL_BASE}/${image}`}
-                          alt=""
-                          style={{
-                            display: "flex",
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                            objectPosition: "center",
-                            borderRadius: "6px",
-                          }}
-                        />
-                      </Box>
-                    ))}
+                  {destinationImages?.map((image, index) => (
+                    <Box key={index}>
+                      <img
+                        src={buildImageSrc(image)}
+                        alt=""
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                          borderRadius: "6px",
+                        }}
+                      />
+                    </Box>
+                  ))}
                 </Box>
               </Box>
             </Box>
