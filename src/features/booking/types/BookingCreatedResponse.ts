@@ -1,36 +1,23 @@
-// import { PaymentType } from "./PaymentType";
-
 import { PaymentType } from "./PaymentType";
+import { TouristType } from "./TouristType";
 
-export interface BookingType {
+export interface BookingCreatedResponse {
   id: string;
-
+  tourists: TouristType[];
+  payments: PaymentType[];
   tourPackageId: string;
   dateRangeId: string;
   sellerId: string;
-
-  touristIds: string[];
-
-  totalPrice: number;
-
-  payments?: PaymentType[];
-
-  notes: string;
-
   status: "pending" | "paid" | "cancelled" | "completed";
-
+  totalPrice: number;
+  notes: string;
   paymentProofFolder: string;
-
-  createdAt: string;
-
-  attendance?: {
+  attendance: {
     touristId: string;
     status: "present" | "absent";
   }[];
-
   cancellationFee?: number;
   refundAmount?: number;
   refundedAt?: Date;
-
-  bookingCode?: string;
+  bookingCode: string;
 }

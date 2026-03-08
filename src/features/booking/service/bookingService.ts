@@ -4,55 +4,90 @@ import { sileo } from "sileo";
 import { axiosPublic, axiosPrivate } from "../../../config/axiosConfig";
 import type { ApiResponse } from "../../../types/api";
 
-import { BookingType } from "../types/BookingType";
-import { UpdateBookingType } from "../types/UpdateBookingType";
-
-// Si tienes un tipo real para attendance, úsalo. Aquí lo tipamos mínimo:
-export type AttendanceListPayload = unknown;
+import type { BookingType } from "../types/BookingType";
+import type { UpdateBookingType } from "../types/UpdateBookingType";
+import type { Group } from "../../guide/context/GuideContext";
+import { BookingCreatedResponse } from "../types/BookingCreatedResponse";
 
 const url = "/bookings";
 
-/**
- * CREATE booking
- * Normalmente PRIVADO (si es público, cambia axiosPrivate -> axiosPublic)
- */
+/* ============================
+   Helpers
+============================ */
+const isLogicalErrorResponse = (payload: any): boolean => {
+  if (!payload) return true;
+
+  if (typeof payload.statusCode === "number") {
+    if (payload.statusCode >= 200 && payload.statusCode < 300) return false;
+    return true;
+  }
+
+  if (payload.success === false) return true;
+  if (payload.status === "error") return true;
+
+  return false;
+};
+
+const extractMessage = (payload: any, fallback: string) =>
+  payload?.message || fallback;
+
+/* ============================
+   CREATE booking
+============================ */
 export const createBookingRequest = async (
   data: FormData,
-): Promise<BookingType | null> => {
+): Promise<BookingCreatedResponse | null> => {
   try {
-    const response = await axiosPrivate.post<ApiResponse<BookingType>>(
-      url,
+    const response = await axiosPrivate.post<ApiResponse<any>>(
+      "/bookings",
       data,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
+      { headers: { "Content-Type": "multipart/form-data" } },
     );
+
+    if (!response.data?.data) {
+      sileo.error({
+        title: "Error",
+        description: "No se pudo crear la reserva",
+      });
+      return null;
+    }
 
     sileo.success({
       title: "Éxito",
       description: "Reserva creada correctamente",
     });
-    return response.data.data;
+
+    return response.data.data as BookingCreatedResponse;
   } catch (error) {
-    if (isAxiosError(error)) console.log(error.response?.data);
-    sileo.error({ title: "Error", description: "No se pudo crear la reserva" });
+    console.error(error);
+    sileo.error({
+      title: "Error",
+      description: "No se pudo crear la reserva",
+    });
     return null;
   }
 };
 
-/**
- * GET all bookings
- * Normalmente PRIVADO (porque es data operativa)
- * Si tu backend lo expone público, cambia axiosPrivate -> axiosPublic
- */
+/* ============================
+   GET all bookings
+============================ */
 export const getAllBookingsRequest = async (): Promise<
   BookingType[] | null
 > => {
   try {
-    const response = await axiosPublic.get<ApiResponse<BookingType[]>>(url);
-    return response.data.data;
+    const response = await axiosPublic.get<ApiResponse<any>>(url);
+
+    if (isLogicalErrorResponse(response.data)) {
+      sileo.error({
+        title: "Error",
+        description: "No se pudieron cargar las reservas",
+      });
+      return null;
+    }
+
+    return response.data.data as BookingType[];
   } catch (error) {
-    if (isAxiosError(error)) console.log(error.response?.data);
+    if (isAxiosError(error)) console.error(error.response?.data);
     sileo.error({
       title: "Error",
       description: "No se pudieron cargar las reservas",
@@ -61,27 +96,38 @@ export const getAllBookingsRequest = async (): Promise<
   }
 };
 
-/**
- * UPDATE booking
- * PRIVADO
- */
+/* ============================
+   UPDATE booking
+============================ */
 export const updateBookingRequest = async (
   id: string,
   data: Partial<UpdateBookingType>,
 ): Promise<BookingType | null> => {
   try {
-    const response = await axiosPrivate.put<ApiResponse<BookingType>>(
+    const response = await axiosPrivate.put<ApiResponse<any>>(
       `${url}/${id}`,
       data,
     );
+
+    if (isLogicalErrorResponse(response.data)) {
+      sileo.error({
+        title: "Error",
+        description: extractMessage(
+          response.data,
+          "No se pudo actualizar la reserva",
+        ),
+      });
+      return null;
+    }
 
     sileo.success({
       title: "Éxito",
       description: "Reserva actualizada correctamente",
     });
-    return response.data.data;
+
+    return response.data.data as BookingType;
   } catch (error) {
-    if (isAxiosError(error)) console.log(error.response?.data);
+    if (isAxiosError(error)) console.error(error.response?.data);
     sileo.error({
       title: "Error",
       description: "No se pudo actualizar la reserva",
@@ -90,13 +136,12 @@ export const updateBookingRequest = async (
   }
 };
 
-/**
- * UPDATE attendance lists
- * PRIVADO
- */
+/* ============================
+   UPDATE attendance
+============================ */
 export const updateAttendanceRequest = async (
-  data: AttendanceListPayload,
-): Promise<any | null> => {
+  data: unknown,
+): Promise<Group[] | null> => {
   try {
     const response = await axiosPrivate.put<ApiResponse<any>>(
       `${url}/attendance-lists`,
@@ -104,13 +149,22 @@ export const updateAttendanceRequest = async (
       { headers: { "Content-Type": "application/json" } },
     );
 
+    if (isLogicalErrorResponse(response.data)) {
+      sileo.error({
+        title: "Error",
+        description: "No se pudo actualizar la asistencia",
+      });
+      return null;
+    }
+
     sileo.success({
       title: "Éxito",
       description: "Asistencia actualizada correctamente",
     });
-    return response.data.data;
+
+    return response.data.data as Group[];
   } catch (error) {
-    if (isAxiosError(error)) console.log(error.response?.data);
+    if (isAxiosError(error)) console.error(error.response?.data);
     sileo.error({
       title: "Error",
       description: "No se pudo actualizar la asistencia",
@@ -119,10 +173,9 @@ export const updateAttendanceRequest = async (
   }
 };
 
-/**
- * CANCEL booking
- * PRIVADO
- */
+/* ============================
+   CANCEL booking
+============================ */
 export const cancelBookingRequest = async (
   bookingId: string,
   cancellationFee: number,
@@ -130,19 +183,28 @@ export const cancelBookingRequest = async (
   refundedAt: Date,
 ): Promise<BookingType | null> => {
   try {
-    const response = await axiosPrivate.put<ApiResponse<BookingType>>(
+    const response = await axiosPrivate.put<ApiResponse<any>>(
       `${url}/cancel/${bookingId}`,
       { cancellationFee, refundAmount, refundedAt },
       { headers: { "Content-Type": "application/json" } },
     );
 
+    if (isLogicalErrorResponse(response.data)) {
+      sileo.error({
+        title: "Error",
+        description: "No se pudo cancelar la reserva",
+      });
+      return null;
+    }
+
     sileo.success({
       title: "Éxito",
       description: "Reserva cancelada correctamente",
     });
-    return response.data.data;
+
+    return response.data.data as BookingType;
   } catch (error) {
-    if (isAxiosError(error)) console.log(error.response?.data);
+    if (isAxiosError(error)) console.error(error.response?.data);
     sileo.error({
       title: "Error",
       description: "No se pudo cancelar la reserva",
