@@ -4,23 +4,33 @@ import {
   DialogContent,
   IconButton,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 import { Close } from "@mui/icons-material";
+import { forwardRef } from "react";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 import DialogCardContainer from "./card/DialogCardContainer";
-
-import { forwardRef } from "react";
-import Slide, { type SlideProps } from "@mui/material/Slide";
 import { ENV } from "../../../../../config/env";
+
+const BASE_URL = ENV.API_BASE_URL;
+
+/* -------------------------------------------------------------------------------------------------
+ * Transition
+ * -----------------------------------------------------------------------------------------------*/
 
 const Transition = forwardRef<unknown, SlideProps>(
   function Transition(props, ref) {
-    const { in: inProp, ...other } = props;
-
-    return <Slide in={inProp} direction="up" ref={ref} {...other} />;
+    return <Slide direction="up" ref={ref} {...props} />;
   },
 );
+
+/* -------------------------------------------------------------------------------------------------
+ * Props
+ * -----------------------------------------------------------------------------------------------*/
 
 interface DialogProps {
   open: boolean;
@@ -29,8 +39,9 @@ interface DialogProps {
   tourPackagesByTouristDestinationId: TourPackageType[];
 }
 
-// const BASE_URL = "http://localhost:3000";
-const BASE_URL = ENV.API_BASE_URL;
+/* -------------------------------------------------------------------------------------------------
+ * Component
+ * -----------------------------------------------------------------------------------------------*/
 
 const DialogComponent: React.FC<DialogProps> = ({
   open,
@@ -38,142 +49,154 @@ const DialogComponent: React.FC<DialogProps> = ({
   touristDestination,
   tourPackagesByTouristDestinationId,
 }) => {
-  const firstImage = touristDestination.images[0];
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  const firstImage = touristDestination.images[0];
   const backgroundImageUrl =
-    typeof firstImage === "string" && `${BASE_URL}${firstImage}`;
+    typeof firstImage === "string" ? `${BASE_URL}${firstImage}` : undefined;
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
+      fullScreen={isMobile}
       maxWidth="lg"
-      sx={{
-        // overflowY: "auto",
-        "& .MuiDialog-paper": {
-          // width: "60rem",
-          height: "30rem",
-          // overflowY: "auto",
-          // borderRadius: "10px",
-          // border: "none",
-          // padding:"1rem"
-        },
-      }}
-      slots={{
-        transition: Transition,
-      }}
-      slotProps={{
-        transition: {
-          timeout: { enter: 300, exit: 300 },
-          // onExited: onClose,
-          easing: {
-            enter: "ease-out",
-            exit: "ease-in",
-          },
-        },
-        paper: {
-          sx: {
-            backgroundImage: `url(${backgroundImageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            // width: "60rem",
-            // height: "30rem",
-            borderRadius: "10px",
-            // overflowY: "auto",
-          },
+      TransitionComponent={Transition}
+      PaperProps={{
+        sx: {
+          borderRadius: isMobile ? 0 : 3,
+          height: isMobile ? "100%" : "32rem",
+          overflow: "hidden",
+          backgroundImage: !isMobile ? `url(${backgroundImageUrl})` : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         },
       }}
     >
+      {/* HERO IMAGE (mobile only) */}
+      {isMobile && backgroundImageUrl && (
+        <Box
+          sx={{
+            height: 220,
+            backgroundImage: `url(${backgroundImageUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            position: "relative",
+          }}
+        >
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              bgcolor: "rgba(0,0,0,0.6)",
+              color: "white",
+              "&:hover": { bgcolor: "rgba(0,0,0,0.8)" },
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+      )}
+
       <DialogContent
         sx={{
-          // width: "40rem",
-          // height: "20rem",
-          backgroundColor: "rgba(0, 0, 0, 0.45)",
-          padding: "0",
+          p: 0,
           display: "flex",
-          // overflowY: "auto",
+          height: "100%",
+          backgroundColor: isMobile ? "background.default" : "rgba(0,0,0,0.45)",
         }}
       >
+        {/* LEFT IMAGE (desktop only) */}
+        {!isMobile && (
+          <Box
+            sx={{
+              width: "30%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backdropFilter: "blur(6px)",
+              bgcolor: "rgba(0,0,0,0.85)",
+            }}
+          >
+            <img
+              src={backgroundImageUrl}
+              alt={touristDestination.name}
+              style={{
+                width: "90%",
+                borderRadius: 12,
+                objectFit: "cover",
+              }}
+            />
+          </Box>
+        )}
+
+        {/* CONTENT */}
         <Box
           sx={{
-            width: "30%",
-            height: "100%",
-            display: { xs: "none", md: "flex" },
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 1)",
-            backdropFilter: "blur(5px)",
-            // backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
-            // backgroundSize: "cover",
-            // backgroundPosition: "center",
-            // backgroundRepeat: "no-repeat",
-            // backgroundImage: `url(${BASE_URL}${touristDestination.images[0]})`,
-            // backgroundSize: "cover",
-            // backgroundPosition: "center",
-            // backgroundRepeat: "no-repeat",
-            // display:{md: "none"}
-          }}
-        >
-          <img
-            src={
-              typeof touristDestination.images[0] === "string"
-                ? BASE_URL + touristDestination.images[0]
-                : "tourist-destination-image"
-            }
-            alt="tourist-destination-image"
-          />
-        </Box>
-        <Box
-          sx={{
-            backgroundColor: "rgba(0, 0, 0, 0.55)",
             width: { xs: "100%", md: "70%" },
             height: "100%",
-            // borderRadius: "6px",
-            backdropFilter: "blur(10px)",
             overflowY: "auto",
+            backdropFilter: !isMobile ? "blur(10px)" : "none",
+            bgcolor: !isMobile ? "rgba(0,0,0,0.55)" : "background.paper",
           }}
         >
+          {!isMobile && (
+            <IconButton
+              onClick={onClose}
+              sx={{
+                position: "absolute",
+                top: 12,
+                right: 12,
+                color: "white",
+              }}
+            >
+              <Close />
+            </IconButton>
+          )}
+
           <Typography
             variant="h5"
             sx={{
-              padding: "1rem",
-              fontWeight: "500",
+              p: 2,
+              fontWeight: 600,
               fontFamily: "Montserrat",
             }}
           >
             {touristDestination.name}
           </Typography>
-          <IconButton
-            autoFocus
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              position: "absolute",
-              right: 12,
-              top: 12,
-            }}
-          >
-            <Close />
-          </IconButton>
+
           <Typography
             variant="body1"
-            sx={{ padding: "1rem", fontWeight: "light", fontFamily: "Roboto" }}
+            sx={{
+              px: 2,
+              pb: 2,
+              opacity: 0.9,
+            }}
           >
             {touristDestination.description}
           </Typography>
+
           <Typography
             variant="h6"
-            sx={{ padding: "1rem", fontFamily: "Montserrat" }}
+            sx={{
+              px: 2,
+              pb: 1,
+              fontFamily: "Montserrat",
+            }}
           >
-            Paquetes para este destino
+            Paquetes disponibles
           </Typography>
+
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: "1rem",
-              px: "1rem",
+              gap: 2,
+              px: 2,
+              pb: 3,
             }}
           >
             {tourPackagesByTouristDestinationId.map((tourPackage) => (
@@ -188,4 +211,5 @@ const DialogComponent: React.FC<DialogProps> = ({
     </Dialog>
   );
 };
+
 export default DialogComponent;

@@ -49,12 +49,11 @@ export function WelcomeDialog({ storageKey = "welcome_dialog_seen" }: Props) {
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>¡Bienvenido/a!</DialogTitle>
+      <DialogTitle>¡Saludos!</DialogTitle>
       <DialogContent dividers>
         <Stack spacing={2}>
           <Typography>
-            Hola <strong>licen</strong>, si quiere acceder al sistema los
-            usuarios son:
+            Hola, si deseas acceder a la aplicación web los usuarios son:
           </Typography>
 
           <Divider />

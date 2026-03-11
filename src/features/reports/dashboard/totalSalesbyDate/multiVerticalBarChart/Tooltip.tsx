@@ -1,165 +1,203 @@
-// "use client";
-// import * as React from "react";
-// import { createPortal } from "react-dom";
+"use client";
+import * as React from "react";
+import { createPortal } from "react-dom";
 
-// /* -------------------------------------------------------------------------------------------------
-//  * This is a basic tooltip created for the chart demos. Customize as needed or bring your own solution.
-//  * -----------------------------------------------------------------------------------------------*/
+/* -------------------------------------------------------------------------------------------------
+ * Context
+ * -----------------------------------------------------------------------------------------------*/
 
-// type TooltipContextValue = {
-//   tooltip: { x: number; y: number } | undefined;
-//   setTooltip: (tooltip: { x: number; y: number } | undefined) => void;
-// };
+type TooltipPoint = { x: number; y: number };
 
-// const TooltipContext = React.createContext<TooltipContextValue | undefined>(undefined);
+type TooltipContextValue = {
+  tooltip: TooltipPoint | undefined;
+  setTooltip: (tooltip: TooltipPoint | undefined) => void;
+};
 
-// function useTooltipContext(): TooltipContextValue {
-//   const context = React.useContext(TooltipContext);
-//   if (!context) {
-//     throw new Error("Tooltip must be used within a Tooltip Context");
-//   }
-//   return context;
-// }
+const TooltipContext = React.createContext<TooltipContextValue | undefined>(
+  undefined,
+);
 
-// /* -------------------------------------------------------------------------------------------------
-//  * Tooltip
-//  * -----------------------------------------------------------------------------------------------*/
+function useTooltipContext(): TooltipContextValue {
+  const context = React.useContext(TooltipContext);
+  if (!context) {
+    throw new Error("Tooltip must be used within a Tooltip Context");
+  }
+  return context;
+}
 
-// const Tooltip: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-//   const [tooltip, setTooltip] = React.useState<{ x: number; y: number }>();
+/* -------------------------------------------------------------------------------------------------
+ * Provider
+ * -----------------------------------------------------------------------------------------------*/
 
-//   return (
-//     <TooltipContext.Provider value={{ tooltip, setTooltip }}>{children}</TooltipContext.Provider>
-//   );
-// };
+const Tooltip: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [tooltip, setTooltip] = React.useState<TooltipPoint | undefined>(
+    undefined,
+  );
 
-// /* -------------------------------------------------------------------------------------------------
-//  * TooltipTrigger
-//  * -----------------------------------------------------------------------------------------------*/
+  const value = React.useMemo(() => ({ tooltip, setTooltip }), [tooltip]);
 
-// const TRIGGER_NAME = "TooltipTrigger";
+  return (
+    <TooltipContext.Provider value={value}>{children}</TooltipContext.Provider>
+  );
+};
 
-// const TooltipTrigger = React.forwardRef<HTMLElement | SVGGElement, { children: React.ReactNode }>(
-//   (props, forwardedRef) => {
-//     const { children } = props;
-//     const context = useTooltipContext();
-//     const triggerRef = React.useRef<SVGGElement | null>(null);
+/* -------------------------------------------------------------------------------------------------
+ * TooltipTrigger (SVG)
+ * -----------------------------------------------------------------------------------------------*/
 
-//     React.useEffect(() => {
-//       const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-//         if (triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
-//           context.setTooltip(undefined);
-//         }
-//       };
+const TooltipTrigger = React.forwardRef<
+  SVGGElement,
+  { children: React.ReactNode }
+>((props, forwardedRef) => {
+  const { children } = props;
+  const context = useTooltipContext();
+  const triggerRef = React.useRef<SVGGElement | null>(null);
 
-//       document.addEventListener("mousedown", handleClickOutside);
-//       document.addEventListener("touchstart", handleClickOutside);
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        context.setTooltip(undefined);
+      }
+    };
 
-//       return () => {
-//         document.removeEventListener("mousedown", handleClickOutside);
-//         document.removeEventListener("touchstart", handleClickOutside);
-//       };
-//     }, [context]);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
 
-//     return (
-//       <g
-//         ref={(node) => {
-//           // Maintain both refs
-//           triggerRef.current = node;
-//           if (typeof forwardedRef === "function") {
-//             forwardedRef(node);
-//           } else if (forwardedRef) {
-//             forwardedRef.current = node;
-//           }
-//         }}
-//         onPointerMove={(event) => {
-//           // Only handle mouse events, not touch
-//           if (event.pointerType === "mouse") {
-//             context.setTooltip({ x: event.clientX, y: event.clientY });
-//           }
-//         }}
-//         onPointerLeave={(event) => {
-//           // Only handle mouse events, not touch
-//           if (event.pointerType === "mouse") {
-//             context.setTooltip(undefined);
-//           }
-//         }}
-//         onTouchStart={(event) => {
-//           // On mobile, trigger when clicked instead of hover. Change as needed.
-//           context.setTooltip({ x: event.touches[0].clientX, y: event.touches[0].clientY });
-//           setTimeout(() => {
-//             context.setTooltip(undefined);
-//           }, 2000);
-//         }}
-//       >
-//         {children}
-//       </g>
-//     );
-//   }
-// );
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [context]);
 
-// TooltipTrigger.displayName = TRIGGER_NAME;
+  return (
+    <g
+      ref={(node) => {
+        triggerRef.current = node;
+        if (typeof forwardedRef === "function") forwardedRef(node);
+        else if (forwardedRef) forwardedRef.current = node;
+      }}
+      onPointerMove={(event) => {
+        if (event.pointerType === "mouse") {
+          context.setTooltip({
+            x: event.clientX,
+            y: event.clientY,
+          });
+        }
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === "mouse") {
+          context.setTooltip(undefined);
+        }
+      }}
+      onTouchStart={(event) => {
+        context.setTooltip({
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY,
+        });
+        setTimeout(() => context.setTooltip(undefined), 2000);
+      }}
+    >
+      {children}
+    </g>
+  );
+});
 
-// /* -------------------------------------------------------------------------------------------------
-//  * TooltipContent
-//  * -----------------------------------------------------------------------------------------------*/
+TooltipTrigger.displayName = "TooltipTrigger";
 
-// const CONTENT_NAME = "TooltipContent";
+/* -------------------------------------------------------------------------------------------------
+ * TooltipContent (✅ FIXED)
+ * -----------------------------------------------------------------------------------------------*/
 
-// const TooltipContent = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>((props) => {
-//   const { children } = props;
-//   const context = useTooltipContext();
-//   const runningOnClient = typeof document !== "undefined";
-//   const tooltipRef = React.useRef<HTMLDivElement>(null);
+const TooltipContent = React.forwardRef<
+  HTMLDivElement,
+  { children: React.ReactNode }
+>((props) => {
+  const { children } = props;
+  const context = useTooltipContext();
 
-//   // Calculate position based on viewport
-//   const getTooltipPosition = () => {
-//     if (!tooltipRef.current || !context.tooltip) return {};
+  const tooltipRef = React.useRef<HTMLDivElement>(null);
+  const runningOnClient = typeof window !== "undefined";
 
-//     const tooltipWidth = tooltipRef.current.offsetWidth;
-//     const viewportWidth = window.innerWidth;
-//     const willOverflowRight = context.tooltip.x + tooltipWidth + 10 > viewportWidth;
+  const [isMobile, setIsMobile] = React.useState(false);
+  const [position, setPosition] = React.useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
-//     return {
-//       top: context.tooltip.y - 20,
-//       left: willOverflowRight ? context.tooltip.x - tooltipWidth - 10 : context.tooltip.x + 10,
-//     };
-//   };
+  // ✅ detectar mobile sin usar window en render
+  React.useEffect(() => {
+    if (!runningOnClient) return;
 
-//   if (!context.tooltip || !runningOnClient) {
-//     return null;
-//   }
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
 
-//   const isMobile = window.innerWidth < 768;
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [runningOnClient]);
 
-//   return createPortal(
-//     isMobile ? (
-//       <div
-//         className="fixed h-fit z-60 w-fit rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-3"
-//         style={{
-//           top: context.tooltip.y,
-//           left: context.tooltip.x + 20,
-//         }}
-//       >
-//         {children}
-//       </div>
-//     ) : (
-//       <div
-//         ref={tooltipRef}
-//         className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3.5 py-2 rounded-sm fixed z-50"
-//         style={getTooltipPosition()}
-//       >
-//         {children}
-//       </div>
-//     ),
-//     document.body
-//   );
-// });
+  // ✅ calcular posición FUERA del render (aquí sí se leen refs)
+  React.useLayoutEffect(() => {
+    if (!runningOnClient || !context.tooltip) {
+      setPosition(null);
+      return;
+    }
 
-// TooltipContent.displayName = CONTENT_NAME;
+    const { x, y } = context.tooltip;
 
-// /* -------------------------------------------------------------------------------------------------
-//  * Exports
-//  * -----------------------------------------------------------------------------------------------*/
+    if (isMobile) {
+      setPosition({ top: y, left: x + 20 });
+      return;
+    }
 
-// export { Tooltip as ClientTooltip, TooltipTrigger, TooltipContent };
+    const el = tooltipRef.current;
+    if (!el) return;
+
+    const tooltipWidth = el.offsetWidth;
+    const viewportWidth = window.innerWidth;
+    const overflowRight = x + tooltipWidth + 10 > viewportWidth;
+
+    setPosition({
+      top: y - 20,
+      left: overflowRight ? x - tooltipWidth - 10 : x + 10,
+    });
+  }, [context.tooltip?.x, context.tooltip?.y, isMobile, runningOnClient]);
+
+  if (!context.tooltip || !runningOnClient) return null;
+
+  return createPortal(
+    isMobile ? (
+      <div
+        className="fixed z-60 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-3"
+        style={position ?? { top: context.tooltip.y, left: context.tooltip.x }}
+      >
+        {children}
+      </div>
+    ) : (
+      <div
+        ref={tooltipRef}
+        className="fixed z-50 rounded-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3.5 py-2"
+        style={
+          position ?? {
+            top: context.tooltip.y - 20,
+            left: context.tooltip.x + 10,
+          }
+        }
+      >
+        {children}
+      </div>
+    ),
+    document.body,
+  );
+});
+
+TooltipContent.displayName = "TooltipContent";
+
+/* -------------------------------------------------------------------------------------------------
+ * Exports
+ * -----------------------------------------------------------------------------------------------*/
+
+export { Tooltip as ClientTooltip, TooltipTrigger, TooltipContent };
