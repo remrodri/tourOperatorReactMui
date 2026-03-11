@@ -6,6 +6,7 @@ import CumulativeBookingTrendContainer from "./cumulativeBookingTrend/Cumulative
 import GuideRankingByDestinationContainer from "./GuideRankingByDestination/GuideRankingByDestinationContainer";
 import GlobalStatsContainer from "./globalStats/GlobalStatsContainer";
 import TextType from "../../../TextAnimations/TextType/TextType";
+import TotalSalesByDateContainer from "./totalSalesbyDate/TotalSalesByDateContainer";
 
 
 const Dashboard: React.FC = (
@@ -139,7 +140,7 @@ const Dashboard: React.FC = (
                 threshold={0.2}
                 delay={0.3}
               > */}
-              {/* <TotalSalesByDateContainer /> */}
+              <TotalSalesByDateContainer />
               {/* </AnimatedContent> */}
             </Box>
           </Grow>
