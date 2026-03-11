@@ -1,20 +1,30 @@
 import { Box, Typography } from "@mui/material";
 import { TouristDestinationType } from "../../../touristDestination/types/TouristDestinationType";
 
-// const BASE_URL = "http://localhost:3000";
-
-const URL_BASE = import.meta.env.VITE_API_URL;
-
 export interface TouristDestinationProps {
   loading: boolean;
   touristDestination: TouristDestinationType | null;
 }
 
+/**
+ * Normaliza imágenes del backend:
+ * - si ya es URL absoluta → se usa tal cual
+ * - si es /uploads/... → se antepone VITE_API_BASE_URL
+ */
+const buildImageUrl = (path?: string): string => {
+  if (!path) return "";
+
+  if (/^https?:\/\//i.test(path)) return path;
+
+  const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${normalized}`;
+};
+
 const TouristDestination: React.FC<TouristDestinationProps> = ({
   loading,
   touristDestination,
 }) => {
-  // console.log("touristDestination::: ", touristDestination);
   return (
     <Box
       sx={{
@@ -24,7 +34,7 @@ const TouristDestination: React.FC<TouristDestinationProps> = ({
         alignItems: "center",
         justifyContent: "center",
         height: "calc(100dvh - 86px)",
-        p:"0 10px 0 10px"
+        p: "0 10px",
       }}
     >
       {loading ? (
@@ -39,19 +49,16 @@ const TouristDestination: React.FC<TouristDestinationProps> = ({
             boxShadow: "0 4px 10px rgb(41, 39, 37)",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(191, 182, 174, 1)",
-            padding: "20px 20px",
+            padding: "20px",
             gap: "10px",
-            width: {
-              xs: "100%",
-              sm: "100%",
-              md: "60%",
-            },
+            width: { xs: "100%", md: "60%" },
             overflowY: "auto",
           }}
         >
           <Typography variant="h5" align="center">
             Destino turístico
           </Typography>
+
           <Box
             sx={{
               display: "flex",
@@ -60,10 +67,8 @@ const TouristDestination: React.FC<TouristDestinationProps> = ({
               background: "rgba(43, 37, 32, 0.47)",
               borderRadius: "10px",
               boxShadow: "0 4px 10px rgb(46, 39, 33)",
-              // backdropFilter: "blur(10px)",
               border: "1px solid rgb(73, 63, 54)",
               padding: "20px",
-              // pb:"5px"
             }}
           >
             <Typography variant="h6" align="center">
@@ -73,6 +78,7 @@ const TouristDestination: React.FC<TouristDestinationProps> = ({
               {touristDestination?.description}
             </Typography>
           </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -90,14 +96,12 @@ const TouristDestination: React.FC<TouristDestinationProps> = ({
                 }}
               >
                 <img
-                  src={`${URL_BASE}${image}`}
+                  src={buildImageUrl(image as string)}
                   alt={`image-${index}`}
                   style={{
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
                     borderRadius: "10px",
                   }}
                 />

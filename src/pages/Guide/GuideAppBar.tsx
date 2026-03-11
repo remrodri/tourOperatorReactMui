@@ -1,58 +1,68 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-// import Switch from '@mui/material/Switch';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import FormGroup from '@mui/material/FormGroup';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import { Avatar, Tooltip } from '@mui/material';
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
-
-// const BASE_URL = "http://localhost:3000";
-
-const URL_BASE = import.meta.env.VITE_API_URL;
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import { Avatar, Tooltip } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
-    toggleDrawer: (newOpen: boolean) => () => void;
-    guideName: string;
+  toggleDrawer: (newOpen: boolean) => () => void;
+  guideName: string;
 }
 
-const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
+/**
+ * Normaliza un path de imagen que viene del backend:
+ * - si ya es URL absoluta (https://...), la devuelve tal cual
+ * - si es ruta (/uploads/...), antepone VITE_API_BASE_URL
+ */
+const buildImageUrl = (path?: string): string => {
+  if (!path) return "";
+
+  // URL absoluto
+  if (/^https?:\/\//i.test(path)) return path;
+
+  // Base del backend (Railway)
+  const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+
+  return `${base}${normalized}`;
+};
+
+const GuideAppBar: React.FC<Props> = ({ toggleDrawer, guideName }) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [imageUrl, setImageUrl] = React.useState<string>("");
 
   const navigate = useNavigate();
 
-  const getImage=()=>{
-    const token = localStorage.getItem("token")
-    if(!token){
-      return
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user:any = jwtDecode(token)
-    setImageUrl(`${URL_BASE}${user.imagePath}`)
-  }
+  const getImage = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setAuth(event.target.checked);
-  // };
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const user: any = jwtDecode(token);
+
+      // user.imagePath puede ser "/uploads/..." o "https://..."
+      setImageUrl(buildImageUrl(user.imagePath));
+    } catch {
+      // Token inválido/corrupto: no rompemos la UI
+      setImageUrl("");
+    }
+  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    // console.log('handleMenu::: ', event);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -62,14 +72,10 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
     navigate("/");
   };
 
-  // const handlePerfil = () => {
-  //   navigate("/guia-de-turismo/perfil");
-  //   handleClose();
-  // };
+  React.useEffect(() => {
+    getImage();
+  }, []);
 
-  React.useEffect(()=>{
-    getImage()
-  },[])
   return (
     <Box
       sx={{
@@ -77,18 +83,6 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
         p: "10px 10px 10px 10px",
       }}
     >
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? 'Logout' : 'Login'}
-        />
-      </FormGroup> */}
       <AppBar
         position="static"
         sx={{
@@ -112,12 +106,12 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
               <MenuIcon />
             </IconButton>
           </Tooltip>
+
           <Typography
             variant="h6"
             component="div"
             sx={{
               flexGrow: 1,
-              // fontSize: "2rem",
               "@media (max-width:600px)": {
                 fontSize: "1rem",
               },
@@ -125,6 +119,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
           >
             {guideName}
           </Typography>
+
           {auth && (
             <div>
               <IconButton
@@ -136,11 +131,20 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
                 color="inherit"
               >
                 {imageUrl ? (
-                  <Avatar src={imageUrl} />
+                  <Avatar
+                    src={imageUrl}
+                    imgProps={{
+                      onError: () => {
+                        // Si falla la carga, volvemos al icono
+                        setImageUrl("");
+                      },
+                    }}
+                  />
                 ) : (
                   <AccountCircle fontSize="large" />
                 )}
               </IconButton>
+
               <Menu
                 sx={{ mt: "50px" }}
                 id="menu-appbar"
@@ -157,8 +161,7 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {/* <MenuItem onClick={handlePerfil}>Perfil</MenuItem> */}
-                <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+                <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </div>
           )}
@@ -166,6 +169,6 @@ const GuideAppBar:React.FC<Props>=({toggleDrawer, guideName})=> {
       </AppBar>
     </Box>
   );
-}
-export default GuideAppBar
+};
 
+export default GuideAppBar;
