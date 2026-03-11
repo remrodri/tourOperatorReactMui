@@ -7,11 +7,11 @@ import { UserProvider } from "../../features/userManagement/context/UserContext"
 import GuidePage from "./GuidePage";
 import { DateRangeProvider } from "../../features/dateRange/context/DateRangeContext";
 
-const guideBackground = "/src/assets/images/guide.webp";
+// ✅ IMPORT CORRECTO PARA VITE
+import guideBackground from "../../assets/images/guide.webp";
 
 const GuidePageContainer = () => {
   return (
-    // <SnackbarProvider>
     <DateRangeProvider>
       <TourPackageProvider>
         <TouristDestinationProvider>
@@ -27,7 +27,6 @@ const GuidePageContainer = () => {
         </TouristDestinationProvider>
       </TourPackageProvider>
     </DateRangeProvider>
-    //  </SnackbarProvider>
   );
 };
 
