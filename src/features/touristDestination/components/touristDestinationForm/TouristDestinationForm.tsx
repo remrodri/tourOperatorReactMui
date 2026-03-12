@@ -9,8 +9,9 @@ import {
   Typography,
   Alert,
   styled,
+  IconButton,
 } from "@mui/material";
-import { CloudUpload } from "@mui/icons-material";
+import { Close, CloudUpload } from "@mui/icons-material";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { FormikProps } from "formik";
 import { useEffect, useState } from "react";
@@ -93,6 +94,14 @@ const TouristDestinationForm: React.FC<TouristDestinationFormProps> = ({
           cursorCharacter="_"
         />
       </DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={handleClick}
+        disabled={formik.isSubmitting}
+        sx={{ position: "absolute", right: 12, top: 12 }}
+      >
+        <Close />
+      </IconButton>
 
       <DialogContent dividers>
         <Alert severity="info" sx={{ mb: 2 }}>

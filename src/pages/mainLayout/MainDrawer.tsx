@@ -218,7 +218,7 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
             <Typography
               variant="subtitle1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "center", fontSize: "15px" }}
             >
               <TextType
                 text={roleName.toUpperCase()}
