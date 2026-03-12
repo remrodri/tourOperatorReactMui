@@ -420,7 +420,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 p: 2,
               }}
             >
-              <Typography variant="h6">4. Información de pago</Typography>
+              <Typography variant="h6">3. Información de pago</Typography>
 
               <PaymentForm
                 prefix="firstPayment"

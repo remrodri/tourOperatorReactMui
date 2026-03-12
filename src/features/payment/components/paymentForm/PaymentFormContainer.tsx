@@ -1,19 +1,24 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { BookingType } from "../../../booking/types/BookingType";
-import PaymentForm from "./PaymentForm";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useFormik } from "formik";
-import { paymentSchema } from "./validation/paymentSchema";
-import DialogAlert from "./DialogAlert";
-import { useTouristContext } from "../../../tourist/context/TouristContext";
-import { TouristType } from "../../../booking/types/TouristType";
 import dayjs from "dayjs";
-import { usePaymentContext } from "../../context/PaymentContext";
+
+import PaymentForm from "./PaymentForm";
+import DialogAlert from "./DialogAlert";
+
+import { BookingType } from "../../../booking/types/BookingType";
+import { TouristType } from "../../../booking/types/TouristType";
 import { PaymentType } from "../../../booking/types/PaymentType";
+
+import { useTouristContext } from "../../../tourist/context/TouristContext";
+import { usePaymentContext } from "../../context/PaymentContext";
+import { paymentSchema } from "./validation/paymentSchema";
 
 interface PaymentFormContainerProps {
   open: boolean;
   onClose: () => void;
   booking: BookingType;
+  /** balance = lo que ya se pagó (por lo que tu saldo restante = total - balance) */
   balance: number;
   handleOpenPaymentProof: () => void;
   setCreatedPayment: (payment: PaymentType | null) => void;
@@ -21,8 +26,8 @@ interface PaymentFormContainerProps {
 
 export interface PaymentFormContainerValues {
   amount: number;
-  paymentDate: string;
-  paymentMethod: string;
+  paymentDate: string; // DD-MM-YYYY
+  paymentMethod: "cash" | "bank_transfer";
   paymentProofImage: File | null;
   touristId: string;
 }
@@ -30,7 +35,7 @@ export interface PaymentFormContainerValues {
 const paymentMethods = [
   { value: "cash", label: "Efectivo" },
   { value: "bank_transfer", label: "Transferencia Bancaria" },
-];
+] as const;
 
 const PaymentFormContainer: React.FC<PaymentFormContainerProps> = ({
   open,
@@ -39,115 +44,117 @@ const PaymentFormContainer: React.FC<PaymentFormContainerProps> = ({
   balance,
   handleOpenPaymentProof,
   setCreatedPayment,
-}: PaymentFormContainerProps) => {
-  const [openDialogAlert, setOpenDialogAlert] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>("");
+}) => {
   const { getTouristInfoById } = useTouristContext();
-  const [touristsInfo, setTouristsInfo] = useState<TouristType[]>([]);
-
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [fileSelected, setFileSelected] = useState<File | null>(null);
   const { createPayment } = usePaymentContext();
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
-    setFileSelected(file);
-    formik.setFieldValue("paymentProofImage", file);
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewImage(objectUrl);
-  };
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const getTourists = () => {
-    const tourists = booking.touristIds
-      .map((touristId) => getTouristInfoById(touristId))
-      .filter((tourist) => tourist !== null);
-    setTouristsInfo(tourists);
-  };
+  const [openDialogAlert, setOpenDialogAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
-  const handleAmountChange = (amount: number) => {
-    const willExceedTotal = amount > booking.totalPrice - balance;
-    if (willExceedTotal) {
-      setAlertMessage(
-        `La reserva tiene un saldo de ${
-          booking.totalPrice - balance
-        } Bs, el pago que intentas ingresar de ${amount} Bs, excede el saldo por ${
-          amount - (booking.totalPrice - balance)
-        } Bs.`
-      );
-      setOpenDialogAlert(true);
-      formik.setFieldValue("amount", 0);
-    } else {
-      formik.setFieldValue("amount", amount);
-    }
-  };
+  /** ✅ Turistas de la reserva (derivados de booking.touristIds) */
+  const touristsInfo: TouristType[] = useMemo(() => {
+    const ids = booking?.touristIds ?? [];
+    return ids
+      .map((id) => getTouristInfoById(id))
+      .filter((t): t is TouristType => Boolean(t));
+  }, [booking?.touristIds, getTouristInfoById]);
 
-  const handleDateChange = (date: string) => {
-    formik.setFieldValue("paymentDate", date);
-  };
-
-  const handleMethodChange = (method: string) => {
-    formik.setFieldValue("paymentMethod", method);
-  };
-
-  const onSubmit = async (values: PaymentFormContainerValues) => {
-    if (!booking.id) {
-      console.error("No se encontro el id de la reserva");
-      return;
-    }
-    try {
-      const paymentTocreate = {
-        ...values,
-        bookingId: booking.id,
-        paymentProofFolder: booking.paymentProofFolder,
-      };
-      const paymentCreated = await createPayment(paymentTocreate);
-      if (!paymentCreated) {
-        return;
-      }
-      setCreatedPayment(paymentCreated);
-      handleOpenPaymentProof();
-    } catch (error) {
-      console.error("Error al guardar el pago:", error);
-    } finally {
-      onClose();
-    }
-  };
+  /** ✅ Saldo restante real */
+  const remaining = Math.max(0, (booking?.totalPrice ?? 0) - (balance ?? 0));
 
   const formik = useFormik<PaymentFormContainerValues>({
     initialValues: {
       amount: 0,
-      paymentDate: dayjs().format("DD/MM/YYYY"),
+      paymentDate: dayjs().format("DD-MM-YYYY"), // ✅ unificado
       paymentMethod: "cash",
       paymentProofImage: null,
       touristId: touristsInfo[0]?.id || "",
     },
     validationSchema: paymentSchema,
-    onSubmit,
     enableReinitialize: true,
+    onSubmit: async (values) => {
+      if (!booking?.id) return;
+
+      const payload = {
+        ...values,
+        bookingId: booking.id,
+        paymentProofFolder: booking.paymentProofFolder,
+      };
+
+      const created = await createPayment(payload);
+      if (!created) return;
+
+      setCreatedPayment(created);
+      handleOpenPaymentProof();
+
+      // cerrar modal y limpiar estado local
+      handleCloseAndReset();
+    },
   });
 
+  /** ✅ Si cambia touristsInfo y aún no hay touristId, setear el primero */
   useEffect(() => {
-    getTourists();
-  }, [booking]);
+    if (!formik.values.touristId && touristsInfo.length > 0) {
+      formik.setFieldValue("touristId", touristsInfo[0].id, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [touristsInfo]);
+
+  /** ✅ Guardrail local: evitar exceder saldo (sin depender del service) */
+  useEffect(() => {
+    const amount = Number(formik.values.amount || 0);
+    if (!amount) return;
+
+    if (amount > remaining) {
+      setAlertMessage(
+        `Saldo restante: ${remaining} Bs. El monto ingresado (${amount} Bs) excede el saldo por ${amount - remaining} Bs.`,
+      );
+      setOpenDialogAlert(true);
+      formik.setFieldValue("amount", 0, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik.values.amount, remaining]);
+
+  /** ✅ File change + preview */
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    formik.setFieldValue("paymentProofImage", file, true);
+
+    const url = URL.createObjectURL(file);
+    setPreviewImage(url);
+  };
+
+  /** ✅ Cleanup de preview URL (evita leaks) */
+  useEffect(() => {
+    return () => {
+      if (previewImage?.startsWith("blob:")) URL.revokeObjectURL(previewImage);
+    };
+  }, [previewImage]);
+
+  /** ✅ cerrar + reset */
+  const handleCloseAndReset = () => {
+    formik.resetForm();
+    if (previewImage?.startsWith("blob:")) URL.revokeObjectURL(previewImage);
+    setPreviewImage(null);
+    onClose();
+  };
 
   return (
     <>
       <PaymentForm
         open={open}
-        onClose={onClose}
+        onClose={handleCloseAndReset}
         formik={formik}
-        paymentMethods={paymentMethods}
-        handleMethodChange={handleMethodChange}
-        handleAmountChange={handleAmountChange}
-        handleDateChange={handleDateChange}
         tourists={touristsInfo}
-        handleFileChange={handleFileChange}
+        paymentMethods={paymentMethods as any}
         previewImage={previewImage}
-        fileSelected={fileSelected}
+        handleFileChange={handleFileChange}
       />
+
       {openDialogAlert && (
         <DialogAlert
           open={openDialogAlert}

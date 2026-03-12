@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -6,6 +7,7 @@ import {
   DialogTitle,
   FormControl,
   FormHelperText,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -13,26 +15,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PaymentFormContainerValues } from "./PaymentFormContainer";
 import { FormikProps } from "formik";
 import { TouristType } from "../../../booking/types/TouristType";
-import { CloudUpload } from "@mui/icons-material";
+import { Close, CloudUpload } from "@mui/icons-material";
 import { ChangeEvent } from "react";
 
-interface PaymentFormProps {
-  open: boolean;
-  onClose: () => void;
-  formik: FormikProps<PaymentFormContainerValues>;
-  paymentMethods: { value: string; label: string }[];
-  handleMethodChange: (method: string) => void;
-  handleAmountChange: (amount: number) => void;
-  handleDateChange: (date: string) => void;
-  tourists: TouristType[];
-  handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  previewImage: string | null;
-  fileSelected: File | null;
-}
+/* ============================
+   Helpers (igual que otros forms)
+============================ */
+const getIn = (obj: any, path: string) =>
+  path.split(".").reduce((acc, key) => acc?.[key], obj);
 
+const hasError = (formik: any, path: string) =>
+  Boolean(getIn(formik.touched, path) && getIn(formik.errors, path));
+
+const helperText = (formik: any, path: string, fallback = " ") =>
+  hasError(formik, path) ? String(getIn(formik.errors, path)) : fallback;
+
+/* ============================
+   Microcopy
+============================ */
+const fieldGuides = {
+  touristId: "Selecciona el turista que realiza el pago",
+  amount: "Monto a registrar",
+  paymentMethod: "Selecciona el método de pago",
+  paymentProofImage: "Requerido para transferencias bancarias",
+};
+
+/* ============================
+   Hidden input
+============================ */
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -45,212 +57,176 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const PaymentForm = ({
+/* ============================
+   Props
+============================ */
+interface PaymentFormProps {
+  open: boolean;
+  onClose: () => void;
+  formik: FormikProps<any>;
+  tourists: TouristType[];
+  paymentMethods: { value: string; label: string }[];
+  previewImage: string | null;
+  handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+/* ============================
+   Component
+============================ */
+const PaymentForm: React.FC<PaymentFormProps> = ({
   open,
   onClose,
   formik,
-  paymentMethods,
-  handleMethodChange,
-  handleAmountChange,
   tourists,
-  handleFileChange,
+  paymentMethods,
   previewImage,
-}: PaymentFormProps) => {
-  // console.log('tourists::: ', tourists);
+  handleFileChange,
+}) => {
+  const method = formik.values.paymentMethod;
+
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Registrar pago</DialogTitle>
-      <DialogContent
-        sx={{
-          // width: "500px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          // pt:2,
-        }}
-      >
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>
+        Registrar pago
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          disabled={formik.isSubmitting}
+          sx={{ position: "absolute", right: 12, top: 12 }}
+        >
+          <Close />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent dividers>
         <form
           onSubmit={formik.handleSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-          }}
+          noValidate
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
-          <Box sx={{display:"flex", gap:"1rem"}}>
-            <Box sx={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
-              <Box
-                sx={{
-                  pt: 2,
-                  // height:"70px",
-                }}
-              >
-                <FormControl
-                  size="small"
-                  fullWidth
-                  error={
-                    formik.touched.touristId && Boolean(formik.errors.touristId)
-                  }
-                >
-                  <InputLabel id="tourist-id-label">Turista</InputLabel>
-                  <Select
-                    labelId="tourist-id-label"
-                    id="tourist-id"
-                    value={formik.values.touristId || ""}
-                    label="Turista"
-                    onChange={(e) => {
-                      formik.setFieldValue("touristId", e.target.value);
-                    }}
-                  >
-                    {tourists.map((tourist) => (
-                      <MenuItem key={tourist.id} value={tourist.id}>
-                        {tourist.firstName} {tourist.lastName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {formik.touched.touristId && formik.errors.touristId && (
-                    <Typography color="error" sx={{ fontSize: "12px", mt: 1 }}>
-                      {formik.errors.touristId}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Box>
+          {/* Turista */}
+          <FormControl
+            size="small"
+            fullWidth
+            error={hasError(formik, "touristId")}
+          >
+            <InputLabel>Turista</InputLabel>
+            <Select label="Turista" {...formik.getFieldProps("touristId")}>
+              {tourists.map((t) => (
+                <MenuItem key={t.id} value={t.id}>
+                  {t.firstName} {t.lastName}
+                </MenuItem>
+              ))}
+            </Select>
 
-              <Box
-                sx={
-                  {
-                    // height:"70px",
-                    // mt:1,
-                  }
-                }
-              >
-                <TextField
-                  label="Monto"
-                  type="number"
-                  size="small"
-                  fullWidth
-                  value={formik.values.amount === 0 ? "" : formik.values.amount}
-                  onChange={(e) => handleAmountChange(Number(e.target.value))}
-                  error={formik.touched.amount && Boolean(formik.errors.amount)}
-                  helperText={formik.touched.amount && formik.errors.amount}
-                />
-              </Box>
+            <FormHelperText>
+              {helperText(formik, "touristId", fieldGuides.touristId)}
+            </FormHelperText>
+          </FormControl>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  // justifyContent: "flex-end",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  borderRadius: "6px",
-                  p: "5px 10px",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  Fecha de pago: {formik.values.paymentDate}
-                </Typography>
-              </Box>
+          {/* Monto */}
+          <TextField
+            label="Monto"
+            type="number"
+            size="small"
+            fullWidth
+            {...formik.getFieldProps("amount")}
+            error={hasError(formik, "amount")}
+            helperText={helperText(formik, "amount", fieldGuides.amount)}
+          />
 
-              <FormControl
-                size="small"
-                fullWidth
-                error={
-                  formik.touched.paymentMethod &&
-                  Boolean(formik.errors.paymentMethod)
-                }
-              >
-                <InputLabel id="payment-method-label">
-                  Método de Pago
-                </InputLabel>
-                <Select
-                  labelId="payment-method-label"
-                  id="payment-method"
-                  value={formik.values.paymentMethod || ""}
-                  label="Método de Pago"
-                  onChange={(e) => {
-                    handleMethodChange(e.target.value);
-                  }}
-                >
-                  {paymentMethods.map((method) => (
-                    <MenuItem key={method.value} value={method.value}>
-                      {method.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formik.touched.paymentMethod &&
-                  formik.errors.paymentMethod && (
-                    <Typography color="error" sx={{ fontSize: "12px", mt: 1 }}>
-                      {formik.errors.paymentMethod}
-                    </Typography>
-                  )}
-              </FormControl>
-            </Box>
-            {formik.values.paymentMethod === "bank_transfer" && (
-              <Box sx={{pt:"1rem"}}>
-                <VisuallyHiddenInput
-                  id="payment-proof-image"
-                  name="payment-proof-image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-                <label htmlFor="payment-proof-image">
-                  <Button
-                    variant="contained"
-                    component="span"
-                    startIcon={<CloudUpload />}
-                  >
-                    Subir comprobante
-                  </Button>
-                </label>
-                {formik.touched.paymentProofImage &&
-                  formik.errors.paymentProofImage && (
-                    <FormHelperText
-                      error={Boolean(formik.errors?.paymentProofImage)}
-                    >
-                      {formik.errors?.paymentProofImage}
-                    </FormHelperText>
-                  )}
-                {previewImage && (
-                  <Box
-                    sx={{
-                      mt: 2,
-                    }}
-                  >
-                    <img
-                      src={previewImage}
-                      alt="payment-proof"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
-                  </Box>
-                )}
-              </Box>
-            )}
-          </Box>
+          {/* Fecha */}
           <Box
             sx={{
-              display: "flex",
-              gap: "1rem",
-              justifyContent: "flex-end",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "6px",
+              p: "6px 10px",
             }}
           >
+            <Typography variant="subtitle2">
+              Fecha de pago: {formik.values.paymentDate}
+            </Typography>
+          </Box>
+
+          {/* Método */}
+          <FormControl
+            size="small"
+            fullWidth
+            error={hasError(formik, "paymentMethod")}
+          >
+            <InputLabel>Método de pago</InputLabel>
+            <Select
+              label="Método de pago"
+              {...formik.getFieldProps("paymentMethod")}
+            >
+              {paymentMethods.map((m) => (
+                <MenuItem key={m.value} value={m.value}>
+                  {m.label}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <FormHelperText>
+              {helperText(formik, "paymentMethod", fieldGuides.paymentMethod)}
+            </FormHelperText>
+          </FormControl>
+
+          {/* Comprobante */}
+          {method === "bank_transfer" && (
+            <Box>
+              <VisuallyHiddenInput
+                id="payment-proof-image"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <label htmlFor="payment-proof-image">
+                <Button
+                  variant="contained"
+                  component="span"
+                  startIcon={<CloudUpload />}
+                >
+                  Subir comprobante
+                </Button>
+              </label>
+
+              <FormHelperText error={hasError(formik, "paymentProofImage")}>
+                {helperText(
+                  formik,
+                  "paymentProofImage",
+                  fieldGuides.paymentProofImage,
+                )}
+              </FormHelperText>
+
+              {previewImage && (
+                <Box sx={{ mt: 2 }}>
+                  <img
+                    src={previewImage}
+                    alt="Comprobante"
+                    style={{ width: "100%", borderRadius: "6px" }}
+                  />
+                </Box>
+              )}
+            </Box>
+          )}
+
+          {/* Acciones */}
+          <Box sx={{ display: "flex", gap: "1rem", mt: 2 }}>
             <Button
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ mt: 2 }}
+              disabled={formik.isSubmitting}
             >
               Registrar
             </Button>
             <Button
               variant="contained"
               color="error"
-              onClick={onClose}
               fullWidth
-              sx={{ mt: 2 }}
+              onClick={onClose}
+              disabled={formik.isSubmitting}
             >
               Cancelar
             </Button>
