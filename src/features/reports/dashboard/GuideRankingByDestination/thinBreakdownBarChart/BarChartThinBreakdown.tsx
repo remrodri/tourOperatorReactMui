@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import { GuideStatsType } from "../../../context/DashboardContext";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";

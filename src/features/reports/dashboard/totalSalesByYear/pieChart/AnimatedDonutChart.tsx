@@ -14,15 +14,15 @@ type Item = { name: string; value: number };
 // ];
 
 interface AnimatedDonutChartProps {
-    singleColor?: "purple" | "blue" | "fuchsia" | "yellow";
-    // countedBookings: any[];
+  singleColor?: "purple" | "blue" | "fuchsia" | "yellow" | "green";
+  // countedBookings: any[];
 }
 
 const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
-  singleColor
+  singleColor,
   // countedBookings
 }) => {
-  const {bookingsByTouristDestination}=useDashboardContext();
+  const { bookingsByTouristDestination } = useDashboardContext();
   // console.log('bookingsByTouristDestination::: ', bookingsByTouristDestination);
   // console.log('countedBookings::: ', countedBookings);
   const radius = 420; // Chart base dimensions
@@ -49,7 +49,9 @@ const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
   //     .cornerRadius(lightStrokeEffect + 2) || undefined;
 
   const labelRadius = radius * 0.825;
-  const arcLabel = arc<PieArcDatum<Item>>().innerRadius(labelRadius).outerRadius(labelRadius);
+  const arcLabel = arc<PieArcDatum<Item>>()
+    .innerRadius(labelRadius)
+    .outerRadius(labelRadius);
 
   const arcs = pieLayout(bookingsByTouristDestination);
 
@@ -62,18 +64,56 @@ const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
   const minAngle = 20; // Adjust this value as needed
 
   const colors = {
-    purple: ["#7e4cfe", "#895cfc", "#956bff", "#a37fff", "#b291fd", "#b597ff"],
-    blue: ["#73caee", "#73caeeee", "#73caeedd", "#73caeecc", "#73caeebb", "#73caeeaa"],
-    fuchsia: ["#f6a3ef", "#f6a3efee", "#f6a3efdd", "#f6a3efcc", "#f6a3efbb", "#f6a3efaa"],
-    yellow: ["#f6e71f", "#f6e71fee", "#f6e71fdd", "#f6e71fcc", "#f6e71fbb", "#f6e71faa"],
+    purple: [
+      "#7e4cfe",
+      "#895cfc",
+      "#956bff",
+      "#a37fff",
+      "#b291fd",
+      "#b597ff",
+      "#c4a9ff",
+      "#d3bbff",
+      "#e2ceff",
+      "#f1e1ff",
+    ],
+    blue: [
+      "#73caee",
+      "#73caeeee",
+      "#73caeedd",
+      "#73caeecc",
+      "#73caeebb",
+      "#73caeeaa",
+    ],
+    fuchsia: [
+      "#f6a3ef",
+      "#f6a3efee",
+      "#f6a3efdd",
+      "#f6a3efcc",
+      "#f6a3efbb",
+      "#f6a3efaa",
+    ],
+    yellow: [
+      "#f6e71f",
+      "#f6e71fee",
+      "#f6e71fdd",
+      "#f6e71fcc",
+      "#f6e71fbb",
+      "#f6e71faa",
+    ],
+    green: [
+      "#4ade80",
+      "#4ade80ee",
+      "#4ade80dd",
+      "#4ade80cc",
+      "#4ade80bb",
+      "#4ade80aa",
+    ],
   };
 
   // console.log(arcs);
 
   return (
-    
-      
-      <div className="relative">
+    <div className="relative">
       {/* Add a new div for centered text */}
       <svg
         viewBox={`-${radius} -${radius} ${radius * 2} ${radius * 2}`}
@@ -93,56 +133,59 @@ const AnimatedDonutChart: React.FC<AnimatedDonutChartProps> = ({
           }
           return (
             <ClientTooltip key={i}>
-            <TooltipTrigger>
-            <AnimatedSlice key={i} index={i}>
-              <path
-                stroke="#ffffff33" // Lighter stroke for a 3D effect
-                strokeWidth={lightStrokeEffect} // Adjust stroke width for the desired effect
-                fill={singleColor ? colors[singleColor][i] : colors.purple[i]}
-                d={arcGenerator(d) || undefined}
-              />
-              {/* Labels with conditional rendering */}
-              <g opacity={angle > minAngle ? 1 : 0}>
-                <text 
-                  transform={`translate(${centroid})`} 
-                  textAnchor="middle" 
-                  fontSize={47}
-                >
-                  <tspan
-                  fillOpacity={0.7}
-                    y="-0.4em"
-                    fontWeight="600"
-                    // fill={singleColor === "purple" ? "#eee" : "#444"}
-                    fill={singleColor === "purple" ? "#FFFFFF" : "#FFFFFF"}
-                  >
-                    {d.data.name}
-                  </tspan>
-                  {angle > minAngle && (
-                    <tspan
-                    
-                      x={0}
-                      y="1em"
-                      // fillOpacity={0.7}
-                      fill={singleColor === "purple" ? "#FFFFFF" : "#FFFFFF"}
+              <TooltipTrigger>
+                <AnimatedSlice key={i} index={i}>
+                  <path
+                    stroke="#ffffff33" // Lighter stroke for a 3D effect
+                    strokeWidth={lightStrokeEffect} // Adjust stroke width for the desired effect
+                    fill={
+                      singleColor ? colors[singleColor][i] : colors.purple[i]
+                    }
+                    d={arcGenerator(d) || undefined}
+                  />
+                  {/* Labels with conditional rendering */}
+                  <g opacity={angle > minAngle ? 1 : 0}>
+                    <text
+                      transform={`translate(${centroid})`}
+                      textAnchor="middle"
+                      fontSize={47}
                     >
-                      {d.data.value.toLocaleString("en-US")}
-                    </tspan>
-                  )}
-                </text>
-              </g>
-            </AnimatedSlice>
-            <TooltipContent>
-                <div>{d.data.name}</div>
-                <div className="text-gray-500 text-sm">{d.data.value.toLocaleString("en-US")}</div>
-              </TooltipContent>
-            </TooltipTrigger>
+                      <tspan
+                        fillOpacity={0.7}
+                        y="-0.4em"
+                        fontWeight="600"
+                        // fill={singleColor === "purple" ? "#eee" : "#444"}
+                        fill={singleColor === "purple" ? "#FFFFFF" : "#FFFFFF"}
+                      >
+                        {d.data.name}
+                      </tspan>
+                      {angle > minAngle && (
+                        <tspan
+                          x={0}
+                          y="1em"
+                          // fillOpacity={0.7}
+                          fill={
+                            singleColor === "purple" ? "#FFFFFF" : "#FFFFFF"
+                          }
+                        >
+                          {d.data.value.toLocaleString("en-US")}
+                        </tspan>
+                      )}
+                    </text>
+                  </g>
+                </AnimatedSlice>
+                <TooltipContent>
+                  <div>{d.data.name}</div>
+                  <div className="text-gray-500 text-sm">
+                    {d.data.value.toLocaleString("en-US")}
+                  </div>
+                </TooltipContent>
+              </TooltipTrigger>
             </ClientTooltip>
-            
           );
         })}
       </svg>
     </div>
-    
   );
-}
+};
 export default AnimatedDonutChart;

@@ -65,15 +65,9 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
   const { bookings } = useBookingContext();
   const { showSnackbar } = useNewSnackbar();
 
-  // const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
-  // const handleCloseMoreInfo = () => {
-  //   setBookingCode("");
-  //   setOpenMoreInfoDialog(false);
-  // };
-
-  // const handleOpenMoreInfo = () => {
-  //   setOpenMoreInfoDialog(true);
-  // };
+  const [selectedBooking, setSelectedBooking] = useState<BookingType | null>(
+    null,
+  );
 
   const handleClickSearchByBookingCode = () => {
     if (!bookingCode.trim()) {
@@ -96,10 +90,6 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
     return bookings.find((booking) => booking.bookingCode === bCode) ?? null;
   };
 
-  const [selectedBooking, setSelectedBooking] = useState<BookingType | null>(
-    null,
-  );
-
   const handleCloseBookingInfo = () => {
     setSelectedBooking(null);
     setBookingCode("");
@@ -111,15 +101,11 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
         position="fixed"
         sx={{
           backgroundColor: "#6f0000",
-          // background: "rgba(49, 49, 49, 0.46)",
-          // borderRadius: "10px",
-          // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-          // backdropFilter: "blur(5px)",
-          // border: "1px solid rgba(49, 49, 49, 0.46)",
         }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {/* MOBILE: Hamburguesa + Menu */}
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -128,6 +114,7 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
               >
                 <MenuIcon />
               </IconButton>
+
               <Menu
                 anchorEl={anchorElNav}
                 anchorOrigin={{
@@ -143,51 +130,55 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
                 onClose={handleCloseNavMenu}
                 sx={{ display: { xs: "block", md: "none" } }}
               >
-                {sections.map((section) => (
-                  <MenuItem key={section} onClick={() => handleOption(section)}>
-                    {section}
-                  </MenuItem>
-                ))}
+                {/* ✅ AQUÍ: en mobile NO se muestra "Consultar reserva" */}
+                {sections
+                  .filter((section) => section !== "Consultar reserva")
+                  .map((section) => (
+                    <MenuItem
+                      key={section}
+                      onClick={() => handleOption(section)}
+                    >
+                      {section}
+                    </MenuItem>
+                  ))}
               </Menu>
             </Box>
+
+            {/* Logo / título */}
             <Typography
               variant="h6"
               noWrap
               component="a"
               href="/"
-              // sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
               sx={{
                 mr: 2,
                 display: { md: "flex" },
                 fontFamily: "Montserrat",
                 fontWeight: "600",
                 letterSpacing: ".3rem",
-                // color: "#fff",
                 color: "white",
                 textDecoration: "none",
               }}
             >
               Operadora de turismo
             </Typography>
-            {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
+
+            {/* DESKTOP: Botones */}
             <Box
               sx={{
                 flexGrow: 1,
                 display: { xs: "none", md: "flex" },
-                // alignItems:"center",
                 justifyContent: "end",
-                // pl: "2rem",
                 gap: "1rem",
               }}
             >
+              {/* ✅ En desktop sí aparece "Consultar reserva" */}
               {sections.map((section) => (
                 <Button
                   key={section}
                   onClick={(event) => handleOption(section, event)}
                   sx={{
-                    // width: "10rem",
                     my: 2,
-
                     "&:hover": { backgroundColor: "#a00000" },
                   }}
                 >
@@ -204,6 +195,8 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
                   </Typography>
                 </Button>
               ))}
+
+              {/* Menú anclado (buscador) */}
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -215,12 +208,7 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
                   },
                 }}
               >
-                <Box
-                  sx={{
-                    m: "10px",
-                  }}
-                  // onClick={handleClose}
-                >
+                <Box sx={{ m: "10px" }}>
                   <TextField
                     id="outlined-basic"
                     label="Numero de reserva"
@@ -231,9 +219,7 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
                     slotProps={{
                       input: {
                         endAdornment: (
-                          <IconButton
-                            onClick={() => handleClickSearchByBookingCode()}
-                          >
+                          <IconButton onClick={handleClickSearchByBookingCode}>
                             <SearchOutlined />
                           </IconButton>
                         ),
@@ -241,13 +227,13 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
                     }}
                   />
                 </Box>
-                {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
-                {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
               </Menu>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
+
+      {/* Providers / Modals */}
       <UserProvider>
         <TourTypeProvider>
           <DateRangeProvider>
@@ -259,6 +245,7 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
           </DateRangeProvider>
         </TourTypeProvider>
       </UserProvider>
+
       <LoginDialogComponentContainer
         open={openLoginDialog}
         onClose={handleCloseLoginDialog}
