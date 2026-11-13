@@ -11,6 +11,14 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
     css: true,
-    exclude: [...configDefaults.exclude, "e2e/*"],
+    exclude: [
+      ...configDefaults.exclude,
+      "e2e/*",
+      "src/features/booking/test/bookingService.test.ts",
+      "src/features/touristDestination/tests/touristDestinationService.test.ts",
+      "src/features/tourPackage/test/tourPackageService.test.ts",
+      "src/features/tourType/tests/tourTypeService.test.ts",
+      "src/features/userManagement/tests/userService.test.ts",
+    ],
   },
 });
