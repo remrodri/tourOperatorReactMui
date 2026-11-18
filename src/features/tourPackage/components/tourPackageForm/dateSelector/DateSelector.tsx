@@ -53,6 +53,9 @@ interface DateSelectorProps {
   selectedGuides: UserType[];
   setSelectedGuides: (guides: UserType[]) => void;
 
+  capacity: number | "";
+  setCapacity: (capacity: number | "") => void;
+
   // Actions
   handleAddDateRange: () => void;
   handleRemoveRange: (index: number) => void;
@@ -72,12 +75,17 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   setSelectedDate,
   selectedGuides,
   setSelectedGuides,
+  capacity,
+  setCapacity,
   handleAddDateRange,
   handleRemoveRange,
   handleClearAllRanges,
   isEditing,
 }) => {
-  const canAdd = Boolean(selectedDate) && selectedGuides.length > 0;
+  const capacityValue = typeof capacity === "number" ? capacity : Number(capacity);
+  const hasValidCapacity = Number.isInteger(capacityValue) && capacityValue > 0;
+  const canAdd =
+    Boolean(selectedDate) && selectedGuides.length > 0 && hasValidCapacity;
   const hasRanges = dateRanges.length > 0;
 
   return (
@@ -172,6 +180,20 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               sx={{ width: "100%" }}
             />
           </LocalizationProvider>
+
+          <TextField
+            label="Capacidad"
+            type="number"
+            value={capacity}
+            onChange={(event) =>
+              setCapacity(
+                event.target.value === "" ? "" : Number(event.target.value),
+              )
+            }
+            inputProps={{ min: 1, step: 1 }}
+            helperText="Cupos disponibles para esta salida."
+            sx={{ width: "100%", mt: 2 }}
+          />
 
           {selectedDate && (
             <Box sx={{ mt: 3 }}>

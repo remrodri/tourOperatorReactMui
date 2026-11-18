@@ -32,6 +32,7 @@ interface DateSelectorFormProps {
   guides: UserType[];
   formik: FormikProps<DateRangeFormValues>;
   blockedDates: string[];
+  requireCapacity: boolean;
 }
 
 const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
@@ -41,6 +42,7 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
   guides,
   formik,
   blockedDates,
+  requireCapacity,
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,8 +60,18 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
     formik.values.guides.includes(g.id),
   );
 
+  const capacityValue =
+    typeof formik.values.capacity === "number"
+      ? formik.values.capacity
+      : Number(formik.values.capacity);
+  const hasValidCapacity =
+    Number.isInteger(capacityValue) && capacityValue > 0;
+
   // Condición para habilitar botón
-  const isFormValid = selectedDate !== null && formik.values.guides.length > 0;
+  const isFormValid =
+    selectedDate !== null &&
+    formik.values.guides.length > 0 &&
+    (!requireCapacity || hasValidCapacity);
 
   return (
     <Dialog
@@ -151,6 +163,27 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
                   placeholder="Agregar guía"
                 />
               )}
+            />
+
+            <TextField
+              label="Capacidad"
+              type="number"
+              value={formik.values.capacity ?? ""}
+              onChange={(event) =>
+                formik.setFieldValue(
+                  "capacity",
+                  event.target.value === "" ? "" : Number(event.target.value),
+                )
+              }
+              onBlur={formik.handleBlur}
+              inputProps={{ min: 1, step: 1 }}
+              error={Boolean(formik.touched.capacity && formik.errors.capacity)}
+              helperText={
+                formik.touched.capacity && formik.errors.capacity
+                  ? String(formik.errors.capacity)
+                  : "Cupos disponibles para esta salida."
+              }
+              fullWidth
             />
           </Stack>
         </DialogContent>

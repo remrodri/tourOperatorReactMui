@@ -10,12 +10,14 @@ interface BookingSearchByCodeProps {
   searchValue: string;
   onChange: (value: string) => void;
   onSearch: () => void;
+  searching?: boolean;
   // onClear: () => void;
 }
 const BookingSearchByCode: React.FC<BookingSearchByCodeProps> = ({
   searchValue,
   onChange,
   onSearch,
+  searching = false,
   // onClear,
 }: BookingSearchByCodeProps) => {
   return (
@@ -53,6 +55,7 @@ const BookingSearchByCode: React.FC<BookingSearchByCodeProps> = ({
                 <Button
                   onClick={onSearch}
                   variant="contained"
+                  disabled={searching}
                   sx={{ height: "2.5rem", boxShadow: "none" }}
                 >
                   <SearchIcon />

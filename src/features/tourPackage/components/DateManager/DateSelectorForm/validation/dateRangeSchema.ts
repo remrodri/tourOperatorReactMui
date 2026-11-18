@@ -31,7 +31,13 @@
 
 import * as Yup from "yup";
 
-export const dateRangeSchema = () => {
+interface DateRangeSchemaOptions {
+  requireCapacity?: boolean;
+}
+
+export const dateRangeSchema = (options: DateRangeSchemaOptions = {}) => {
+  const requireCapacity = options.requireCapacity ?? false;
+
   return Yup.object().shape({
     id: Yup.string().optional(),
     dates: Yup.array()
@@ -40,5 +46,17 @@ export const dateRangeSchema = () => {
     guides: Yup.array()
       .of(Yup.string())
       .min(1, "Debes asignar al menos un guía"),
+    capacity: Yup.number()
+      .transform((value, originalValue) =>
+        originalValue === "" || Number.isNaN(value) ? undefined : value,
+      )
+      .typeError("La capacidad debe ser un número válido")
+      .integer("La capacidad debe ser un número entero")
+      .min(1, "La capacidad debe ser mayor a 0")
+      .when([], {
+        is: () => requireCapacity,
+        then: (schema) => schema.required("La capacidad es obligatoria"),
+        otherwise: (schema) => schema.optional(),
+      }),
   });
 };

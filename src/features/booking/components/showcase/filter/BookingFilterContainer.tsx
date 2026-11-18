@@ -1,38 +1,21 @@
 import { useEffect, useState } from "react";
-import { BookingType } from "../../../types/BookingType";
 import BookingFilter from "./BookingFilter";
 import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
+import { useBookingContext } from "../../../context/BookingContext";
 
-interface BookingFilterContainerProps {
-  bookings: BookingType[];
-  // tourPackages: TourPackageType[];
-  setFilteredBookings: (bookings: BookingType[]) => void;
-}
-const BookingFilterContainer: React.FC<BookingFilterContainerProps> = ({
-  bookings,
-  // tourPackages,
-  setFilteredBookings,
-}) => {
+const BookingFilterContainer: React.FC = () => {
   const [status, setStatus] = useState("");
   const [tourPackageId, setTourPackageId] = useState("");
   const { tourPackages } = useTourPackageContext();
+  const { setBookingFilters } = useBookingContext();
 
   useEffect(() => {
-    if (!bookings) return;
+    setBookingFilters({
+      status: status || undefined,
+      tourPackageId: tourPackageId || undefined,
+    });
+  }, [status, tourPackageId, setBookingFilters]);
 
-    let filtered = [...bookings];
-
-    if (status) {
-      filtered = filtered.filter((booking) => booking.status === status);
-    }
-
-    if (tourPackageId) {
-      filtered = filtered.filter(
-        (booking) => booking.tourPackageId === tourPackageId
-      );
-    }
-    setFilteredBookings(filtered);
-  }, [bookings, status, tourPackageId]);
   return (
     <BookingFilter
       status={status}

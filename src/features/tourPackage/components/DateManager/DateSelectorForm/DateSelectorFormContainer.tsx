@@ -29,6 +29,7 @@ export interface DateRangeFormValues {
   dates: string[];
   // tourPackageId: string;
   guides: string[];
+  capacity?: number | "";
 }
 
 const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
@@ -64,14 +65,23 @@ const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
   };
 
   const onSubmit = (values: DateRangeFormValues) => {
+    const capacity =
+      values.capacity === "" || values.capacity === undefined
+        ? undefined
+        : Number(values.capacity);
     const dateRangeToCreate: DateRangeType = {
       dates: values.dates,
       guides: values.guides,
       tourPackageId: tourPackageId,
+      ...(capacity !== undefined ? { capacity } : {}),
     };
-    console.log(" values:", values);
     if (isEditing) {
-      updateDateRange(values);
+      updateDateRange({
+        ...(values.id ? { id: values.id } : {}),
+        dates: values.dates,
+        guides: values.guides,
+        ...(capacity !== undefined ? { capacity } : {}),
+      });
     } else {
       createDateRange(dateRangeToCreate);
       onClose();
@@ -85,8 +95,9 @@ const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
       dates: currentDateRange?.dates || [],
       // tourPackageId: "",
       guides: currentDateRange?.guides || [],
+      capacity: currentDateRange?.capacity ?? "",
     },
-    validationSchema: dateRangeSchema(),
+    validationSchema: dateRangeSchema({ requireCapacity: !isEditing }),
     enableReinitialize: true,
     onSubmit,
   });
@@ -110,6 +121,7 @@ const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
       guides={guides}
       formik={formik}
       blockedDates={blockedDates}
+      requireCapacity={!isEditing}
       // handleOpenDateSelector={handleOpenDateSelector}
       // handleCloseDateSelector={handleCloseDateSelector}
     />

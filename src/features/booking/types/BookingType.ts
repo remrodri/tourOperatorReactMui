@@ -2,6 +2,12 @@
 
 import { PaymentType } from "./PaymentType";
 
+export type BookingStatus =
+  | "pending"
+  | "confirmed"
+  | "cancelled"
+  | "completed";
+
 export interface BookingType {
   id: string;
 
@@ -17,7 +23,7 @@ export interface BookingType {
 
   notes: string;
 
-  status: "pending" | "paid" | "cancelled" | "completed";
+  status: BookingStatus;
 
   paymentProofFolder: string;
 

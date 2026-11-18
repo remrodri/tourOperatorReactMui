@@ -1,32 +1,27 @@
 import { useEffect, useState } from "react";
 import BookingShowcase from "./BookingShowcase";
 import { useBookingContext } from "../../context/BookingContext";
-// import BookingFormContainer from "../bookingForm/BookingFormContainer";
 import { getCurrentUserRole } from "../../../../utils/helpers/roleHelper";
 import { BookingType } from "../../types/BookingType";
 import BookingProofDialogContainer from "../bookingForm/bookingProofDialog/BookingProofDialogContainer";
 import BookingFormContainer from "../bookingForm3/BookingFormContainer";
 
 const BookingShowcaseContainer: React.FC = () => {
-  const { bookings } = useBookingContext();
+  const {
+    bookings,
+    loading,
+    loadingMore,
+    hasMore,
+    fetchBookings,
+    loadMoreBookings,
+  } = useBookingContext();
   const [open, setOpen] = useState(false);
   const [bookingFound, setBookingFound] = useState<BookingType | null>(null);
-  // const { tourPackages } = useTourPackageContext();
-  const [filteredBookings, setFilteredBookings] = useState<BookingType[]>([]);
-  const [openBookingProof, setOpenBookingProof] = useState<boolean>(false);
   const [bookingProof, setBookingProof] = useState<BookingType | null>(null);
 
-
-
   const handleCloseBookingProof = () => {
-    setOpenBookingProof(false);
+    setBookingProof(null);
   };
-
-  // console.log('bookings::: ', bookings);
-
-  // useEffect(() => {
-  //   console.log('filteredBookings::: ', filteredBookings);
-  // },[filteredBookings])
 
   const role = getCurrentUserRole();
 
@@ -35,10 +30,8 @@ const BookingShowcaseContainer: React.FC = () => {
   };
 
   useEffect(() => {
-    if (bookingProof) {
-      setOpenBookingProof(true);
-    }
-  }, [bookingProof]);
+    fetchBookings();
+  }, [fetchBookings]);
 
   return (
     <>
@@ -49,10 +42,11 @@ const BookingShowcaseContainer: React.FC = () => {
         role={role}
         setBookingFound={setBookingFound}
         bookingFound={bookingFound}
-        // tourPackages={tourPackages}
-        filteredBookings={filteredBookings}
-        setFilteredBookings={setFilteredBookings}
         setBookingProof={setBookingProof}
+        loading={loading}
+        loadingMore={loadingMore}
+        hasMore={hasMore}
+        loadMoreBookings={loadMoreBookings}
       />
       {open && (
         <BookingFormContainer
@@ -61,9 +55,9 @@ const BookingShowcaseContainer: React.FC = () => {
           setBookingProof={setBookingProof}
         />
       )}
-      {openBookingProof && (
+      {bookingProof && (
         <BookingProofDialogContainer
-          open={openBookingProof}
+          open={Boolean(bookingProof)}
           handleClose={handleCloseBookingProof}
           booking={bookingProof}
         />

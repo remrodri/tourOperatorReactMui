@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { BookingType } from "../../../booking/types/BookingType";
 import BookingInfo from "./BookingInfo";
 import { useTourPackageContext } from "../../../tourPackage/context/TourPackageContext";
@@ -20,7 +20,13 @@ const BookingInfoContainer: React.FC<BookingInfoContainerProps> = ({
   const { tourPackages } = useTourPackageContext();
   const { tourTypes } = useTourTypeContext();
   const { users } = useUserContext();
-  const { getTouristInfoById } = useTouristContext();
+  const { getTouristInfoById, ensureTouristsByIds } = useTouristContext();
+
+  useEffect(() => {
+    if (booking?.touristIds?.length) {
+      void ensureTouristsByIds(booking.touristIds);
+    }
+  }, [booking, ensureTouristsByIds]);
 
   const memoizedBooking = useMemo(() => {
     if (!booking) {

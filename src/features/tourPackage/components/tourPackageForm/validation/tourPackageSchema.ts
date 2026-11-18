@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 import { ActivityType } from "../../../types/ActivityType";
 import { DayItineraryType, TourItineraryType } from "../../../types/DayItineraryType";
-import { DateRangeType } from "../../../types/DateRangeType";
 
 
 const DATE_FORMAT = /^\d{2}-\d{2}-\d{4}$/; // DD-MM-YYYY
@@ -69,26 +68,41 @@ const itinerarySchema: Yup.Schema<
    DATERANGE
 -------------------------------- */
 
-const dateRangeItemSchema: Yup.ObjectSchema<DateRangeType> = Yup.object({
-  id: Yup.string().optional(),
-  state: Yup.string().optional(),
-  tourPackageId: Yup.string().optional(),
+const dateRangeItemSchema = (requireCapacity: boolean) =>
+  Yup.object({
+    id: Yup.string().optional(),
+    state: Yup.string().optional(),
+    tourPackageId: Yup.string().optional(),
+    dataOrigin: Yup.string().optional(),
 
-  dates: Yup.array()
-    .of(
-      Yup.string()
-        .required("Fecha inválida")
-        .matches(DATE_FORMAT, "Formato de fecha inválido (DD-MM-YYYY)"),
-    )
-    .required("Fechas requeridas")
-    .default([]), // flag "d"
+    dates: Yup.array()
+      .of(
+        Yup.string()
+          .required("Fecha inválida")
+          .matches(DATE_FORMAT, "Formato de fecha inválido (DD-MM-YYYY)"),
+      )
+      .required("Fechas requeridas")
+      .default([]), // flag "d"
 
-  guides: Yup.array()
-    .of(Yup.string().required("ID de guía requerido"))
-    .min(1, "Debes asignar al menos un guía")
-    .required("Guías requeridos")
-    .default([]), // flag "d"
-});
+    guides: Yup.array()
+      .of(Yup.string().required("ID de guía requerido"))
+      .min(1, "Debes asignar al menos un guía")
+      .required("Guías requeridos")
+      .default([]), // flag "d"
+
+    capacity: Yup.number()
+      .transform((value, originalValue) =>
+        originalValue === "" || Number.isNaN(value) ? undefined : value,
+      )
+      .typeError("La capacidad debe ser un número válido")
+      .integer("La capacidad debe ser un número entero")
+      .min(1, "La capacidad debe ser mayor a 0")
+      .when([], {
+        is: () => requireCapacity,
+        then: (schema) => schema.required("La capacidad es obligatoria"),
+        otherwise: (schema) => schema.optional(),
+      }),
+  });
 
 /* -----------------------------
    MAIN: TOUR PACKAGE
@@ -125,7 +139,7 @@ export const tourPackageSchema = (isEditMode: boolean) =>
       .required("El precio es obligatorio"),
 
     dateRanges: Yup.array()
-      .of(dateRangeItemSchema)
+      .of(dateRangeItemSchema(!isEditMode))
       .when([], {
         is: () => !isEditMode,
         then: (schema) =>
@@ -142,7 +156,7 @@ export const tourPackageSchema = (isEditMode: boolean) =>
         if (!duration || typeof duration !== "number") return true;
 
         const badIndex = ranges.findIndex(
-          (r: DateRangeType) => (r.dates?.length ?? 0) !== duration,
+          (r) => (r.dates?.length ?? 0) !== duration,
         );
 
         if (badIndex === -1) return true;

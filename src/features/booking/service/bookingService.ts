@@ -11,6 +11,42 @@ import { BookingCreatedResponse } from "../types/BookingCreatedResponse";
 
 const url = "/bookings";
 
+export type BookingFeedFilters = {
+  status?: string;
+  bookingCode?: string;
+  tourPackageId?: string;
+  dateRangeId?: string;
+};
+
+export type FeedPagination = {
+  nextCursor: string | null;
+  hasMore: boolean;
+};
+
+export type FeedPage<T> = {
+  items: T[];
+  pagination: FeedPagination;
+};
+
+export type BookingReportSummary = {
+  totalBookings: number;
+  totalRevenue: number;
+  years: number[];
+  byTourPackageMonth: {
+    tourPackageId: string;
+    year: number;
+    month: number;
+    count: number;
+    totalAmount: number;
+  }[];
+  bySellerTourPackage: {
+    sellerId: string;
+    tourPackageId: string;
+    count: number;
+  }[];
+  daily: { date: string; count: number }[];
+};
+
 /* ============================
    Helpers
 ============================ */
@@ -92,6 +128,81 @@ export const getAllBookingsRequest = async (): Promise<
       title: "Error",
       description: "No se pudieron cargar las reservas",
     });
+    return null;
+  }
+};
+
+/* ============================
+   GET bookings feed
+============================ */
+export const getBookingsFeedRequest = async (
+  filters: BookingFeedFilters & { cursor?: string | null; limit?: number } = {},
+): Promise<FeedPage<BookingType> | null> => {
+  try {
+    const response = await axiosPublic.get<
+      ApiResponse<FeedPage<BookingType>>
+    >(`${url}/feed`, {
+      params: {
+        limit: filters.limit,
+        cursor: filters.cursor || undefined,
+        status: filters.status || undefined,
+        bookingCode: filters.bookingCode || undefined,
+        tourPackageId: filters.tourPackageId || undefined,
+        dateRangeId: filters.dateRangeId || undefined,
+      },
+    });
+
+    if (isLogicalErrorResponse(response.data)) {
+      return null;
+    }
+
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.error(error.response?.data);
+    return null;
+  }
+};
+
+export const getBookingDetailRequest = async (
+  id: string,
+): Promise<{ booking: BookingType; tourists: any[] } | null> => {
+  try {
+    const response = await axiosPublic.get<
+      ApiResponse<{ booking: BookingType; tourists: any[] }>
+    >(`${url}/${id}/detail`);
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.error(error.response?.data);
+    return null;
+  }
+};
+
+export const getBookingReportSummaryRequest =
+  async (): Promise<BookingReportSummary | null> => {
+    try {
+      const response = await axiosPublic.get<ApiResponse<BookingReportSummary>>(
+        `${url}/report-summary`,
+      );
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error)) console.error(error.response?.data);
+      return null;
+    }
+  };
+
+export const getDateRangeSummaryRequest = async (
+  dateRangeId: string,
+  tourPackageId?: string,
+): Promise<{ bookingCount: number; touristCount: number } | null> => {
+  try {
+    const response = await axiosPublic.get<
+      ApiResponse<{ bookingCount: number; touristCount: number }>
+    >(`${url}/date-range-summary`, {
+      params: { dateRangeId, tourPackageId },
+    });
+    return response.data.data;
+  } catch (error) {
+    if (isAxiosError(error)) console.error(error.response?.data);
     return null;
   }
 };

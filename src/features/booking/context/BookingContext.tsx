@@ -3,8 +3,8 @@ import {
   createContext,
   ReactNode,
   useContext,
-  useEffect,
   useCallback,
+  useRef,
   useState,
 } from "react";
 
@@ -16,19 +16,19 @@ import { useTouristContext } from "../../tourist/context/TouristContext";
 
 import type { UserType } from "../../userManagement/types/UserType";
 import type { BookingType } from "../types/BookingType";
+import { normalizeBookingStatus } from "../types/normalizeBookingStatus";
 import type { TouristType } from "../types/TouristType";
 import type { PaymentType } from "../types/PaymentType";
-// import type { UpdateBookingType } from "../types/UpdateBookingType";
-// import type { BookingFormValues } from "../components/bookingForm/BookingFormContainer";
 import type { Group } from "../../guide/context/GuideContext";
 
 import {
   cancelBookingRequest,
   createBookingRequest,
-  getAllBookingsRequest,
+  getBookingsFeedRequest,
+  getDateRangeSummaryRequest,
   updateAttendanceRequest,
-  // updateBookingRequest,
 } from "../service/bookingService";
+import type { BookingFeedFilters } from "../service/bookingService";
 import { BookingFormValues } from "../components/bookingForm3/BookingFormContainer";
 
 /* ============================
@@ -37,17 +37,26 @@ import { BookingFormValues } from "../components/bookingForm3/BookingFormContain
 interface BookingContextType {
   bookings: BookingType[];
   loading: boolean;
+  loadingMore: boolean;
+  hasMore: boolean;
   error: string | null;
+  bookingFilters: BookingFeedFilters;
 
   fetchBookings: () => void;
+  loadMoreBookings: () => Promise<void>;
+  setBookingFilters: (filters: BookingFeedFilters) => void;
+  searchBookingByCode: (code: string) => Promise<BookingType | null>;
+  fetchBookingsByDateRange: (
+    dateRangeId: string,
+    tourPackageId?: string,
+  ) => Promise<BookingType[]>;
+
   getBookingById: (id: string) => BookingType | null;
 
   createBooking: (
     booking: BookingFormValues,
     touristsBySearch: TouristType[],
   ) => Promise<BookingType | null>;
-
-  // updateBooking: (booking: any) => Promise<BookingType | null>;
 
   cancelBooking: (
     bookingId: string,
@@ -62,7 +71,10 @@ interface BookingContextType {
 
   setBookings: (bookings: BookingType[]) => void;
 
-  getTouristCounterByDateRangeId: (dateRangeId: string) => number;
+  getTouristCounterByDateRangeId: (
+    dateRangeId: string,
+    tourPackageId?: string,
+  ) => Promise<number>;
 
   getBookingsByDateRangeId: (
     dateRangeId: string,
@@ -117,6 +129,12 @@ const toAttendance = (group: any[]): AttendanceItem[] =>
         (x.status === "present" || x.status === "absent"),
     );
 
+const sameFilters = (a: BookingFeedFilters, b: BookingFeedFilters) =>
+  (a.status ?? "") === (b.status ?? "") &&
+  (a.bookingCode ?? "") === (b.bookingCode ?? "") &&
+  (a.tourPackageId ?? "") === (b.tourPackageId ?? "") &&
+  (a.dateRangeId ?? "") === (b.dateRangeId ?? "");
+
 /* ============================
    Provider
 ============================ */
@@ -124,10 +142,22 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [bookings, setBookings] = useState<BookingType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [bookingFilters, setBookingFiltersState] = useState<BookingFeedFilters>(
+    {},
+  );
 
-  const { addTouristFromBooking } = useTouristContext();
+  const { addTouristFromBooking, ensureTouristsByIds } = useTouristContext();
+  const ensureRef = useRef(ensureTouristsByIds);
+  ensureRef.current = ensureTouristsByIds;
+
+  const cursorRef = useRef<string | null>(null);
+  const filtersRef = useRef<BookingFeedFilters>({});
+  const generationRef = useRef<number>(0);
+  const loadingRef = useRef<boolean>(false);
 
   /* ============================
      Transform
@@ -142,7 +172,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
       totalPrice: apiBooking.totalPrice,
       payments: apiBooking.payments ?? [],
       notes: apiBooking.notes ?? "",
-      status: apiBooking.status ?? "pending",
+      status: normalizeBookingStatus(apiBooking.status),
       paymentProofFolder: apiBooking.paymentProofFolder,
       createdAt: apiBooking.createdAt,
       attendance: apiBooking.attendance,
@@ -154,32 +184,169 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
     [],
   );
 
+  const ensureBookingTourists = useCallback((list: BookingType[]) => {
+    const ids = Array.from(
+      new Set(list.flatMap((booking) => booking.touristIds ?? [])),
+    );
+    if (ids.length) void ensureRef.current(ids);
+  }, []);
+
   /* ============================
      Fetch
   ============================ */
-  const fetchBookings = useCallback(async () => {
-    setLoading(true);
+  const loadBookings = useCallback(
+    async (filters: BookingFeedFilters) => {
+      const generation = ++generationRef.current;
+      loadingRef.current = true;
+      setLoading(true);
+      setLoadingMore(false);
+      cursorRef.current = null;
+      setHasMore(false);
+
+      try {
+        const page = await getBookingsFeedRequest({ ...filters, limit: 25 });
+        if (generation !== generationRef.current) return;
+
+        if (!page) {
+          setBookings([]);
+          setHasMore(false);
+          setError("No se pudieron cargar las reservas");
+          return;
+        }
+
+        const items = page.items.map(transformApiBooking);
+        setBookings(items);
+        ensureBookingTourists(items);
+        cursorRef.current = page.pagination.nextCursor;
+        setHasMore(page.pagination.hasMore);
+        setError(null);
+      } catch (e) {
+        if (generation !== generationRef.current) return;
+        console.error(e);
+        setError("Error al cargar reservas");
+      } finally {
+        if (generation === generationRef.current) {
+          loadingRef.current = false;
+          setLoading(false);
+        }
+      }
+    },
+    [ensureBookingTourists, transformApiBooking],
+  );
+
+  const fetchBookings = useCallback(() => {
+    void loadBookings(filtersRef.current);
+  }, [loadBookings]);
+
+  const loadMoreBookings = useCallback(async (): Promise<void> => {
+    if (loadingRef.current || loadingMore || !cursorRef.current || !hasMore) {
+      return;
+    }
+
+    const generation = generationRef.current;
+    const filters = { ...filtersRef.current };
+    const cursor = cursorRef.current;
+
+    loadingRef.current = true;
+    setLoadingMore(true);
     try {
-      const response = await getAllBookingsRequest();
-      if (!response) {
-        setBookings([]);
-        setError("No se pudieron cargar las reservas");
+      const page = await getBookingsFeedRequest({
+        ...filters,
+        cursor,
+        limit: 25,
+      });
+
+      if (generation !== generationRef.current) return;
+
+      if (!page) {
+        setError("No se pudieron cargar más reservas");
         return;
       }
 
-      setBookings(response.map(transformApiBooking));
+      const items = page.items.map(transformApiBooking);
+      setBookings((prev) => {
+        const seen = new Set(prev.map((booking) => booking.id));
+        const unique = items.filter((booking) => !seen.has(booking.id));
+        return [...prev, ...unique];
+      });
+      ensureBookingTourists(items);
+      cursorRef.current = page.pagination.nextCursor;
+      setHasMore(page.pagination.hasMore);
       setError(null);
     } catch (e) {
+      if (generation !== generationRef.current) return;
       console.error(e);
-      setError("Error al cargar reservas");
+      setError("Error al cargar más reservas");
     } finally {
-      setLoading(false);
+      if (generation === generationRef.current) {
+        loadingRef.current = false;
+        setLoadingMore(false);
+      }
     }
-  }, [transformApiBooking]);
+  }, [
+    ensureBookingTourists,
+    hasMore,
+    loadingMore,
+    transformApiBooking,
+  ]);
 
-  useEffect(() => {
-    fetchBookings();
-  }, [fetchBookings]);
+  const setBookingFilters = useCallback(
+    (filters: BookingFeedFilters) => {
+      if (sameFilters(filtersRef.current, filters)) return;
+      filtersRef.current = filters;
+      setBookingFiltersState(filters);
+      void loadBookings(filters);
+    },
+    [loadBookings],
+  );
+
+  const searchBookingByCode = useCallback(
+    async (code: string): Promise<BookingType | null> => {
+      const trimmed = code.trim();
+      if (!trimmed) return null;
+
+      const page = await getBookingsFeedRequest({
+        bookingCode: trimmed,
+        limit: 1,
+      });
+      const found = page?.items?.[0];
+      if (!found) return null;
+
+      const booking = transformApiBooking(found);
+      ensureBookingTourists([booking]);
+      return booking;
+    },
+    [ensureBookingTourists, transformApiBooking],
+  );
+
+  const fetchBookingsByDateRange = useCallback(
+    async (
+      dateRangeId: string,
+      tourPackageId?: string,
+    ): Promise<BookingType[]> => {
+      const collected: BookingType[] = [];
+      let cursor: string | null | undefined = null;
+
+      for (let pageNumber = 0; pageNumber < 50; pageNumber += 1) {
+        const page = await getBookingsFeedRequest({
+          dateRangeId,
+          tourPackageId,
+          cursor,
+          limit: 100,
+        });
+
+        if (!page) break;
+
+        collected.push(...page.items.map(transformApiBooking));
+        if (!page.pagination.hasMore || !page.pagination.nextCursor) break;
+        cursor = page.pagination.nextCursor;
+      }
+
+      ensureBookingTourists(collected);
+      return collected;
+    },
+    [ensureBookingTourists, transformApiBooking],
+  );
 
   /* ============================
      Selectors
@@ -200,15 +367,14 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const getTouristCounterByDateRangeId = useCallback(
-    (dateRangeId: string): number =>
-      bookings.reduce(
-        (count, b) =>
-          b.dateRangeId === dateRangeId
-            ? count + (b.touristIds?.length ?? 0)
-            : count,
-        0,
-      ),
-    [bookings],
+    async (dateRangeId: string, tourPackageId?: string): Promise<number> => {
+      const summary = await getDateRangeSummaryRequest(
+        dateRangeId,
+        tourPackageId,
+      );
+      return summary?.touristCount ?? 0;
+    },
+    [],
   );
 
   /* ============================
@@ -337,7 +503,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
           touristIds: response.tourists.map((t) => t.id),
         });
 
-        setBookings((prev) => [...prev, newBooking]);
+        setBookings((prev) => [newBooking, ...prev]);
         return newBooking;
       } catch (e) {
         console.error(e);
@@ -349,56 +515,6 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
     },
     [addTouristFromBooking, transformApiBooking],
   );
-
-  /* ============================
-     Update / Cancel
-  ============================ */
-  // const updateBooking = useCallback(
-  //   async (booking: any): Promise<BookingType | null> => {
-  //     setLoading(true);
-  //     try {
-  //       const tourists = [
-  //         booking.mainTourist,
-  //         ...(booking.additionalTourists ?? []),
-  //       ].filter(isValidTourist);
-
-  //       const bookingToUpdate: UpdateBookingType = {
-  //         totalPrice: booking.totalPrice,
-  //         notes: booking.notes,
-  //         status: booking.status ?? "pending",
-  //         tourists,
-  //       };
-
-  //       const response = await updateBookingRequest(
-  //         getBookingId(booking),
-  //         bookingToUpdate,
-  //       );
-
-  //       if (!response) return null;
-
-  //       const updated = transformApiBooking({
-  //         ...response,
-  //         touristIds:
-  //           response.tourists
-  //             ?.filter(isValidTourist)
-  //             .map((t: any) => addTouristFromBooking(t).id) ?? [],
-  //       });
-
-  //       setBookings((prev) =>
-  //         prev.map((b) => (getBookingId(b) === updated.id ? updated : b)),
-  //       );
-
-  //       return updated;
-  //     } catch (e) {
-  //       console.error(e);
-  //       setError("Error al actualizar la reserva");
-  //       return null;
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   },
-  //   [addTouristFromBooking, transformApiBooking],
-  // );
 
   const cancelBooking = useCallback(
     async (
@@ -441,11 +557,17 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         bookings,
         loading,
+        loadingMore,
+        hasMore,
         error,
+        bookingFilters,
         fetchBookings,
+        loadMoreBookings,
+        setBookingFilters,
+        searchBookingByCode,
+        fetchBookingsByDateRange,
         getBookingById,
         createBooking,
-        // updateBooking,
         cancelBooking,
         updateAttendance,
         addPaymentToBooking,

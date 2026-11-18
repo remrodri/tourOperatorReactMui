@@ -16,6 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 
 import { TouristType } from "../../types/TouristType";
+import { useTouristContext } from "../../../tourist/context/TouristContext";
 
 /* -----------------------------
    Helpers (safe getIn)
@@ -82,6 +83,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
 }) => {
   // ✅ blindaje contra undefined
   const touristsSafe = tourists ?? [];
+  const { findTouristByDocument } = useTouristContext();
 
   const touristValue: TouristType =
     getIn(formik.values, prefix) || ({} as TouristType);
@@ -97,16 +99,6 @@ const TouristForm: React.FC<TouristFormProps> = ({
   const [locked, setLocked] = useState(false);
   const debounceRef = useRef<number | null>(null);
 
-  const matchedTourist = useMemo(() => {
-    const doc = docValue.trim();
-    if (!doc) return null;
-
-    const found = touristsSafe.find(
-      (t) => t.ci === doc || t.passportNumber === doc,
-    );
-    return found ? normalizeTourist(found) : null;
-  }, [docValue, touristsSafe]);
-
   useEffect(() => {
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
 
@@ -115,10 +107,25 @@ const TouristForm: React.FC<TouristFormProps> = ({
       return;
     }
 
-    debounceRef.current = window.setTimeout(() => {
-      if (matchedTourist) {
+    debounceRef.current = window.setTimeout(async () => {
+      const doc = docValue.trim();
+      const local = touristsSafe.find(
+        (t) => t.ci === doc || t.passportNumber === doc,
+      );
+      const found =
+        (local ? normalizeTourist(local) : null) ??
+        (await findTouristByDocument(
+          doc,
+          docType === "ci" ? "ci" : "passport",
+        ));
+
+      if (found) {
         const tempId = touristValue.tempId;
-        formik.setFieldValue(prefix, { ...matchedTourist, tempId }, false);
+        formik.setFieldValue(
+          prefix,
+          { ...normalizeTourist(found), tempId },
+          false,
+        );
         setLocked(true);
       } else {
         setLocked(false);
@@ -129,7 +136,7 @@ const TouristForm: React.FC<TouristFormProps> = ({
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [docValue, matchedTourist, prefix]);
+  }, [docValue, docType, prefix]);
 
   const birthDate: Dayjs | null = useMemo(() => {
     const raw = touristValue.dateOfBirth;

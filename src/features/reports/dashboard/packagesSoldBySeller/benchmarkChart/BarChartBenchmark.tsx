@@ -5,7 +5,6 @@ import { useDashboardContext } from "../../../context/DashboardContext";
 import { Box, Typography } from "@mui/material";
 import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
 import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
-import { BookingType } from "../../../../booking/types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 // import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 // const data = [
@@ -25,24 +24,22 @@ export function BarChartBenchmark() {
 
   const getBookingInfoById = () => {
     const touristDestinationInfos = packagesSoldBySeller.map((d)=>{
-      const tourPackageIds = d.bookings.map(
-        (booking: BookingType) => booking.tourPackageId
-      );
-      const tourPackageInfos = tourPackageIds.map((tourPackageId: string) =>
-        getTourPackageInfoById(tourPackageId)
-      );
+      const touristDestinations: string[] = [];
 
-      const touristDestinations = tourPackageInfos
-        .map((tourPackage: TourPackageType | null) => {
-          if (tourPackage) {
-            return (
-              getTouristDestinationInfoById(tourPackage.touristDestination)
-                ?.name || null
-            );
-          }
-          return null;
-        })
-        .filter((d) => !!d); // 🔹 elimina null, undefined, "" y falsy
+      d.tourPackageCounts.forEach(({ tourPackageId, count }) => {
+        const tourPackage: TourPackageType | null =
+          getTourPackageInfoById(tourPackageId);
+        if (!tourPackage) return;
+
+        const destinationName =
+          getTouristDestinationInfoById(tourPackage.touristDestination)?.name ||
+          null;
+        if (!destinationName) return;
+
+        for (let i = 0; i < count; i += 1) {
+          touristDestinations.push(destinationName);
+        }
+      });
 
       // console.log('touristDestinations::: ', touristDestinations);
 

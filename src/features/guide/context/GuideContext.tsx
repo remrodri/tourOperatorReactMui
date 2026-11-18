@@ -70,8 +70,7 @@ export const GuideProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { tourPackages } = useTourPackageContext();
   const { getUserById, userInfo } = useUserContext(); // <- usa userInfo si ya lo tienes
-  const { bookings, getBookingsByDateRangeId, updateAttendance } =
-    useBookingContext();
+  const { fetchBookingsByDateRange, updateAttendance } = useBookingContext();
 
   // ✅ inicializa desde localStorage para evitar bug de "estado vacío"
   const [currentDateRange, _setCurrentDateRange] = useState<string>(
@@ -148,29 +147,28 @@ export const GuideProvider: React.FC<{ children: ReactNode }> = ({
   }, [guideInfo, tourPackages]);
 
   // ✅ bookings del dateRange seleccionado
-  const computeDateRangeBookings = useCallback(() => {
-    if (!currentDateRange || !currentTourPackage) {
-      setDateRangeBookings([]);
-      return;
-    }
-
-    const result = getBookingsByDateRangeId(
-      currentDateRange,
-      bookings,
-      currentTourPackage,
-    );
-
-    setDateRangeBookings(result);
-  }, [
-    currentDateRange,
-    currentTourPackage,
-    bookings,
-    getBookingsByDateRangeId,
-  ]);
-
   useEffect(() => {
-    computeDateRangeBookings();
-  }, [computeDateRangeBookings]);
+    let cancelled = false;
+
+    const computeDateRangeBookings = async () => {
+      if (!currentDateRange || !currentTourPackage) {
+        setDateRangeBookings([]);
+        return;
+      }
+
+      const result = await fetchBookingsByDateRange(
+        currentDateRange,
+        currentTourPackage,
+      );
+      if (!cancelled) setDateRangeBookings(result);
+    };
+
+    void computeDateRangeBookings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentDateRange, currentTourPackage, fetchBookingsByDateRange]);
 
   // ✅ inicializa attendanceList cuando cambian las reservas del dateRange
   // - si booking ya tiene attendance, lo respeta

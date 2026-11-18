@@ -62,7 +62,7 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
   openLoginDialog,
   handleCloseLoginDialog,
 }) => {
-  const { bookings } = useBookingContext();
+  const { searchBookingByCode } = useBookingContext();
   const { showSnackbar } = useNewSnackbar();
 
   // const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
@@ -75,13 +75,13 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
   //   setOpenMoreInfoDialog(true);
   // };
 
-  const handleClickSearchByBookingCode = () => {
+  const handleClickSearchByBookingCode = async () => {
     if (!bookingCode.trim()) {
       showSnackbar("Debe ingresar un codigo de reserva", "error");
       return;
     }
 
-    const bookingFound = searchByBookingCode();
+    const bookingFound = await searchBookingByCode(bookingCode);
 
     if (!bookingFound) {
       showSnackbar("No se encontro la reserva", "error");
@@ -89,11 +89,6 @@ const HomeAppBar: React.FC<HomeAppBarProps> = ({
     }
 
     setSelectedBooking(bookingFound);
-  };
-
-  const searchByBookingCode = (): BookingType | null => {
-    const bCode = bookingCode.trim();
-    return bookings.find((booking) => booking.bookingCode === bCode) ?? null;
   };
 
   const [selectedBooking, setSelectedBooking] = useState<BookingType | null>(

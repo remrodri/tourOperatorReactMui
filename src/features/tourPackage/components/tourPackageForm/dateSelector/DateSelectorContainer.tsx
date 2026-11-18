@@ -40,6 +40,7 @@ const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedGuides, setSelectedGuides] = useState<UserType[]>([]);
+  const [capacity, setCapacity] = useState<number | "">("");
 
   const setFormikRanges = (ranges: DateRangeType[]) => {
     // ✅ clave para que Yup muestre errores si corresponde
@@ -50,6 +51,7 @@ const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
   const handleOpenDialog = () => {
     setSelectedDate(null);
     setSelectedGuides([]);
+    setCapacity("");
     setOpenDialog(true);
   };
 
@@ -60,6 +62,12 @@ const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
 
     if (duration <= 0) {
       showSnackbar("La duración debe ser mayor a 0", "error");
+      return;
+    }
+
+    const capacityValue = typeof capacity === "number" ? capacity : Number(capacity);
+    if (!Number.isInteger(capacityValue) || capacityValue <= 0) {
+      showSnackbar("La capacidad debe ser un entero mayor a 0", "error");
       return;
     }
 
@@ -84,12 +92,15 @@ const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
     const newRange: DateRangeType = {
       dates: newDates,
       guides: selectedGuides.map((g) => g.id || ""),
+      capacity: capacityValue,
+      dataOrigin: "manual",
     };
 
     setFormikRanges([...dateRanges, newRange]);
 
     // reset
     setSelectedGuides([]);
+    setCapacity("");
     handleCloseDialog();
   };
 
@@ -115,6 +126,8 @@ const DateSelectorContainer: React.FC<DateSelectorContainerProps> = ({
       setSelectedDate={setSelectedDate}
       selectedGuides={selectedGuides}
       setSelectedGuides={setSelectedGuides}
+      capacity={capacity}
+      setCapacity={setCapacity}
       handleAddDateRange={handleAddDateRange}
       handleRemoveRange={handleRemoveRange}
       handleClearAllRanges={handleClearAllRanges}

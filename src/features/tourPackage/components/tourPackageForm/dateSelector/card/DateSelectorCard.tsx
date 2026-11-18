@@ -90,6 +90,20 @@ const DateSelectorCard: React.FC<DateSelectorCardProps> = ({
                 variant="outlined"
                 sx={{ ml: 0.5 }}
               />
+              <Chip
+                label={
+                  typeof range.capacity === "number" && range.capacity > 0
+                    ? `${range.capacity} cupo(s)`
+                    : "Capacidad pendiente"
+                }
+                size="small"
+                variant="outlined"
+                color={
+                  typeof range.capacity === "number" && range.capacity > 0
+                    ? "default"
+                    : "warning"
+                }
+              />
             </>
           ) : (
             <Typography variant="caption" color="error">

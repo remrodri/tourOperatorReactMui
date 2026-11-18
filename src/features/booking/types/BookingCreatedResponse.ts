@@ -1,5 +1,6 @@
 import { PaymentType } from "./PaymentType";
 import { TouristType } from "./TouristType";
+import type { BookingStatus } from "./BookingType";
 
 export interface BookingCreatedResponse {
   id: string;
@@ -8,7 +9,7 @@ export interface BookingCreatedResponse {
   tourPackageId: string;
   dateRangeId: string;
   sellerId: string;
-  status: "pending" | "paid" | "cancelled" | "completed";
+  status: BookingStatus;
   totalPrice: number;
   notes: string;
   paymentProofFolder: string;

@@ -5,14 +5,8 @@ import "dayjs/locale/es";
 
 import TotalSalesByDate from "./TotalSalesByDate";
 import { useDashboardContext } from "../../context/DashboardContext";
-import type { BookingType } from "../../../booking/types/BookingType";
-import type { TouristDestinationWithBookings } from "../../context/DashboardContext";
 
 dayjs.locale("es");
-
-/* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
 
 type MonthData = {
   name: string;
@@ -34,43 +28,9 @@ const MONTH_NAMES: MonthData["name"][] = [
   "Dic",
 ];
 
-/* -------------------------------------------------------------------------------------------------
- * Helpers
- * -----------------------------------------------------------------------------------------------*/
-
 function createEmptyMonths(): MonthData[] {
   return MONTH_NAMES.map((name) => ({ name, counts: [] }));
 }
-
-function buildMonthlyData(
-  destinations: TouristDestinationWithBookings[],
-  year: number,
-  mode: "count" | "amount",
-): MonthData[] {
-  const months = createEmptyMonths();
-
-  destinations.forEach((destination) => {
-    const monthTotals = new Array(12).fill(0);
-
-    destination.filteredBookings.forEach((booking: BookingType) => {
-      const bookingDate = dayjs(booking.createdAt);
-      if (bookingDate.year() === year) {
-        const monthIndex = bookingDate.month();
-        monthTotals[monthIndex] += mode === "count" ? 1 : booking.totalPrice;
-      }
-    });
-
-    monthTotals.forEach((value, index) => {
-      months[index].counts.push(value);
-    });
-  });
-
-  return months;
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Component
- * -----------------------------------------------------------------------------------------------*/
 
 const TotalSalesByDateContainer: React.FC = () => {
   const currentYear = dayjs().year();
@@ -78,61 +38,45 @@ const TotalSalesByDateContainer: React.FC = () => {
     currentYear.toString(),
   );
 
-  const { bookings, touristDestinationWithBookings } = useDashboardContext();
-
-  /* ---------------------------------------
-   * Years selector
-   * ---------------------------------------*/
-
-  const yearsToSelect = useMemo(() => {
-    const years = bookings.map((b) => dayjs(b.createdAt).year());
-
-    const uniqueYears = Array.from(new Set(years)).sort((a, b) => a - b);
-
-    return uniqueYears.length ? uniqueYears : [currentYear];
-  }, [bookings, currentYear]);
+  const { yearsToSelect, monthlyByDestination } = useDashboardContext();
 
   const numericYear = Number(yearSelected);
 
-  /* ---------------------------------------
-   * Derived data
-   * ---------------------------------------*/
-
   const countedBookings = useMemo(() => {
-    if (!touristDestinationWithBookings.length) {
-      return createEmptyMonths();
-    }
+    const months = createEmptyMonths();
 
-    return buildMonthlyData(
-      touristDestinationWithBookings,
-      numericYear,
-      "count",
-    );
-  }, [touristDestinationWithBookings, numericYear]);
+    monthlyByDestination.forEach((destination) => {
+      const monthTotals = new Array(12).fill(0);
+      destination.rows.forEach((row) => {
+        if (row.year === numericYear) {
+          monthTotals[row.month - 1] += row.count;
+        }
+      });
+      monthTotals.forEach((value, index) => months[index].counts.push(value));
+    });
+
+    return months;
+  }, [monthlyByDestination, numericYear]);
 
   const mountsByMonth = useMemo(() => {
-    if (!touristDestinationWithBookings.length) {
-      return createEmptyMonths();
-    }
+    const months = createEmptyMonths();
 
-    return buildMonthlyData(
-      touristDestinationWithBookings,
-      numericYear,
-      "amount",
-    );
-  }, [touristDestinationWithBookings, numericYear]);
+    monthlyByDestination.forEach((destination) => {
+      const monthTotals = new Array(12).fill(0);
+      destination.rows.forEach((row) => {
+        if (row.year === numericYear) {
+          monthTotals[row.month - 1] += row.amount;
+        }
+      });
+      monthTotals.forEach((value, index) => months[index].counts.push(value));
+    });
 
-  /* ---------------------------------------
-   * Handlers
-   * ---------------------------------------*/
+    return months;
+  }, [monthlyByDestination, numericYear]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setYearSelected(event.target.value);
   };
-
-  /* ---------------------------------------
-   * Render
-   * ---------------------------------------*/
 
   return (
     <TotalSalesByDate

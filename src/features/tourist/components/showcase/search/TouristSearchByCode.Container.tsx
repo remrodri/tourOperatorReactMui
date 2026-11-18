@@ -1,54 +1,37 @@
 import { useState } from "react";
-import { TouristType } from "../../../../booking/types/TouristType";
 import TouristSearchByCode from "./TouristSearchByCode";
 import { useNewSnackbar } from "../../../../../context/SnackbarContext";
+import { useTouristContext } from "../../../context/TouristContext";
 
-interface TouristSearchByCodeContainerProps {
-  tourists: TouristType[] | null;
-  setTouristFound: (tourist: TouristType | null) => void;
-  touristFound: TouristType | null;
-}
-const TouristSearchByCodeContainer: React.FC<
-  TouristSearchByCodeContainerProps
-> = ({ tourists, setTouristFound, touristFound }) => {
+const TouristSearchByCodeContainer: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const { showSnackbar } = useNewSnackbar();
+  const { fetchTourists, loading } = useTouristContext();
 
-  const handleSearch = () => {
-    console.log("searchValue::: ", searchValue);
-    if (!tourists) {
+  const handleSearch = async () => {
+    const value = searchValue.trim();
+    if (!value) {
+      showSnackbar("Ingresa un nombre o documento", "info");
+      await fetchTourists("");
       return;
     }
-    if (!searchValue) {
-      showSnackbar("Ingresa un nro. de documento", "error");
-      handleClear();
-      return;
-    }
-    const TouristFound = tourists.find((tourist) =>
-      tourist.documentType === "ci"
-        ? tourist.ci?.toUpperCase().includes(searchValue.toUpperCase())
-        : tourist.passportNumber
-            ?.toUpperCase()
-            .includes(searchValue.toUpperCase())
-    );
-    if (!TouristFound) {
-      showSnackbar("No encontrado", "error");
-    }
-    setTouristFound(TouristFound || null);
-    // handleClear();
+
+    await fetchTourists(value);
+    if (searchValue !== value) setSearchValue(value);
   };
 
-  const handleClear = () => {
+  const handleClear = async () => {
     setSearchValue("");
-    setTouristFound(null);
+    await fetchTourists("");
   };
+
   return (
     <TouristSearchByCode
       searchValue={searchValue}
       onChange={setSearchValue}
       onSearch={handleSearch}
       onClear={handleClear}
-      touristFound={touristFound}
+      searching={loading}
     />
   );
 };

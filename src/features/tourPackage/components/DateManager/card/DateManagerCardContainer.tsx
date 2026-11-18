@@ -90,16 +90,30 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
   };
 
   useEffect(() => {
-    if (dateRange) {
+    let cancelled = false;
+
+    const loadCounter = async () => {
+      if (!dateRange) return;
+
       const guides = dateRange.guides
         ?.map((guideId) => getUserById(guideId))
         .filter((guide): guide is UserType => !!guide);
 
       setGuides(guides || []);
-      setTouristCounter(getTouristCounterByDateRangeId(dateRange.id ?? ""));
-      // setIsEditing(true);
-    }
-  }, [dateRange]);
+
+      const counter = await getTouristCounterByDateRangeId(
+        dateRange.id ?? "",
+        tourPackageId,
+      );
+      if (!cancelled) setTouristCounter(counter);
+    };
+
+    void loadCounter();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dateRange, getTouristCounterByDateRangeId, getUserById, tourPackageId]);
 
   return (
     <>
