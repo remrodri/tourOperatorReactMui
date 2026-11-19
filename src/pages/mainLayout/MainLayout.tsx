@@ -10,6 +10,7 @@ import userManagementBackground from "../../assets/images/userManagement.webp";
 import tourPackageBackground from "../../assets/images/tourPackage.webp";
 import bookingBackground from "../../assets/images/booking.webp";
 import reportsBackground from "../../assets/images/reports.webp";
+import reportsAlternativeBackground from "../../assets/images/reports1.webp";
 import touristBackground from "../../assets/images/tourist.webp";
 import tourTypesBackground from "../../assets/images/tourTypes2.webp";
 import touristDestination from "../../assets/images/touristDestination.webp";
@@ -45,6 +46,9 @@ const MainLayout: React.FC = () => {
         setCurrentStyles(appBarStyles[2]);
       } else if (location.pathname.includes("reportes")) {
         setBackgroundImg(reportsBackground);
+        setCurrentStyles(appBarStyles[3]);
+      } else if (location.pathname.includes("analytics")) {
+        setBackgroundImg(reportsAlternativeBackground);
         setCurrentStyles(appBarStyles[3]);
       } else if (location.pathname.includes("turistas")) {
         setBackgroundImg(touristBackground);

@@ -14,6 +14,7 @@ import BookingPage from "../pages/BookingPage";
 import BookingShowcaseContainer from "../features/booking/components/showcase/BookingShowcaseContainer";
 import ReportsPage from "../pages/ReportsPage";
 import DashboardContainer from "../features/reports/dashboard/DashboardContainer";
+import AnalyticsPage from "../pages/AnalyticsPage";
 import GuidePageContainer from "../pages/Guide/GuidePageContainer";
 import GuideDrawerContainer from "../pages/Guide/GuideDrawerContainer";
 import TouristListContainer from "../features/guide/components/touristList/TouristListContainer";
@@ -124,6 +125,10 @@ export const AppRouter = createBrowserRouter(
           path: "reportes",
           element: <ReportsPage />,
           children: [{ path: "", element: <DashboardContainer /> }],
+        },
+        {
+          path: "analytics",
+          element: <AnalyticsPage />,
         },
         {
           path: "turistas",

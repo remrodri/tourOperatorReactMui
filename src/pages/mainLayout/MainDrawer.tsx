@@ -26,9 +26,11 @@ import MainAppBar from "./MainAppBar";
 import TextType from "../../TextAnimations/TextType/TextType";
 import PeopleIcon from "@mui/icons-material/People";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import InsightsIcon from "@mui/icons-material/Insights";
 import CategoryIcon from "@mui/icons-material/Category";
 import { Groups } from "@mui/icons-material";
 import { AppBarStyle } from "./style/MainStyles";
+import { canAccessAnalytics } from "../../features/analytics/utils/analyticsAccess";
 
 const drawerWidth = 240;
 
@@ -152,6 +154,9 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
       case "Reportes":
         navigate("reportes");
         break;
+      case "Analítica":
+        navigate("analytics");
+        break;
       case "Turistas":
         navigate("turistas");
         break;
@@ -173,21 +178,15 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
     if (path.includes("destinos-turisticos")) setSelectedOption("Destinos");
     if (path.includes("reservas")) setSelectedOption("Reservas");
     if (path.includes("reportes")) setSelectedOption("Reportes");
+    if (path.includes("analytics")) setSelectedOption("Analítica");
     if (path.includes("turistas")) setSelectedOption("Turistas");
   }, [location.pathname]);
 
-  const [roleName, setRoleName] = useState<string>("");
   const token = TokenService.getToken();
   const user: UserType = jwtDecode(token as string);
   const { getRoleById } = useRoleContext();
-  const getRoleName = () => {
-    const role = getRoleById(user.role);
-    setRoleName(role.name);
-  };
-
-  useEffect(() => {
-    getRoleName();
-  }, [user]);
+  const roleName = getRoleById(user.role).name;
+  const canShowAnalytics = canAccessAnalytics(roleName);
 
   return (
     <Box
@@ -620,6 +619,63 @@ export const MainDrawer: React.FC<Props> = ({ currentStyles }) => {
             </Box>
           )}
         </List>
+        {canShowAnalytics && (
+          <>
+            <Divider />
+            <List>
+              <Tooltip
+                title="En este módulo puedes consultar la planificación comercial y operativa de salidas turísticas con analítica descriptiva y predictiva"
+                placement="right"
+              >
+                <ListItemButton
+                  sx={{
+                    pl: open ? 4 : 2.5,
+                    backgroundColor:
+                      selectedOption === "Analítica"
+                        ? "rgba(255, 255, 255, 0.4)"
+                        : "transparent",
+                    "&:hover": {
+                      backgroundColor: "rgba(255,255,255,0.4)",
+                    },
+                    color:
+                      selectedOption === "Analítica"
+                        ? "rgba(43, 43, 43, 0.88)"
+                        : "inherit",
+                  }}
+                  onClick={() => handleClick("Analítica")}
+                >
+                  <ListItemIcon>
+                    <InsightsIcon
+                      sx={{
+                        color:
+                          selectedOption === "Analítica"
+                            ? "rgba(43, 43, 43, 0.88)"
+                            : "inherit",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={open ? "Analítica" : ""} />
+                </ListItemButton>
+              </Tooltip>
+              {!open && (
+                <Box width="100%">
+                  <Typography
+                    sx={{
+                      fontSize: open ? "0.8rem" : "0.7rem",
+                      width: open ? "100%" : "3.8rem",
+                      fontWeight: "100",
+                      display: "flex",
+                      justifyContent: open ? "left" : "center",
+                      pl: open ? 2 : 0,
+                    }}
+                  >
+                    Analítica
+                  </Typography>
+                </Box>
+              )}
+            </List>
+          </>
+        )}
       </Drawer>
       <Box
         sx={{
