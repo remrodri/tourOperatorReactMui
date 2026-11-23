@@ -181,6 +181,9 @@ describe("AnalyticsFoundation T-816", () => {
     expect(screen.getByText("Uyuni cultural")).toBeInTheDocument();
     expect(screen.getByText("Salar de Uyuni")).toBeInTheDocument();
     expect(screen.getByText("Datos ficticios: registros simulados.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Ver detalle de Uyuni cultural/ }),
+    ).toBeInTheDocument();
 
     await waitFor(() => expect(fetchSummary).toHaveBeenCalledWith());
     expect(fetchDepartures).toHaveBeenCalledWith({ limit: 100 });

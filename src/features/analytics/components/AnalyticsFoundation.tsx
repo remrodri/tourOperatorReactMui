@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useAnalytics } from "../context/AnalyticsContext";
+import AnalyticsDepartureDetail from "./AnalyticsDepartureDetail";
 import type {
   AnalyticsDeparture,
   AnalyticsFilters,
@@ -168,6 +169,7 @@ const AnalyticsFoundation: React.FC = () => {
   const [draftFilters, setDraftFilters] = useState<FilterForm>(emptyFilters);
   const [appliedFilters, setAppliedFilters] = useState<FilterForm>(emptyFilters);
   const [filterError, setFilterError] = useState<string | null>(null);
+  const [selectedDepartureId, setSelectedDepartureId] = useState<string | null>(null);
   useEffect(() => {
     if (!overview) return;
     void fetchSummary();
@@ -329,6 +331,13 @@ const AnalyticsFoundation: React.FC = () => {
         {summary.loading && !summaryData ? <SummarySkeleton /> : summaryData ? <SummaryCards summary={summaryData} /> : null}
       </Box>
 
+      {selectedDepartureId && (
+        <AnalyticsDepartureDetail
+          departureId={selectedDepartureId}
+          onClose={() => setSelectedDepartureId(null)}
+        />
+      )}
+
       {isEmpty ? (
         <Alert severity="info" sx={{ mb: 2 }}>
           <AlertTitle>Sin resultados para los filtros</AlertTitle>
@@ -355,6 +364,7 @@ const AnalyticsFoundation: React.FC = () => {
                     <TableCell align="right">Capacidad</TableCell>
                     <TableCell align="right">Ocupación</TableCell>
                     <TableCell>Estado de capacidad</TableCell>
+                    <TableCell align="right">Detalle</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -370,6 +380,16 @@ const AnalyticsFoundation: React.FC = () => {
                       <TableCell align="right">{formatPercent(item.occupancy)}</TableCell>
                       <TableCell>
                         <Chip size="small" color={item.capacityStatus === "valid" ? "success" : "warning"} label={statusLabel(item.capacityStatus)} />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button
+                          size="small"
+                          variant={selectedDepartureId === item.id ? "contained" : "outlined"}
+                          onClick={() => setSelectedDepartureId(item.id)}
+                          aria-label={`Ver detalle de ${item.tourPackage?.name ?? "la salida"} del ${formatDate(item.startDate)}`}
+                        >
+                          Ver detalle
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
