@@ -4,8 +4,8 @@ import {
   Typography,
 } from "@mui/material";
 import { TouristType } from "../../../../booking/types/TouristType";
-import dayjs from "dayjs";
 import TouristCardMenu from "./TouristCardMenu";
+import { formatAge } from "../../../utils/calculateAge";
 // import { BookingType } from "../../../types/BookingType";
 // import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 // import { TouristType } from "../../../types/TouristType";
@@ -151,7 +151,7 @@ const TouristCard: React.FC<TouristCardProps> = ({
                 gap: "0.5rem",
               }}
             >
-              {dayjs().diff(dayjs(tourist.dateOfBirth, "DD/MM/YYYY"), "year")}
+              {formatAge(tourist.dateOfBirth)}
               {/* {booking.status === "pending"
                 ? `Pendiente`
                 : booking.status === "cancelled"

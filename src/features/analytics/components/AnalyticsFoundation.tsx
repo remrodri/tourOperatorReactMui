@@ -254,7 +254,8 @@ const AnalyticsFoundation: React.FC = () => {
 
   const summaryData = summary.data?.data.summary;
   const departureItems = currentDepartureItems;
-  const warnings = [...new Set([...(summary.data?.warnings ?? []), ...(departures.data?.warnings ?? [])])];
+  const warnings = [...new Set([...(summary.data?.warnings ?? []), ...(departures.data?.warnings ?? [])])]
+    .filter((warning) => !/simulad|fictici/i.test(warning));
   const isEmpty = Boolean(summaryData && summaryData.departures === 0);
 
   return (
@@ -267,7 +268,6 @@ const AnalyticsFoundation: React.FC = () => {
           </Typography>
         </Box>
         <Stack direction="row" spacing={1} alignItems="center">
-          <Chip color="warning" label="DATOS SIMULADOS" />
           {summary.data?.metadata.generatedAt && (
             <Typography variant="caption">
               Actualizado {new Date(summary.data.metadata.generatedAt).toLocaleString("es-BO")}

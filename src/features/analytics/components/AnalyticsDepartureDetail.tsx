@@ -5,7 +5,6 @@ import {
   AlertTitle,
   Box,
   Button,
-  Chip,
   CircularProgress,
   Divider,
   Paper,
@@ -47,7 +46,7 @@ const predictionStateCopy: Record<
 > = {
   "no-data": {
     title: "Predicción no disponible",
-    description: "La salida no dispone de los datos simulados mínimos para reproducir una estimación.",
+    description: "La salida no dispone de los datos mínimos para reproducir una estimación.",
   },
   "insufficient-history": {
     title: "Historia insuficiente",
@@ -213,7 +212,7 @@ const AnalyticsDepartureDetail = ({
   const analysisWarnings = [
     ...(trendData ? (trends.data?.warnings ?? []) : []),
     ...(predictionData ? (prediction.data?.warnings ?? []) : []),
-  ];
+  ].filter((warning) => !/simulad|fictici/i.test(warning));
 
   const retry = () => {
     void fetchDeparture(departureId);
@@ -243,7 +242,6 @@ const AnalyticsDepartureDetail = ({
             </Typography>
           </Box>
         </Stack>
-        <Chip color="warning" label="DATOS SIMULADOS" />
       </Stack>
 
       {loading && !detail && (

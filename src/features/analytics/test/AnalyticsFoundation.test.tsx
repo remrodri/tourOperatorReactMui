@@ -175,12 +175,12 @@ describe("AnalyticsFoundation T-816", () => {
     render(<AnalyticsFoundation />);
 
     expect(screen.getByRole("heading", { name: "Planificación analítica" })).toBeInTheDocument();
-    expect(screen.getByText("DATOS SIMULADOS")).toBeInTheDocument();
+    expect(screen.queryByText("DATOS SIMULADOS")).not.toBeInTheDocument();
     expect(screen.getByText("Turistas vigentes")).toBeInTheDocument();
     expect(screen.getAllByText("5").length).toBeGreaterThan(0);
     expect(screen.getByText("Uyuni cultural")).toBeInTheDocument();
     expect(screen.getByText("Salar de Uyuni")).toBeInTheDocument();
-    expect(screen.getByText("Datos ficticios: registros simulados.")).toBeInTheDocument();
+    expect(screen.queryByText("Datos ficticios: registros simulados.")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Ver detalle de Uyuni cultural/ }),
     ).toBeInTheDocument();

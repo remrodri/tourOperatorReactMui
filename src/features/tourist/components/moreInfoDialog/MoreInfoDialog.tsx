@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { Close } from "@mui/icons-material";
-import dayjs from "dayjs";
+import { formatAge } from "../../utils/calculateAge";
 import TextType from "../../../../TextAnimations/TextType/TextType";
 import { TouristType } from "../../../booking/types/TouristType";
 
@@ -114,7 +114,7 @@ const MoreInfoDialog: React.FC<MoreInfoDialogProps> = ({
         <Box>
           <Box>Edad</Box>
           <Typography sx={{ display: "flex", justifyContent: "center" }}>
-            {dayjs().diff(dayjs(tourist.dateOfBirth, "DD/MM/YYYY"), "year")}
+            {formatAge(tourist.dateOfBirth)}
           </Typography>
         </Box>
       </DialogContent>
