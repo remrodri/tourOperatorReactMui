@@ -2,8 +2,14 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { axiosPrivate } from "../../../config/axiosConfig";
 import {
+  getAnalyticsDeparture,
+  getAnalyticsDepartures,
   getAnalyticsErrorMessage,
   getAnalyticsOverview,
+  getAnalyticsPrediction,
+  getAnalyticsPredictionMetrics,
+  getAnalyticsSummary,
+  getAnalyticsTrends,
 } from "../service/analyticsService";
 import type {
   AnalyticsApiEnvelope,
@@ -116,5 +122,79 @@ describe("analytics service", () => {
     expect(getAnalyticsErrorMessage(new Error("boom"))).toBe(
       "No se pudo cargar el módulo de analítica",
     );
+  });
+
+  it("uses typed descriptive routes and compacts their parameters", async () => {
+    const summaryEnvelope = {
+      statusCode: 200,
+      message: "ok",
+      data: { summary: { departures: 0 } },
+      meta,
+      warnings: [],
+    };
+    const departuresEnvelope = {
+      statusCode: 200,
+      message: "ok",
+      data: { items: [], pagination: { limit: 20, hasMore: false, nextCursor: null } },
+      meta,
+      warnings: [],
+    };
+    mock.onGet("/analytics/summary").reply(200, summaryEnvelope);
+    mock.onGet("/analytics/departures").reply(200, departuresEnvelope);
+    mock.onGet("/analytics/departures/departure-1").reply(200, {
+      ...departuresEnvelope,
+      data: { departure: { id: "departure-1" } },
+    });
+
+    await getAnalyticsSummary({ from: "2026-01-01", destinationId: "" });
+    await getAnalyticsDepartures({ limit: 25, cursor: undefined });
+    await getAnalyticsDeparture("departure-1", { tourPackageId: "package-1" });
+
+    expect(mock.history.get.map(({ url }) => url)).toEqual([
+      "/analytics/summary",
+      "/analytics/departures",
+      "/analytics/departures/departure-1",
+    ]);
+    expect(mock.history.get[0].params).toEqual({ from: "2026-01-01" });
+    expect(mock.history.get[1].params).toEqual({ limit: 25 });
+    expect(mock.history.get[2].params).toEqual({ tourPackageId: "package-1" });
+  });
+
+  it("uses typed trends and predictive routes", async () => {
+    mock.onGet("/analytics/trends").reply(200, {
+      statusCode: 200,
+      message: "ok",
+      data: { state: "no-activity" },
+      meta: { ...meta, granularity: "week", timeZone: "UTC", asOf: "2026-11-13" },
+      warnings: [],
+    });
+    mock.onGet("/analytics/departures/departure-2/prediction").reply(200, {
+      statusCode: 200,
+      message: "ok",
+      data: { state: "available", horizonDays: 14 },
+      meta: { ...meta, status: "predictive" },
+      warnings: [],
+    });
+    mock.onGet("/analytics/predictions/metrics").reply(200, {
+      statusCode: 200,
+      message: "ok",
+      data: { state: "available", horizons: [] },
+      meta: { ...meta, status: "predictive" },
+      warnings: [],
+    });
+
+    await getAnalyticsTrends({
+      dateRangeId: "departure-2",
+      granularity: "week",
+    });
+    await getAnalyticsPrediction("departure-2", 14);
+    await getAnalyticsPredictionMetrics();
+
+    expect(mock.history.get[0].params).toEqual({
+      dateRangeId: "departure-2",
+      granularity: "week",
+    });
+    expect(mock.history.get[1].params).toEqual({ horizonDays: 14 });
+    expect(mock.history.get[2].params).toEqual({});
   });
 });
