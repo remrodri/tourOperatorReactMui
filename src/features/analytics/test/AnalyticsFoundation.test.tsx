@@ -176,7 +176,7 @@ describe("AnalyticsFoundation T-816", () => {
 
     expect(screen.getByRole("heading", { name: "Planificación analítica" })).toBeInTheDocument();
     expect(screen.queryByText("DATOS SIMULADOS")).not.toBeInTheDocument();
-    expect(screen.getByText("Turistas vigentes")).toBeInTheDocument();
+    expect(screen.getByText("Turistas confirmados")).toBeInTheDocument();
     expect(screen.getAllByText("5").length).toBeGreaterThan(0);
     expect(screen.getByText("Uyuni cultural")).toBeInTheDocument();
     expect(screen.getByText("Salar de Uyuni")).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe("AnalyticsFoundation T-816", () => {
     render(<AnalyticsFoundation />);
     await waitFor(() => expect(fetchSummary).toHaveBeenCalledTimes(1));
 
-    fireEvent.change(screen.getByLabelText("Desde"), {
+    fireEvent.change(screen.getByLabelText("Salida desde"), {
       target: { value: "2026-11-01" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
@@ -203,7 +203,7 @@ describe("AnalyticsFoundation T-816", () => {
     ).toBeInTheDocument();
     expect(fetchSummary).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(screen.getByLabelText("Hasta"), {
+    fireEvent.change(screen.getByLabelText("Salida hasta"), {
       target: { value: "2026-11-30" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
@@ -217,6 +217,80 @@ describe("AnalyticsFoundation T-816", () => {
       to: "2026-11-30",
       limit: 100,
     });
+  });
+
+  it("filters destination, package and departure in sequence and clears lower selections", async () => {
+    vi.mocked(useAnalytics).mockReturnValue(
+      contextValue({
+        filterCatalog: {
+          data: {
+            destinations: [
+              { id: "destination-1", name: "Salar de Uyuni" },
+              { id: "destination-2", name: "Incachaca" },
+            ],
+            packages: [
+              { id: "package-1", name: "Uyuni cultural" },
+              { id: "package-2", name: "Incachaca Full Day" },
+            ],
+            departures: [
+              {
+                id: "departure-1",
+                startDate: "2026-11-28T00:00:00.000Z",
+                tourPackage: { id: "package-1", name: "Uyuni cultural" },
+                destination: { id: "destination-1", name: "Salar de Uyuni" },
+              },
+              {
+                id: "departure-2",
+                startDate: "2026-12-11T00:00:00.000Z",
+                tourPackage: { id: "package-2", name: "Incachaca Full Day" },
+                destination: { id: "destination-2", name: "Incachaca" },
+              },
+            ],
+          },
+          loading: false,
+          error: null,
+        },
+      }),
+    );
+
+    render(<AnalyticsFoundation />);
+
+    expect(screen.getByLabelText("Paquete turístico")).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+    expect(screen.getByLabelText("Salida")).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+
+    fireEvent.mouseDown(screen.getByRole("combobox", { name: "Destino" }));
+    fireEvent.click(screen.getByRole("option", { name: "Incachaca" }));
+
+    expect(screen.getByLabelText("Paquete turístico")).not.toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+    fireEvent.mouseDown(screen.getByLabelText("Paquete turístico"));
+    expect(screen.getByRole("option", { name: "Incachaca Full Day" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Uyuni cultural" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("option", { name: "Incachaca Full Day" }));
+
+    expect(screen.getByLabelText("Salida")).not.toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+    fireEvent.mouseDown(screen.getByLabelText("Salida"));
+    const incachacaDeparture = screen.getByRole("option", {
+      name: /11 dic 2026.*Incachaca Full Day/i,
+    });
+    expect(incachacaDeparture).toBeInTheDocument();
+    fireEvent.click(incachacaDeparture);
+
+    fireEvent.mouseDown(screen.getByRole("combobox", { name: "Destino" }));
+    fireEvent.click(screen.getByRole("option", { name: "Salar de Uyuni" }));
+    expect(screen.getByRole("combobox", { name: "Paquete turístico" })).not.toHaveTextContent("Incachaca Full Day");
+    expect(screen.getByRole("combobox", { name: "Salida" })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("shows an explicit empty state for filters without results", () => {
@@ -240,7 +314,7 @@ describe("AnalyticsFoundation T-816", () => {
     render(<AnalyticsFoundation />);
 
     expect(screen.getByText("Sin resultados para los filtros")).toBeInTheDocument();
-    expect(screen.getByText(/No se inventaron valores/)).toBeInTheDocument();
+    expect(screen.getByText("Ajusta o limpia los filtros para consultar otras salidas.")).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
@@ -252,7 +326,8 @@ describe("AnalyticsFoundation T-816", () => {
     );
     render(<AnalyticsFoundation />);
 
-    expect(screen.getByText("Resumen no disponible")).toBeInTheDocument();
+    expect(screen.getByText("No pudimos actualizar la información")).toBeInTheDocument();
+    expect(screen.queryByText("Resumen no disponible")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Reintentar" }));
     expect(fetchSummary).toHaveBeenLastCalledWith({});
     expect(fetchDepartures).toHaveBeenLastCalledWith({ limit: 100 });

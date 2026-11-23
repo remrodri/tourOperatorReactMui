@@ -26,24 +26,19 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useAnalytics } from "../context/AnalyticsContext";
 import AnalyticsDepartureDetail from "./AnalyticsDepartureDetail";
+import {
+  analyticsCurrencyFormat,
+  analyticsMetricHelp,
+  analyticsNumberFormat,
+  formatAnalyticsDate,
+  formatAnalyticsPercent,
+  presentAnalyticsWarning,
+} from "../utils/analyticsPresentation";
 import type {
   AnalyticsDeparture,
   AnalyticsFilters,
   AnalyticsSummary,
 } from "../types/AnalyticsTypes";
-
-const numberFormat = new Intl.NumberFormat("es-BO", { maximumFractionDigits: 2 });
-const currencyFormat = new Intl.NumberFormat("es-BO", {
-  style: "currency",
-  currency: "BOB",
-  maximumFractionDigits: 2,
-});
-const dateFormat = new Intl.DateTimeFormat("es-BO", {
-  year: "numeric",
-  month: "short",
-  day: "2-digit",
-  timeZone: "UTC",
-});
 
 interface FilterForm {
   from: string;
@@ -69,16 +64,10 @@ const toApiFilters = (filters: FilterForm): AnalyticsFilters => ({
   ...(filters.dateRangeId ? { dateRangeId: filters.dateRangeId } : {}),
 });
 
-const formatDate = (value: string | null) =>
-  value ? dateFormat.format(new Date(value)) : "Fecha no disponible";
-
-const formatPercent = (value: number | null) =>
-  value === null ? "No calculable" : `${numberFormat.format(value)} %`;
-
 const statusLabel = (status: AnalyticsDeparture["capacityStatus"]) => {
-  if (status === "invalid") return "Capacidad inválida";
-  if (status === "overcapacity") return "Sobrecapacidad";
-  return "Capacidad válida";
+  if (status === "invalid") return "Falta registrar la capacidad";
+  if (status === "overcapacity") return "Turistas por encima de la capacidad";
+  return "Ocupación disponible";
 };
 
 interface MetricCardProps {
@@ -102,8 +91,8 @@ const MetricCard = ({ label, value, helper, status = "default" }: MetricCardProp
       <Typography variant="body2" sx={{ opacity: 0.78 }}>
         {label}
       </Typography>
-      <Tooltip title={helper} arrow>
-        <InfoOutlinedIcon fontSize="small" aria-label={`Fórmula de ${label}`} />
+      <Tooltip title={helper} arrow enterTouchDelay={0} leaveTouchDelay={5000}>
+        <InfoOutlinedIcon fontSize="small" tabIndex={0} aria-label={`¿Qué significa ${label}?`} />
       </Tooltip>
     </Stack>
     <Typography variant="h5" component="p" sx={{ mt: 1, fontWeight: 700 }}>
@@ -130,8 +119,8 @@ const SummarySkeleton = () => (
 const SummaryCards = ({ summary }: { summary: AnalyticsSummary }) => {
   const capacityHelper =
     summary.capacityStatus === "valid"
-      ? `${numberFormat.format(summary.tourists)} turistas / ${numberFormat.format(summary.capacity ?? 0)} cupos × 100`
-      : "No se calcula porque una o más salidas no tienen capacidad válida.";
+      ? analyticsMetricHelp.occupancy
+      : "No se puede calcular porque una o más salidas no tienen una capacidad mayor que cero. Revisa la capacidad registrada.";
 
   return (
     <Box
@@ -141,14 +130,14 @@ const SummaryCards = ({ summary }: { summary: AnalyticsSummary }) => {
         gap: 1.5,
       }}
     >
-      <MetricCard label="Turistas vigentes" value={numberFormat.format(summary.tourists)} helper="Suma de turistas en reservas no canceladas." />
-      <MetricCard label="Reservas vigentes" value={numberFormat.format(summary.bookings)} helper="Cantidad de reservas incluidas; se excluyen las canceladas." />
-      <MetricCard label="Tamaño medio de grupo" value={summary.averageGroupSize === null ? "Sin reservas" : `${numberFormat.format(summary.averageGroupSize)} turistas/reserva`} helper="Turistas vigentes divididos entre reservas vigentes." />
-      <MetricCard label="Ocupación confirmada" value={formatPercent(summary.occupancy)} helper={capacityHelper} status={summary.capacityStatus === "valid" ? "default" : "warning"} />
-      <MetricCard label="Ingreso reservado" value={currencyFormat.format(summary.reservedRevenue)} helper="Suma del precio de reservas incluidas. No representa utilidad ni rentabilidad." />
-      <MetricCard label="Pagos registrados" value={currencyFormat.format(summary.registeredPayments)} helper="Suma de pagos válidos registrados para las reservas incluidas." />
-      <MetricCard label="Saldo pendiente" value={currencyFormat.format(summary.pendingBalance)} helper="Ingreso reservado menos pagos registrados, sin mostrar saldos negativos." status={summary.pendingBalanceStatus === "overpaid" ? "warning" : "default"} />
-      <MetricCard label="Cupos disponibles" value={summary.availableSlots === null ? "No calculable" : numberFormat.format(summary.availableSlots)} helper="Capacidad válida menos turistas vigentes, con mínimo cero." status={summary.availableSlots === null ? "warning" : "default"} />
+      <MetricCard label="Turistas confirmados" value={analyticsNumberFormat.format(summary.tourists)} helper={analyticsMetricHelp.tourists} />
+      <MetricCard label="Reservas vigentes" value={analyticsNumberFormat.format(summary.bookings)} helper={analyticsMetricHelp.bookings} />
+      <MetricCard label="Personas por reserva" value={summary.averageGroupSize === null ? "Sin reservas" : `${analyticsNumberFormat.format(summary.averageGroupSize)} personas`} helper={analyticsMetricHelp.averageGroupSize} />
+      <MetricCard label="Ocupación confirmada" value={formatAnalyticsPercent(summary.occupancy)} helper={capacityHelper} status={summary.capacityStatus === "valid" ? "default" : "warning"} />
+      <MetricCard label="Importe reservado" value={analyticsCurrencyFormat.format(summary.reservedRevenue)} helper={analyticsMetricHelp.reservedRevenue} />
+      <MetricCard label="Pagos registrados" value={analyticsCurrencyFormat.format(summary.registeredPayments)} helper={analyticsMetricHelp.registeredPayments} />
+      <MetricCard label="Saldo pendiente" value={analyticsCurrencyFormat.format(summary.pendingBalance)} helper={analyticsMetricHelp.pendingBalance} status={summary.pendingBalanceStatus === "overpaid" ? "warning" : "default"} />
+      <MetricCard label="Cupos disponibles" value={summary.availableSlots === null ? "Falta información" : analyticsNumberFormat.format(summary.availableSlots)} helper={analyticsMetricHelp.availableSlots} status={summary.availableSlots === null ? "warning" : "default"} />
     </Box>
   );
 };
@@ -181,9 +170,46 @@ const AnalyticsFoundation: React.FC = () => {
     () => departures.data?.data.items ?? [],
     [departures.data],
   );
-  const packageOptions = filterCatalog.data?.packages ?? [];
-  const destinationOptions = filterCatalog.data?.destinations ?? [];
-  const departureOptions = filterCatalog.data?.departures ?? [];
+  const catalogDepartures = useMemo(
+    () => filterCatalog.data?.departures ?? [],
+    [filterCatalog.data],
+  );
+  const departuresInDraftPeriod = useMemo(() => {
+    if (!draftFilters.from || !draftFilters.to) return catalogDepartures;
+    return catalogDepartures.filter((item) => {
+      if (!item.startDate) return false;
+      const date = item.startDate.slice(0, 10);
+      return date >= draftFilters.from && date <= draftFilters.to;
+    });
+  }, [catalogDepartures, draftFilters.from, draftFilters.to]);
+  const destinationOptions = useMemo(() => {
+    const availableIds = new Set(
+      departuresInDraftPeriod.map((item) => item.destination?.id).filter(Boolean),
+    );
+    return (filterCatalog.data?.destinations ?? []).filter((item) =>
+      availableIds.has(item.id),
+    );
+  }, [departuresInDraftPeriod, filterCatalog.data]);
+  const packageOptions = useMemo(() => {
+    if (!draftFilters.destinationId) return [];
+    const availableIds = new Set(
+      departuresInDraftPeriod
+        .filter((item) => item.destination?.id === draftFilters.destinationId)
+        .map((item) => item.tourPackage?.id)
+        .filter(Boolean),
+    );
+    return (filterCatalog.data?.packages ?? []).filter((item) =>
+      availableIds.has(item.id),
+    );
+  }, [departuresInDraftPeriod, draftFilters.destinationId, filterCatalog.data]);
+  const departureOptions = useMemo(() => {
+    if (!draftFilters.destinationId || !draftFilters.tourPackageId) return [];
+    return departuresInDraftPeriod.filter(
+      (item) =>
+        item.destination?.id === draftFilters.destinationId &&
+        item.tourPackage?.id === draftFilters.tourPackageId,
+    );
+  }, [departuresInDraftPeriod, draftFilters.destinationId, draftFilters.tourPackageId]);
 
   const activeFilterEntries = useMemo(
     () => Object.entries(appliedFilters).filter(([, value]) => value !== ""),
@@ -194,13 +220,13 @@ const AnalyticsFoundation: React.FC = () => {
     if (key === "from") return `Desde: ${value}`;
     if (key === "to") return `Hasta: ${value}`;
     if (key === "tourPackageId") {
-      return `Paquete: ${packageOptions.find((item) => item.id === value)?.name ?? value}`;
+      return `Paquete: ${filterCatalog.data?.packages.find((item) => item.id === value)?.name ?? "Nombre no disponible"}`;
     }
     if (key === "destinationId") {
-      return `Destino: ${destinationOptions.find((item) => item.id === value)?.name ?? value}`;
+      return `Destino: ${filterCatalog.data?.destinations.find((item) => item.id === value)?.name ?? "Nombre no disponible"}`;
     }
-    const departure = departureOptions.find((item) => item.id === value);
-    return `Salida: ${departure ? formatDate(departure.startDate) : value}`;
+    const departure = catalogDepartures.find((item) => item.id === value);
+    return `Salida: ${departure ? formatAnalyticsDate(departure.startDate) : "Nombre no disponible"}`;
   };
 
   const requestData = (filters: FilterForm) => {
@@ -230,6 +256,60 @@ const AnalyticsFoundation: React.FC = () => {
     requestData(emptyFilters);
   };
 
+  const selectDestination = (value: string) => {
+    setDraftFilters((current) => ({
+      ...current,
+      destinationId: value,
+      tourPackageId: "",
+      dateRangeId: "",
+    }));
+  };
+
+  const selectPackage = (value: string) => {
+    setDraftFilters((current) => ({
+      ...current,
+      tourPackageId: value,
+      dateRangeId: "",
+    }));
+  };
+
+  const updatePeriod = (field: "from" | "to", value: string) => {
+    setDraftFilters((current) => {
+      const next = { ...current, [field]: value };
+      if (!next.from || !next.to) return next;
+      const compatibleDepartures = catalogDepartures.filter((item) => {
+        if (!item.startDate) return false;
+        const date = item.startDate.slice(0, 10);
+        return date >= next.from && date <= next.to;
+      });
+      if (
+        next.destinationId &&
+        !compatibleDepartures.some(
+          (item) => item.destination?.id === next.destinationId,
+        )
+      ) {
+        return { ...next, destinationId: "", tourPackageId: "", dateRangeId: "" };
+      }
+      if (
+        next.tourPackageId &&
+        !compatibleDepartures.some(
+          (item) =>
+            item.destination?.id === next.destinationId &&
+            item.tourPackage?.id === next.tourPackageId,
+        )
+      ) {
+        return { ...next, tourPackageId: "", dateRangeId: "" };
+      }
+      if (
+        next.dateRangeId &&
+        !compatibleDepartures.some((item) => item.id === next.dateRangeId)
+      ) {
+        return { ...next, dateRangeId: "" };
+      }
+      return next;
+    });
+  };
+
   if (loading && !overview) {
     return (
       <Box sx={{ height: "calc(100dvh - 6.7rem)", display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
@@ -255,7 +335,8 @@ const AnalyticsFoundation: React.FC = () => {
   const summaryData = summary.data?.data.summary;
   const departureItems = currentDepartureItems;
   const warnings = [...new Set([...(summary.data?.warnings ?? []), ...(departures.data?.warnings ?? [])])]
-    .filter((warning) => !/simulad|fictici/i.test(warning));
+    .map(presentAnalyticsWarning)
+    .filter((warning) => warning !== null);
   const isEmpty = Boolean(summaryData && summaryData.departures === 0);
 
   return (
@@ -264,7 +345,7 @@ const AnalyticsFoundation: React.FC = () => {
         <Box>
           <Typography variant="h4" component="h1">Planificación analítica</Typography>
           <Typography variant="body1" sx={{ opacity: 0.8 }}>
-            Resumen descriptivo para apoyar decisiones sobre salidas turísticas.
+            Consulta reservas, ocupación y disponibilidad para apoyar la planificación de salidas turísticas. El módulo informa y orienta; la decisión final corresponde a la persona responsable.
           </Typography>
         </Box>
         <Stack direction="row" spacing={1} alignItems="center">
@@ -277,36 +358,50 @@ const AnalyticsFoundation: React.FC = () => {
       </Stack>
 
       <Paper variant="outlined" component="section" aria-labelledby="analytics-filters-title" sx={{ p: 2, mb: 2, backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
-        <Typography id="analytics-filters-title" variant="h6" sx={{ mb: 1.5 }}>Filtros por fecha de salida</Typography>
+        <Typography id="analytics-filters-title" variant="h6">Selecciona las salidas que deseas analizar</Typography>
+        <Typography variant="body2" sx={{ mb: 1.5, opacity: 0.75 }}>
+          El periodo limita los destinos disponibles; después selecciona destino, paquete turístico y salida.
+        </Typography>
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", xl: "repeat(5, 1fr)" }, gap: 1.5 }}>
-          <TextField label="Desde" type="date" value={draftFilters.from} onChange={(event) => setDraftFilters((current) => ({ ...current, from: event.target.value }))} slotProps={{ inputLabel: { shrink: true } }} />
-          <TextField label="Hasta" type="date" value={draftFilters.to} onChange={(event) => setDraftFilters((current) => ({ ...current, to: event.target.value }))} slotProps={{ inputLabel: { shrink: true } }} />
-          <FormControl>
-            <InputLabel id="package-filter-label">Paquete</InputLabel>
-            <Select labelId="package-filter-label" label="Paquete" value={draftFilters.tourPackageId} onChange={(event) => setDraftFilters((current) => ({ ...current, tourPackageId: event.target.value }))}>
-              <MenuItem value="">Todos</MenuItem>
-              {packageOptions.map((item) => <MenuItem key={item.id} value={item.id}>{item.name ?? item.id}</MenuItem>)}
-            </Select>
-          </FormControl>
+          <TextField label="Salida desde" type="date" value={draftFilters.from} onChange={(event) => updatePeriod("from", event.target.value)} slotProps={{ inputLabel: { shrink: true } }} />
+          <TextField label="Salida hasta" type="date" value={draftFilters.to} onChange={(event) => updatePeriod("to", event.target.value)} slotProps={{ inputLabel: { shrink: true } }} />
           <FormControl>
             <InputLabel id="destination-filter-label">Destino</InputLabel>
-            <Select labelId="destination-filter-label" label="Destino" value={draftFilters.destinationId} onChange={(event) => setDraftFilters((current) => ({ ...current, destinationId: event.target.value }))}>
+            <Select labelId="destination-filter-label" label="Destino" value={draftFilters.destinationId} onChange={(event) => selectDestination(event.target.value)}>
               <MenuItem value="">Todos</MenuItem>
-              {destinationOptions.map((item) => <MenuItem key={item.id} value={item.id}>{item.name ?? item.id}</MenuItem>)}
+              {destinationOptions.map((item) => <MenuItem key={item.id} value={item.id}>{item.name ?? "Nombre no disponible"}</MenuItem>)}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl disabled={!draftFilters.destinationId}>
+            <InputLabel id="package-filter-label">Paquete turístico</InputLabel>
+            <Select labelId="package-filter-label" label="Paquete turístico" value={draftFilters.tourPackageId} onChange={(event) => selectPackage(event.target.value)}>
+              <MenuItem value="">Todos los paquetes del destino</MenuItem>
+              {packageOptions.map((item) => <MenuItem key={item.id} value={item.id}>{item.name ?? "Nombre no disponible"}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <FormControl disabled={!draftFilters.tourPackageId}>
             <InputLabel id="departure-filter-label">Salida</InputLabel>
             <Select labelId="departure-filter-label" label="Salida" value={draftFilters.dateRangeId} onChange={(event) => setDraftFilters((current) => ({ ...current, dateRangeId: event.target.value }))}>
-              <MenuItem value="">Todas</MenuItem>
+              <MenuItem value="">Todas las salidas del paquete</MenuItem>
               {departureOptions.map((item) => (
                 <MenuItem key={item.id} value={item.id}>
-                  {formatDate(item.startDate)} · {item.tourPackage?.name ?? "Sin paquete"}
+                  {formatAnalyticsDate(item.startDate)} · {item.tourPackage?.name ?? "Nombre no disponible"}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Box>
+        {!draftFilters.destinationId && (
+          <Typography variant="caption" sx={{ display: "block", mt: 1 }}>
+            Primero selecciona un destino para habilitar los paquetes turísticos.
+          </Typography>
+        )}
+        {draftFilters.destinationId && packageOptions.length === 0 && (
+          <Alert severity="info" sx={{ mt: 1.5 }}>No hay paquetes turísticos disponibles para este destino y periodo.</Alert>
+        )}
+        {draftFilters.tourPackageId && departureOptions.length === 0 && (
+          <Alert severity="info" sx={{ mt: 1.5 }}>Este paquete no tiene salidas disponibles en el periodo seleccionado.</Alert>
+        )}
         {filterError && <Alert severity="warning" sx={{ mt: 1.5 }}>{filterError}</Alert>}
         <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" spacing={1} sx={{ mt: 1.5 }}>
           <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" aria-label="Filtros activos">
@@ -321,8 +416,8 @@ const AnalyticsFoundation: React.FC = () => {
 
       {(summary.error || departures.error || filterCatalog.error) && (
         <Alert severity="error" sx={{ mb: 2 }} action={<Button color="inherit" size="small" onClick={() => { requestData(appliedFilters); void fetchFilterCatalog(); }}>Reintentar</Button>}>
-          <AlertTitle>No se pudo actualizar el resumen</AlertTitle>
-          {summary.error ?? departures.error ?? filterCatalog.error}
+          <AlertTitle>No pudimos actualizar la información</AlertTitle>
+          La consulta no se completó. Revisa tu conexión o inténtalo nuevamente.
         </Alert>
       )}
 
@@ -341,14 +436,14 @@ const AnalyticsFoundation: React.FC = () => {
       {isEmpty ? (
         <Alert severity="info" sx={{ mb: 2 }}>
           <AlertTitle>Sin resultados para los filtros</AlertTitle>
-          Ajusta o limpia los filtros para consultar otras salidas. No se inventaron valores para este periodo.
+          Ajusta o limpia los filtros para consultar otras salidas.
         </Alert>
       ) : (
         <Paper variant="outlined" component="section" aria-labelledby="analytics-departures-title" sx={{ mb: 2, overflow: "hidden", backgroundColor: "rgba(255, 255, 255, 0.04)" }}>
           <Box sx={{ p: 2, pb: 1 }}>
             <Typography id="analytics-departures-title" variant="h6">Salidas incluidas</Typography>
             <Typography variant="caption" sx={{ opacity: 0.75 }}>
-              Primeras {departureItems.length} salidas agregadas; los indicadores se calculan en el backend.
+              Se muestran {departureItems.length} salidas de la selección actual. Los indicadores superiores consideran todo el resultado filtrado.
             </Typography>
           </Box>
           {departures.loading && departureItems.length === 0 ? (
@@ -370,14 +465,14 @@ const AnalyticsFoundation: React.FC = () => {
                 <TableBody>
                   {departureItems.map((item) => (
                     <TableRow hover key={item.id}>
-                      <TableCell>{formatDate(item.startDate)}</TableCell>
+                      <TableCell>{formatAnalyticsDate(item.startDate)}</TableCell>
                       <TableCell>
                         <Typography variant="body2">{item.tourPackage?.name ?? "Sin paquete"}</Typography>
                         <Typography variant="caption" sx={{ opacity: 0.7 }}>{item.destination?.name ?? "Sin destino"}</Typography>
                       </TableCell>
-                      <TableCell align="right">{numberFormat.format(item.tourists)}</TableCell>
-                      <TableCell align="right">{item.capacity === null ? "—" : numberFormat.format(item.capacity)}</TableCell>
-                      <TableCell align="right">{formatPercent(item.occupancy)}</TableCell>
+                      <TableCell align="right">{analyticsNumberFormat.format(item.tourists)}</TableCell>
+                      <TableCell align="right">{item.capacity === null ? "Falta información" : analyticsNumberFormat.format(item.capacity)}</TableCell>
+                      <TableCell align="right">{formatAnalyticsPercent(item.occupancy)}</TableCell>
                       <TableCell>
                         <Chip size="small" color={item.capacityStatus === "valid" ? "success" : "warning"} label={statusLabel(item.capacityStatus)} />
                       </TableCell>
@@ -386,7 +481,7 @@ const AnalyticsFoundation: React.FC = () => {
                           size="small"
                           variant={selectedDepartureId === item.id ? "contained" : "outlined"}
                           onClick={() => setSelectedDepartureId(item.id)}
-                          aria-label={`Ver detalle de ${item.tourPackage?.name ?? "la salida"} del ${formatDate(item.startDate)}`}
+                          aria-label={`Ver detalle de ${item.tourPackage?.name ?? "la salida"} del ${formatAnalyticsDate(item.startDate)}`}
                         >
                           Ver detalle
                         </Button>
@@ -401,12 +496,15 @@ const AnalyticsFoundation: React.FC = () => {
       )}
 
       {warnings.length > 0 && (
-        <Alert severity="warning">
-          <AlertTitle>Advertencias y alcance</AlertTitle>
-          <Stack component="ul" spacing={0.5} sx={{ m: 0, pl: 2.5 }}>
-            {warnings.map((warning) => <Typography component="li" variant="body2" key={warning}>{warning}</Typography>)}
-          </Stack>
-        </Alert>
+        <Stack spacing={1}>
+          {warnings.map((warning) => (
+            <Alert severity={warning.severity} key={`${warning.title}-${warning.description}`}>
+              <AlertTitle>{warning.title}</AlertTitle>
+              {warning.description}
+              {warning.action && <Typography variant="body2" sx={{ mt: 0.5 }}>{warning.action}</Typography>}
+            </Alert>
+          ))}
+        </Stack>
       )}
     </Box>
   );
