@@ -13,6 +13,7 @@ import {
   getAnalyticsDeparture,
   getAnalyticsDepartures,
   getAnalyticsErrorMessage,
+  getAnalyticsFilterCatalog,
   getAnalyticsOverview,
   getAnalyticsPrediction,
   getAnalyticsPredictionMetrics,
@@ -24,6 +25,7 @@ import type {
   AnalyticsDeparturesQuery,
   AnalyticsDeparturesResource,
   AnalyticsFilters,
+  AnalyticsFilterCatalog,
   AnalyticsOverview,
   AnalyticsPredictionHorizon,
   AnalyticsPredictionMetricsResource,
@@ -39,6 +41,7 @@ type ResourceKey =
   | "summary"
   | "departures"
   | "departure"
+  | "filterCatalog"
   | "trends"
   | "prediction"
   | "predictionMetrics";
@@ -56,6 +59,7 @@ export interface AnalyticsContextType {
   summary: AnalyticsResourceState<AnalyticsSummaryResource>;
   departures: AnalyticsResourceState<AnalyticsDeparturesResource>;
   departure: AnalyticsResourceState<AnalyticsDepartureResource>;
+  filterCatalog: AnalyticsResourceState<AnalyticsFilterCatalog>;
   trends: AnalyticsResourceState<AnalyticsTrendsResource>;
   prediction: AnalyticsResourceState<AnalyticsPredictionResource>;
   predictionMetrics: AnalyticsResourceState<AnalyticsPredictionMetricsResource>;
@@ -63,6 +67,7 @@ export interface AnalyticsContextType {
   fetchSummary: (filters?: AnalyticsFilters) => Promise<void>;
   fetchDepartures: (query?: AnalyticsDeparturesQuery) => Promise<void>;
   fetchDeparture: (id: string, filters?: AnalyticsFilters) => Promise<void>;
+  fetchFilterCatalog: () => Promise<void>;
   fetchTrends: (query: AnalyticsTrendsQuery) => Promise<void>;
   fetchPrediction: (
     id: string,
@@ -88,6 +93,9 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [summary, setSummary] = useState(emptyResource<AnalyticsSummaryResource>);
   const [departures, setDepartures] = useState(emptyResource<AnalyticsDeparturesResource>);
   const [departure, setDeparture] = useState(emptyResource<AnalyticsDepartureResource>);
+  const [filterCatalog, setFilterCatalog] = useState(
+    emptyResource<AnalyticsFilterCatalog>,
+  );
   const [trends, setTrends] = useState(emptyResource<AnalyticsTrendsResource>);
   const [prediction, setPrediction] = useState(emptyResource<AnalyticsPredictionResource>);
   const [predictionMetrics, setPredictionMetrics] = useState(
@@ -98,6 +106,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
     summary: 0,
     departures: 0,
     departure: 0,
+    filterCatalog: 0,
     trends: 0,
     prediction: 0,
     predictionMetrics: 0,
@@ -163,6 +172,17 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
     [fetchResource],
   );
 
+  const fetchFilterCatalog = useCallback(
+    () =>
+      fetchResource(
+        "filterCatalog",
+        setFilterCatalog,
+        getAnalyticsFilterCatalog,
+        "No se pudieron cargar las opciones de filtros",
+      ),
+    [fetchResource],
+  );
+
   const fetchTrends = useCallback(
     (query: AnalyticsTrendsQuery) =>
       fetchResource("trends", setTrends, () => getAnalyticsTrends(query), "No se pudieron cargar las tendencias"),
@@ -200,6 +220,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
         summary,
         departures,
         departure,
+        filterCatalog,
         trends,
         prediction,
         predictionMetrics,
@@ -207,6 +228,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
         fetchSummary,
         fetchDepartures,
         fetchDeparture,
+        fetchFilterCatalog,
         fetchTrends,
         fetchPrediction,
         fetchPredictionMetrics,

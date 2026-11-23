@@ -141,6 +141,17 @@ export interface AnalyticsDeparturePagination {
   nextCursor: string | null;
 }
 
+export interface AnalyticsFilterCatalog {
+  packages: AnalyticsDepartureReference[];
+  destinations: AnalyticsDepartureReference[];
+  departures: Array<
+    Pick<
+      AnalyticsDeparture,
+      "id" | "startDate" | "tourPackage" | "destination"
+    >
+  >;
+}
+
 export type AnalyticsSummaryResource = AnalyticsResource<{ summary: AnalyticsSummary }, AnalyticsMeta>;
 export type AnalyticsDeparturesResource = AnalyticsResource<{
   items: AnalyticsDeparture[];

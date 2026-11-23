@@ -5,6 +5,7 @@ import {
   getAnalyticsDeparture,
   getAnalyticsDepartures,
   getAnalyticsErrorMessage,
+  getAnalyticsFilterCatalog,
   getAnalyticsOverview,
   getAnalyticsPrediction,
   getAnalyticsPredictionMetrics,
@@ -196,5 +197,55 @@ describe("analytics service", () => {
     });
     expect(mock.history.get[1].params).toEqual({ horizonDays: 14 });
     expect(mock.history.get[2].params).toEqual({});
+  });
+
+  it("builds complete filter options across departure pages", async () => {
+    mock.onGet("/analytics/departures").reply((config) => {
+      const secondPage = config.params?.cursor === "next-page";
+      return [
+        200,
+        {
+          statusCode: 200,
+          message: "ok",
+          data: {
+            items: [
+              {
+                id: secondPage ? "departure-2" : "departure-1",
+                startDate: secondPage ? "2026-12-01" : "2026-11-01",
+                tourPackage: {
+                  id: secondPage ? "package-2" : "package-1",
+                  name: secondPage ? "Potosí" : "Uyuni",
+                },
+                destination: {
+                  id: secondPage ? "destination-2" : "destination-1",
+                  name: secondPage ? "Potosí" : "Salar de Uyuni",
+                },
+              },
+            ],
+            pagination: {
+              limit: 100,
+              hasMore: !secondPage,
+              nextCursor: secondPage ? null : "next-page",
+            },
+          },
+          meta,
+          warnings: [],
+        },
+      ];
+    });
+
+    const catalog = await getAnalyticsFilterCatalog();
+
+    expect(mock.history.get).toHaveLength(2);
+    expect(mock.history.get[1].params).toEqual({
+      limit: 100,
+      cursor: "next-page",
+    });
+    expect(catalog.departures.map(({ id }) => id)).toEqual([
+      "departure-1",
+      "departure-2",
+    ]);
+    expect(catalog.packages.map(({ name }) => name)).toEqual(["Potosí", "Uyuni"]);
+    expect(catalog.destinations).toHaveLength(2);
   });
 });

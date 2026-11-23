@@ -7,6 +7,7 @@ import type {
   AnalyticsDeparturesQuery,
   AnalyticsDeparturesResource,
   AnalyticsFilters,
+  AnalyticsFilterCatalog,
   AnalyticsFoundationEnvelope,
   AnalyticsMeta,
   AnalyticsOverview,
@@ -95,6 +96,48 @@ export const getAnalyticsDepartures = (
     "/analytics/departures",
     query,
   );
+
+export const getAnalyticsFilterCatalog = async (): Promise<AnalyticsFilterCatalog> => {
+  const packages = new Map<string, AnalyticsFilterCatalog["packages"][number]>();
+  const destinations = new Map<
+    string,
+    AnalyticsFilterCatalog["destinations"][number]
+  >();
+  const departures: AnalyticsFilterCatalog["departures"] = [];
+  let cursor: string | undefined;
+
+  for (let page = 0; page < 20; page += 1) {
+    const response = await getAnalyticsDepartures({
+      limit: 100,
+      ...(cursor ? { cursor } : {}),
+    });
+    response.data.items.forEach((item) => {
+      if (item.tourPackage) packages.set(item.tourPackage.id, item.tourPackage);
+      if (item.destination) destinations.set(item.destination.id, item.destination);
+      departures.push({
+        id: item.id,
+        startDate: item.startDate,
+        tourPackage: item.tourPackage,
+        destination: item.destination,
+      });
+    });
+    cursor = response.data.pagination.nextCursor ?? undefined;
+    if (!response.data.pagination.hasMore) {
+      return {
+        packages: [...packages.values()].sort((a, b) =>
+          (a.name ?? a.id).localeCompare(b.name ?? b.id),
+        ),
+        destinations: [...destinations.values()].sort((a, b) =>
+          (a.name ?? a.id).localeCompare(b.name ?? b.id),
+        ),
+        departures,
+      };
+    }
+    if (!cursor) break;
+  }
+
+  throw new Error("El catálogo analítico excede el límite seguro de paginación");
+};
 
 export const getAnalyticsDeparture = (
   departureId: string,
