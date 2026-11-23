@@ -217,12 +217,12 @@ describe("AnalyticsDepartureDetail T-817", () => {
     render(<AnalyticsDepartureDetail departureId={departureId} onClose={vi.fn()} />);
 
     expect(screen.getByRole("heading", { name: "Uyuni 3D/2N" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: /Curva acumulada/ })).toBeInTheDocument();
-    expect(screen.getByText("Esperados finales")).toBeInTheDocument();
-    expect(screen.getByText("Rango de referencia: 21–29 turistas")).toBeInTheDocument();
-    expect(screen.getByText("Ocupación esperada: 83,33 %")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /Evolución de turistas confirmados/ })).toBeInTheDocument();
+    expect(screen.getByText("Total estimado al inicio")).toBeInTheDocument();
+    expect(screen.getByText("Margen orientativo: entre 21 y 29 turistas")).toBeInTheDocument();
+    expect(screen.getByText("Ocupación estimada: 83,33 %")).toBeInTheDocument();
     expect(
-      screen.getByLabelText("Información sobre la banda de predicción"),
+      screen.getByLabelText("¿Qué significa el margen orientativo?"),
     ).toBeInTheDocument();
 
     await waitFor(() => {
@@ -251,16 +251,16 @@ describe("AnalyticsDepartureDetail T-817", () => {
   });
 
   it.each([
-    ["insufficient-history", "Historia insuficiente"],
-    ["stale-model", "Modelo vencido"],
-    ["invalid-capacity", "Capacidad inválida"],
-    ["no-data", "Predicción no disponible"],
+    ["insufficient-history", "Aún no hay suficiente información anterior"],
+    ["stale-model", "La estimación necesita actualizarse"],
+    ["invalid-capacity", "Falta registrar una capacidad válida"],
+    ["no-data", "No se puede preparar una estimación"],
   ] as const)("shows the %s controlled state", (state, title) => {
     vi.mocked(useAnalytics).mockReturnValue(contextValue(state));
     render(<AnalyticsDepartureDetail departureId={departureId} onClose={vi.fn()} />);
 
     expect(screen.getByText(title)).toBeInTheDocument();
-    expect(screen.queryByText("Esperados finales")).not.toBeInTheDocument();
+    expect(screen.queryByText("Total estimado al inicio")).not.toBeInTheDocument();
   });
 
   it("returns to the departure list using a keyboard-accessible button", () => {
@@ -312,7 +312,8 @@ describe("AnalyticsDepartureDetail T-817", () => {
 
     render(<AnalyticsDepartureDetail departureId={departureId} onClose={vi.fn()} />);
 
-    expect(screen.getByText("Métricas no disponibles")).toBeInTheDocument();
+    expect(screen.getByText("No pudimos actualizar el detalle")).toBeInTheDocument();
+    expect(screen.queryByText("Métricas no disponibles")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Reintentar" }));
     expect(fetchPredictionMetrics).toHaveBeenCalledTimes(2);
   });
