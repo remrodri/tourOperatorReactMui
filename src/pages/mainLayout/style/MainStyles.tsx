@@ -9,7 +9,7 @@ export interface AppBarStyle {
   drawerBoxShadow: string;
 }
 
-export const appBarStyles:AppBarStyle[] = [
+export const appBarStyles: AppBarStyle[] = [
   {
     background: "rgba(176, 143, 123, 0.6)",
     borderRadius: "16px",
@@ -79,5 +79,15 @@ export const appBarStyles:AppBarStyle[] = [
     drawerBackground: "rgba(158, 118, 81, 0.6)",
     drawerBorder: "1px solid rgba(158, 118, 81, 0.7)",
     drawerBoxShadow: "0 4px 10px rgba(158, 118, 81, 0.5)",
+  },
+  {
+    background: "rgba(235, 239, 242, 0.6)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(235, 239, 242, 0.7)",
+    drawerBackground: "rgba(235, 239, 242, 0.6)",
+    drawerBorder: "1px solid rgba(235, 239, 242, 0.7)",
+    drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   },
 ];

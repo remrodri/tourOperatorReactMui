@@ -75,7 +75,9 @@ const AnalyticsPage: React.FC = () => {
       <Box sx={{ p: "10px", width: "100%" }}>
         <Box
           sx={{
+            // p: 3,
             background: style.background,
+            // background: "rgba(0, 0, 0, 0.44)",
             borderRadius: style.borderRadius,
             boxShadow: style.boxShadow,
             backdropFilter: style.backdropFilter,

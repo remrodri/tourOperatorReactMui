@@ -49,7 +49,7 @@ const MainLayout: React.FC = () => {
         setCurrentStyles(appBarStyles[3]);
       } else if (location.pathname.includes("analytics")) {
         setBackgroundImg(reportsAlternativeBackground);
-        setCurrentStyles(appBarStyles[3]);
+        setCurrentStyles(appBarStyles[7]);
       } else if (location.pathname.includes("turistas")) {
         setBackgroundImg(touristBackground);
         setCurrentStyles(appBarStyles[4]);
