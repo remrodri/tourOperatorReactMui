@@ -182,6 +182,9 @@ describe("AnalyticsFoundation T-816", () => {
     expect(screen.getAllByText("5").length).toBeGreaterThan(0);
     expect(screen.getByText("Uyuni cultural")).toBeInTheDocument();
     expect(screen.getByText("Salar de Uyuni")).toBeInTheDocument();
+    expect(screen.getByText(/Consulta generada el/)).toBeInTheDocument();
+    expect(screen.getByText("Indica cuándo se preparó la consulta, no la fecha de las salidas.")).toBeInTheDocument();
+    expect(screen.queryByText(/Actualizado/)).not.toBeInTheDocument();
     expect(screen.queryByText("Datos ficticios: registros simulados.")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Ver detalle de Uyuni cultural/ }),
@@ -197,7 +200,7 @@ describe("AnalyticsFoundation T-816", () => {
     await waitFor(() => expect(fetchSummary).toHaveBeenCalledTimes(1));
 
     fireEvent.change(screen.getByLabelText("Salida desde"), {
-      target: { value: "2026-11-01" },
+      target: { value: "01/11/2026" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
     expect(
@@ -206,7 +209,7 @@ describe("AnalyticsFoundation T-816", () => {
     expect(fetchSummary).toHaveBeenCalledTimes(1);
 
     fireEvent.change(screen.getByLabelText("Salida hasta"), {
-      target: { value: "2026-11-30" },
+      target: { value: "30/11/2026" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
 
@@ -219,6 +222,23 @@ describe("AnalyticsFoundation T-816", () => {
       to: "2026-11-30",
       limit: 100,
     });
+  });
+
+  it("explains and validates the local date format", async () => {
+    render(<AnalyticsFoundation />);
+    await waitFor(() => expect(fetchSummary).toHaveBeenCalledTimes(1));
+
+    expect(screen.getAllByText("Formato: dd/mm/aaaa")).toHaveLength(2);
+    fireEvent.change(screen.getByLabelText("Salida desde"), {
+      target: { value: "31/02/2026" },
+    });
+    fireEvent.change(screen.getByLabelText("Salida hasta"), {
+      target: { value: "30/11/2026" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
+
+    expect(screen.getByText("Escribe las fechas con el formato dd/mm/aaaa y verifica que sean válidas.")).toBeInTheDocument();
+    expect(fetchSummary).toHaveBeenCalledTimes(1);
   });
 
   it("filters destination, package and departure in sequence and clears lower selections", async () => {

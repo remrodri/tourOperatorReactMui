@@ -31,7 +31,9 @@ import {
   analyticsMetricHelp,
   analyticsNumberFormat,
   formatAnalyticsDate,
+  formatAnalyticsDateTime,
   formatAnalyticsPercent,
+  parseAnalyticsLocalDate,
   presentAnalyticsWarning,
 } from "../utils/analyticsPresentation";
 import type {
@@ -56,13 +58,17 @@ const emptyFilters: FilterForm = {
   dateRangeId: "",
 };
 
-const toApiFilters = (filters: FilterForm): AnalyticsFilters => ({
-  ...(filters.from ? { from: filters.from } : {}),
-  ...(filters.to ? { to: filters.to } : {}),
-  ...(filters.tourPackageId ? { tourPackageId: filters.tourPackageId } : {}),
-  ...(filters.destinationId ? { destinationId: filters.destinationId } : {}),
-  ...(filters.dateRangeId ? { dateRangeId: filters.dateRangeId } : {}),
-});
+const toApiFilters = (filters: FilterForm): AnalyticsFilters => {
+  const from = parseAnalyticsLocalDate(filters.from);
+  const to = parseAnalyticsLocalDate(filters.to);
+  return {
+    ...(from ? { from } : {}),
+    ...(to ? { to } : {}),
+    ...(filters.tourPackageId ? { tourPackageId: filters.tourPackageId } : {}),
+    ...(filters.destinationId ? { destinationId: filters.destinationId } : {}),
+    ...(filters.dateRangeId ? { dateRangeId: filters.dateRangeId } : {}),
+  };
+};
 
 const statusLabel = (status: AnalyticsDeparture["capacityStatus"]) => {
   if (status === "invalid") return "Falta registrar la capacidad";
@@ -243,10 +249,13 @@ const AnalyticsFoundation: React.FC = () => {
   );
   const departuresInDraftPeriod = useMemo(() => {
     if (!draftFilters.from || !draftFilters.to) return catalogDepartures;
+    const from = parseAnalyticsLocalDate(draftFilters.from);
+    const to = parseAnalyticsLocalDate(draftFilters.to);
+    if (!from || !to) return catalogDepartures;
     return catalogDepartures.filter((item) => {
       if (!item.startDate) return false;
       const date = item.startDate.slice(0, 10);
-      return date >= draftFilters.from && date <= draftFilters.to;
+      return date >= from && date <= to;
     });
   }, [catalogDepartures, draftFilters.from, draftFilters.to]);
   const destinationOptions = useMemo(() => {
@@ -315,10 +324,20 @@ const AnalyticsFoundation: React.FC = () => {
       );
       return;
     }
+    const from = draftFilters.from
+      ? parseAnalyticsLocalDate(draftFilters.from)
+      : null;
+    const to = draftFilters.to
+      ? parseAnalyticsLocalDate(draftFilters.to)
+      : null;
+    if ((draftFilters.from && !from) || (draftFilters.to && !to)) {
+      setFilterError("Escribe las fechas con el formato dd/mm/aaaa y verifica que sean válidas.");
+      return;
+    }
     if (
-      draftFilters.from &&
-      draftFilters.to &&
-      draftFilters.from > draftFilters.to
+      from &&
+      to &&
+      from > to
     ) {
       setFilterError("La fecha desde no puede ser posterior a la fecha hasta.");
       return;
@@ -356,10 +375,13 @@ const AnalyticsFoundation: React.FC = () => {
     setDraftFilters((current) => {
       const next = { ...current, [field]: value };
       if (!next.from || !next.to) return next;
+      const from = parseAnalyticsLocalDate(next.from);
+      const to = parseAnalyticsLocalDate(next.to);
+      if (!from || !to) return next;
       const compatibleDepartures = catalogDepartures.filter((item) => {
         if (!item.startDate) return false;
         const date = item.startDate.slice(0, 10);
-        return date >= next.from && date <= next.to;
+        return date >= from && date <= to;
       });
       if (
         next.destinationId &&
@@ -471,19 +493,22 @@ const AnalyticsFoundation: React.FC = () => {
             Planificación analítica
           </Typography>
           <Typography variant="body1" sx={{ opacity: 0.8 }}>
-            Consulta reservas, ocupación y disponibilidad para apoyar la
-            planificación de salidas turísticas. El módulo informa y orienta; la
-            decisión final corresponde a la persona responsable.
+            {selectedDepartureId
+              ? "Consulta el resumen y la evidencia de la salida seleccionada."
+              : "Consulta reservas, ocupación y disponibilidad para apoyar la planificación de salidas turísticas. El módulo informa y orienta; la decisión final corresponde a la persona responsable."}
           </Typography>
         </Box>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack spacing={0.25} alignItems={{ xs: "flex-start", sm: "flex-end" }}>
           {summary.data?.metadata.generatedAt && (
-            <Typography variant="caption">
-              Actualizado{" "}
-              {new Date(summary.data.metadata.generatedAt).toLocaleString(
-                "es-BO",
-              )}
-            </Typography>
+            <>
+              <Typography variant="caption">
+                Consulta generada el{" "}
+                {formatAnalyticsDateTime(summary.data.metadata.generatedAt)}
+              </Typography>
+              <Typography variant="caption" sx={{ opacity: 0.75 }}>
+                Indica cuándo se preparó la consulta, no la fecha de las salidas.
+              </Typography>
+            </>
           )}
         </Stack>
       </Stack>
@@ -530,17 +555,27 @@ const AnalyticsFoundation: React.FC = () => {
           >
             <TextField
               label="Salida desde"
-              type="date"
+              type="text"
+              placeholder="dd/mm/aaaa"
               value={draftFilters.from}
               onChange={(event) => updatePeriod("from", event.target.value)}
-              slotProps={{ inputLabel: { shrink: true } }}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { inputMode: "numeric", maxLength: 10 },
+              }}
+              helperText="Formato: dd/mm/aaaa"
             />
             <TextField
               label="Salida hasta"
-              type="date"
+              type="text"
+              placeholder="dd/mm/aaaa"
               value={draftFilters.to}
               onChange={(event) => updatePeriod("to", event.target.value)}
-              slotProps={{ inputLabel: { shrink: true } }}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { inputMode: "numeric", maxLength: 10 },
+              }}
+              helperText="Formato: dd/mm/aaaa"
             />
             <FormControl>
               <InputLabel id="destination-filter-label">Destino</InputLabel>

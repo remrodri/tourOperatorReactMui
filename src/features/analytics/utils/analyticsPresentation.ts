@@ -31,12 +31,43 @@ export const analyticsDateFormat = new Intl.DateTimeFormat("es-BO", {
   timeZone: "UTC",
 });
 
+export const analyticsDateTimeFormat = new Intl.DateTimeFormat("es-BO", {
+  year: "numeric",
+  month: "short",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: "America/La_Paz",
+});
+
 export const formatAnalyticsDate = (value: string | null | undefined) => {
   if (!value) return "Fecha no disponible";
   const date = new Date(value);
   return Number.isNaN(date.getTime())
     ? "Fecha no disponible"
     : analyticsDateFormat.format(date);
+};
+
+export const formatAnalyticsDateTime = (value: string | null | undefined) => {
+  if (!value) return "Fecha y hora no disponibles";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? "Fecha y hora no disponibles"
+    : analyticsDateTimeFormat.format(date);
+};
+
+export const parseAnalyticsLocalDate = (value: string): string | null => {
+  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return null;
+  const [, day, month, year] = match;
+  const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+  if (
+    Number.isNaN(date.getTime()) ||
+    date.getUTCFullYear() !== Number(year) ||
+    date.getUTCMonth() + 1 !== Number(month) ||
+    date.getUTCDate() !== Number(day)
+  ) return null;
+  return `${year}-${month}-${day}`;
 };
 
 export const formatAnalyticsPercent = (value: number | null | undefined) =>
@@ -48,6 +79,20 @@ export const formatAnalyticsCurrency = (value: number | null | undefined) =>
   value === null || value === undefined
     ? "No se puede calcular"
     : analyticsCurrencyFormat.format(value);
+
+export const formatSignedAnalyticsCurrency = (
+  value: number | null | undefined,
+) => {
+  if (value === null || value === undefined) return "No se puede calcular";
+  const sign = value > 0 ? "+ " : value < 0 ? "− " : "";
+  const description =
+    value > 0
+      ? "resultado favorable"
+      : value < 0
+        ? "resultado insuficiente"
+        : "punto de equilibrio";
+  return `${sign}${analyticsCurrencyFormat.format(Math.abs(value))} — ${description}`;
+};
 
 export const economicStatusPresentation: Record<
   AnalyticsEconomicStatus,

@@ -219,6 +219,8 @@ describe("AnalyticsDepartureDetail T-817", () => {
   it("shows observed trend and an available prediction", async () => {
     render(<AnalyticsDepartureDetail departureId={departureId} onClose={vi.fn()} />);
 
+    fireEvent.click(screen.getByRole("button", { name: /Demanda y estimación/ }));
+
     expect(screen.getByRole("heading", { name: "Uyuni 3D/2N" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /Evolución de turistas confirmados/ })).toBeInTheDocument();
     expect(screen.getByText("Total estimado al inicio")).toBeInTheDocument();
@@ -227,6 +229,7 @@ describe("AnalyticsDepartureDetail T-817", () => {
     expect(
       screen.getByLabelText("¿Qué significa el margen orientativo?"),
     ).toBeInTheDocument();
+    expect(screen.queryByText(/La decisión final corresponde a la persona responsable/)).not.toBeInTheDocument();
 
     await waitFor(() => {
       expect(fetchDeparture).toHaveBeenCalledWith(departureId);
@@ -241,6 +244,8 @@ describe("AnalyticsDepartureDetail T-817", () => {
 
   it("changes horizon and trend granularity through labeled controls", async () => {
     render(<AnalyticsDepartureDetail departureId={departureId} onClose={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Demanda y estimación/ }));
 
     fireEvent.click(screen.getByRole("button", { name: "30 días" }));
     fireEvent.click(screen.getByRole("button", { name: "Día" }));
@@ -274,6 +279,29 @@ describe("AnalyticsDepartureDetail T-817", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Volver a salidas" }));
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the summary visible and reveals demand and costs progressively", () => {
+    render(<AnalyticsDepartureDetail departureId={departureId} onClose={vi.fn()} />);
+
+    const demandSection = screen.getByRole("button", { name: /Demanda y estimación/ });
+    const economicSection = screen.getByRole("button", { name: /Costos y punto de equilibrio/ });
+
+    expect(demandSection).toHaveAttribute("aria-expanded", "false");
+    expect(economicSection).toHaveAttribute("aria-expanded", "false");
+    expect(demandSection.tagName).toBe("BUTTON");
+    expect(economicSection.tagName).toBe("BUTTON");
+    expect(demandSection).toHaveAttribute("aria-controls", "demand-estimation-content");
+    expect(economicSection).toHaveAttribute("aria-controls", "economic-planning-content");
+    demandSection.focus();
+    expect(demandSection).toHaveFocus();
+
+    fireEvent.click(demandSection);
+    fireEvent.click(economicSection);
+
+    expect(demandSection).toHaveAttribute("aria-expanded", "true");
+    expect(economicSection).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("img", { name: /Evolución de turistas confirmados/ })).toBeInTheDocument();
   });
 
   it("does not show warnings retained from a previously selected departure", () => {

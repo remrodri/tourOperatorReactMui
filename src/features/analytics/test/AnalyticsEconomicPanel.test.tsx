@@ -50,16 +50,11 @@ describe("AnalyticsEconomicPanel T-1207", () => {
   it("explains costs, minimums, results and the recommendation in plain language", () => {
     render(<AnalyticsEconomicPanel resource={resource("expected-viable")} loading={false} />);
 
-    expect(screen.getByText("La estimación alcanzaría el mínimo")).toBeInTheDocument();
     expect(screen.getByText("Costos fijos planificados")).toBeInTheDocument();
     expect(screen.getByText("Mínimo final que debe cumplirse")).toBeInTheDocument();
     expect(screen.getByText("Resultado con reservas confirmadas")).toBeInTheDocument();
     expect(screen.getByText("Resultado estimado")).toBeInTheDocument();
-    expect(screen.getByText("Acción comercial recomendada")).toBeInTheDocument();
-    expect(screen.getByText(/Información analizada hasta:/)).toHaveTextContent("13 nov 2026");
-    expect(screen.getByText(/Tiempo disponible en la fecha de referencia:/)).toHaveTextContent("7 días hasta la fecha límite");
     expect(screen.getByText(/no reemplaza un estado contable/i)).toBeInTheDocument();
-    expect(screen.getByText(/no mantiene, reprograma ni cancela/i)).toBeInTheDocument();
     expect(screen.queryByText("expected-viable")).not.toBeInTheDocument();
   });
 
@@ -76,7 +71,6 @@ describe("AnalyticsEconomicPanel T-1207", () => {
 
     render(<AnalyticsEconomicPanel resource={missing} loading={false} />);
 
-    expect(screen.getByText("Falta completar la planificación económica")).toBeInTheDocument();
     expect(screen.queryByText("Costos fijos planificados")).not.toBeInTheDocument();
   });
 

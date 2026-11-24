@@ -1,20 +1,13 @@
 import {
-  Alert,
-  AlertTitle,
   Box,
   CircularProgress,
-  Divider,
   Paper,
   Stack,
   Typography,
 } from "@mui/material";
 import type { AnalyticsEconomicResource } from "../types/AnalyticsTypes";
 import {
-  analyticsNumberFormat,
-  economicStatusPresentation,
-  economicUrgencySeverity,
   formatAnalyticsCurrency,
-  formatAnalyticsDate,
 } from "../utils/analyticsPresentation";
 
 interface AnalyticsEconomicPanelProps {
@@ -44,21 +37,6 @@ const AnalyticsEconomicPanel = ({
   if (!resource) return null;
 
   const data = resource.data;
-  const status = economicStatusPresentation[data.status];
-  const recommendation = data.recommendation;
-  const remaining =
-    recommendation.timeFractionRemaining === null
-      ? null
-      : `${analyticsNumberFormat.format(recommendation.timeFractionRemaining * 100)} % del periodo de seguimiento`;
-  const asOfTime = new Date(recommendation.asOf).getTime();
-  const deadlineTime = recommendation.decisionDeadline
-    ? new Date(recommendation.decisionDeadline).getTime()
-    : Number.NaN;
-  const remainingDays =
-    Number.isFinite(asOfTime) && Number.isFinite(deadlineTime)
-      ? Math.max(Math.ceil((deadlineTime - asOfTime) / 86_400_000), 0)
-      : null;
-
   return (
     <Paper variant="outlined" sx={{ p: 2, mt: 2 }} component="section" aria-labelledby="economic-title">
       <Box sx={{ mb: 1.5 }}>
@@ -69,12 +47,6 @@ const AnalyticsEconomicPanel = ({
           Compara el mínimo de turistas con las reservas actuales y, cuando está disponible, con la estimación de demanda.
         </Typography>
       </Box>
-
-      <Alert severity={status.severity} sx={{ mb: 2 }}>
-        <AlertTitle>{status.title}</AlertTitle>
-        {status.description}
-        {status.action && <Typography variant="body2" sx={{ mt: 0.5 }}>{status.action}</Typography>}
-      </Alert>
 
       {data.fixedCostsTotal !== null && (
         <>
@@ -101,28 +73,6 @@ const AnalyticsEconomicPanel = ({
         </>
       )}
 
-      <Divider sx={{ my: 2 }} />
-      <Alert severity={economicUrgencySeverity[recommendation.urgency]}>
-        <AlertTitle>{recommendation.title}</AlertTitle>
-        {recommendation.explanation}
-        <Stack spacing={0.25} sx={{ mt: 1 }}>
-          <Typography variant="body2">Información analizada hasta: {formatAnalyticsDate(recommendation.asOf)}</Typography>
-          {recommendation.planningStartedAt && <Typography variant="body2">Seguimiento iniciado: {formatAnalyticsDate(recommendation.planningStartedAt)}</Typography>}
-          {recommendation.decisionDeadline && <Typography variant="body2">Fecha límite para revisar la salida: {formatAnalyticsDate(recommendation.decisionDeadline)}</Typography>}
-          {remainingDays !== null && recommendation.decisionDeadline && (
-            <Typography variant="body2">
-              Tiempo disponible en la fecha de referencia: {remainingDays === 0 ? "la fecha límite ya fue alcanzada" : `${remainingDays} ${remainingDays === 1 ? "día" : "días"} hasta la fecha límite`}{remaining ? ` (${remaining})` : ""}.
-            </Typography>
-          )}
-          {recommendation.actionsToEvaluate.map((action) => (
-            <Typography variant="body2" key={action}>Acción para evaluar: {action}</Typography>
-          ))}
-        </Stack>
-      </Alert>
-
-      <Typography variant="body2" sx={{ mt: 1.5 }}>
-        Esta orientación ayuda a revisar alternativas. El sistema no mantiene, reprograma ni cancela una salida automáticamente; la decisión corresponde a la persona responsable.
-      </Typography>
     </Paper>
   );
 };

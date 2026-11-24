@@ -1,6 +1,10 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   AlertTitle,
   Box,
@@ -36,6 +40,7 @@ import type {
   AnalyticsTrendPoint,
 } from "../types/AnalyticsTypes";
 import AnalyticsEconomicPanel from "./AnalyticsEconomicPanel";
+import AnalyticsDecisionSummary from "./AnalyticsDecisionSummary";
 
 const TrendChart = ({ points }: { points: AnalyticsTrendPoint[] }) => {
   const width = 720;
@@ -66,12 +71,12 @@ const TrendChart = ({ points }: { points: AnalyticsTrendPoint[] }) => {
 
   return (
     <Box>
-      <Box sx={{ width: "100%", overflowX: "auto" }}>
+      <Box sx={{ width: "100%" }}>
         <svg
           viewBox={`0 0 ${width} ${height}`}
           role="img"
           aria-labelledby="trend-chart-title trend-chart-description"
-          style={{ width: "100%", minWidth: 520, maxHeight: 300 }}
+          style={{ width: "100%", maxHeight: 300 }}
         >
           <title id="trend-chart-title">Evolución de turistas confirmados</title>
           <desc id="trend-chart-description">
@@ -96,7 +101,7 @@ const TrendChart = ({ points }: { points: AnalyticsTrendPoint[] }) => {
           </text>
         </svg>
       </Box>
-      <TableContainer sx={{ maxHeight: 220 }}>
+      <TableContainer>
         <Table size="small" aria-label="Valores exactos de la tendencia">
           <TableHead>
             <TableRow>
@@ -255,6 +260,11 @@ const AnalyticsDepartureDetail = ({
 
       {detail && (
         <>
+          <AnalyticsDecisionSummary
+            resource={economicsData}
+            loading={economics.loading}
+            startDate={detail.startDate}
+          />
           <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }, gap: 1.5, mb: 2 }}>
             <Paper variant="outlined" sx={{ p: 1.5 }}>
               <Typography variant="caption">Capacidad registrada</Typography>
@@ -274,8 +284,22 @@ const AnalyticsDepartureDetail = ({
             </Paper>
           </Box>
 
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", xl: "minmax(0, 1.5fr) minmax(340px, 1fr)" }, gap: 2 }}>
-            <Paper variant="outlined" sx={{ p: 2 }}>
+          <Accordion disableGutters sx={{ mb: 1.5 }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="demand-estimation-content"
+              id="demand-estimation-header"
+            >
+              <Box>
+                <Typography variant="h6">Demanda y estimación</Typography>
+                <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                  Consulta cómo crecieron las reservas y la estimación disponible para esta salida.
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails id="demand-estimation-content">
+              <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", xl: "minmax(0, 1.5fr) minmax(340px, 1fr)" }, gap: 2 }}>
+                <Paper variant="outlined" sx={{ p: 2 }}>
               <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" spacing={1} sx={{ mb: 1 }}>
                 <Box>
                   <Typography variant="h6">Cómo crecieron las reservas</Typography>
@@ -303,14 +327,14 @@ const AnalyticsDepartureDetail = ({
                   <Typography variant="body2">Días observados: {trendData.rhythm.window.observedDays}</Typography>
                 </Stack>
               )}
-            </Paper>
+                </Paper>
 
-            <Paper variant="outlined" sx={{ p: 2 }}>
+                <Paper variant="outlined" sx={{ p: 2 }}>
               <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
                 <Box>
                   <Typography variant="h6">Estimación de turistas al inicio de la salida</Typography>
                   <Typography variant="body2" sx={{ opacity: 0.75 }}>
-                    Es una referencia basada en datos anteriores, no una garantía. La decisión final corresponde a la persona responsable.
+                    Es una referencia basada en datos anteriores, no una garantía.
                   </Typography>
                 </Box>
                 <Tooltip title={predictionRangeHelp.description} arrow enterTouchDelay={0} leaveTouchDelay={5000}>
@@ -376,17 +400,31 @@ const AnalyticsDepartureDetail = ({
                   )}
                 </Alert>
               ) : null}
-            </Paper>
-          </Box>
+                </Paper>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
 
-          <AnalyticsEconomicPanel
-            resource={economicsData}
-            loading={economics.loading}
-          />
-
-          <Alert severity="info" sx={{ mt: 2 }}>
-            Para interpretar el resultado, compara los turistas confirmados, el promedio observado y la estimación antes de evaluar promoción, cupos o recursos. El sistema no toma decisiones automáticamente.
-          </Alert>
+          <Accordion disableGutters>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="economic-planning-content"
+              id="economic-planning-header"
+            >
+              <Box>
+                <Typography variant="h6">Costos y punto de equilibrio</Typography>
+                <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                  Revisa costos, aporte por turista, mínimos y resultados planificados.
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails id="economic-planning-content">
+              <AnalyticsEconomicPanel
+                resource={economicsData}
+                loading={economics.loading}
+              />
+            </AccordionDetails>
+          </Accordion>
 
           {analysisWarnings.length > 0 && (
             <Stack spacing={1} sx={{ mt: 2 }} aria-label="Información que debes considerar">
