@@ -1,202 +1,122 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { CSSProperties } from "react";
-import { scaleBand, scaleLinear, max, range } from "d3";
-import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
+import { max, scaleBand } from "d3";
 import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
 
 const PX_BETWEEN_BARS = 5;
+const amountFormat = new Intl.NumberFormat("es-BO", {
+  style: "currency",
+  currency: "BOB",
+  maximumFractionDigits: 2,
+});
+const compactAmountFormat = new Intl.NumberFormat("es-BO", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+export const getChartMaximum = (value: number): number => {
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  const magnitude = 10 ** Math.floor(Math.log10(value));
+  return Math.ceil(value / magnitude) * magnitude;
+};
+
+export const formatAxisAmount = (value: number): string =>
+  value === 0 ? "Bs 0" : `Bs ${compactAmountFormat.format(value)}`;
 
 interface BarChartMultiVerticalProps {
-  // year: string;
-  // countedBookings: any[];
   mountsByMonth: any[];
 }
 
 const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
-  // year,
-  // countedBookings,
   mountsByMonth,
 }) => {
-  // console.log('mountsByMonth::: ', mountsByMonth);
   const { touristDestinations } = useTouristDestinationContext();
-
   if (!mountsByMonth || mountsByMonth.length === 0) return null;
 
   const data = mountsByMonth;
-  const numBars =
-    data.length > 0 && Array.isArray(data[0].counts)
-      ? data[0].counts.length
-      : 0;
-
-  // const [dataToRender, setDataToRender] = useState<any[]>([]);
-
+  const numBars = Array.isArray(data[0]?.counts) ? data[0].counts.length : 0;
+  const maxValue = max(data.flatMap((item) => item.counts)) ?? 0;
+  const chartMaximum = getChartMaximum(maxValue);
   const xScale = scaleBand()
-    .domain(data.map((d) => d.name))
+    .domain(data.map((item) => item.name))
     .range([0, 100])
     .padding(0.4);
-
-  const maxValue = max(data.flatMap((d) => d.counts)) ?? 0;
-  const roundedMax = Math.ceil(maxValue / 1000) * 1000;
-
-  const yScale = scaleLinear().domain([0, roundedMax]).range([100, 0]);
-
   const colors = ["#B89DFB", "#e7deff"];
 
-  // useEffect(() => {
-  //   if (mountsByMonth.length > 0) {
-  //     setDataToRender(mountsByMonth);
-  //   }
-  // }, [mountsByMonth]);
+  if (chartMaximum === 0) {
+    return (
+      <div role="status" className="h-62 w-full flex items-center justify-center text-sm text-gray-300">
+        No hay recaudación registrada para el año seleccionado.
+      </div>
+    );
+  }
 
   return (
     <div
+      role="group"
+      aria-labelledby="monthly-revenue-chart-description"
       className="relative h-62 w-full grid"
-      style={
-        {
-          "--marginTop": "0px",
-          "--marginRight": "25px",
-          "--marginBottom": "30px",
-          "--marginLeft": "25px",
-        } as CSSProperties
-      }
+      style={{
+        "--marginTop": "10px",
+        "--marginRight": "15px",
+        "--marginBottom": "36px",
+        "--marginLeft": "58px",
+      } as CSSProperties}
     >
-      {/* Y axis */}
-      <div
-        className="relative
-          h-[calc(100%-var(--marginTop)-var(--marginBottom))]
-          w-[var(--marginLeft)]
-          translate-y-[var(--marginTop)]
-          overflow-visible
-        "
-      >
-        {range(0, roundedMax + 1000, 1000).map((value, i) => (
-          <div
-            key={i}
-            style={{ top: `${yScale(value)}%` }}
-            className="absolute text-xs tabular-nums -translate-y-1/2 text-gray-300 w-full text-right pr-2"
-          >
-            {value}
-          </div>
-        ))}
+      <p id="monthly-revenue-chart-description" className="sr-only">
+        Recaudación mensual por destino. Escala desde Bs 0 hasta {amountFormat.format(chartMaximum)}. Recorre las barras para consultar cada importe exacto.
+      </p>
+      <div aria-hidden="true" className="absolute text-xs tabular-nums text-gray-200 text-right" style={{ left: 0, top: 2, width: "52px" }}>
+        {formatAxisAmount(chartMaximum)}
+      </div>
+      <div aria-hidden="true" className="absolute text-xs tabular-nums text-gray-200 text-right" style={{ left: 0, bottom: "34px", width: "52px" }}>
+        {formatAxisAmount(0)}
       </div>
 
-      {/* Chart Area */}
-      <div
-        className="absolute inset-0
-          h-[calc(100%-var(--marginTop)-var(--marginBottom))]
-          w-[calc(100%-var(--marginLeft)-var(--marginRight))]
-          translate-x-[var(--marginLeft)]
-          translate-y-[var(--marginTop)]
-          overflow-visible
-        "
-      >
-        <div className="relative w-full h-full">
-          <svg
-            className="h-full w-full"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
+      <div className="absolute h-[calc(100%-var(--marginTop)-var(--marginBottom))] w-[calc(100%-var(--marginLeft)-var(--marginRight))] translate-x-[var(--marginLeft)] translate-y-[var(--marginTop)]">
+        {[0, 50, 100].map((position) => (
+          <div
+            aria-hidden="true"
+            key={position}
+            className="absolute left-0 w-full border-t border-dashed border-gray-300/45"
+            style={{ top: `${position}%` }}
+          />
+        ))}
+
+        {data.map((month) => (
+          <div
+            key={month.name}
+            className="absolute top-0 h-full"
+            style={{ left: `${xScale(month.name)}%`, width: `${xScale.bandwidth()}%` }}
           >
-            {range(0, roundedMax + 1000, 1000).map((value, i) => (
-              <g
-                key={i}
-                transform={`translate(0,${yScale(value)})`}
-                className="text-gray-300/80 dark:text-white"
-              >
-                <line
-                  x1={0}
-                  x2={100}
-                  stroke="currentColor"
-                  strokeDasharray="6,5"
-                  strokeWidth={0.5}
-                  vectorEffect="non-scaling-stroke"
-                />
-              </g>
-            ))}
-          </svg>
-
-          {/* Bars */}
-          {data.map((d, index) => (
-            <ClientTooltip key={index}>
-              <TooltipTrigger>
-                <div
-                  className="absolute top-0"
+            {month.counts.map((count: number, barIndex: number) => {
+              const barWidth = (100 - PX_BETWEEN_BARS * (numBars - 1)) / numBars;
+              const destination = touristDestinations[barIndex]?.name ?? `Destino ${barIndex + 1}`;
+              const exactAmount = amountFormat.format(count);
+              return (
+                <button
+                  type="button"
+                  key={`${month.name}-${destination}`}
+                  title={`${month.name} · ${destination}: ${exactAmount}`}
+                  aria-label={`${month.name}, ${destination}: ${exactAmount}`}
+                  className="absolute bottom-0 rounded-t focus:outline-none focus:ring-2 focus:ring-white"
                   style={{
-                    left: `${xScale(d.name)}%`,
-                    width: `${xScale.bandwidth()}%`,
-                    height: "100%",
+                    left: `${barIndex * (barWidth + PX_BETWEEN_BARS)}%`,
+                    width: `${barWidth}%`,
+                    height: `${(count / chartMaximum) * 100}%`,
+                    minHeight: count > 0 ? "2px" : 0,
+                    backgroundColor: colors[barIndex % colors.length],
+                    border: "1px solid #a07dff55",
+                    cursor: "help",
                   }}
-                >
-                  {d.counts.map((count: number, barIndex: number) => {
-                    const barHeight = 100 - yScale(count);
-                    const barWidth =
-                      (100 - PX_BETWEEN_BARS * (numBars - 1)) / numBars;
-                    const barXPosition =
-                      barIndex * (barWidth + PX_BETWEEN_BARS);
-
-                    return (
-                      <div
-                        key={barIndex}
-                        className="absolute bottom-0 rounded-t"
-                        style={{
-                          left: `${barXPosition}%`,
-                          width: `${barWidth}%`,
-                          height: `${barHeight}%`,
-                          backgroundColor: colors[barIndex % colors.length],
-                          border: `1px solid #a07dff22`,
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="text-sm text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-1 mb-1.5">
-                  {d.name}
-                </div>
-                <div className="flex flex-col gap-2">
-                  {d.counts.map((count: number, index: number) => (
-                    <div
-                      key={index}
-                      className="flex gap-1.5 items-center text-sm"
-                    >
-                      <div
-                        className="h-3.5 w-1 rounded-full"
-                        style={{
-                          backgroundColor: colors[index % colors.length],
-                        }}
-                      ></div>
-                      <span>{`${
-                        touristDestinations[index]?.name ?? "Destino"
-                      } ${count}`}</span>
-                    </div>
-                  ))}
-                </div>
-              </TooltipContent>
-            </ClientTooltip>
-          ))}
-
-          {/* X Axis (Labels) */}
-          {data.map((entry, i) => {
-            const xPosition = xScale(entry.name)! + xScale.bandwidth() / 2;
-
-            return (
-              <div
-                key={i}
-                className="absolute overflow-visible text-gray-400"
-                style={{
-                  left: `${xPosition}%`,
-                  top: "100%",
-                  transform: "rotate(45deg) translateX(4px) translateY(8px)",
-                }}
-              >
-                <div className="absolute text-xs -translate-y-1/2 whitespace-nowrap">
-                  {entry.name.slice(0, 10) +
-                    (entry.name.length > 10 ? "..." : "")}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                />
+              );
+            })}
+            <div aria-hidden="true" className="absolute top-full left-1/2 text-xs text-gray-300 whitespace-nowrap" style={{ transform: "translate(-50%, 8px)" }}>
+              {month.name.slice(0, 3)}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

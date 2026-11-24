@@ -41,7 +41,7 @@ const TotalSalesByDate: React.FC<TotalSalesByDateProps> = ({
             gap:"1rem",
           }}
           >
-            <Typography variant="h6">Recuadación total por mes</Typography>
+            <Typography variant="h6">Recaudación total por mes</Typography>
             <FormControl size="small" sx={{width:"6rem"}}>
               <InputLabel id="demo-simple-select-label">Año</InputLabel>
               <Select
