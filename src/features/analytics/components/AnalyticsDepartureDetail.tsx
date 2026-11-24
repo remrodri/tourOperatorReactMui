@@ -35,6 +35,7 @@ import type {
   AnalyticsTrendGranularity,
   AnalyticsTrendPoint,
 } from "../types/AnalyticsTypes";
+import AnalyticsEconomicPanel from "./AnalyticsEconomicPanel";
 
 const TrendChart = ({ points }: { points: AnalyticsTrendPoint[] }) => {
   const width = 720;
@@ -135,10 +136,12 @@ const AnalyticsDepartureDetail = ({
     trends,
     prediction,
     predictionMetrics,
+    economics,
     fetchDeparture,
     fetchTrends,
     fetchPrediction,
     fetchPredictionMetrics,
+    fetchEconomics,
   } = useAnalytics();
   const [horizon, setHorizon] = useState<AnalyticsPredictionHorizon>(14);
   const [granularity, setGranularity] =
@@ -155,7 +158,8 @@ const AnalyticsDepartureDetail = ({
 
   useEffect(() => {
     void fetchPrediction(departureId, horizon);
-  }, [departureId, fetchPrediction, horizon]);
+    void fetchEconomics(departureId, horizon);
+  }, [departureId, fetchEconomics, fetchPrediction, horizon]);
 
   const detail =
     departure.data?.data.departure.id === departureId
@@ -166,6 +170,11 @@ const AnalyticsDepartureDetail = ({
   const predictionData =
     prediction.data?.data.departureId === departureId
       ? prediction.data.data
+      : null;
+  const economicsData =
+    economics.data?.data.departureId === departureId &&
+    economics.data.data.predictionHorizonDays === horizon
+      ? economics.data
       : null;
   const metric = useMemo(
     () =>
@@ -182,6 +191,7 @@ const AnalyticsDepartureDetail = ({
     departure.error ??
     trends.error ??
     prediction.error ??
+    economics.error ??
     predictionMetrics.error;
   const mappedWarnings = [
     ...(trendData ? (trends.data?.warnings ?? []) : []),
@@ -202,6 +212,7 @@ const AnalyticsDepartureDetail = ({
     void fetchDeparture(departureId);
     void fetchTrends({ dateRangeId: departureId, granularity });
     void fetchPrediction(departureId, horizon);
+    void fetchEconomics(departureId, horizon);
     void fetchPredictionMetrics();
   };
 
@@ -367,6 +378,11 @@ const AnalyticsDepartureDetail = ({
               ) : null}
             </Paper>
           </Box>
+
+          <AnalyticsEconomicPanel
+            resource={economicsData}
+            loading={economics.loading}
+          />
 
           <Alert severity="info" sx={{ mt: 2 }}>
             Para interpretar el resultado, compara los turistas confirmados, el promedio observado y la estimación antes de evaluar promoción, cupos o recursos. El sistema no toma decisiones automáticamente.

@@ -179,6 +179,7 @@ const fetchTrends = vi.fn<AnalyticsContextType["fetchTrends"]>();
 const fetchPrediction = vi.fn<AnalyticsContextType["fetchPrediction"]>();
 const fetchPredictionMetrics =
   vi.fn<AnalyticsContextType["fetchPredictionMetrics"]>();
+const fetchEconomics = vi.fn<AnalyticsContextType["fetchEconomics"]>();
 
 const contextValue = (
   predictionState: AnalyticsPredictionResource["data"]["state"] = "available",
@@ -197,6 +198,7 @@ const contextValue = (
     error: null,
   },
   predictionMetrics: { data: null, loading: false, error: null },
+  economics: { data: null, loading: false, error: null },
   fetchOverview: vi.fn(),
   fetchSummary: vi.fn(),
   fetchDepartures: vi.fn(),
@@ -204,6 +206,7 @@ const contextValue = (
   fetchFilterCatalog: vi.fn(),
   fetchTrends,
   fetchPrediction,
+  fetchEconomics,
   fetchPredictionMetrics,
 });
 
@@ -232,6 +235,7 @@ describe("AnalyticsDepartureDetail T-817", () => {
         granularity: "week",
       });
       expect(fetchPrediction).toHaveBeenCalledWith(departureId, 14);
+      expect(fetchEconomics).toHaveBeenCalledWith(departureId, 14);
     });
   });
 
@@ -243,6 +247,7 @@ describe("AnalyticsDepartureDetail T-817", () => {
 
     await waitFor(() => {
       expect(fetchPrediction).toHaveBeenCalledWith(departureId, 30);
+      expect(fetchEconomics).toHaveBeenCalledWith(departureId, 30);
       expect(fetchTrends).toHaveBeenCalledWith({
         dateRangeId: departureId,
         granularity: "day",

@@ -153,6 +153,7 @@ const contextValue = (
   },
   trends: { data: null, loading: false, error: null },
   prediction: { data: null, loading: false, error: null },
+  economics: { data: null, loading: false, error: null },
   predictionMetrics: { data: null, loading: false, error: null },
   fetchOverview,
   fetchSummary,
@@ -161,6 +162,7 @@ const contextValue = (
   fetchFilterCatalog,
   fetchTrends: vi.fn(),
   fetchPrediction: vi.fn(),
+  fetchEconomics: vi.fn(),
   fetchPredictionMetrics: vi.fn(),
   ...overrides,
 });

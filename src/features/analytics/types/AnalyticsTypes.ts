@@ -35,7 +35,7 @@ export interface AnalyticsModuleMetadata {
   module: "analytics";
   contractVersion: string;
   release: string;
-  status: "foundation" | "descriptive" | "predictive";
+  status: "foundation" | "descriptive" | "predictive" | "economic";
   generatedAt: string;
   scope?: string;
 }
@@ -250,6 +250,66 @@ export interface AnalyticsPredictiveMeta extends AnalyticsModuleMetadata {
 }
 
 export type AnalyticsPredictionResource = AnalyticsResource<AnalyticsPredictionData, AnalyticsPredictiveMeta>;
+
+export type AnalyticsEconomicStatus =
+  | "economic-data-missing"
+  | "non-positive-contribution"
+  | "capacity-insufficient"
+  | "below-break-even"
+  | "expected-viable"
+  | "break-even-reached";
+
+export type AnalyticsEconomicUrgency =
+  | "not-applicable"
+  | "achieved"
+  | "monitor"
+  | "commercial-action"
+  | "priority-action"
+  | "decision-required";
+
+export interface AnalyticsEconomicRecommendation {
+  urgency: AnalyticsEconomicUrgency;
+  asOf: string;
+  planningStartedAt: string | null;
+  decisionDeadline: string | null;
+  timeFractionRemaining: number | null;
+  title: string;
+  explanation: string;
+  actionsToEvaluate: string[];
+  automaticDecision: false;
+  thresholds: { monitor: number; priority: number };
+}
+
+export interface AnalyticsEconomicData {
+  departureId: string;
+  predictionState: AnalyticsPredictionState;
+  predictionHorizonDays: AnalyticsPredictionHorizon;
+  status: AnalyticsEconomicStatus;
+  currency: "BOB" | null;
+  confirmedTourists: number;
+  predictedFinalTourists: number | null;
+  fixedCostsTotal: number | null;
+  variableCostPerTourist: number | null;
+  contributionMarginPerTourist: number | null;
+  economicMinimum: number | null;
+  operationalMinimum: number | null;
+  finalMinimum: number | null;
+  missingConfirmedTourists: number | null;
+  confirmedResult: number | null;
+  estimatedResult: number | null;
+  predictionUsed: boolean;
+  recommendation: AnalyticsEconomicRecommendation;
+}
+
+export interface AnalyticsEconomicMeta extends AnalyticsModuleMetadata {
+  status: "economic";
+  dataOrigin: "simulated";
+}
+
+export type AnalyticsEconomicResource = AnalyticsResource<
+  AnalyticsEconomicData,
+  AnalyticsEconomicMeta
+>;
 
 export interface AnalyticsPredictionMetricItem {
   horizonDays: AnalyticsPredictionHorizon;

@@ -12,6 +12,7 @@ import {
 import {
   getAnalyticsDeparture,
   getAnalyticsDepartures,
+  getAnalyticsEconomics,
   getAnalyticsErrorMessage,
   getAnalyticsFilterCatalog,
   getAnalyticsOverview,
@@ -25,6 +26,7 @@ import type {
   AnalyticsDeparturesQuery,
   AnalyticsDeparturesResource,
   AnalyticsFilters,
+  AnalyticsEconomicResource,
   AnalyticsFilterCatalog,
   AnalyticsOverview,
   AnalyticsPredictionHorizon,
@@ -44,6 +46,7 @@ type ResourceKey =
   | "filterCatalog"
   | "trends"
   | "prediction"
+  | "economics"
   | "predictionMetrics";
 
 const emptyResource = <T,>(): AnalyticsResourceState<T> => ({
@@ -62,6 +65,7 @@ export interface AnalyticsContextType {
   filterCatalog: AnalyticsResourceState<AnalyticsFilterCatalog>;
   trends: AnalyticsResourceState<AnalyticsTrendsResource>;
   prediction: AnalyticsResourceState<AnalyticsPredictionResource>;
+  economics: AnalyticsResourceState<AnalyticsEconomicResource>;
   predictionMetrics: AnalyticsResourceState<AnalyticsPredictionMetricsResource>;
   fetchOverview: (filters?: AnalyticsFilters) => Promise<void>;
   fetchSummary: (filters?: AnalyticsFilters) => Promise<void>;
@@ -70,6 +74,10 @@ export interface AnalyticsContextType {
   fetchFilterCatalog: () => Promise<void>;
   fetchTrends: (query: AnalyticsTrendsQuery) => Promise<void>;
   fetchPrediction: (
+    id: string,
+    horizonDays: AnalyticsPredictionHorizon,
+  ) => Promise<void>;
+  fetchEconomics: (
     id: string,
     horizonDays: AnalyticsPredictionHorizon,
   ) => Promise<void>;
@@ -98,6 +106,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
   );
   const [trends, setTrends] = useState(emptyResource<AnalyticsTrendsResource>);
   const [prediction, setPrediction] = useState(emptyResource<AnalyticsPredictionResource>);
+  const [economics, setEconomics] = useState(emptyResource<AnalyticsEconomicResource>);
   const [predictionMetrics, setPredictionMetrics] = useState(
     emptyResource<AnalyticsPredictionMetricsResource>,
   );
@@ -109,6 +118,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
     filterCatalog: 0,
     trends: 0,
     prediction: 0,
+    economics: 0,
     predictionMetrics: 0,
   });
 
@@ -201,6 +211,17 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
     [fetchResource],
   );
 
+  const fetchEconomics = useCallback(
+    (id: string, horizonDays: AnalyticsPredictionHorizon) =>
+      fetchResource(
+        "economics",
+        setEconomics,
+        () => getAnalyticsEconomics(id, horizonDays),
+        "No se pudo cargar la planificación económica",
+      ),
+    [fetchResource],
+  );
+
   useEffect(() => {
     const requestGenerations = generations.current;
     fetchOverview();
@@ -223,6 +244,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
         filterCatalog,
         trends,
         prediction,
+        economics,
         predictionMetrics,
         fetchOverview,
         fetchSummary,
@@ -231,6 +253,7 @@ export const AnalyticsProvider: React.FC<{ children: ReactNode }> = ({ children 
         fetchFilterCatalog,
         fetchTrends,
         fetchPrediction,
+        fetchEconomics,
         fetchPredictionMetrics,
       }}
     >

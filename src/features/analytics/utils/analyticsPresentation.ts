@@ -1,4 +1,6 @@
 import type {
+  AnalyticsEconomicStatus,
+  AnalyticsEconomicUrgency,
   AnalyticsPredictionState,
   AnalyticsPredictor,
 } from "../types/AnalyticsTypes";
@@ -41,6 +43,68 @@ export const formatAnalyticsPercent = (value: number | null | undefined) =>
   value === null || value === undefined
     ? "No se puede calcular"
     : `${analyticsNumberFormat.format(value)} %`;
+
+export const formatAnalyticsCurrency = (value: number | null | undefined) =>
+  value === null || value === undefined
+    ? "No se puede calcular"
+    : analyticsCurrencyFormat.format(value);
+
+export const economicStatusPresentation: Record<
+  AnalyticsEconomicStatus,
+  AnalyticsPresentationMessage
+> = {
+  "economic-data-missing": {
+    title: "Falta completar la planificación económica",
+    description:
+      "Todavía no se registraron todos los importes necesarios para calcular el mínimo de turistas.",
+    action: "Completa el precio, los costos y el mínimo operativo de la salida.",
+    severity: "info",
+  },
+  "non-positive-contribution": {
+    title: "El precio no cubre el costo por turista",
+    description:
+      "Cada turista adicional no aporta un margen positivo para cubrir los costos fijos.",
+    action: "Revisa el precio o los costos variables antes de continuar la planificación.",
+    severity: "error",
+  },
+  "capacity-insufficient": {
+    title: "La capacidad no permite alcanzar el mínimo",
+    description:
+      "El número de turistas necesario es mayor que la capacidad registrada para esta salida.",
+    action: "Revisa la capacidad, el precio o los costos planificados.",
+    severity: "error",
+  },
+  "below-break-even": {
+    title: "El mínimo aún no está cubierto",
+    description:
+      "Las reservas confirmadas y la estimación disponible todavía no alcanzan el mínimo final.",
+    severity: "warning",
+  },
+  "expected-viable": {
+    title: "La estimación alcanzaría el mínimo",
+    description:
+      "Las reservas confirmadas aún no cubren el mínimo, pero la estimación indica que podría alcanzarse.",
+    severity: "info",
+  },
+  "break-even-reached": {
+    title: "El mínimo ya fue alcanzado",
+    description:
+      "Las reservas confirmadas cubren el mínimo final definido para esta salida.",
+    severity: "info",
+  },
+};
+
+export const economicUrgencySeverity: Record<
+  AnalyticsEconomicUrgency,
+  AnalyticsMessageSeverity
+> = {
+  "not-applicable": "info",
+  achieved: "info",
+  monitor: "info",
+  "commercial-action": "warning",
+  "priority-action": "warning",
+  "decision-required": "error",
+};
 
 export const analyticsMetricHelp = {
   tourists: "Cantidad de personas con una reserva vigente en las salidas seleccionadas.",

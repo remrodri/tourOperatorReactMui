@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AnalyticsProvider, useAnalytics } from "../context/AnalyticsContext";
 import * as analyticsService from "../service/analyticsService";
 import type {
+  AnalyticsEconomicResource,
   AnalyticsOverview,
   AnalyticsSummaryResource,
 } from "../types/AnalyticsTypes";
@@ -70,6 +71,49 @@ const deferred = <T,>() => {
   });
   return { promise, resolve, reject };
 };
+
+const economicsResource = (confirmedTourists: number): AnalyticsEconomicResource => ({
+  data: {
+    departureId: "departure-1",
+    predictionState: "available",
+    predictionHorizonDays: 14,
+    status: "below-break-even",
+    currency: "BOB",
+    confirmedTourists,
+    predictedFinalTourists: 9,
+    fixedCostsTotal: 2800,
+    variableCostPerTourist: 150,
+    contributionMarginPerTourist: 350,
+    economicMinimum: 8,
+    operationalMinimum: 6,
+    finalMinimum: 8,
+    missingConfirmedTourists: Math.max(8 - confirmedTourists, 0),
+    confirmedResult: confirmedTourists * 350 - 2800,
+    estimatedResult: 350,
+    predictionUsed: true,
+    recommendation: {
+      urgency: "monitor",
+      asOf: "2026-11-13T23:59:59.999Z",
+      planningStartedAt: "2026-11-01T00:00:00.000Z",
+      decisionDeadline: "2026-11-20T00:00:00.000Z",
+      timeFractionRemaining: 0.6,
+      title: "Seguimiento recomendado",
+      explanation: "Continuar el seguimiento.",
+      actionsToEvaluate: ["Observar las reservas."],
+      automaticDecision: false,
+      thresholds: { monitor: 0.5, priority: 0.25 },
+    },
+  },
+  metadata: {
+    module: "analytics",
+    contractVersion: "1.5.0",
+    release: "t1206-v1",
+    status: "economic",
+    generatedAt: "2026-11-24T00:00:00.000Z",
+    dataOrigin: "simulated",
+  },
+  warnings: [],
+});
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <AnalyticsProvider>{children}</AnalyticsProvider>
@@ -139,5 +183,25 @@ describe("AnalyticsContext", () => {
     expect(result.current.summary.data?.data.summary.tourists).toBe(5);
     expect(result.current.summary.error).toBe("Resumen no disponible");
     expect(result.current.summary.loading).toBe(false);
+  });
+
+  it("keeps the newest economic orientation when horizons change quickly", async () => {
+    const first = deferred<AnalyticsEconomicResource>();
+    const second = deferred<AnalyticsEconomicResource>();
+    vi.mocked(analyticsService.getAnalyticsEconomics)
+      .mockImplementationOnce(() => first.promise)
+      .mockImplementationOnce(() => second.promise);
+    const { result } = renderHook(() => useAnalytics(), { wrapper });
+    await waitFor(() => expect(result.current.overview).toEqual(overview));
+
+    act(() => {
+      void result.current.fetchEconomics("departure-1", 30);
+      void result.current.fetchEconomics("departure-1", 14);
+    });
+    await act(async () => second.resolve(economicsResource(7)));
+    await act(async () => first.resolve(economicsResource(3)));
+
+    expect(result.current.economics.data?.data.confirmedTourists).toBe(7);
+    expect(result.current.economics.loading).toBe(false);
   });
 });

@@ -4,6 +4,7 @@ import { axiosPrivate } from "../../../config/axiosConfig";
 import {
   getAnalyticsDeparture,
   getAnalyticsDepartures,
+  getAnalyticsEconomics,
   getAnalyticsErrorMessage,
   getAnalyticsFilterCatalog,
   getAnalyticsOverview,
@@ -197,6 +198,31 @@ describe("analytics service", () => {
     });
     expect(mock.history.get[1].params).toEqual({ horizonDays: 14 });
     expect(mock.history.get[2].params).toEqual({});
+  });
+
+  it("requests the economic orientation for the selected horizon", async () => {
+    mock.onGet("/analytics/departures/departure-2/economics").reply(200, {
+      statusCode: 200,
+      message: "ok",
+      data: {
+        departureId: "departure-2",
+        predictionHorizonDays: 30,
+        status: "below-break-even",
+      },
+      meta: {
+        ...meta,
+        contractVersion: "1.5.0",
+        release: "t1206-v1",
+        status: "economic",
+        dataOrigin: "simulated",
+      },
+      warnings: [],
+    });
+
+    const result = await getAnalyticsEconomics("departure-2", 30);
+
+    expect(mock.history.get[0].params).toEqual({ horizonDays: 30 });
+    expect(result.data.departureId).toBe("departure-2");
   });
 
   it("builds complete filter options across departure pages", async () => {

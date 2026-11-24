@@ -7,6 +7,8 @@ import type {
   AnalyticsDeparturesQuery,
   AnalyticsDeparturesResource,
   AnalyticsFilters,
+  AnalyticsEconomicResource,
+  AnalyticsEconomicMeta,
   AnalyticsFilterCatalog,
   AnalyticsFoundationEnvelope,
   AnalyticsMeta,
@@ -162,6 +164,15 @@ export const getAnalyticsPrediction = (
 ): Promise<AnalyticsPredictionResource> =>
   getResource<AnalyticsPredictionResource["data"], AnalyticsPredictiveMeta>(
     `/analytics/departures/${departureId}/prediction`,
+    { horizonDays },
+  );
+
+export const getAnalyticsEconomics = (
+  departureId: string,
+  horizonDays: AnalyticsPredictionHorizon,
+): Promise<AnalyticsEconomicResource> =>
+  getResource<AnalyticsEconomicResource["data"], AnalyticsEconomicMeta>(
+    `/analytics/departures/${departureId}/economics`,
     { horizonDays },
   );
 
