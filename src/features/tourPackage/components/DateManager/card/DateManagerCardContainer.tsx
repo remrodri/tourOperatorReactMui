@@ -9,6 +9,7 @@ import ConfirmationModal from "./ConfirmationModal";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
 import DateSelectorFormContainer from "../DateSelectorForm/DateSelectorFormContainer";
 import DateRangeBookingsDialogContainer from "../dateRangeBookingsDialog/DateRangeBookingsDialogContainer";
+import { sileo } from "sileo";
 interface DateManagerCardContainerProps {
   dateRange: DateRangeType;
   duration: number;
@@ -79,14 +80,24 @@ const DateManagerCardContainer: React.FC<DateManagerCardContainerProps> = ({
     // }
   };
 
-  const handleConfirmAction = () => {
+  const handleConfirmAction = async () => {
     if (!dateRange.id) return;
-    // updateDateRangeStatus(dateRange.id, selectedOption); // ⬅ llamada al contexto
-    updateDateRange({
-      id: dateRange.id,
-      state: selectedOption === "completado" ? "completed" : "cancelled",
-    });
-    setOpenConfirmModal(false);
+    try {
+      await updateDateRange({
+        id: dateRange.id,
+        state: selectedOption === "completado" ? "completed" : "cancelled",
+      });
+    } catch (error) {
+      sileo.error({
+        title: "No se pudo actualizar la salida",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Revisa los datos e inténtalo de nuevo.",
+      });
+    } finally {
+      setOpenConfirmModal(false);
+    }
   };
 
   useEffect(() => {

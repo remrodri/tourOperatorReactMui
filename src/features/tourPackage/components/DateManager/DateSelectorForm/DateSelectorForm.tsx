@@ -11,6 +11,9 @@ import {
   Autocomplete,
   TextField,
   Alert,
+  Divider,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -22,6 +25,8 @@ import { DateRangeFormValues } from "./DateSelectorFormContainer";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import TextType from "../../../../../TextAnimations/TextType/TextType";
 import { UserType } from "../../../../userManagement/types/UserType";
+import EconomicPlanFields from "./EconomicPlanFields";
+import { startDateFromLegacyDates } from "./economicPlanForm";
 
 dayjs.extend(customParseFormat);
 
@@ -33,6 +38,10 @@ interface DateSelectorFormProps {
   formik: FormikProps<DateRangeFormValues>;
   blockedDates: string[];
   requireCapacity: boolean;
+  includeEconomicPlan: boolean;
+  onToggleEconomicPlan: (include: boolean) => void;
+  hasExistingPlan: boolean;
+  submitError?: string | null;
 }
 
 const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
@@ -43,6 +52,10 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
   formik,
   blockedDates,
   requireCapacity,
+  includeEconomicPlan,
+  onToggleEconomicPlan,
+  hasExistingPlan,
+  submitError,
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +90,7 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
     <Dialog
       open={openDialog}
       onClose={handleCloseDialog}
-      maxWidth="xs"
+      maxWidth="md"
       fullWidth
     >
       <form onSubmit={handleSubmit}>
@@ -186,6 +199,42 @@ const DateSelectorForm: React.FC<DateSelectorFormProps> = ({
               fullWidth
             />
           </Stack>
+
+          <Divider sx={{ my: 3 }} />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={includeEconomicPlan}
+                onChange={(event) =>
+                  onToggleEconomicPlan(event.target.checked)
+                }
+                disabled={hasExistingPlan}
+              />
+            }
+            label="Registrar plan económico de esta salida"
+          />
+          <Typography variant="body2" color="text.secondary">
+            {hasExistingPlan
+              ? "Esta salida ya tiene un plan económico; puedes actualizar sus valores."
+              : "Opcional. Si lo activas, completa los datos para calcular el punto de equilibrio."}
+          </Typography>
+
+          {includeEconomicPlan && (
+            <Box sx={{ mt: 2 }}>
+              <EconomicPlanFields
+                formik={formik}
+                capacity={hasValidCapacity ? capacityValue : undefined}
+                startDate={startDateFromLegacyDates(formik.values.dates)}
+              />
+            </Box>
+          )}
+
+          {submitError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {submitError}
+            </Alert>
+          )}
         </DialogContent>
 
         <DialogActions>

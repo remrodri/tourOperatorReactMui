@@ -1,3 +1,9 @@
+import type {
+  EconomicEvaluationType,
+  EconomicPlanPayload,
+  EconomicPlanType,
+} from "./EconomicPlanType";
+
 export type DateRangeDataOrigin = "legacy" | "simulated" | "manual";
 
 export interface DateRangeType {
@@ -10,6 +16,15 @@ export interface DateRangeType {
   endDate?: string;
   capacity?: number;
   dataOrigin?: DateRangeDataOrigin;
+  economicPlan?: EconomicPlanType;
+  economicEvaluation?: EconomicEvaluationType;
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type DateRangeWritePayload = Omit<
+  DateRangeType,
+  "economicPlan" | "economicEvaluation"
+> & {
+  economicPlan?: EconomicPlanPayload;
+};

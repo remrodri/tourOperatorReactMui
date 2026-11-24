@@ -1,17 +1,16 @@
 import DateSelectorForm from "./DateSelectorForm";
-import { useEffect, useState } from "react";
-// import { Dayjs } from "dayjs";
-// import { UserType } from "../../../../userManagement/types/UserType";
+import { useEffect, useMemo, useState } from "react";
 import { DateRangeType } from "../../../types/DateRangeType";
 import { useUserContext } from "../../../../userManagement/context/UserContext";
 import { dateRangeSchema } from "./validation/dateRangeSchema";
 import { useFormik } from "formik";
-// import {
-//   updateDateRangeRequest,
-//   createDateRangeRequest,
-// } from "../../../../dateRange/service/DateRangeService";
-// import { useDateRangeContext } from "../../../../dateRange/context/DateRangeContext";
 import { useTourPackageContext } from "../../../context/TourPackageContext";
+import {
+  buildEconomicPlanPayload,
+  emptyEconomicPlanFormValues,
+  toEconomicPlanFormValues,
+  type EconomicPlanFormValues,
+} from "./economicPlanForm";
 
 interface DateSelectorFormContainerProps {
   open: boolean;
@@ -25,11 +24,10 @@ interface DateSelectorFormContainerProps {
 
 export interface DateRangeFormValues {
   id?: string;
-  // state: string;
   dates: string[];
-  // tourPackageId: string;
   guides: string[];
   capacity?: number | "";
+  economicPlan: EconomicPlanFormValues;
 }
 
 const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
@@ -40,90 +38,113 @@ const DateSelectorFormContainer: React.FC<DateSelectorFormContainerProps> = ({
   dateRanges,
   tourPackageId,
   currentDateRange,
-}: DateSelectorFormContainerProps) => {
-  // const [openDialog, setOpenDialog] = useState(false);
-  // const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  // const [selectedGuides, setSelectedGuides] = useState<User[]>([]);
-  // const [guides, setGuides] = useState<User[]>([]);
-  // const [handleOpenDateSelector, setHandleOpenDateSelector] = useState(false);
-  // const [handleCloseDateSelector, setHandleCloseDateSelector] = useState(false);
-  // const [localDateRanges, setLocalDateRanges] = useState<DateRangeType[]>([]);
-  // const [currentDateRange, setCurrentDateRange] = useState<DateRangeType | null>(null);
-  const [blockedDates, setBlockedDates] = useState<string[]>([]);
-  // const { createDateRange,updateDateRange}=useDateRangeContext();
+}) => {
+  const [includeEconomicPlan, setIncludeEconomicPlan] = useState<boolean>(
+    Boolean(currentDateRange?.economicPlan),
+  );
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { createDateRange, updateDateRange } = useTourPackageContext();
-
   const { guides, fetchGuides } = useUserContext();
 
-  const getBlockedDates = (dateRanges: DateRangeType[]) => {
-    const allDates = dateRanges
-      .flatMap((dr) => dr.dates)
-      .filter((date): date is string => !!date);
-    // return Array.from(new Set(allDates));
-    const uniqueDates = Array.from(new Set(allDates));
-    setBlockedDates(uniqueDates);
-  };
+  const hasExistingPlan = Boolean(currentDateRange?.economicPlan);
 
-  const onSubmit = (values: DateRangeFormValues) => {
-    const capacity =
-      values.capacity === "" || values.capacity === undefined
-        ? undefined
-        : Number(values.capacity);
-    const dateRangeToCreate: DateRangeType = {
-      dates: values.dates,
-      guides: values.guides,
-      tourPackageId: tourPackageId,
-      ...(capacity !== undefined ? { capacity } : {}),
-    };
-    if (isEditing) {
-      updateDateRange({
-        ...(values.id ? { id: values.id } : {}),
+  const blockedDates = useMemo(() => {
+    const allDates = dateRanges
+      .flatMap((dr) => dr.dates ?? [])
+      .filter((date): date is string => Boolean(date));
+    return Array.from(new Set(allDates));
+  }, [dateRanges]);
+
+  const validationSchema = useMemo(
+    () =>
+      dateRangeSchema({
+        requireCapacity: !isEditing,
+        includeEconomicPlan,
+      }),
+    [isEditing, includeEconomicPlan],
+  );
+
+  const onSubmit = async (values: DateRangeFormValues) => {
+    setSubmitError(null);
+    try {
+      const capacity =
+        values.capacity === "" || values.capacity === undefined
+          ? undefined
+          : Number(values.capacity);
+
+      const economicPlan = includeEconomicPlan
+        ? buildEconomicPlanPayload(values.economicPlan)
+        : undefined;
+
+      const basePayload = {
         dates: values.dates,
         guides: values.guides,
         ...(capacity !== undefined ? { capacity } : {}),
-      });
-    } else {
-      createDateRange(dateRangeToCreate);
+        ...(economicPlan ? { economicPlan } : {}),
+      };
+
+      if (isEditing) {
+        await updateDateRange({
+          ...(values.id ? { id: values.id } : {}),
+          ...basePayload,
+        });
+      } else {
+        await createDateRange({
+          ...basePayload,
+          tourPackageId,
+        });
+      }
+
       onClose();
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "No se pudo guardar la salida. Revisa los datos e inténtalo de nuevo.",
+      );
     }
   };
 
   const formik = useFormik<DateRangeFormValues>({
     initialValues: {
       id: currentDateRange?.id || "",
-      // state: "pending",
       dates: currentDateRange?.dates || [],
-      // tourPackageId: "",
       guides: currentDateRange?.guides || [],
       capacity: currentDateRange?.capacity ?? "",
+      economicPlan: currentDateRange?.economicPlan
+        ? toEconomicPlanFormValues(currentDateRange.economicPlan)
+        : emptyEconomicPlanFormValues(),
     },
-    validationSchema: dateRangeSchema({ requireCapacity: !isEditing }),
+    validationSchema,
     enableReinitialize: true,
     onSubmit,
   });
 
   useEffect(() => {
     fetchGuides();
-    getBlockedDates(dateRanges);
-    // console.log("blockedDates", blockedDates);
-    console.log("guides", guides);
-  }, []);
+  }, [fetchGuides]);
+
+  const handleCloseDialog = () => {
+    setSubmitError(null);
+    onClose();
+  };
+
   return (
     <DateSelectorForm
       openDialog={open}
-      handleCloseDialog={onClose}
-      // selectedDate={selectedDate}
-      // setSelectedDate={setSelectedDate}
-      // selectedGuides={selectedGuides}
-      // setSelectedGuides={setSelectedGuides}
-      // handleAddDateRange={onSubmit}
+      handleCloseDialog={handleCloseDialog}
       duration={duration}
       guides={guides}
       formik={formik}
       blockedDates={blockedDates}
       requireCapacity={!isEditing}
-      // handleOpenDateSelector={handleOpenDateSelector}
-      // handleCloseDateSelector={handleCloseDateSelector}
+      includeEconomicPlan={includeEconomicPlan}
+      onToggleEconomicPlan={(include) => {
+        setIncludeEconomicPlan(include);
+        setSubmitError(null);
+      }}
+      hasExistingPlan={hasExistingPlan}
+      submitError={submitError}
     />
   );
 };

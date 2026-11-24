@@ -9,7 +9,10 @@ import {
 } from "react";
 
 import type { TourPackageType } from "../types/TourPackageType";
-import type { DateRangeType } from "../types/DateRangeType";
+import type {
+  DateRangeType,
+  DateRangeWritePayload,
+} from "../types/DateRangeType";
 
 import * as TourPackageService from "../service/TourPackageService";
 import {
@@ -37,9 +40,11 @@ interface TourPackageContextType {
 
   getTourPackageInfoById: (id: string) => TourPackageType | null;
 
-  createDateRange: (dateRange: DateRangeType) => Promise<DateRangeType | null>;
+  createDateRange: (
+    dateRange: DateRangeWritePayload,
+  ) => Promise<DateRangeType | null>;
   updateDateRange: (
-    dateRange: Partial<DateRangeType>,
+    dateRange: Partial<DateRangeWritePayload>,
   ) => Promise<DateRangeType | null>;
 
   setTourPackages: (tourPackages: TourPackageType[]) => void;
@@ -173,7 +178,9 @@ export const TourPackageProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const createDateRange = useCallback(
-    async (dateRange: DateRangeType): Promise<DateRangeType | null> => {
+    async (
+      dateRange: DateRangeWritePayload,
+    ): Promise<DateRangeType | null> => {
       try {
         const created = await createDateRangeRequest(dateRange);
         if (!created) return null;
@@ -189,7 +196,7 @@ export const TourPackageProvider: React.FC<{ children: ReactNode }> = ({
         return created;
       } catch (err) {
         console.error("Error creating date range:", err);
-        return null;
+        throw err;
       }
     },
     [],
@@ -197,7 +204,7 @@ export const TourPackageProvider: React.FC<{ children: ReactNode }> = ({
 
   const updateDateRange = useCallback(
     async (
-      dateRange: Partial<DateRangeType>,
+      dateRange: Partial<DateRangeWritePayload>,
     ): Promise<DateRangeType | null> => {
       if (!dateRange.id) return null;
 
@@ -222,7 +229,7 @@ export const TourPackageProvider: React.FC<{ children: ReactNode }> = ({
         return updated;
       } catch (err) {
         console.error("Error updating date range:", err);
-        return null;
+        throw err;
       }
     },
     [],
