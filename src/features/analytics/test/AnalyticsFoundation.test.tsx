@@ -95,6 +95,15 @@ const departuresResource: AnalyticsDeparturesResource = {
         availableSlots: 9,
         occupancy: 35.71,
         capacityStatus: "valid",
+        attention: {
+          priority: 2,
+          lifecycle: "prospective",
+          label: "Revisión prioritaria",
+          finalMinimum: 8,
+          missingTourists: 3,
+          urgency: "priority-action",
+          decisionDeadline: "2026-11-25T00:00:00.000Z",
+        },
       },
     ],
     pagination: { limit: 100, hasMore: false, nextCursor: null },
@@ -191,7 +200,12 @@ describe("AnalyticsFoundation T-816", () => {
     ).toBeInTheDocument();
 
     await waitFor(() => expect(fetchSummary).toHaveBeenCalledWith());
-    expect(fetchDepartures).toHaveBeenCalledWith({ limit: 100 });
+    expect(fetchDepartures).toHaveBeenCalledWith({ limit: 20, order: "attention" });
+    expect(screen.getByText("Revisión prioritaria")).toBeInTheDocument();
+    expect(screen.getByLabelText("Indicadores principales")).toBeInTheDocument();
+    expect(screen.getByLabelText("Indicadores financieros secundarios")).not.toBeVisible();
+    fireEvent.click(screen.getByText("Información financiera secundaria"));
+    expect(screen.getByLabelText("Indicadores financieros secundarios")).toBeVisible();
     expect(fetchFilterCatalog).toHaveBeenCalledWith();
   });
 
@@ -220,7 +234,8 @@ describe("AnalyticsFoundation T-816", () => {
     expect(fetchDepartures).toHaveBeenLastCalledWith({
       from: "2026-11-01",
       to: "2026-11-30",
-      limit: 100,
+      limit: 20,
+      order: "attention",
     });
   });
 
@@ -239,6 +254,38 @@ describe("AnalyticsFoundation T-816", () => {
 
     expect(screen.getByText("Escribe las fechas con el formato dd/mm/aaaa y verifica que sean válidas.")).toBeInTheDocument();
     expect(fetchSummary).toHaveBeenCalledTimes(1);
+  });
+
+  it("changes the list order and paginates without loading every departure", async () => {
+    vi.mocked(useAnalytics).mockReturnValue(
+      contextValue({
+        departures: {
+          data: {
+            ...departuresResource,
+            data: {
+              ...departuresResource.data,
+              pagination: { limit: 20, hasMore: true, nextCursor: "next-page" },
+            },
+          },
+          loading: false,
+          error: null,
+        },
+      }),
+    );
+    render(<AnalyticsFoundation />);
+    await waitFor(() => expect(fetchDepartures).toHaveBeenCalledWith({ limit: 20, order: "attention" }));
+
+    fireEvent.mouseDown(screen.getByRole("combobox", { name: "Ordenar salidas" }));
+    fireEvent.click(screen.getByRole("option", { name: "Fecha más próxima" }));
+    expect(fetchDepartures).toHaveBeenLastCalledWith({ limit: 20, order: "chronological" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Siguiente" }));
+    expect(fetchDepartures).toHaveBeenLastCalledWith({
+      limit: 20,
+      order: "chronological",
+      cursor: "next-page",
+    });
+    expect(screen.getByText("Página 2")).toBeInTheDocument();
   });
 
   it("filters destination, package and departure in sequence and clears lower selections", async () => {
@@ -352,6 +399,6 @@ describe("AnalyticsFoundation T-816", () => {
     expect(screen.queryByText("Resumen no disponible")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Reintentar" }));
     expect(fetchSummary).toHaveBeenLastCalledWith({});
-    expect(fetchDepartures).toHaveBeenLastCalledWith({ limit: 100 });
+    expect(fetchDepartures).toHaveBeenLastCalledWith({ limit: 20, order: "attention" });
   });
 });

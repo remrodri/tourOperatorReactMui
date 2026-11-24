@@ -9,6 +9,7 @@ export interface AnalyticsFilters {
 export interface AnalyticsDeparturesQuery extends AnalyticsFilters {
   limit?: number;
   cursor?: string;
+  order?: "attention" | "chronological";
 }
 
 export type AnalyticsTrendGranularity = "day" | "week" | "month";
@@ -133,6 +134,15 @@ export interface AnalyticsDeparture {
   availableSlots: number | null;
   occupancy: number | null;
   capacityStatus: AnalyticsCapacityStatus;
+  attention?: {
+    priority: number;
+    lifecycle: "prospective" | "historical" | "invalid-date";
+    label: string;
+    finalMinimum: number | null;
+    missingTourists: number | null;
+    urgency: AnalyticsEconomicUrgency;
+    decisionDeadline: string | null;
+  };
 }
 
 export interface AnalyticsDeparturePagination {

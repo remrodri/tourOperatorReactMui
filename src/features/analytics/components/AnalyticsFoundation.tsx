@@ -1,5 +1,8 @@
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   AlertTitle,
   Box,
@@ -23,6 +26,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useEffect, useMemo, useState } from "react";
 import { useAnalytics } from "../context/AnalyticsContext";
 import AnalyticsDepartureDetail from "./AnalyticsDepartureDetail";
@@ -70,7 +74,9 @@ const toApiFilters = (filters: FilterForm): AnalyticsFilters => {
   };
 };
 
-const statusLabel = (status: AnalyticsDeparture["capacityStatus"]) => {
+const statusLabel = (item: AnalyticsDeparture) => {
+  if (item.attention?.label) return item.attention.label;
+  const status = item.capacityStatus;
   if (status === "invalid") return "Falta registrar la capacidad";
   if (status === "overcapacity") return "Turistas por encima de la capacidad";
   return "Ocupación disponible";
@@ -143,72 +149,78 @@ const SummaryCards = ({ summary }: { summary: AnalyticsSummary }) => {
       ? analyticsMetricHelp.occupancy
       : "No se puede calcular porque una o más salidas no tienen una capacidad mayor que cero. Revisa la capacidad registrada.";
 
+  const cardGrid = {
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "1fr",
+      sm: "repeat(2, 1fr)",
+      lg: "repeat(4, 1fr)",
+    },
+    gap: 1.5,
+  } as const;
+
   return (
-    <Box
-      sx={{
-        display: "grid",
-        gridTemplateColumns: {
-          xs: "1fr",
-          sm: "repeat(2, 1fr)",
-          lg: "repeat(4, 1fr)",
-        },
-        gap: 1.5,
-      }}
-    >
-      <MetricCard
-        label="Turistas confirmados"
-        value={analyticsNumberFormat.format(summary.tourists)}
-        helper={analyticsMetricHelp.tourists}
-      />
-      <MetricCard
-        label="Reservas vigentes"
-        value={analyticsNumberFormat.format(summary.bookings)}
-        helper={analyticsMetricHelp.bookings}
-      />
-      <MetricCard
-        label="Personas por reserva"
-        value={
-          summary.averageGroupSize === null
-            ? "Sin reservas"
-            : `${analyticsNumberFormat.format(summary.averageGroupSize)} personas`
-        }
-        helper={analyticsMetricHelp.averageGroupSize}
-      />
-      <MetricCard
-        label="Ocupación confirmada"
-        value={formatAnalyticsPercent(summary.occupancy)}
-        helper={capacityHelper}
-        status={summary.capacityStatus === "valid" ? "default" : "warning"}
-      />
-      <MetricCard
-        label="Importe reservado"
-        value={analyticsCurrencyFormat.format(summary.reservedRevenue)}
-        helper={analyticsMetricHelp.reservedRevenue}
-      />
-      <MetricCard
-        label="Pagos registrados"
-        value={analyticsCurrencyFormat.format(summary.registeredPayments)}
-        helper={analyticsMetricHelp.registeredPayments}
-      />
-      <MetricCard
-        label="Saldo pendiente"
-        value={analyticsCurrencyFormat.format(summary.pendingBalance)}
-        helper={analyticsMetricHelp.pendingBalance}
-        status={
-          summary.pendingBalanceStatus === "overpaid" ? "warning" : "default"
-        }
-      />
-      <MetricCard
-        label="Cupos disponibles"
-        value={
-          summary.availableSlots === null
-            ? "Falta información"
-            : analyticsNumberFormat.format(summary.availableSlots)
-        }
-        helper={analyticsMetricHelp.availableSlots}
-        status={summary.availableSlots === null ? "warning" : "default"}
-      />
-    </Box>
+    <Stack spacing={1.5}>
+      <Box sx={cardGrid} aria-label="Indicadores principales">
+        <MetricCard
+          label="Turistas confirmados"
+          value={analyticsNumberFormat.format(summary.tourists)}
+          helper={analyticsMetricHelp.tourists}
+        />
+        <MetricCard
+          label="Reservas vigentes"
+          value={analyticsNumberFormat.format(summary.bookings)}
+          helper={analyticsMetricHelp.bookings}
+        />
+        <MetricCard
+          label="Ocupación confirmada"
+          value={formatAnalyticsPercent(summary.occupancy)}
+          helper={capacityHelper}
+          status={summary.capacityStatus === "valid" ? "default" : "warning"}
+        />
+        <MetricCard
+          label="Cupos disponibles"
+          value={summary.availableSlots === null ? "Falta información" : analyticsNumberFormat.format(summary.availableSlots)}
+          helper={analyticsMetricHelp.availableSlots}
+          status={summary.availableSlots === null ? "warning" : "default"}
+        />
+      </Box>
+      <Accordion disableGutters>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Box>
+            <Typography variant="subtitle1">Información financiera secundaria</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.75 }}>
+              Consulta importes, pagos, saldo y personas por reserva.
+            </Typography>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box sx={cardGrid} aria-label="Indicadores financieros secundarios">
+            <MetricCard
+              label="Importe reservado"
+              value={analyticsCurrencyFormat.format(summary.reservedRevenue)}
+              helper={analyticsMetricHelp.reservedRevenue}
+            />
+            <MetricCard
+              label="Pagos registrados"
+              value={analyticsCurrencyFormat.format(summary.registeredPayments)}
+              helper={analyticsMetricHelp.registeredPayments}
+            />
+            <MetricCard
+              label="Saldo pendiente"
+              value={analyticsCurrencyFormat.format(summary.pendingBalance)}
+              helper={analyticsMetricHelp.pendingBalance}
+              status={summary.pendingBalanceStatus === "overpaid" ? "warning" : "default"}
+            />
+            <MetricCard
+              label="Personas por reserva"
+              value={summary.averageGroupSize === null ? "Sin reservas" : `${analyticsNumberFormat.format(summary.averageGroupSize)} personas`}
+              helper={analyticsMetricHelp.averageGroupSize}
+            />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+    </Stack>
   );
 };
 
@@ -232,10 +244,13 @@ const AnalyticsFoundation: React.FC = () => {
   const [selectedDepartureId, setSelectedDepartureId] = useState<string | null>(
     null,
   );
+  const [departureOrder, setDepartureOrder] = useState<"attention" | "chronological">("attention");
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageCursors, setPageCursors] = useState<Array<string | undefined>>([undefined]);
   useEffect(() => {
     if (!overview) return;
     void fetchSummary();
-    void fetchDepartures({ limit: 100 });
+    void fetchDepartures({ limit: 20, order: "attention" });
     void fetchFilterCatalog();
   }, [overview, fetchDepartures, fetchFilterCatalog, fetchSummary]);
 
@@ -314,7 +329,26 @@ const AnalyticsFoundation: React.FC = () => {
   const requestData = (filters: FilterForm) => {
     const apiFilters = toApiFilters(filters);
     void fetchSummary(apiFilters);
-    void fetchDepartures({ ...apiFilters, limit: 100 });
+    setPageIndex(0);
+    setPageCursors([undefined]);
+    void fetchDepartures({ ...apiFilters, limit: 20, order: departureOrder });
+  };
+
+  const changeDepartureOrder = (order: "attention" | "chronological") => {
+    setDepartureOrder(order);
+    setPageIndex(0);
+    setPageCursors([undefined]);
+    void fetchDepartures({ ...toApiFilters(appliedFilters), limit: 20, order });
+  };
+
+  const goToDeparturePage = (index: number, cursor?: string) => {
+    setPageIndex(index);
+    void fetchDepartures({
+      ...toApiFilters(appliedFilters),
+      limit: 20,
+      order: departureOrder,
+      ...(cursor ? { cursor } : {}),
+    });
   };
 
   const applyFilters = () => {
@@ -768,21 +802,33 @@ const AnalyticsFoundation: React.FC = () => {
             }}
           >
             <Box sx={{ p: 2, pb: 1 }}>
-              <Typography id="analytics-departures-title" variant="h6">
-                Salidas incluidas
-              </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.75 }}>
-                Se muestran {departureItems.length} salidas de la selección
-                actual. Los indicadores superiores consideran todo el resultado
-                filtrado.
-              </Typography>
+              <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" spacing={1}>
+                <Box>
+                  <Typography id="analytics-departures-title" variant="h6">Salidas incluidas</Typography>
+                  <Typography variant="caption" sx={{ opacity: 0.75 }}>
+                    Se muestran {departureItems.length} salidas en esta página. Los indicadores superiores consideran todo el resultado filtrado.
+                  </Typography>
+                </Box>
+                <FormControl size="small" sx={{ minWidth: 210 }}>
+                  <InputLabel id="departure-order-label">Ordenar salidas</InputLabel>
+                  <Select
+                    labelId="departure-order-label"
+                    label="Ordenar salidas"
+                    value={departureOrder}
+                    onChange={(event) => changeDepartureOrder(event.target.value as "attention" | "chronological")}
+                  >
+                    <MenuItem value="attention">Atención primero</MenuItem>
+                    <MenuItem value="chronological">Fecha más próxima</MenuItem>
+                  </Select>
+                </FormControl>
+              </Stack>
             </Box>
             {departures.loading && departureItems.length === 0 ? (
               <Box sx={{ p: 2 }}>
                 <Skeleton variant="rounded" height={180} />
               </Box>
             ) : (
-              <TableContainer sx={{ maxHeight: 420 }}>
+                <TableContainer>
                 <Table
                   stickyHeader
                   size="small"
@@ -795,7 +841,7 @@ const AnalyticsFoundation: React.FC = () => {
                       <TableCell align="right">Turistas</TableCell>
                       <TableCell align="right">Capacidad</TableCell>
                       <TableCell align="right">Ocupación</TableCell>
-                      <TableCell>Estado de capacidad</TableCell>
+                      <TableCell>Situación</TableCell>
                       <TableCell align="right">Detalle</TableCell>
                     </TableRow>
                   </TableHead>
@@ -827,12 +873,14 @@ const AnalyticsFoundation: React.FC = () => {
                         <TableCell>
                           <Chip
                             size="small"
-                            color={
-                              item.capacityStatus === "valid"
-                                ? "success"
-                                : "warning"
-                            }
-                            label={statusLabel(item.capacityStatus)}
+                            color={item.attention?.priority === 0
+                              ? "error"
+                              : item.attention && item.attention.priority <= 4
+                                ? "warning"
+                                : item.attention?.priority === 7
+                                  ? "default"
+                                  : "success"}
+                            label={statusLabel(item)}
                           />
                         </TableCell>
                         <TableCell align="right">
@@ -855,6 +903,30 @@ const AnalyticsFoundation: React.FC = () => {
                 </Table>
               </TableContainer>
             )}
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ p: 2 }}>
+              <Button
+                disabled={pageIndex === 0 || departures.loading}
+                onClick={() => goToDeparturePage(pageIndex - 1, pageCursors[pageIndex - 1])}
+              >
+                Anterior
+              </Button>
+              <Typography variant="body2">Página {pageIndex + 1}</Typography>
+              <Button
+                disabled={!departures.data?.data.pagination.hasMore || departures.loading}
+                onClick={() => {
+                  const cursor = departures.data?.data.pagination.nextCursor ?? undefined;
+                  if (!cursor) return;
+                  setPageCursors((current) => {
+                    const next = [...current];
+                    next[pageIndex + 1] = cursor;
+                    return next;
+                  });
+                  goToDeparturePage(pageIndex + 1, cursor);
+                }}
+              >
+                Siguiente
+              </Button>
+            </Stack>
           </Paper>
         )}
 
