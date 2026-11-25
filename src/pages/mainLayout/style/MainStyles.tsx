@@ -81,13 +81,13 @@ export const appBarStyles: AppBarStyle[] = [
     drawerBoxShadow: "0 4px 10px rgba(158, 118, 81, 0.5)",
   },
   {
-    background: "rgba(235, 239, 242, 0.6)",
+    background: "rgba(1, 99, 99, 0.6)",
     borderRadius: "16px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(10px)",
-    border: "1px solid rgba(235, 239, 242, 0.7)",
-    drawerBackground: "rgba(235, 239, 242, 0.6)",
-    drawerBorder: "1px solid rgba(235, 239, 242, 0.7)",
+    border: "1px solid rgba(1, 99, 99, 0.7)",
+    drawerBackground: "rgba(1, 99, 99, 0.6)",
+    drawerBorder: "1px solid rgba(1, 99, 99, 0.7)",
     drawerBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   },
 ];
