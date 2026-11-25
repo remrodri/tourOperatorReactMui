@@ -75,6 +75,11 @@ const AnalyticsDecisionSummary = ({
     data.confirmedResult === null
       ? "Resultado planificado: no se puede calcular"
       : `Resultado planificado: ${formatSignedAnalyticsCurrency(data.confirmedResult)}`;
+  const missingDescription = data.missingConfirmedTourists === null
+    ? "faltantes no calculables"
+    : data.missingConfirmedTourists === 1
+      ? "falta 1 turista"
+      : `faltan ${data.missingConfirmedTourists} turistas`;
 
   return (
     <Paper
@@ -97,7 +102,7 @@ const AnalyticsDecisionSummary = ({
         </Typography>
         <Stack spacing={0.35} sx={{ mt: 1 }}>
           <Typography variant="body2">
-            {data.confirmedTourists} confirmados · mínimo {data.finalMinimum ?? "no disponible"} · {data.missingConfirmedTourists === null ? "faltantes no calculables" : `faltan ${data.missingConfirmedTourists}`}
+            {data.confirmedTourists} confirmados · mínimo {data.finalMinimum ?? "no disponible"} · {missingDescription}
           </Typography>
           <Typography variant="body2">{resultDescription}</Typography>
           <Typography variant="body2">

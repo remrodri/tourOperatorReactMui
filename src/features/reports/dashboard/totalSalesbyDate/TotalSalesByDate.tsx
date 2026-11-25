@@ -36,8 +36,9 @@ const TotalSalesByDate: React.FC<TotalSalesByDateProps> = ({
           <Box
           sx={{
             display:"flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "flex-start", sm: "center" },
             // justifyContent:"space-between",
-            alignItems:"center",
             gap:"1rem",
           }}
           >

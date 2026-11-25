@@ -513,11 +513,11 @@ const AnalyticsFoundation: React.FC = () => {
         height: "calc(100dvh - 6.7rem)",
         overflowY: "auto",
         // p: { xs: 2, md: 3 },
-        p: "20px",
+        p: { xs: "12px", md: "20px" },
       }}
     >
       <Stack
-        direction={{ xs: "column", sm: "row" }}
+        direction={{ xs: "column", md: "row" }}
         justifyContent="space-between"
         spacing={1}
         sx={{ mb: 2 }}
@@ -532,7 +532,7 @@ const AnalyticsFoundation: React.FC = () => {
               : "Consulta reservas, ocupación y disponibilidad para apoyar la planificación de salidas turísticas. El módulo informa y orienta; la decisión final corresponde a la persona responsable."}
           </Typography>
         </Box>
-        <Stack spacing={0.25} alignItems={{ xs: "flex-start", sm: "flex-end" }}>
+        <Stack spacing={0.25} alignItems={{ xs: "flex-start", md: "flex-end" }}>
           {summary.data?.metadata.generatedAt && (
             <>
               <Typography variant="caption">
@@ -830,6 +830,7 @@ const AnalyticsFoundation: React.FC = () => {
             ) : (
                 <TableContainer>
                 <Table
+                  sx={{ minWidth: 860 }}
                   stickyHeader
                   size="small"
                   aria-label="Resumen de salidas turísticas"

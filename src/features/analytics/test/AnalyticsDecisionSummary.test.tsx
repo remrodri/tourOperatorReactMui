@@ -79,6 +79,22 @@ describe("AnalyticsDecisionSummary T-1302", () => {
     expect(screen.queryByText(/Acción para evaluar:/)).not.toBeInTheDocument();
   });
 
+  it("uses singular wording when only one tourist is missing", () => {
+    const singular = resource();
+    singular.data.missingConfirmedTourists = 1;
+
+    render(
+      <AnalyticsDecisionSummary
+        resource={singular}
+        loading={false}
+        startDate="2026-12-20T00:00:00.000Z"
+      />,
+    );
+
+    expect(screen.getByText(/6 confirmados · mínimo 8 · falta 1 turista/)).toBeInTheDocument();
+    expect(screen.queryByText(/faltan 1 turistas/)).not.toBeInTheDocument();
+  });
+
   it("keeps invalid economic information as the primary current state", () => {
     const missing = resource();
     missing.data.status = "economic-data-missing";

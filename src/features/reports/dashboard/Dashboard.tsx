@@ -78,11 +78,14 @@ const Dashboard: React.FC = (
           > */}
         <Box
           sx={{
-            p: "20px",
+            p: { xs: "12px", md: "20px" },
             flexGrow: 1,
             // overflowY: "auto",
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateColumns: {
+              xs: "minmax(0, 1fr)",
+              lg: "repeat(4, minmax(0, 1fr))",
+            },
             // gridTemplateRows: "1fr 1fr 1fr 1fr",
             gap: "10px 10px",
           }}
@@ -90,9 +93,7 @@ const Dashboard: React.FC = (
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={500}>
             <Box
               sx={{
-                gridColumn: "1 / 5",
-                gridRow: "1 / 2",
-                height: "11rem",
+                gridColumn: "1 / -1",
               }}
             >
               <GlobalStatsContainer />
@@ -101,7 +102,7 @@ const Dashboard: React.FC = (
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={1400}>
             <Box
               sx={{
-                gridColumn: "3 / 5",
+                gridColumn: { xs: "1 / -1", lg: "3 / 5" },
                 // gridRow: "3 / 4",
               }}
             >
@@ -124,8 +125,7 @@ const Dashboard: React.FC = (
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={800}>
             <Box
               sx={{
-                gridColumn: "1 / 5",
-                gridRow: "2 / 3",
+                gridColumn: "1 / -1",
               }}
             >
               {/* <AnimatedContent
@@ -147,8 +147,7 @@ const Dashboard: React.FC = (
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={1100}>
             <Box
               sx={{
-                gridColumn: "1 / 3",
-                gridRow: "3 / 4",
+                gridColumn: { xs: "1 / -1", lg: "1 / 3" },
                 background: "rgba(14, 18, 20, 0.6)",
                 borderRadius: "10px",
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
@@ -162,8 +161,7 @@ const Dashboard: React.FC = (
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={1700}>
             <Box
               sx={{
-                gridColumn: "1 / 3",
-                gridRow: "4 / 5",
+                gridColumn: { xs: "1 / -1", lg: "1 / 3" },
                 background: "rgba(14, 18, 20, 0.6)",
                 borderRadius: "10px",
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
@@ -177,8 +175,7 @@ const Dashboard: React.FC = (
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={2000}>
             <Box
               sx={{
-                gridColumn: "3 / 5",
-                gridRow: "4 / 5",
+                gridColumn: { xs: "1 / -1", lg: "3 / 5" },
                 background: "rgba(14, 18, 20, 0.6)",
                 borderRadius: "10px",
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)",
