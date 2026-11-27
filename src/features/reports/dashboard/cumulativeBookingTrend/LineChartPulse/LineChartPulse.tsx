@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useMemo } from "react";
 import { scaleTime, scaleLinear, max, line as d3_line, curveNatural as d3_curveNatural } from "d3";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
 import dayjs from "dayjs";
@@ -22,41 +22,34 @@ interface LineChartPulseProps {
 // let data = sales.map((d) => ({ ...d, date: new Date(d.date) }));
 
 const LineChartPulse:React.FC<LineChartPulseProps> = ({ cumulativeBookings }) => {
-  const [data, setData] = useState<{date:Date,value:number}[]>([]);
-
-  const getData = ()=>{
-    const formatedDates = cumulativeBookings.map((d):{date:Date,value:number}=>({
-      date: dayjs(d.date).toDate(),
-      value: Number(d.value)
-    }))
-    .sort((a,b)=>a.date.getTime()-b.date.getTime())
-    setData(formatedDates)
-  }
-
-  useEffect(() => {
-    if(cumulativeBookings.length>0){
-      getData()
-    }
-  }, [cumulativeBookings]);
+  const data = useMemo(
+    () => cumulativeBookings
+      .map((item): { date: Date; value: number } => ({
+        date: dayjs(item.date).toDate(),
+        value: Number(item.value),
+      }))
+      .sort((a, b) => a.date.getTime() - b.date.getTime()),
+    [cumulativeBookings],
+  );
   // console.log('cumulativeBookings::: ', cumulativeBookings);
   // console.log('data::: ', data);
 
   // let data = cumulativeBookings.map((d) => ({ ...d, date: new Date(Date.UTC(Number(d.date.split("-")[0]), Number(d.date.split("-")[1]), Number(d.date.split("-")[2]))) }));
   // const data = cumulativeBookings.map((d) => ({ ...d, date: new Date(Date.UTC(Number(d.date.split("-")[0]), Number(d.date.split("-")[1]), Number(d.date.split("-")[2]))) }));
   if(data.length===0) return null;
-  let xScale = scaleTime()
+  const xScale = scaleTime()
     .domain([data[0].date, data[data.length - 1].date])
     .range([0, 100]);
-  let yScale = scaleLinear()
+  const yScale = scaleLinear()
     .domain([0, max(data.map((d) => Number(d.value))) ?? 0])
     .range([100, 0]);
 
-  let line = d3_line<(typeof data)[number]>()
+  const line = d3_line<(typeof data)[number]>()
     .x((d) => xScale(d.date))
     .y((d) => yScale(d.value))
     .curve(d3_curveNatural);
 
-  let d = line(data);
+  const d = line(data);
 
   if (!d) {
     return null;
@@ -197,16 +190,28 @@ const LineChartPulse:React.FC<LineChartPulseProps> = ({ cumulativeBookings }) =>
                     height={100}
                     fill="transparent"
                   />
+                  <circle
+                    cx={xScale(d.date)}
+                    cy={yScale(d.value)}
+                    r={1.1}
+                    fill="currentColor"
+                    className="text-pink-300 opacity-0 group-hover/tooltip:opacity-100 transition-opacity"
+                    vectorEffect="non-scaling-stroke"
+                    style={{ pointerEvents: "none" }}
+                  />
                 </g>
               </TooltipTrigger>
               <TooltipContent>
                 <div>
-                  {d.date.toLocaleDateString("en-US", {
+                  {d.date.toLocaleDateString("es-BO", {
                     month: "short",
                     day: "2-digit",
+                    year: "numeric",
                   })}
                 </div>
-                <div className="text-gray-500 text-sm">{d.value.toLocaleString("en-US")}</div>
+                <div className="text-gray-500 dark:text-zinc-400 text-sm">
+                  Reservas registradas: {d.value.toLocaleString("es-BO")}
+                </div>
               </TooltipContent>
             </ClientTooltip>
           ))}

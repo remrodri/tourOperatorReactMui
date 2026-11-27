@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { CSSProperties } from "react";
 import { max, scaleBand } from "d3";
+import { Tooltip } from "@mui/material";
 import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
 
 const PX_BETWEEN_BARS = 5;
@@ -94,22 +95,50 @@ const BarChartMultiVertical: React.FC<BarChartMultiVerticalProps> = ({
               const destination = touristDestinations[barIndex]?.name ?? `Destino ${barIndex + 1}`;
               const exactAmount = amountFormat.format(count);
               return (
-                <button
-                  type="button"
+                <Tooltip
                   key={`${month.name}-${destination}`}
-                  title={`${month.name} · ${destination}: ${exactAmount}`}
-                  aria-label={`${month.name}, ${destination}: ${exactAmount}`}
-                  className="absolute bottom-0 rounded-t focus:outline-none focus:ring-2 focus:ring-white"
-                  style={{
-                    left: `${barIndex * (barWidth + PX_BETWEEN_BARS)}%`,
-                    width: `${barWidth}%`,
-                    height: `${(count / chartMaximum) * 100}%`,
-                    minHeight: count > 0 ? "2px" : 0,
-                    backgroundColor: colors[barIndex % colors.length],
-                    border: "1px solid #a07dff55",
-                    cursor: "help",
+                  arrow
+                  enterDelay={0}
+                  enterTouchDelay={0}
+                  leaveTouchDelay={5000}
+                  title={
+                    <div>
+                      <div>{month.name}</div>
+                      <div>{destination}</div>
+                      <div className="text-gray-400">
+                        Recaudación: {exactAmount}
+                      </div>
+                    </div>
+                  }
+                  slotProps={{
+                    tooltip: {
+                      sx: {
+                        backgroundColor: "#18181b",
+                        border: "1px solid #3f3f46",
+                        borderRadius: "4px",
+                        px: 1.75,
+                        py: 1,
+                        fontSize: "0.875rem",
+                      },
+                    },
+                    arrow: { sx: { color: "#18181b" } },
                   }}
-                />
+                >
+                  <button
+                    type="button"
+                    aria-label={`${month.name}, ${destination}: ${exactAmount}`}
+                    className="absolute bottom-0 rounded-t focus:outline-none focus:ring-2 focus:ring-white"
+                    style={{
+                      left: `${barIndex * (barWidth + PX_BETWEEN_BARS)}%`,
+                      width: `${barWidth}%`,
+                      height: `${(count / chartMaximum) * 100}%`,
+                      minHeight: count > 0 ? "2px" : 0,
+                      backgroundColor: colors[barIndex % colors.length],
+                      border: "1px solid #a07dff55",
+                      cursor: "help",
+                    }}
+                  />
+                </Tooltip>
               );
             })}
             <div aria-hidden="true" className="absolute top-full left-1/2 text-xs text-gray-300 whitespace-nowrap" style={{ transform: "translate(-50%, 8px)" }}>

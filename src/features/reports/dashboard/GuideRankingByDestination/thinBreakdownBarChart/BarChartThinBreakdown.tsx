@@ -1,7 +1,8 @@
-import React, { CSSProperties, useEffect, useMemo, useState } from "react";
+import React, { CSSProperties, useMemo } from "react";
 import { GuideStatsType } from "../../../context/DashboardContext";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { Avatar, Box } from "@mui/material";
+import { buildImageUrl } from "../../../../../utils/helpers/buildImage";
 
 const colorPalette = [
   "from-fuchsia-400 to-fuchsia-600",
@@ -30,32 +31,20 @@ type ThinBarItem = {
 const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
   data,
 }) => {
-  const [newData, setNewData] = useState<ThinBarItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const addColorToData = (incoming: GuideStatsType) => {
-    const updated: ThinBarItem[] = incoming.destinations.map(
+  const newData = useMemo<ThinBarItem[]>(
+    () => data.destinations.map(
       (destination, index) => {
         const color = colorPalette[index % colorPalette.length];
         return {
           key: destination.destinationName,
           value: destination.count,
           color,
-          img: incoming.guideImage,
+          img: destination.destinationImage,
         };
       },
-    );
-    setNewData(updated);
-  };
-
-  useEffect(() => {
-    if (!data) {
-      setLoading(true);
-      return;
-    }
-    setLoading(false);
-    addColorToData(data);
-  }, [data]);
+    ),
+    [data],
+  );
 
   const barHeight = 12;
   const cornerRadius = 4;
@@ -79,8 +68,6 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
       return acc;
     }, []);
   }, [newData, totalValue]);
-
-  if (loading) return <div>Cargando...</div>;
 
   return (
     <div
@@ -129,10 +116,13 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
                   <div
                     className="text-xs text-white text-center"
                     style={{
-                      left: "50%",
+                      left: 0,
                       top: `${barHeight + 5}px`,
-                      transform: "translateX(-50%)",
                       position: "absolute",
+                      width: "100%",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
                   >
                     {d.key}
@@ -142,8 +132,15 @@ const BarChartThinBreakdown: React.FC<BarChartThinBreakdownProps> = ({
 
               <TooltipContent>
                 <div className="flex items-center gap-2">
-                  <Avatar src={d.img} />
-                  {d.key}
+                  <Avatar
+                    src={buildImageUrl(d.img) ?? undefined}
+                    alt={`Imagen de ${d.key}`}
+                  >
+                    {d.key.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <div>
+                    <div>{d.key}</div>
+                  </div>
                 </div>
                 <div className="text-gray-500 dark:text-zinc-400 text-sm">
                   Cantidad de viajes: {d.value}

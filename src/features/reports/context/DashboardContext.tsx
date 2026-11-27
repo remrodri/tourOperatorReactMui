@@ -23,9 +23,9 @@ import type { DateRangeType } from "../../tourPackage/types/DateRangeType";
 export interface GuideStatsType {
   guideId: string;
   guideName: string;
-  guideImage: string;
   destinations: {
     destinationName: string;
+    destinationImage: string;
     count: number;
   }[];
 }
@@ -298,10 +298,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         guideName: guide
           ? `${guide.firstName} ${guide.lastName}`
           : "Guía desconocido",
-        guideImage: guide?.imageUrl || "",
         destinations: touristDestinations
           .map((td) => ({
             destinationName: td.name,
+            destinationImage:
+              td.images.find((image): image is string => typeof image === "string") ?? "",
             count: dests[td.id] || 0,
           }))
           .filter((d) => d.count > 0),

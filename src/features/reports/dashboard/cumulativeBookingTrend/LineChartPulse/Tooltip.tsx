@@ -47,12 +47,12 @@ const Tooltip: React.FC<{ children: React.ReactNode }> = ({ children }) => {
  * -----------------------------------------------------------------------------------------------*/
 
 const TooltipTrigger = React.forwardRef<
-  HTMLDivElement,
+  SVGGElement,
   { children: React.ReactNode }
 >((props, forwardedRef) => {
   const { children } = props;
   const context = useTooltipContext();
-  const triggerRef = React.useRef<HTMLDivElement | null>(null);
+  const triggerRef = React.useRef<SVGGElement | null>(null);
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -74,7 +74,7 @@ const TooltipTrigger = React.forwardRef<
   }, [context]);
 
   return (
-    <div
+    <g
       ref={(node) => {
         triggerRef.current = node;
         if (typeof forwardedRef === "function") forwardedRef(node);
@@ -96,10 +96,9 @@ const TooltipTrigger = React.forwardRef<
         });
         setTimeout(() => context.setTooltip(undefined), 2000);
       }}
-      style={{ width: "fit-content", height: "fit-content" }}
     >
       {children}
-    </div>
+    </g>
   );
 });
 
@@ -109,10 +108,7 @@ TooltipTrigger.displayName = "TooltipTrigger";
  * TooltipContent (FIX: NO leer ref.current durante render)
  * -----------------------------------------------------------------------------------------------*/
 
-const TooltipContent = React.forwardRef<
-  HTMLDivElement,
-  { children: React.ReactNode }
->((props) => {
+const TooltipContent: React.FC<{ children: React.ReactNode }> = (props) => {
   const { children } = props;
   const context = useTooltipContext();
 
@@ -164,7 +160,7 @@ const TooltipContent = React.forwardRef<
       top: y - 20,
       left: willOverflowRight ? x - tooltipWidth - 10 : x + 10,
     });
-  }, [context.tooltip?.x, context.tooltip?.y, isMobile, runningOnClient]);
+  }, [context.tooltip, isMobile, runningOnClient]);
 
   if (!context.tooltip || !runningOnClient) return null;
 
@@ -189,7 +185,7 @@ const TooltipContent = React.forwardRef<
     ),
     document.body,
   );
-});
+};
 
 TooltipContent.displayName = "TooltipContent";
 

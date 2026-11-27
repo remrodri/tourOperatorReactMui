@@ -109,10 +109,7 @@ TooltipTrigger.displayName = "TooltipTrigger";
  * TooltipContent (FIX: NO leer ref.current durante render)
  * -----------------------------------------------------------------------------------------------*/
 
-const TooltipContent = React.forwardRef<
-  HTMLDivElement,
-  { children: React.ReactNode }
->((props) => {
+const TooltipContent: React.FC<{ children: React.ReactNode }> = (props) => {
   const { children } = props;
   const context = useTooltipContext();
 
@@ -164,7 +161,7 @@ const TooltipContent = React.forwardRef<
       top: y - 20,
       left: willOverflowRight ? x - tooltipWidth - 10 : x + 10,
     });
-  }, [context.tooltip?.x, context.tooltip?.y, isMobile, runningOnClient]);
+  }, [context.tooltip, isMobile, runningOnClient]);
 
   if (!context.tooltip || !runningOnClient) return null;
 
@@ -189,7 +186,7 @@ const TooltipContent = React.forwardRef<
     ),
     document.body,
   );
-});
+};
 
 TooltipContent.displayName = "TooltipContent";
 

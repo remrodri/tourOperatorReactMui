@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { ClientTooltip, TooltipContent, TooltipTrigger } from "./Tooltip"; // Or wherever you pasted Tooltip.tsx
 import { useDashboardContext } from "../../../context/DashboardContext";
-import { Box, Typography } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
 import { useTouristDestinationContext } from "../../../../touristDestination/context/TouristDestinationContext";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
+import { buildImageUrl } from "../../../../../utils/helpers/buildImage";
 // import { TouristDestinationType } from "../../../../touristDestination/types/TouristDestinationType";
 // const data = [
 //   { key: "Model 0", value: 85.8 },
@@ -15,14 +16,12 @@ import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
 // ];
 
 export function BarChartBenchmark() {
-  const [data,setData]=useState<any>([])
-
   const {packagesSoldBySeller}=useDashboardContext();
   const {getTourPackageInfoById}=useTourPackageContext();
   const {getTouristDestinationInfoById}=useTouristDestinationContext();
   // const [packagesSoldBySellerWithDestinations,setPackagesSoldBySellerWithDestinations]=useState<any>([])
 
-  const getBookingInfoById = () => {
+  const data = useMemo(() => {
     const touristDestinationInfos = packagesSoldBySeller.map((d)=>{
       const touristDestinations: string[] = [];
 
@@ -58,20 +57,19 @@ export function BarChartBenchmark() {
       return destinationsCounter;
     })
     // console.log('touristDestinationInfos::: ', touristDestinationInfos);
-    if(touristDestinationInfos.length===0){
-      return setData([])
-    }
+    if(touristDestinationInfos.length===0) return [];
     const touristDestinationInfosWithDestinations = []
     for (let i = 0; i < packagesSoldBySeller.length; i++) {
       
       touristDestinationInfosWithDestinations.push({...packagesSoldBySeller[i],destinationsCounter:touristDestinationInfos[i]})
       // console.log('touristDestinationInfosWithDestinations::: ', touristDestinationInfosWithDestinations);
     }
-    setData(touristDestinationInfosWithDestinations)
-  }
-  useEffect(() => {
-    getBookingInfoById();
-  }, [packagesSoldBySeller]);
+    return touristDestinationInfosWithDestinations;
+  }, [
+    getTourPackageInfoById,
+    getTouristDestinationInfoById,
+    packagesSoldBySeller,
+  ]);
   return (
     <div className="w-full h-full grid gap-4 py-4">
       {/* Bars */}
@@ -132,16 +130,13 @@ export function BarChartBenchmark() {
                 gap: "0.5rem",
               }}
               >
-              <Box
-                sx={{
-                  width: "3rem",
-                  height: "3rem",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                }}
+              <Avatar
+                src={buildImageUrl(d.img) ?? undefined}
+                alt={`Fotografía de ${d.name}`}
+                sx={{ width: "3rem", height: "3rem" }}
               >
-                <img src={d.img} alt="" width="100%" height="100%" />
-              </Box>
+                {String(d.name ?? "V").charAt(0).toUpperCase()}
+              </Avatar>
               <Box
                 sx={{
                   display: "flex",
