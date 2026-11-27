@@ -12,6 +12,7 @@ export interface BookingType {
   id: string;
 
   tourPackageId: string;
+  tourPackageName?: string | null;
   dateRangeId: string;
   sellerId: string;
 

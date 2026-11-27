@@ -22,11 +22,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { useAnalytics } from "../context/AnalyticsContext";
 import AnalyticsDepartureDetail from "./AnalyticsDepartureDetail";
@@ -72,6 +74,11 @@ const toApiFilters = (filters: FilterForm): AnalyticsFilters => {
     ...(filters.destinationId ? { destinationId: filters.destinationId } : {}),
     ...(filters.dateRangeId ? { dateRangeId: filters.dateRangeId } : {}),
   };
+};
+
+const pickerValue = (value: string): Dayjs | null => {
+  const isoDate = parseAnalyticsLocalDate(value);
+  return isoDate ? dayjs(isoDate) : null;
 };
 
 const statusLabel = (item: AnalyticsDeparture) => {
@@ -408,6 +415,13 @@ const AnalyticsFoundation: React.FC = () => {
   const updatePeriod = (field: "from" | "to", value: string) => {
     setDraftFilters((current) => {
       const next = { ...current, [field]: value };
+      if (field === "from") {
+        const nextFrom = parseAnalyticsLocalDate(value);
+        const currentTo = parseAnalyticsLocalDate(current.to);
+        if (nextFrom && currentTo && currentTo < nextFrom) {
+          next.to = "";
+        }
+      }
       if (!next.from || !next.to) return next;
       const from = parseAnalyticsLocalDate(next.from);
       const to = parseAnalyticsLocalDate(next.to);
@@ -448,6 +462,11 @@ const AnalyticsFoundation: React.FC = () => {
       }
       return next;
     });
+    setFilterError(null);
+  };
+
+  const updatePickerPeriod = (field: "from" | "to", value: Dayjs | null) => {
+    updatePeriod(field, value?.isValid() ? value.format("DD/MM/YYYY") : "");
   };
 
   if (loading && !overview) {
@@ -522,27 +541,47 @@ const AnalyticsFoundation: React.FC = () => {
         spacing={1}
         sx={{ mb: 2 }}
       >
-        <Box>
+        <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="h4" component="h1">
             Planificación analítica
           </Typography>
-          <Typography variant="body1" sx={{ opacity: 0.8 }}>
-            {selectedDepartureId
-              ? "Consulta el resumen y la evidencia de la salida seleccionada."
-              : "Consulta reservas, ocupación y disponibilidad para apoyar la planificación de salidas turísticas. El módulo informa y orienta; la decisión final corresponde a la persona responsable."}
-          </Typography>
-        </Box>
+          <Tooltip
+            title={
+              selectedDepartureId
+                ? "Consulta el resumen y la evidencia de la salida seleccionada."
+                : "Consulta reservas, ocupación y disponibilidad para apoyar la planificación de salidas turísticas. El módulo informa y orienta; la decisión final corresponde a la persona responsable."
+            }
+            arrow
+            enterTouchDelay={0}
+            leaveTouchDelay={5000}
+          >
+            <InfoOutlinedIcon
+              fontSize="small"
+              tabIndex={0}
+              aria-label="¿Qué ofrece Planificación analítica?"
+            />
+          </Tooltip>
+        </Stack>
         <Stack spacing={0.25} alignItems={{ xs: "flex-start", md: "flex-end" }}>
           {summary.data?.metadata.generatedAt && (
-            <>
+            <Stack direction="row" spacing={0.75} alignItems="center">
               <Typography variant="caption">
                 Consulta generada el{" "}
                 {formatAnalyticsDateTime(summary.data.metadata.generatedAt)}
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.75 }}>
-                Indica cuándo se preparó la consulta, no la fecha de las salidas.
-              </Typography>
-            </>
+              <Tooltip
+                title="Indica cuándo se preparó la consulta, no la fecha de las salidas."
+                arrow
+                enterTouchDelay={0}
+                leaveTouchDelay={5000}
+              >
+                <InfoOutlinedIcon
+                  fontSize="small"
+                  tabIndex={0}
+                  aria-label="¿Qué significa Consulta generada?"
+                />
+              </Tooltip>
+            </Stack>
           )}
         </Stack>
       </Stack>
@@ -552,7 +591,7 @@ const AnalyticsFoundation: React.FC = () => {
           borderRadius: "10px",
           border: "1px solid rgba(0, 0, 0, 0.5)",
           p: "20px",
-          height: "calc(100dvh - 14.3rem)",
+          height: "calc(100dvh - 12.8rem)",
           overflowY: "auto",
         }}
       >
@@ -587,30 +626,39 @@ const AnalyticsFoundation: React.FC = () => {
               gap: 1.5,
             }}
           >
-            <TextField
-              label="Salida desde"
-              type="text"
-              placeholder="dd/mm/aaaa"
-              value={draftFilters.from}
-              onChange={(event) => updatePeriod("from", event.target.value)}
-              slotProps={{
-                inputLabel: { shrink: true },
-                htmlInput: { inputMode: "numeric", maxLength: 10 },
-              }}
-              helperText="Formato: dd/mm/aaaa"
-            />
-            <TextField
-              label="Salida hasta"
-              type="text"
-              placeholder="dd/mm/aaaa"
-              value={draftFilters.to}
-              onChange={(event) => updatePeriod("to", event.target.value)}
-              slotProps={{
-                inputLabel: { shrink: true },
-                htmlInput: { inputMode: "numeric", maxLength: 10 },
-              }}
-              helperText="Formato: dd/mm/aaaa"
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Salida desde"
+                enableAccessibleFieldDOMStructure={false}
+                value={pickerValue(draftFilters.from)}
+                onChange={(value) => updatePickerPeriod("from", value)}
+                format="DD/MM/YYYY"
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    helperText: "Selecciona la fecha inicial.",
+                  },
+                }}
+              />
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Salida hasta"
+                enableAccessibleFieldDOMStructure={false}
+                value={pickerValue(draftFilters.to)}
+                onChange={(value) => updatePickerPeriod("to", value)}
+                minDate={pickerValue(draftFilters.from) ?? undefined}
+                format="DD/MM/YYYY"
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    helperText: draftFilters.from
+                      ? "Debe ser igual o posterior a la fecha inicial."
+                      : "Selecciona primero la fecha inicial.",
+                  },
+                }}
+              />
+            </LocalizationProvider>
             <FormControl>
               <InputLabel id="destination-filter-label">Destino</InputLabel>
               <Select

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useTouristContext } from "../../../../tourist/context/TouristContext";
 import { useTourPackageContext } from "../../../../tourPackage/context/TourPackageContext";
 import { useBookingContext } from "../../../context/BookingContext";
 import { BookingType } from "../../../types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
-import { TouristType } from "../../../types/TouristType";
 import BookingFormContainer from "../../bookingForm3/BookingFormContainer";
 import PaymentFormContainer from "../../../../payment/components/paymentForm/PaymentFormContainer";
 import MoreInfoDialogContainer from "../../moreInfoDialogV2/MoreInfoDialogContainerV2";
@@ -28,7 +26,6 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   setBookingProof,
 }) => {
   const { getTourPackageInfoById } = useTourPackageContext();
-  const { getTouristInfoById } = useTouristContext();
   const { bookings, cancelBooking } = useBookingContext();
 
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
@@ -40,9 +37,6 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   );
 
   const [tpInfo, setTpInfo] = useState<TourPackageType | null>(null);
-  const [mainTouristInfo, setMainTouristInfo] = useState<TouristType | null>(
-    null,
-  );
   const [balance, setBalance] = useState(0);
   const [localBooking, setLocalBooking] = useState<BookingType | null>(null);
 
@@ -129,8 +123,6 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
   const loadBookingData = (booking: BookingType) => {
     setLocalBooking(booking);
     setTpInfo(getTourPackageInfoById(booking.tourPackageId) ?? null);
-    const mainTourist = booking.touristIds[0];
-    setMainTouristInfo(getTouristInfoById(mainTourist) ?? null);
     calculateBalance(booking);
   };
 
@@ -175,7 +167,6 @@ const BookingCardContainer: React.FC<BookingCardContainerProps> = ({
           booking={localBooking}
           index={index}
           tpInfo={tpInfo}
-          mainTouristInfo={mainTouristInfo}
           balance={balance}
           handleMenuOptions={handleMenuOptions}
           role={role}

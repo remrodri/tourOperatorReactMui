@@ -166,6 +166,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({
     (apiBooking: any): BookingType => ({
       id: getBookingId(apiBooking),
       tourPackageId: apiBooking.tourPackageId,
+      tourPackageName: apiBooking.tourPackageName ?? null,
       dateRangeId: apiBooking.dateRangeId,
       sellerId: apiBooking.sellerId,
       touristIds: apiBooking.touristIds ?? [],

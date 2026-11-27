@@ -192,7 +192,20 @@ describe("AnalyticsFoundation T-816", () => {
     expect(screen.getByText("Uyuni cultural")).toBeInTheDocument();
     expect(screen.getByText("Salar de Uyuni")).toBeInTheDocument();
     expect(screen.getByText(/Consulta generada el/)).toBeInTheDocument();
-    expect(screen.getByText("Indica cuándo se preparó la consulta, no la fecha de las salidas.")).toBeInTheDocument();
+    expect(screen.queryByText("Indica cuándo se preparó la consulta, no la fecha de las salidas.")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Consulta reservas, ocupación y disponibilidad/)).not.toBeInTheDocument();
+    fireEvent.mouseOver(
+      screen.getByLabelText("¿Qué ofrece Planificación analítica?"),
+    );
+    expect(
+      await screen.findByText(/Consulta reservas, ocupación y disponibilidad/),
+    ).toBeInTheDocument();
+    fireEvent.mouseOver(screen.getByLabelText("¿Qué significa Consulta generada?"));
+    expect(
+      await screen.findByText(
+        "Indica cuándo se preparó la consulta, no la fecha de las salidas.",
+      ),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/Actualizado/)).not.toBeInTheDocument();
     expect(screen.queryByText("Datos ficticios: registros simulados.")).not.toBeInTheDocument();
     expect(
@@ -239,20 +252,25 @@ describe("AnalyticsFoundation T-816", () => {
     });
   });
 
-  it("explains and validates the local date format", async () => {
+  it("offers calendar selectors and clears an end date earlier than a new start date", async () => {
     render(<AnalyticsFoundation />);
     await waitFor(() => expect(fetchSummary).toHaveBeenCalledTimes(1));
 
-    expect(screen.getAllByText("Formato: dd/mm/aaaa")).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "Choose date" })).toHaveLength(2);
+    expect(screen.getByText("Selecciona la fecha inicial.")).toBeInTheDocument();
+    expect(screen.getByText("Selecciona primero la fecha inicial.")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Salida desde"), {
-      target: { value: "31/02/2026" },
+      target: { value: "01/11/2026" },
     });
     fireEvent.change(screen.getByLabelText("Salida hasta"), {
-      target: { value: "30/11/2026" },
+      target: { value: "10/11/2026" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
+    fireEvent.change(screen.getByLabelText("Salida desde"), {
+      target: { value: "20/11/2026" },
+    });
 
-    expect(screen.getByText("Escribe las fechas con el formato dd/mm/aaaa y verifica que sean válidas.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Salida hasta")).toHaveValue("");
+    expect(screen.getByText("Debe ser igual o posterior a la fecha inicial.")).toBeInTheDocument();
     expect(fetchSummary).toHaveBeenCalledTimes(1);
   });
 

@@ -6,14 +6,12 @@ import {
 } from "@mui/material";
 import { BookingType } from "../../../types/BookingType";
 import { TourPackageType } from "../../../../tourPackage/types/TourPackageType";
-import { TouristType } from "../../../types/TouristType";
 import BookingCardMenu from "./BookingCardMenu";
 
 interface BookingCardV2Props {
   booking: BookingType | null;
   index: number;
   tpInfo: TourPackageType | null;
-  mainTouristInfo: TouristType | null;
   balance: number;
   handleMenuOptions: (option: string) => void;
   role: string;
@@ -22,7 +20,6 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
   booking,
   index,
   tpInfo,
-  mainTouristInfo,
   balance,
   handleMenuOptions,
   role,
@@ -144,10 +141,7 @@ const BookingCardV2: React.FC<BookingCardV2Props> = ({
                 fontWeight: "normal",
               }}
             >
-              {mainTouristInfo
-              // ? `Contacto: ${mainTouristInfo.firstName} ${mainTouristInfo.lastName}`
-              ? `${tpInfo?.name}`
-                : ""}
+              {booking.tourPackageName ?? tpInfo?.name ?? "No disponible"}
             </Typography>
           </Box>
           <Box

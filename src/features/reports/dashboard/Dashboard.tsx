@@ -99,33 +99,11 @@ const Dashboard: React.FC = (
               <GlobalStatsContainer />
             </Box>
           </Grow>
-          <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={1400}>
-            <Box
-              sx={{
-                gridColumn: { xs: "1 / -1", lg: "3 / 5" },
-                // gridRow: "3 / 4",
-              }}
-            >
-              {/* <AnimatedContent
-                distance={100}
-                direction="vertical"
-                reverse={true}
-                duration={1.2}
-                ease="power3.out"
-                initialOpacity={0.2}
-                animateOpacity
-                scale={1.1}
-                threshold={0.2}
-                delay={0.3}
-              > */}
-              <TotalSalesByYearContainer />
-              {/* </AnimatedContent> */}
-            </Box>
-          </Grow>
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={800}>
             <Box
               sx={{
                 gridColumn: "1 / -1",
+                minWidth: 0,
               }}
             >
               {/* <AnimatedContent
@@ -156,6 +134,18 @@ const Dashboard: React.FC = (
               }}
             >
               <PackagesSoldBySellerContainer />
+            </Box>
+          </Grow>
+          <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={1400}>
+            <Box
+              sx={{
+                gridColumn: { xs: "1 / -1", lg: "3 / 5" },
+                minWidth: 0,
+                display: "flex",
+                "& > *": { width: "100%" },
+              }}
+            >
+              <TotalSalesByYearContainer />
             </Box>
           </Grow>
           <Grow in={true} style={{ transformOrigin: "0 0 0" }} timeout={1700}>
